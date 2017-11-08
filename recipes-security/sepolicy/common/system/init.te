@@ -37,6 +37,16 @@ allow init_t self:system { reboot halt };
 # Included in later upstream versions
 kernel_load_module(initrc_t)
 
+# ADB policies
+
+# /dev/usb-ffs/adb
+fs_search_functionfs_dirs(initrc_t)
+fs_rw_functionfs_files(initrc_t)
+# /etc/adb_devid & /etc/build.prop
+adb_read_files(initrc_t)
+# /dev/socket/leprop-service
+adb_rw_sockets(initrc_t)
+
 # Systemd policies
 ifdef(`init_systemd',`
     ifdef(`enable_mls',`
