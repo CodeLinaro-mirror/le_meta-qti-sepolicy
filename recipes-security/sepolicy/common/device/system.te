@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-policy_module(system_dir, 1.0)
+policy_module(system, 1.0)
 
 ########################################
 #

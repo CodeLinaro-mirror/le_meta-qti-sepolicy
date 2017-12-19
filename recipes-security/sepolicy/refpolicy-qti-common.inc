@@ -1,8 +1,6 @@
 FILESEXTRAPATHS_append := "${THISDIR}:${THISDIR}/patches:"
 
-SRC_URI += "file://Remove-MLS-constraints.patch \ 
-            file://0001-add-monolithic-policy.patch \
-            file://0001-Remove-mls-relabelto.patch \
+SRC_URI += "file://0001-add-monolithic-policy.patch \
             file://Assign-proc_t-to-proc-dir.patch \
             file://0004-selinux-update-the-getty.te-for-addressing.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
