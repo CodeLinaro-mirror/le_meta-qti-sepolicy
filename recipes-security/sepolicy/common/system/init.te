@@ -39,10 +39,17 @@ kernel_load_module(initrc_t)
 
 # Systemd policies
 ifdef(`init_systemd',`
+    ifdef(`enable_mls',`
+        mls_process_set_level(kernel_t)
+        mls_file_upgrade(init_t)
+    ')
+    
     # Should be included in later upstream versions
     allow init_t {
         systemd_unit_t
         init_var_run_t
         power_unit_t
     }:service { status start stop };
+    
+    term_create_devpts_dirs(init_t)
 ')

@@ -25,7 +25,5 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-# Appended to modules/system/init.te in meta-selinux
-#============= mount_t ==============
 allow mount_t init_t:unix_stream_socket { read write };
+mls_process_write_to_clearance(mount_t)
