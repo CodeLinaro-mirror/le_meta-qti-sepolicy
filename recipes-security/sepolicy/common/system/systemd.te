@@ -33,5 +33,5 @@ ifdef(`init_systemd',`
     allow systemd_passwd_agent_t proc_t:file { read open };
 
     files_manage_var_dirs(systemd_tmpfiles_t)
-    #fs_getattr_tmpfs_dirs(systemd_tmpfiles_t)
+    files_read_generic_tmp_symlinks(systemd_tmpfiles_t)
 ')
