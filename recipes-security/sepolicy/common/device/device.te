@@ -55,6 +55,6 @@ dev_node(diag_device_t);
 
 #TODO : need to clean up this
 type data_t;
-files_type(data_t);
+files_mountpoint(data_t);
 type wifi_data_file_t;
 files_type(wifi_data_file_t)

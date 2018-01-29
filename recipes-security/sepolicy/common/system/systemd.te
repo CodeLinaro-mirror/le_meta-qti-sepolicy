@@ -34,4 +34,12 @@ ifdef(`init_systemd',`
 
     files_manage_var_dirs(systemd_tmpfiles_t)
     files_read_generic_tmp_symlinks(systemd_tmpfiles_t)
+    allow daemon init_t:unix_dgram_socket sendto;
+    fs_getattr_cgroup(systemd_logind_t)
+    fs_read_cgroup_files(systemd_logind_t)
+    init_dgram_send(systemd_cgroups_t)
+    init_stream_connect(systemd_cgroups_t)
+    seutil_read_file_contexts(systemd_logind_t)
+    allow systemd_logind_t init_t:system { start status stop };
+    allow systemd_logind_t self:process { getcap setfscreate };
 ')

@@ -62,4 +62,10 @@ ifdef(`init_systemd',`
     }:service { status start stop };
     
     term_create_devpts_dirs(init_t)
+    fs_search_cgroup_dirs(daemon)
+    allow init_t daemon:unix_stream_socket create_stream_socket_perms;
+    allow initrc_t init_t:system { start status reboot halt reload };
 ')
+
+#this access is needed by servicemanager
+allow initrc_t self:binder set_context_mgr;

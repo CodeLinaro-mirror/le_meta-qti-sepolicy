@@ -29,3 +29,5 @@ type functionfs_t;
 fs_noxattr_type(functionfs_t)
 files_mountpoint(functionfs_t)
 genfscon functionfs / gen_context(system_u:object_r:functionfs_t,s0)
+
+files_mountpoint(configfs_t)

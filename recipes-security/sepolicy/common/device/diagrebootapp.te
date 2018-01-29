@@ -41,3 +41,4 @@ init_daemon_domain(diagrebootapp_t, diagrebootapp_exec_t)
 ##============= diagrebootapp_t ==============
 allow diagrebootapp_t device_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid };
+rw_diag_dev(diagrebootapp_t)
