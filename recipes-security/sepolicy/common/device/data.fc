@@ -1,4 +1,4 @@
-# Copyright (c) 2016-17, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,31 +25,5 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(device, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type subsys_modem_device_t;
-dev_node(subsys_modem_device_t)
-
-type audio_device_t;
-dev_node(audio_device_t)
-
-type video_device_t;
-dev_node(video_device_t)
-
-type shared_log_device_t;
-dev_node(shared_log_device_t)
-
-type smd_device_t;
-dev_node(smd_device_t);
-
-type logd_socket_t;
-dev_node(logd_socket_t);
-
-type diag_device_t;
-dev_node(diag_device_t);
-
+/data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
+/systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)

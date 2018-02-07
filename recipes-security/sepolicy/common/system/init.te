@@ -1,4 +1,4 @@
-# Copyright (c) 2016-17, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,6 +24,9 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+type init_user_data_t;
+user_data_files_type(init_user_data_t)
 
 dev_relabelto_irsc_util(kernel_t)
 
@@ -65,7 +68,28 @@ ifdef(`init_systemd',`
     fs_search_cgroup_dirs(daemon)
     allow init_t daemon:unix_stream_socket create_stream_socket_perms;
     allow initrc_t init_t:system { start status reboot halt reload };
+
+    # For /data/usb
+    manage_user_data_files(init_t, init_user_data_t)
+
+    # Needed for now to allow access to /data/usb on first boot. Once files
+    #   are moved or a restorecon call is made, this policy can be removed.
+    gen_require(`
+        type data_t;
+    ')
+    manage_user_data_files(init_t, data_t)
+    auditallow init_t data_t:file { read write };
 ')
 
 #this access is needed by servicemanager
 allow initrc_t self:binder set_context_mgr;
+
+manage_user_data_files(initrc_t, init_user_data_t)
+auditallow initrc_t init_user_data_t:file { read write };
+
+# Allow with warning
+gen_require(`
+    type system_data_t;
+')
+read_system_data_files(initrc_t, system_data_t);
+auditallow initrc_t system_data_t:file { read };

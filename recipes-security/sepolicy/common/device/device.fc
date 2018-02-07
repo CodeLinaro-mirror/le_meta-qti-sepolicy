@@ -37,6 +37,3 @@
 /dev/diag             -c    gen_context(system_u:object_r:diag_device_t,s0)
 #/dev/log              -s     gen_context(system_u:object_r:logd_socket_t,s0)
 
-#TODO need to cleanup this
-/data(/.*)?               gen_context(system_u:object_r:data_t,s0)
-/data/misc/wifi(/.*)?     gen_context(system_u:object_r:wifi_data_file_t,s0)
