@@ -34,7 +34,6 @@ allow init_t initrc_t:binder { transfer call };
 allow init_t self:binder { transfer call set_context_mgr };
 binder_call_transfer(initrc_t)
 
-reboot_recovery_start(init_t)
 allow init_t self:system { reboot halt };
 
 # Included in later upstream versions
