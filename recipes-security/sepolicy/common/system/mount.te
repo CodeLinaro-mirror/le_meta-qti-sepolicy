@@ -27,3 +27,4 @@
 
 allow mount_t init_t:unix_stream_socket { read write };
 mls_process_write_to_clearance(mount_t)
+fs_relabelfrom_firmware(mount_t)

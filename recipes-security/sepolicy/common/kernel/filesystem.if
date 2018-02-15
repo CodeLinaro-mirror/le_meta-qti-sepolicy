@@ -60,3 +60,22 @@ interface(`fs_rw_functionfs_files',`
 
         rw_files_pattern($1, functionfs_t, functionfs_t)
 ')
+
+########################################
+## <summary>
+##      Allow changing of the label of a
+##      Firmware filesystem using the context= mount option.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`fs_relabelfrom_firmware',`
+        gen_require(`
+                type firmware_t;
+        ')
+
+        allow $1 firmware_t:filesystem relabelfrom;
+')
