@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /data/misc/wifi(/.*)?           gen_context(system_u:object_r:wifi_data_t,s0)
+/data/dnsmasq.leases            gen_context(system_u:object_r:wifi_data_t,s0)
+/data/dhcpcd-wlan(.*)?          gen_context(system_u:object_r:wifi_data_t,s0)
