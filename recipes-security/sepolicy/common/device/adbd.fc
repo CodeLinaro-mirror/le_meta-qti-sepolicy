@@ -25,13 +25,16 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/sbin/adbd              --      gen_context(system_u:object_r:shell_exec_t,mls_systemhigh)
+/sbin/adbd              --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
+/sbin/usb_composition   --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
+/etc/launch_adbd        --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
 
-/etc/adb_devid          --      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
-/etc/build.prop         --      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
-/etc/launch_adbd        --      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
+/etc/rc\.d/init\.d/usb  --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
+/etc/initscripts/usb    --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 
-/systemrw/adb_devid     --      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
-/systemrw/build.prop    --      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
-
-/dev/socket/leprop-service      gen_context(system_u:object_r:adbd_file_t,mls_systemhigh)
+/etc/adb_devid            --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+/etc/boot_hsusb_comp      --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+/etc/boot_hsic_comp       --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+/systemrw/adb_devid       --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+/systemrw/boot_hsusb_comp --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+/systemrw/boot_hsic_comp  --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)

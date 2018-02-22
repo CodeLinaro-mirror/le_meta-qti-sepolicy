@@ -82,8 +82,8 @@ dev_node(shared_log_device_t)
 type smd_device_t;
 dev_node(smd_device_t);
 
-type logd_socket_t;
-dev_node(logd_socket_t);
+type socket_device_t;
+files_type(socket_device_t);
 
 type diag_device_t;
 dev_node(diag_device_t);

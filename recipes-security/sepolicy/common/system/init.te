@@ -25,9 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type init_user_data_t;
-user_data_files_type(init_user_data_t)
-
 dev_relabelto_irsc_util(kernel_t)
 
 allow init_t initrc_t:binder { transfer call };
@@ -38,16 +35,6 @@ allow init_t self:system { reboot halt };
 
 # Included in later upstream versions
 kernel_load_module(initrc_t)
-
-# ADB policies
-
-# /dev/usb-ffs/adb
-fs_search_functionfs_dirs(initrc_t)
-fs_rw_functionfs_files(initrc_t)
-# /etc/adb_devid & /etc/build.prop
-adb_read_files(initrc_t)
-# /dev/socket/leprop-service
-adb_rw_sockets(initrc_t)
 
 # Systemd policies
 ifdef(`init_systemd',`
@@ -67,17 +54,6 @@ ifdef(`init_systemd',`
     fs_search_cgroup_dirs(daemon)
     allow init_t daemon:unix_stream_socket create_stream_socket_perms;
     allow initrc_t init_t:system { start status reboot halt reload };
-
-    # For /data/usb
-    manage_user_data_files(init_t, init_user_data_t)
-
-    # Needed for now to allow access to /data/usb on first boot. Once files
-    #   are moved or a restorecon call is made, this policy can be removed.
-    gen_require(`
-        type data_t;
-    ')
-    manage_user_data_files(init_t, data_t)
-    auditallow init_t data_t:file { read write };
 ')
 
 # find_partitions
@@ -88,12 +64,14 @@ seutil_domtrans_setfiles(initrc_t)
 #this access is needed by servicemanager
 allow initrc_t self:binder set_context_mgr;
 
-manage_user_data_files(initrc_t, init_user_data_t)
-auditallow initrc_t init_user_data_t:file { read write };
-
-# Allow with warning
 gen_require(`
-    type system_data_t;
+    attribute user_data;
+    attribute system_data;
 ')
-read_system_data_files(initrc_t, system_data_t);
-auditallow initrc_t system_data_t:file { read };
+
+# If these neverallows are tripped, it likely means a daemon was created
+#  without a unique context. Please update the file that launches the
+#  service with a unique selinux context before allowing access to these
+#  attributes.
+neverallow initrc_t user_data:file rw_file_perms;
+neverallow initrc_t system_data:file rw_file_perms;

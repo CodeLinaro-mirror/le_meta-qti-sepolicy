@@ -30,7 +30,6 @@ user_data_files_type(wifi_data_t)
 
 # this rules are for wpa_supplicant which run in NetworkManger context
 rw_shared_memory_dev(NetworkManager_t)
-#rw_logd_sock(NetworkManager_t)
 manage_user_data_files(NetworkManager_t, wifi_data_t)
 #This need to be removed later
 rw_diag_dev(NetworkManager_t)

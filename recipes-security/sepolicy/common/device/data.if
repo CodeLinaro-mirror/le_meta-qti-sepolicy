@@ -63,7 +63,7 @@ interface(`search_user_data_dir',`
     ')
 
     typeattribute $1 domain_can_read_userdata;
-    allow $1 user_data:dir list_dir_perms;
+    allow $1 user_data:dir search_dir_perms;
 ')
 
 ########################################
@@ -84,12 +84,11 @@ interface(`search_user_data_dir',`
 interface(`read_user_data_files',`
     gen_require(`
         attribute user_data;
-        attribute domain_can_read_userdata;
     ')
 
     search_user_data_dir($1)
-    read_files_pattern($1, user_data, { user_data $2 })
-    read_lnk_files_pattern($1, user_data, { user_data $2 })
+    read_files_pattern($1, user_data, $2)
+    read_lnk_files_pattern($1, user_data, $2)
 ')
 
 ########################################
@@ -112,7 +111,7 @@ interface(`read_generic_user_data_files',`
         attribute user_data;
     ')
 
-    read_user_data_files($1, data_t)
+    read_user_data_files($1, user_data)
 ')
 
 
@@ -137,11 +136,13 @@ interface(`manage_user_data_files',`
         attribute domain_can_write_userdata;
     ')
 
+    read_user_data_files($1, $2)
+
     typeattribute $1 domain_can_write_userdata;
-    manage_dirs_pattern($1, user_data, { user_data $2 })
-    manage_files_pattern($1, user_data, { user_data $2 })
-    manage_lnk_files_pattern($1, user_data, { user_data $2 })
-    manage_sock_files_pattern($1, user_data, { user_data $2 })
+    manage_dirs_pattern($1, user_data, $2)
+    manage_files_pattern($1, user_data, $2)
+    manage_lnk_files_pattern($1, user_data, $2)
+    manage_sock_files_pattern($1, user_data, $2)
 ')
 
 ########################################
@@ -199,7 +200,7 @@ interface(`search_system_data_dir',`
     ')
 
     typeattribute $1 domain_can_read_systemdata;
-    allow $1 system_data:dir list_dir_perms;
+    allow $1 system_data:dir search_dir_perms;
 ')
 
 ########################################
@@ -220,12 +221,11 @@ interface(`search_system_data_dir',`
 interface(`read_system_data_files',`
     gen_require(`
         attribute system_data;
-        attribute domain_can_read_systemdata;
     ')
 
     search_system_data_dir($1)
-    read_files_pattern($1, system_data, { system_data $2 })
-    read_lnk_files_pattern($1, system_data, { system_data $2 })
+    read_files_pattern($1, system_data, $2)
+    read_lnk_files_pattern($1, system_data, $2)
 ')
 
 ########################################
@@ -249,11 +249,13 @@ interface(`manage_system_data_files',`
         attribute domain_can_write_systemdata;
     ')
 
+    read_system_data_files($1, $2)
+
     typeattribute $1 domain_can_write_systemdata;
-    manage_dirs_pattern($1, system_data, { system_data $2 })
-    manage_files_pattern($1, system_data, { system_data $2 })
-    manage_sock_files_pattern($1, system_data, { system_data $2 })
-    manage_lnk_files_pattern($1, system_data, { system_data $2 })
+    manage_dirs_pattern($1, system_data, $2)
+    manage_files_pattern($1, system_data, $2)
+    manage_sock_files_pattern($1, system_data, $2)
+    manage_lnk_files_pattern($1, system_data, $2)
 ')
 
 ########################################

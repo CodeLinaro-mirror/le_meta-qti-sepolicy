@@ -1,4 +1,4 @@
-# Copyright (c) 2016-17, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -141,19 +141,30 @@ interface(`rw_diag_dev',`
 
 ########################################
 ## <summary>
-##      Read and write the logd_socket
+##      Create named socket in /dev/socket
+##      Example: device_manage_socket(leprop_t, leprop_sock_t, "leprop")
 ## </summary>
 ## <param name="domain">
 ##      <summary>
-##      Domain allowed access.
+##      Domain managing the socket
+##      </summary>
+## </param>
+## <param name="context">
+##      <summary>
+##      Context of newly created sockets
+##      </summary>
+## </param>
+## <param name="filename">
+##      <summary>
+##      Filename to transition
 ##      </summary>
 ## </param>
 #
-interface(`rw_logd_sock',`
+interface(`device_manage_socket_file',`
     gen_require(`
-        type device_t, log_socket_t;
+        type socket_device_t;
     ')
 
-    write_sock_files_pattern($1, device_t, log_socket_t)
+    type_transition $1 socket_device_t:sock_file $2 $3;
+    manage_sock_files_pattern($1, socket_device_t, $2)
 ')
-

@@ -27,7 +27,44 @@
 
 policy_module(adbd, 1.0)
 
-type adbd_file_t;
+type adbd_t;
+type adbd_exec_t;
 
-files_mountpoint(adbd_file_t)
+init_daemon_domain(adbd_t, adbd_exec_t)
 
+userdebug_or_eng(`
+    unconfined_domain(adbd_t)
+
+    gen_require(`
+        attribute user_data;
+        attribute system_data;
+    ')
+    manage_user_data_files(adbd_t, user_data)
+    manage_system_data_files(adbd_t, system_data)
+')
+
+# Writable adb files are placed in /systemrw, but mounted to /etc
+type adbd_system_data_t;
+system_data_files_type(adbd_system_data_t)
+adb_read_data_files(adbd_t)
+files_read_config_files(adbd_t)
+
+type adbd_device_t;
+files_type(adbd_device_t)
+
+# /dev/usb-ffs/adb
+fs_search_functionfs_dirs(adbd_t)
+fs_rw_functionfs_files(adbd_t)
+# /dev/socket/leprop-service
+leprop_manage_props(adbd_t)
+
+# usb initscript
+type adbd_initrc_exec_t;
+type adbd_initrc_t;
+
+init_script_domain(adbd_initrc_t, adbd_initrc_exec_t)
+domtrans_pattern(adbd_initrc_t, adbd_exec_t, adbd_t)
+adb_manage_data_files(adbd_initrc_t)
+leprop_rw_props(adbd_initrc_t)
+# The default initrc_t context is unconfined - do the same here.
+unconfined_domain(adbd_initrc_t)

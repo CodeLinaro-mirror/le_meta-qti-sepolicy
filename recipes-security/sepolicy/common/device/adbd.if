@@ -33,7 +33,7 @@
 
 ########################################
 ## <summary>
-##      Read ADB etc files
+##      Read ADB data files
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -41,17 +41,17 @@
 ##      </summary>
 ## </param>
 #
-interface(`adb_read_files',`
+interface(`adb_read_data_files',`
     gen_require(`
-        type adbd_file_t;
+        type adbd_system_data_t;
     ')
 
-    read_files_pattern($1, adbd_file_t, adbd_file_t)
+    read_system_data_files($1, adbd_system_data_t)
 ')
 
 ########################################
 ## <summary>
-##      Manage ADB etc files
+##      Manage ADB data files
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -59,47 +59,10 @@ interface(`adb_read_files',`
 ##      </summary>
 ## </param>
 #
-interface(`adb_manage_files',`
+interface(`adb_manage_data_files',`
     gen_require(`
-        type adbd_file_t;
+        type adbd_system_data_t;
     ')
 
-    manage_files_pattern($1, adbd_file_t, adbd_file_t)
+    manage_system_data_files($1, adbd_system_data_t)
 ')
-
-########################################
-## <summary>
-##      Read ADB sockets
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-#
-interface(`adb_read_sockets',`
-    gen_require(`
-        type adbd_file_t;
-    ')
-
-    allow $1 adbd_file_t:sock_file read_sock_file_perms;
-')
-
-########################################
-## <summary>
-##      Read and write ADB sockets
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-#
-interface(`adb_rw_sockets',`
-    gen_require(`
-        type adbd_file_t;
-    ')
-
-    allow $1 adbd_file_t:sock_file rw_sock_file_perms;
-')
-
