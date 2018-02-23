@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_append := "${THISDIR}:${THISDIR}/patches:"
 
-SRC_URI += "file://0001-add-monolithic-policy.patch \
+SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Assign-proc_t-to-proc-dir.patch \
             file://0004-selinux-update-the-getty.te-for-addressing.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
@@ -9,6 +9,8 @@ SRC_URI += "file://0001-add-monolithic-policy.patch \
 
 PROVIDES += "sepolicy"
 RPROVIDES_${PN} += "sepolicy"
+
+EXTRA_OEMAKE += "USER_BUILD=${@base_conditional('USER_BUILD', '1', 'y', 'n', d)}"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
