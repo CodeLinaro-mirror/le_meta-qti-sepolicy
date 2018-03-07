@@ -1,4 +1,4 @@
-# Copyright (c) 2016-17, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,6 +24,20 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### tftp server ###
+
+/sbin/tftp_server     --    gen_context(system_u:object_r:tftp_server_exec_t,s0)
+/data/tombstone(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
+
+### misc properties ###
+
+/data/persist/rfs/mdm/mpss(/.*)?  gen_context(system_u:object_r:mpss_persist_t,s0)
+/data/persist/rfs/msm/mpss(/.*)?  gen_context(system_u:object_r:mpss_persist_t,s0)
+/data/persist/rfs/mdm/adsp(/.*)?  gen_context(system_u:object_r:adsp_persist_t,s0)
+/data/persist/rfs/msm/adsp(/.*)?  gen_context(system_u:object_r:adsp_persist_t,s0)
+
+### dev nodes ###
 
 /dev/subsys_modem    gen_context(system_u:object_r:subsys_modem_device_t,s0)
 

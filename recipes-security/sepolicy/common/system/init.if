@@ -1,4 +1,4 @@
-# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -67,4 +67,30 @@ interface(`binder_call_transfer',`
 
                 allow $1 init_t:binder  { transfer call };
         ')
+')
+
+########################################
+### <summary>
+###     Transition from inittab context to daemon
+### </summary>
+### <param name="child_domain">
+###     <summary>
+###     Domain to transition to
+###     </summary>
+### </param>
+### <param name="child_context"
+###     <summary>
+###     File type of the child domain executable
+###     </summary>
+### </param>
+### <rolecap/>
+##
+#
+interface(`inittab_domtrans',`
+    ifndef(`init_systemd',`
+        gen_require(`
+            type init_t;
+        ')
+        domtrans_pattern(init_t, $2, $1)
+    ')
 ')

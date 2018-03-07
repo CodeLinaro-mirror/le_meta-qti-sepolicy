@@ -1,4 +1,4 @@
-# Copyright (c) 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,7 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## <summary> devices interface </summary>
+## <summary> Firmware interface </summary>
 
 
 ########################################
@@ -46,3 +46,19 @@ interface(`read_firmware_file',`
     read_lnk_files_pattern($1, firmware_t, firmware_t)
 ')
 
+########################################
+## <summary>
+##      Read and write shared firmware properties
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`firmware_manage_shared_props',`
+    gen_require(`
+        type firmware_persist_t;
+    ')
+    manage_user_data_files($1, firmware_persist_t)
+')
