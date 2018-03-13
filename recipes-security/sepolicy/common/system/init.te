@@ -80,6 +80,11 @@ ifdef(`init_systemd',`
     auditallow init_t data_t:file { read write };
 ')
 
+# find_partitions
+manage_default_user_data_dirs(initrc_t)
+mount_domtrans(initrc_t)
+seutil_domtrans_setfiles(initrc_t)
+
 #this access is needed by servicemanager
 allow initrc_t self:binder set_context_mgr;
 
