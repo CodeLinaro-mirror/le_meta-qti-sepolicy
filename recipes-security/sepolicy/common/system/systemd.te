@@ -42,4 +42,11 @@ ifdef(`init_systemd',`
     seutil_read_file_contexts(systemd_logind_t)
     allow systemd_logind_t init_t:system { start status stop };
     allow systemd_logind_t self:process { getcap setfscreate };
+    userdebug_or_eng(`
+        gen_require(`
+                attribute unconfined_domain_type;
+                class service { start status stop } ;
+        ')
+        allow unconfined_domain_type power_unit_t:service { start status stop };
+    ')
 ')
