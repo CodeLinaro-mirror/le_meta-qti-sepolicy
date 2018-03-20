@@ -69,3 +69,11 @@ leprop_rw_props(adbd_initrc_t)
 alog_rw_log(adbd_initrc_t)
 # The default initrc_t context is unconfined - do the same here.
 unconfined_domain(adbd_initrc_t)
+
+#This userdebug macro is for audio test app
+userdebug_or_eng(`
+    servicemanager_binder_use(adbd_t)
+    audio_binder_call_transfer(adbd_t)
+    allow adbd_t self:capability2 block_suspend;
+    allow adbd_t alogd_t:dir search;
+')

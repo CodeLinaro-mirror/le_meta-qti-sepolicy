@@ -25,44 +25,24 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(alogd, 1.0)
+## <summary> qti audio server daemon interface </summary>
 
-type alogd_t;
-type alogd_exec_t;
+#######################################
+## <summary>
+##      Binder call and transfer support
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`audio_binder_call_transfer',`
+                 gen_require(`
+                       type audio-server-daemon_t;
+                 ')
 
-init_daemon_domain(alogd_t, alogd_exec_t)
-
-allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
-allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };
-allow alogd_t self:netlink_audit_socket create_netlink_socket_perms;
-allow alogd_t self:process { signal setsched };
-
-# read and write kernel logs
-kernel_read_messages(alogd_t)
-kernel_read_ring_buffer(alogd_t)
-kernel_clear_ring_buffer(alogd_t)
-dev_read_kmsg(alogd_t)
-dev_write_kmsg(alogd_t)
-
-# change logd* sockets to system:system
-allow alogd_t self:capability { chown fowner fsetid setuid setgid };
-
-# Label and manage /dev/socket nodes
-type alogd_sock_t;
-dev_node(alogd_sock_t)
-device_manage_socket_file(alogd_t, alogd_sock_t, "logd")
-device_manage_socket_file(alogd_t, alogd_sock_t, "logdr")
-device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
-
-leprop_rw_props(alogd_t)
-
-#This change is for audio test app
-
-gen_require(`
-    type audio-server-daemon_t;
-    type adbd_t;
-')
-
-userdebug_or_eng(`
-    allow alogd_t adbd_t:dir search;
+                 allow $1 audio-server-daemon_t:binder {call transfer};
+         ')
 ')

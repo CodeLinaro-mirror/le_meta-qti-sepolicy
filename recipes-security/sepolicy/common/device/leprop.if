@@ -48,7 +48,7 @@ interface(`leprop_read_props',`
     ')
 
     allow $1 leprop_sock_t:sock_file read_sock_file_perms;
-    allow $1 leprop_t:unix_stream_socket { connectto read_socket_perms };
+    allow $1 leprop_t:unix_stream_socket { connectto rw_socket_perms };
 ')
 
 ########################################

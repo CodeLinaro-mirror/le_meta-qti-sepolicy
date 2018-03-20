@@ -26,8 +26,11 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 type functionfs_t;
+type trace_marker_t;
 fs_noxattr_type(functionfs_t)
 files_mountpoint(functionfs_t)
 genfscon functionfs / gen_context(system_u:object_r:functionfs_t,s0)
 
 files_mountpoint(configfs_t)
+files_mountpoint(trace_marker_t)
+genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0
