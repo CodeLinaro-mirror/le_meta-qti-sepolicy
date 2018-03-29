@@ -1,10 +1,9 @@
 do_install_append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
-        # Remove recursive restorecon calls from populate_volatile.sh
+        # Remove recursive restorecon calls
         sed -i '/^test ! -x \/sbin\/restorecon/ d' ${D}${sysconfdir}/init.d/populate-volatile.sh
-        # read_only_rootfs_hook does not mount fstab and therefore will not
-        #  have the correct context when writing to /var/log/lastlog. Attempt
-        #  to label this, but do not abort on failure.
-        echo "/sbin/restorecon -F /var/log || true" >> ${D}${sysconfdir}/init.d/populate-volatile.sh
+
+        # Replace with a white-list of files that need labeling
+        echo "/sbin/restorecon /run/lock /var/volatile/log /var/volatile/tmp /var/lock /var/run /var/tmp /tmp /var/lock/subsys /var/log/wtmp /var/run/utmp /etc/resolv.conf /var/run/resolv.conf || true" >> ${D}${sysconfdir}/init.d/populate-volatile.sh
     fi
 }
