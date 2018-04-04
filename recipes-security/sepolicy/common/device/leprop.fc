@@ -25,46 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(adbd, 1.0)
+/sbin/leprop-service      --    gen_context(system_u:object_r:leprop_exec_t,mls_systemhigh)
+/usr/bin/setprop          --    gen_context(system_u:object_r:setprop_exec_t,s0)
 
-type adbd_t;
-type adbd_exec_t;
+/build\.prop              --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
+/etc/build\.prop          --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
+/systemrw/build\.prop     --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
 
-init_daemon_domain(adbd_t, adbd_exec_t)
-
-userdebug_or_eng(`
-    unconfined_domain(adbd_t)
-
-    gen_require(`
-        attribute user_data;
-        attribute system_data;
-    ')
-    manage_user_data_files(adbd_t, user_data)
-    manage_system_data_files(adbd_t, system_data)
-')
-
-# Writable adb files are placed in /systemrw, but mounted to /etc
-type adbd_system_data_t;
-system_data_files_type(adbd_system_data_t)
-adb_read_data_files(adbd_t)
-files_read_config_files(adbd_t)
-
-# for logcat
-alog_rw_log(adbd_t)
-
-# /dev/usb-ffs/adb
-fs_search_functionfs_dirs(adbd_t)
-fs_rw_functionfs_files(adbd_t)
-# /dev/socket/leprop-service
-leprop_rw_props(adbd_t)
-
-# usb initscript
-type adbd_initrc_exec_t;
-type adbd_initrc_t;
-
-init_script_domain(adbd_initrc_t, adbd_initrc_exec_t)
-domtrans_pattern(adbd_initrc_t, adbd_exec_t, adbd_t)
-adb_manage_data_files(adbd_initrc_t)
-leprop_rw_props(adbd_initrc_t)
-# The default initrc_t context is unconfined - do the same here.
-unconfined_domain(adbd_initrc_t)

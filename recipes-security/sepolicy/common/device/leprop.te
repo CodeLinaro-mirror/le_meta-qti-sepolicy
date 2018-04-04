@@ -25,46 +25,38 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(adbd, 1.0)
+policy_module(leprop, 1.0)
 
-type adbd_t;
-type adbd_exec_t;
+# leprop-service
+type leprop_t;
+type leprop_exec_t;
+init_daemon_domain(leprop_t, leprop_exec_t)
+inittab_domtrans(leprop_t, leprop_exec_t)
 
-init_daemon_domain(adbd_t, adbd_exec_t)
+type leprop_system_data_t;
+system_data_files_type(leprop_system_data_t)
+manage_system_data_files(leprop_t, leprop_system_data_t)
 
-userdebug_or_eng(`
-    unconfined_domain(adbd_t)
+type leprop_sock_t;
+dev_node(leprop_sock_t)
+leprop_rw_props(leprop_t)
+device_manage_socket_file(leprop_t, leprop_sock_t, "leprop-service")
 
-    gen_require(`
-        attribute user_data;
-        attribute system_data;
-    ')
-    manage_user_data_files(adbd_t, user_data)
-    manage_system_data_files(adbd_t, system_data)
-')
+# /var/volatile/tmp/core.leprop-service.*
+files_manage_generic_tmp_files(leprop_t)
+# proptrigger.conf
+files_read_etc_files(leprop_t)
 
-# Writable adb files are placed in /systemrw, but mounted to /etc
-type adbd_system_data_t;
-system_data_files_type(adbd_system_data_t)
-adb_read_data_files(adbd_t)
-files_read_config_files(adbd_t)
+# setprop utility
+type setprop_t;
+type setprop_exec_t;
 
-# for logcat
-alog_rw_log(adbd_t)
+init_system_domain(setprop_t, setprop_exec_t)
+leprop_rw_props(setprop_t)
+alog_rw_log(setprop_t)
 
-# /dev/usb-ffs/adb
-fs_search_functionfs_dirs(adbd_t)
-fs_rw_functionfs_files(adbd_t)
-# /dev/socket/leprop-service
-leprop_rw_props(adbd_t)
+allow setprop_t self:unix_dgram_socket create_socket_perms;
+allow setprop_t self:capability dac_override;  # TODO: why is this needed?
 
-# usb initscript
-type adbd_initrc_exec_t;
-type adbd_initrc_t;
-
-init_script_domain(adbd_initrc_t, adbd_initrc_exec_t)
-domtrans_pattern(adbd_initrc_t, adbd_exec_t, adbd_t)
-adb_manage_data_files(adbd_initrc_t)
-leprop_rw_props(adbd_initrc_t)
-# The default initrc_t context is unconfined - do the same here.
-unconfined_domain(adbd_initrc_t)
+init_dontaudit_use_fds(setprop_t)
+term_dontaudit_use_unallocated_ttys(setprop_t)
