@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,46 +25,52 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-dev_relabelto_irsc_util(kernel_t)
+#######################################
+## <summary>
+##	servicemanager interface
+## </summary>
+#
 
-allow init_t self:system { reboot halt };
-
-# Included in later upstream versions
-kernel_load_module(initrc_t)
-
-# Systemd policies
-ifdef(`init_systemd',`
-    ifdef(`enable_mls',`
-        mls_process_set_level(kernel_t)
-        mls_file_upgrade(init_t)
+########################################
+## <summary>
+##      Request binder instance from servicemanager
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`servicemanager_binder_use',`
+    gen_require(`
+        type servicemanager_t;
+        type binder_device_t;
     ')
-    
-    # Should be included in later upstream versions
-    allow init_t {
-        systemd_unit_t
-        init_var_run_t
-        power_unit_t
-    }:service { status start stop };
-    
-    term_create_devpts_dirs(init_t)
-    fs_search_cgroup_dirs(daemon)
-    allow init_t daemon:unix_stream_socket create_stream_socket_perms;
-    allow initrc_t init_t:system { start status reboot halt reload };
+
+    allow $1 servicemanager_t:binder { transfer call };
+    allow servicemanager_t $1:process getattr;
+    read_files_pattern(servicemanager_t, $1, $1)
+    rw_chr_files_pattern($1, binder_device_t, binder_device_t)
 ')
 
-# find_partitions
-manage_default_user_data_dirs(initrc_t)
-mount_domtrans(initrc_t)
-seutil_domtrans_setfiles(initrc_t)
-
-gen_require(`
-    attribute user_data;
-    attribute system_data;
+########################################
+## <summary>
+##      Use binder interface
+## </summary>
+## <param name="client">
+##      <summary>
+##      Client allowed access.
+##      </summary>
+## </param>
+## <param name="server">
+##      <summary>
+##      Server allowed access.
+##      </summary>
+## </param>
+#
+interface(`servicemanager_binder_call',`
+    allow $1 $2:binder { call transfer };
+    allow $2 $1:binder transfer;
+    allow $1 $2:fd use;
 ')
 
-# If these neverallows are tripped, it likely means a daemon was created
-#  without a unique context. Please update the file that launches the
-#  service with a unique selinux context before allowing access to these
-#  attributes.
-neverallow initrc_t user_data:file rw_file_perms;
-neverallow initrc_t system_data:file rw_file_perms;
