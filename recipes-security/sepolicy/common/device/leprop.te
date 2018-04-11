@@ -33,11 +33,14 @@ type leprop_exec_t;
 init_daemon_domain(leprop_t, leprop_exec_t)
 inittab_domtrans(leprop_t, leprop_exec_t)
 
+allow leprop_t self:unix_dgram_socket create_socket_perms;
+
 type leprop_system_data_t;
 system_data_files_type(leprop_system_data_t)
 manage_system_data_files(leprop_t, leprop_system_data_t)
 
 type leprop_sock_t;
+files_type(leprop_sock_t)
 dev_node(leprop_sock_t)
 leprop_rw_props(leprop_t)
 device_manage_socket_file(leprop_t, leprop_sock_t, "leprop-service")

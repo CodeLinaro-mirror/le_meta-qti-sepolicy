@@ -84,6 +84,7 @@ dev_node(smd_device_t);
 
 type socket_device_t;
 files_type(socket_device_t);
+allow socket_device_t device_t:filesystem associate;
 
 type diag_device_t;
 dev_node(diag_device_t);

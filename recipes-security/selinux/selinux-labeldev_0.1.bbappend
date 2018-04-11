@@ -12,5 +12,8 @@ do_install_append() {
         #  context of device_t. Recreate the directory before relabeling.
         sed -i '/\${RESTORECON}/i \
 mkdir -p \/dev\/socket -m 776' ${D}${sysconfdir}/init.d/selinux-labeldev
+    else
+        sed -i '/\${RESTORECON}/i \
+mkdir -p \/dev\/socket -m 776' ${D}${bindir}/selinux-labeldev.sh
     fi
 }

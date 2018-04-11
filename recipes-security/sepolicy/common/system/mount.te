@@ -31,4 +31,5 @@ fs_relabelfrom_firmware(mount_t)
 
 # For mount-copybind
 fs_getattr_all_fs(mount_t)
+data_mount(mount_t)
 seutil_exec_setfiles(mount_t)

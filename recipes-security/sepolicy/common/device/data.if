@@ -260,6 +260,35 @@ interface(`manage_system_data_files',`
 
 ########################################
 ## <summary>
+##      Mount in any data partition. Intended for mount-copybind
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <param name="filetype">
+##      <summary>
+##      File type managed
+##      </summary>
+## </param>
+#
+interface(`data_mount',`
+    gen_require(`
+        attribute user_data;
+        attribute domain_can_read_userdata;
+        attribute system_data;
+        attribute domain_can_read_systemdata;
+    ')
+
+    typeattribute $1 domain_can_read_userdata;
+    typeattribute $1 domain_can_read_systemdata;
+    read_files_pattern($1, { user_data system_data }, { user_data system_data })
+    allow $1 { user_data system_data }:file { getattr mounton };
+')
+
+########################################
+## <summary>
 ##      Relabel all data files
 ## </summary>
 ## <param name="domain">
