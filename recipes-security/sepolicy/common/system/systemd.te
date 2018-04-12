@@ -49,4 +49,15 @@ ifdef(`init_systemd',`
         ')
         allow unconfined_domain_type power_unit_t:service { start status stop };
     ')
+
+    gen_require(`
+        type init_var_run_t;
+        type udev_var_run_t;
+    ')
+    # init_write_pid_socket
+    read_sock_files_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
+    # init_create_pid_dirs
+    create_dirs_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
+    # udev_list_pids
+    allow systemd_logind_t udev_var_run_t:dir { read };
 ')
