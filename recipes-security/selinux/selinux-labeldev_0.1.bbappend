@@ -11,9 +11,9 @@ do_install_append() {
         #  the file is later recreated, it will inherit the incorrect parent
         #  context of device_t. Recreate the directory before relabeling.
         sed -i '/\${RESTORECON}/i \
-mkdir -p \/dev\/socket -m 776' ${D}${sysconfdir}/init.d/selinux-labeldev
+mkdir -p \/dev\/socket -m 777' ${D}${sysconfdir}/init.d/selinux-labeldev
     else
         sed -i '/\${RESTORECON}/i \
-mkdir -p \/dev\/socket -m 776' ${D}${bindir}/selinux-labeldev.sh
+mkdir -p \/dev\/socket -m 777' ${D}${bindir}/selinux-labeldev.sh
     fi
 }
