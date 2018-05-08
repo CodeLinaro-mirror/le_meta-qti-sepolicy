@@ -53,7 +53,7 @@ ifdef(`init_systemd',`
 ')
 
 # find_partitions
-manage_default_user_data_dirs(initrc_t)
+data_mount_user(initrc_t)
 mount_domtrans(initrc_t)
 seutil_domtrans_setfiles(initrc_t)
 
