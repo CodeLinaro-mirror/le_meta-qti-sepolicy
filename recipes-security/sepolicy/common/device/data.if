@@ -93,30 +93,6 @@ interface(`read_user_data_files',`
 
 ########################################
 ## <summary>
-##       Read generic data files
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <param name="type">
-##      <summary>
-##      File type allowed to read
-##      </summary>
-## </param>
-#
-interface(`read_generic_user_data_files',`
-    gen_require(`
-        attribute user_data;
-    ')
-
-    read_user_data_files($1, user_data)
-')
-
-
-########################################
-## <summary>
 ##      Manage user data files
 ## </summary>
 ## <param name="domain">
@@ -147,6 +123,24 @@ interface(`manage_user_data_files',`
 
 ########################################
 ## <summary>
+##      Manage default user data files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`data_manage_generic_user_files',`
+    gen_require(`
+        attribute user_data;
+    ')
+
+    manage_user_data_files($1, user_data)
+')
+
+########################################
+## <summary>
 ##      Create and mount /data
 ## </summary>
 ## <param name="domain">
@@ -155,7 +149,7 @@ interface(`manage_user_data_files',`
 ##      </summary>
 ## </param>
 #
-interface(`manage_default_user_data_dirs',`
+interface(`data_mount_user',`
     gen_require(`
         type data_t;
     ')
@@ -260,31 +254,41 @@ interface(`manage_system_data_files',`
 
 ########################################
 ## <summary>
-##      Mount in any data partition. Intended for mount-copybind
+##      Manage generic system data files. Intended for usage
+##      by mount-copybind before the proper label is assigned.
 ## </summary>
 ## <param name="domain">
 ##      <summary>
 ##      Domain allowed access.
 ##      </summary>
 ## </param>
-## <param name="filetype">
+#
+interface(`data_manage_generic_system_files',`
+    gen_require(`
+        attribute system_data;
+    ')
+
+    manage_system_data_files($1, system_data)
+')
+
+########################################
+## <summary>
+##      Perform bind mounts on files within /systemrw
+## </summary>
+## <param name="domain">
 ##      <summary>
-##      File type managed
+##      Domain allowed access.
 ##      </summary>
 ## </param>
 #
-interface(`data_mount',`
+interface(`data_mount_volatile_bind',`
     gen_require(`
-        attribute user_data;
-        attribute domain_can_read_userdata;
         attribute system_data;
-        attribute domain_can_read_systemdata;
     ')
 
-    typeattribute $1 domain_can_read_userdata;
-    typeattribute $1 domain_can_read_systemdata;
-    read_files_pattern($1, { user_data system_data }, { user_data system_data })
-    allow $1 { user_data system_data }:file { getattr mounton };
+    manage_dirs_pattern($1, system_data, system_data)
+    allow $1 system_data:{ dir file } mounton;
+    allow $1 system_data:file getattr;
 ')
 
 ########################################
