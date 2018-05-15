@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,32 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type wifi_data_t;
-user_data_files_type(wifi_data_t)
-
-# this rules are for wpa_supplicant which run in NetworkManger context
-rw_shared_memory_dev(NetworkManager_t)
-manage_user_data_files(NetworkManager_t, wifi_data_t)
-#This need to be removed later
-rw_diag_dev(NetworkManager_t)
-dev_rw_null(NetworkManager_t)
-allow NetworkManager_t var_t:dir { write add_name };
-allow NetworkManager_t var_t:file { read write create open };
-
-manage_sock_files_pattern(NetworkManager_t, device_t, device_t)
-files_search_default(NetworkManager_t)
-files_read_default_files(NetworkManager_t)
-allow NetworkManager_t initrc_t:unix_dgram_socket sendto;
-init_stream_connect_script(NetworkManager_t)
-
-# This needs to have its own context
-allow wpa_cli_t var_run_t:dir { write search read remove_name open getattr add_name };
-allow wpa_cli_t var_run_t:sock_file { write create unlink };
-manage_user_data_files(wpa_cli_t, wifi_data_t)
-manage_user_data_files(dhcpc_t, wifi_data_t)
-
-# this needs to have for qcmap_cm context
-read_write_qcmap_cm_socket_files(NetworkManager_t)
-qcmap_cm_rw_sock_files(NetworkManager_t)
-qcmap_cm_sendto_unix_dgram_socket(NetworkManager_t);
-adbd_sendto_unix_dgram_socket(NetworkManager_t)
+/usr/bin/QCMAP_ConnectionManager  --  gen_context(system_u:object_r:qcmap_cm_exec_t,s0)
+/etc/data(/.*)?                       gen_context(system_u:object_r:qcmap_etc_data_t,s0)
+/systemrw/data(/.*)?                  gen_context(system_u:object_r:qcmap_etc_data_t,s0)
+/systemrw/rt_tables(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
+/systemrw/misc/wifi(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
