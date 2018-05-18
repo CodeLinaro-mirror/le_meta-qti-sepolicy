@@ -56,13 +56,4 @@ device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
 
 leprop_rw_props(alogd_t)
 
-#This change is for audio test app
-
-gen_require(`
-    type audio-server-daemon_t;
-    type adbd_t;
-')
-
-userdebug_or_eng(`
-    allow alogd_t adbd_t:dir search;
-')
+read_files_pattern(alogd_t, domain, domain)
