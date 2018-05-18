@@ -7,6 +7,8 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://common/ \
 "
 
+SRC_URI_append_sdxpoorwills = "file://Add-lib-busybox-to-subs_dist.patch"
+
 PROVIDES += "sepolicy"
 RPROVIDES_${PN} += "sepolicy"
 
