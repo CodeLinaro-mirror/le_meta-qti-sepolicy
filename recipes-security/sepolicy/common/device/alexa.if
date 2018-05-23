@@ -30,4 +30,24 @@
 ## <summary>
 ##      alexa daemon interface
 ## </summary>
+########################################
+## <summary>
+##      Read generic files in /etc
+## </summary>
+## <desc>
+##      Read alexa_data_t file
+## </desc>
+## <param name="domain">
+##  <summary>
+##      Domain allowed access
+##  </summary>
+## </param>
+interface(`files_read_alexa_data_files',`
+    gen_require(`
+       type alexa_data_t;
+    ')
 
+    allow $1 alexa_data_t:dir list_dir_perms;
+    read_files_pattern($1, alexa_data_t, alexa_data_t)
+    read_lnk_files_pattern($1, alexa_data_t, alexa_data_t)
+')
