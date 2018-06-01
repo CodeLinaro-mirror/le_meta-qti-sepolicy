@@ -14,7 +14,7 @@ do_install_append() {
                 install -m 0644 ${WORKDIR}/systemd/label-cache.service ${D}${sysconfdir}/systemd/system/label-cache.service
                 install -m 0644 ${WORKDIR}/systemd/label-persist.service ${D}${sysconfdir}/systemd/system/label-persist.service
                 install -m 0644 ${WORKDIR}/systemd/label-systemrw.service ${D}${sysconfdir}/systemd/system/label-systemrw.service
-                install -m 0644 ${WORKDIR}/systemd/label-systemrw.service ${D}${sysconfdir}/systemd/system/label-data.service
+                install -m 0644 ${WORKDIR}/systemd/label-data.service ${D}${sysconfdir}/systemd/system/label-data.service
 
                 ln -sf  ../label-cache.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-cache.service
                 ln -sf  ../label-persist.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-persist.service
