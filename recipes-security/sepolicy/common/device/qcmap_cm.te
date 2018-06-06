@@ -104,7 +104,7 @@ dev_read_urand(qcmap_cm_t)
 sysnet_domtrans_ifconfig(qcmap_cm_t)
 kernel_getattr_proc(qcmap_cm_t)
 iptables_domtrans(qcmap_cm_t)
-corenet_udp_bind_dhcpc_port(qcmap_cm_t)
+corenet_udp_bind_dhcpd_port(qcmap_cm_t)
 kernel_read_network_state(qcmap_cm_t)
 sysnet_domtrans_dhcpc(qcmap_cm_t)
 
