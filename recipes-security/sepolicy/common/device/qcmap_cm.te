@@ -33,7 +33,7 @@ type qcmap_etc_data_t;
 init_daemon_domain(qcmap_cm_t, qcmap_cm_exec_t)
 system_data_files_type(qcmap_etc_data_t);
 
-modutils_domtrans_insmod(qcmap_cm_t)
+wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
 dontaudit qcmap_cm_t domain:file read_file_perms;
@@ -122,7 +122,6 @@ adbd_sendto_unix_dgram_socket(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(ifconfig_t)
 networkmanager_read_pid_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
-kernel_request_load_module(qcmap_cm_t)
 qcmap_cm_sendto_unix_dgram_socket(qcmap_cm_t)
 sysnet_read_dhcpc_pid(qcmap_cm_t)
 sysnet_kill_dhcpc(qcmap_cm_t)

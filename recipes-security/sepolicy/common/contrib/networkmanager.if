@@ -25,8 +25,22 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/data/misc/wifi(/.*)?           gen_context(system_u:object_r:wifi_data_t,s0)
-/data/dnsmasq.leases            gen_context(system_u:object_r:wifi_data_t,s0)
-/data/dhcpcd-wlan(.*)?          gen_context(system_u:object_r:wifi_data_t,s0)
+########################################
+## <summary>
+##       Run /etc/init.d/wlan to load or unload the wlan kernel module 
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`wlan_start_stop',`
+    gen_require(`
+        type wlan_initrc_exec_t;
+        type wlan_initrc_t;
+    ')
 
-/etc/rc\.d/init\.d/wlan         gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+    files_search_etc($1)
+    domtrans_pattern($1, wlan_initrc_exec_t, wlan_initrc_t)
+')
