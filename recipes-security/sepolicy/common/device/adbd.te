@@ -41,6 +41,8 @@ userdebug_or_eng(`
     ')
     manage_user_data_files(adbd_t, user_data)
     manage_system_data_files(adbd_t, system_data)
+
+    wlan_start_stop(adbd_t)
 ')
 
 # Writable adb files are placed in /systemrw, but mounted to /etc
@@ -77,3 +79,9 @@ userdebug_or_eng(`
     allow adbd_t self:capability2 block_suspend;
     allow adbd_t alogd_t:dir search;
 ')
+
+# Allow all domains opened via adb shell to display log messages on adb shell
+type adbd_pty_t;
+term_create_pty(adbd_t, adbd_pty_t)
+allow domain adbd_pty_t:chr_file rw_term_perms;
+allow domain adbd_t:fd use;
