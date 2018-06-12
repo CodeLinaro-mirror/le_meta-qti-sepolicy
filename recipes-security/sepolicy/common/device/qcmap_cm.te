@@ -52,6 +52,7 @@ gen_require(`
   type ifconfig_t;
   type dhcpc_t;
   type initrc_exec_t;
+  type data_t;
 ')
 
 userdebug_or_eng(`
@@ -74,7 +75,7 @@ allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_run_t:dir { write add_name remove_name setattr};
 allow qcmap_cm_t var_run_t:sock_file { create write unlink setattr };
 allow qcmap_cm_t sysfs_t:file write;
-allow qcmap_cm_t var_t:file { create write open read getattr unlink };
+allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
 allow qcmap_cm_t self:fifo_file write;
 allow qcmap_cm_t self:netlink_generic_socket { write getattr setopt read bind create };
@@ -96,6 +97,10 @@ allow qcmap_cm_t var_run_t:file { unlink create read open append getattr setattr
 allow qcmap_cm_t tmp_t:file { read unlink write create open getattr setattr rename append };
 allow qcmap_cm_t tmp_t:dir { remove_name search write add_name };
 allow qcmap_cm_t initrc_exec_t:file { read execute open execute_no_trans };
+init_search_run(qcmap_cm_t);
+allow qcmap_cm_t data_t:dir { add_name };
+manage_user_data_files(qcmap_cm_t, data_t)
+allow qcmap_cm_t data_t:file { create_file_perms write_file_perms };
 
 dev_write_kmsg(qcmap_cm_t)
 files_read_generic_tmp_symlinks(qcmap_cm_t)
