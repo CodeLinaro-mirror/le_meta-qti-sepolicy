@@ -40,8 +40,6 @@ dontaudit qcmap_cm_t domain:file read_file_perms;
 
 gen_require(`
   type lib_t;
-  type var_run_t;
-  type tmp_t;
   type node_t;
   type var_t;
   type init_var_run_t;
@@ -71,10 +69,8 @@ allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket { create ioctl };
 allow qcmap_cm_t self:socket { create ioctl bind read write };
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
-allow qcmap_cm_t var_run_t:dir { write add_name remove_name setattr};
-allow qcmap_cm_t var_run_t:sock_file { create write unlink setattr };
 allow qcmap_cm_t sysfs_t:file write;
-allow qcmap_cm_t var_t:file { create write open read getattr unlink };
+allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
 allow qcmap_cm_t self:fifo_file write;
 allow qcmap_cm_t self:netlink_generic_socket { write getattr setopt read bind create };
@@ -83,18 +79,13 @@ allow qcmap_cm_t self:tcp_socket listen;
 allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
 allow qcmap_cm_t node_t:udp_socket node_bind;
 allow qcmap_cm_t var_t:dir { add_name remove_name };
-allow qcmap_cm_t var_run_t:dir { rmdir create };
 allow qcmap_cm_t self:process { signal };
 allow qcmap_cm_t self:rawip_socket { create setopt getopt write read };
-allow qcmap_cm_t tmp_t:sock_file { unlink write create };
 allow qcmap_cm_t init_var_run_t:sock_file { write };
 allow qcmap_cm_t self:packet_socket { create bind setopt read write };
 allow qcmap_cm_t self:capability { setuid net_bind_service setgid kill sys_ptrace net_admin net_raw };
 allow qcmap_cm_t node_t:tcp_socket { node_bind listen };
 allow qcmap_cm_t self:fifo_file { ioctl read getattr };
-allow qcmap_cm_t var_run_t:file { unlink create read open append getattr setattr lock write };
-allow qcmap_cm_t tmp_t:file { read unlink write create open getattr setattr rename append };
-allow qcmap_cm_t tmp_t:dir { remove_name search write add_name };
 allow qcmap_cm_t initrc_exec_t:file { read execute open execute_no_trans };
 
 dev_write_kmsg(qcmap_cm_t)
@@ -136,3 +127,23 @@ qcmap_cm_sendto_unix_dgram_socket(qcmap_cm_t)
 sysnet_read_dhcpc_pid(qcmap_cm_t)
 sysnet_kill_dhcpc(qcmap_cm_t)
 networkmanager_signal(qcmap_cm_t)
+init_search_run(qcmap_cm_t)
+
+# Manage private files inside /var/run
+type qcmap_var_run_t;
+files_pid_file(qcmap_var_run_t)
+allow qcmap_cm_t qcmap_var_run_t:file { create_file_perms write_file_perms };
+files_pid_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file })
+
+# Manage private files inside /data
+type qcmap_data_t;
+user_data_files_type(qcmap_data_t)
+manage_user_data_files(qcmap_cm_t, qcmap_data_t)
+data_filetrans(qcmap_cm_t, qcmap_data_t, file)
+
+# Manage private files inside /tmp
+type qcmap_tmp_t;
+files_tmp_file(qcmap_tmp_t)
+allow qcmap_cm_t qcmap_tmp_t:file { create_file_perms write_file_perms };
+allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
+files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
