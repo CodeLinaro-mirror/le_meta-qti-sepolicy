@@ -93,6 +93,38 @@ interface(`read_user_data_files',`
 
 ########################################
 ## <summary>
+##      Create data files in custom context
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain creating file.
+##      </summary>
+## </param>
+## <param name="type">
+##      <summary>
+##      File type to transition to.
+##      </summary>
+## </param>
+## <param name="class">
+##      <summary>
+##      The class of file being created
+##      </summary>
+## </param>
+## <param name="type">
+##      <summary>
+##      (optional): Name of the file being created
+##      </summary>
+## </param>
+#
+interface(`data_filetrans',`
+    gen_require(`
+        type data_t;
+    ')
+    filetrans_pattern($1, data_t, $2, $3, $4)
+')
+
+########################################
+## <summary>
 ##      Manage user data files
 ## </summary>
 ## <param name="domain">
