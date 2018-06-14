@@ -1,4 +1,4 @@
-#Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,53 +25,36 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(qti-audio-server-daemon, 1.0)
+policy_module(alljoyn , 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type audio-server-daemon_t;
-type audio-server-daemon_exec_t;
+type alljoyn_t;
+type alljoyn_exec_t;
+type alljoyn_conf_file_t;
 
-init_daemon_domain(audio-server-daemon_t, audio-server-daemon_exec_t)
+init_daemon_domain(alljoyn_t, alljoyn_exec_t)
 
-userdebug_or_eng(`
-  kernel_search_debugfs(audio-server-daemon_t);
-  rw_diag_dev(audio-server-daemon_t);
-')
+files_type(alljoyn_conf_file_t)
+allow alljoyn_t alljoyn_conf_file_t:file read_file_perms;
 
-gen_require(`
-         type adbd_t;
-         type tracefs_t;
-         type trace_marker_t;
-         type alogd_t;
-    ')
+dev_read_urand(alljoyn_t)
+corecmd_exec_shell(alljoyn_t)
+kernel_read_network_state(alljoyn_t)
 
-dev_write_sound(audio-server-daemon_t)
-dev_read_sound(audio-server-daemon_t)
-dev_read_sysfs(audio-server-daemon_t)
-files_read_etc_files(audio-server-daemon_t)
-kernel_read_system_state(audio-server-daemon_t)
-read_firmware_file(audio-server-daemon_t)
-servicemanager_binder_use(audio-server-daemon_t)
-leprop_read_props(audio-server-daemon_t)
-leprop_rw_props(audio-server-daemon_t)
-alog_rw_log(audio-server-daemon_t)
-allow audio-server-daemon_t self:unix_dgram_socket { create connect write};
-allow audio-server-daemon_t self:process { signal };
-allow audio-server-daemon_t self:capability { sys_nice };
-allow audio-server-daemon_t self:process { setsched };
-allow audio-server-daemon_t alogd_t:dir search;
-allow audio-server-daemon_t tracefs_t:dir search;
-allow audio-server-daemon_t trace_marker_t:file { write open };
+corenet_tcp_bind_all_unreserved_ports(alljoyn_t)
+corenet_udp_bind_all_unreserved_ports(alljoyn_t)
+corenet_tcp_bind_generic_node(alljoyn_t)
+corenet_udp_bind_generic_node(alljoyn_t)
+corenet_udp_bind_howl_port(alljoyn_t) # mDNS port
 
-userdebug_or_eng(`
-    allow audio-server-daemon_t adbd_t:binder call;
-    allow audio-server-daemon_t adbd_t:fd use;
-    allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
-')
-
-dontaudit audio-server-daemon_t self:capability dac_override;
+allow alljoyn_t self:capability net_raw;
+allow alljoyn_t self:netlink_route_socket { setopt write getattr read bind create nlmsg_read };
+allow alljoyn_t self:tcp_socket { connect connected_stream_socket_perms };
+allow alljoyn_t self:udp_socket { create read write bind ioctl setopt name_bind getattr };
+allow alljoyn_t self:unix_dgram_socket { create read write bind listen ioctl connect  };
+allow alljoyn_t self:unix_stream_socket { create read write bind listen ioctl connect };
 

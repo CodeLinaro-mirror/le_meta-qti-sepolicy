@@ -1,4 +1,4 @@
-#Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,53 +25,61 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(qti-audio-server-daemon, 1.0)
+policy_module(devconfig , 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type audio-server-daemon_t;
-type audio-server-daemon_exec_t;
-
-init_daemon_domain(audio-server-daemon_t, audio-server-daemon_exec_t)
-
-userdebug_or_eng(`
-  kernel_search_debugfs(audio-server-daemon_t);
-  rw_diag_dev(audio-server-daemon_t);
-')
+type devconfig_t;
+type devconfig_exec_t;
 
 gen_require(`
-         type adbd_t;
-         type tracefs_t;
-         type trace_marker_t;
-         type alogd_t;
-    ')
+	type tmp_t, var_t;
+	type persist_t;
 
-dev_write_sound(audio-server-daemon_t)
-dev_read_sound(audio-server-daemon_t)
-dev_read_sysfs(audio-server-daemon_t)
-files_read_etc_files(audio-server-daemon_t)
-kernel_read_system_state(audio-server-daemon_t)
-read_firmware_file(audio-server-daemon_t)
-servicemanager_binder_use(audio-server-daemon_t)
-leprop_read_props(audio-server-daemon_t)
-leprop_rw_props(audio-server-daemon_t)
-alog_rw_log(audio-server-daemon_t)
-allow audio-server-daemon_t self:unix_dgram_socket { create connect write};
-allow audio-server-daemon_t self:process { signal };
-allow audio-server-daemon_t self:capability { sys_nice };
-allow audio-server-daemon_t self:process { setsched };
-allow audio-server-daemon_t alogd_t:dir search;
-allow audio-server-daemon_t tracefs_t:dir search;
-allow audio-server-daemon_t trace_marker_t:file { write open };
-
-userdebug_or_eng(`
-    allow audio-server-daemon_t adbd_t:binder call;
-    allow audio-server-daemon_t adbd_t:fd use;
-    allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
+	# for leprop
+	type socket_device_t;
 ')
 
-dontaudit audio-server-daemon_t self:capability dac_override;
+init_system_domain(devconfig_t, devconfig_exec_t)
 
+# to run from /sbin/sh (which goes to /bin/busybox) ?
+corecmd_exec_bin(devconfig_t)
+
+dev_read_urand(devconfig_t)
+corecmd_exec_shell(devconfig_t)
+
+## /proc/cmdline
+kernel_read_system_state(devconfig_t)
+
+## /sys/class/net/wlan0/..
+dev_read_sysfs(devconfig_t)
+
+## load wlan to get MAC address
+wlan_start_stop(devconfig_t)
+
+## /persist/device.conf
+create_files_pattern(devconfig_t, persist_t, persist_t)
+rename_files_pattern(devconfig_t, persist_t, persist_t)
+rw_files_pattern(devconfig_t, persist_t, persist_t)
+delete_files_pattern(devconfig_t, persist_t, persist_t)
+
+allow devconfig_t self:fifo_file { read write ioctl getattr };
+
+## /tmp read,write,delete files 
+files_manage_generic_tmp_files(devconfig_t)
+files_manage_generic_tmp_dirs(devconfig_t)
+files_delete_tmp_dir_entry(devconfig_t)
+create_files_pattern(devconfig_t, tmp_t, tmp_t)
+manage_files_pattern(devconfig_t, tmp_t, tmp_t)
+manage_files_pattern(devconfig_t, var_t, var_t)
+
+
+leprop_rw_props(devconfig_t)
+allow devconfig_t self:unix_dgram_socket create;
+allow devconfig_t socket_device_t:dir search;
+
+
+files_rw_qcmap_etc_data_files(devconfig_t)
