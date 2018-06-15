@@ -136,8 +136,10 @@ init_search_run(qcmap_cm_t)
 # Manage private files inside /var/run
 type qcmap_var_run_t;
 files_pid_file(qcmap_var_run_t)
-allow qcmap_cm_t qcmap_var_run_t:file { create_file_perms write_file_perms };
-files_pid_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file })
+allow qcmap_cm_t qcmap_var_run_t:file manage_file_perms;
+allow qcmap_cm_t qcmap_var_run_t:sock_file manage_sock_file_perms;
+manage_dirs_pattern(qcmap_cm_t, qcmap_var_run_t, qcmap_var_run_t)
+files_pid_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file dir })
 
 # Manage private files inside /data
 type qcmap_data_t;
@@ -148,9 +150,11 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-allow qcmap_cm_t qcmap_tmp_t:file { create_file_perms write_file_perms };
+allow qcmap_cm_t qcmap_tmp_t:file manage_file_perms;
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
-
-# from sed /dnsmasq.host
-#dontaudit qcmap_cm_t var_t:file { rename setattr };
+ifdef(`init_systemd', `
+    # /tmp is not always labeled correctly on systemd (TODO)
+    files_var_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
+')
+allow NetworkManager_t qcmap_tmp_t:sock_file { write };
