@@ -68,7 +68,7 @@ delete_files_pattern(devconfig_t, persist_t, persist_t)
 
 allow devconfig_t self:fifo_file { read write ioctl getattr };
 
-## /tmp read,write,delete files 
+## /tmp read,write,delete files
 files_manage_generic_tmp_files(devconfig_t)
 files_manage_generic_tmp_dirs(devconfig_t)
 files_delete_tmp_dir_entry(devconfig_t)

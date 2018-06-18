@@ -107,6 +107,7 @@ corenet_sendrecv_all_server_packets(allplay_t)
 corenet_tcp_bind_all_unreserved_ports(allplay_t)
 corenet_sendrecv_all_client_packets(allplay_t)
 corenet_tcp_connect_all_unreserved_ports(allplay_t)
+corenet_tcp_connect_http_port(allplay_t)
 corenet_tcp_sendrecv_all_ports(allplay_t)
 corenet_tcp_bind_all_unreserved_ports(allplay_t)
 allow allplay_t node_t:tcp_socket node_bind;
@@ -215,4 +216,20 @@ allow allplay_t lib_t:file { execute_no_trans }; # /lib/busybox/sbin/ifconfig
 # CGI searches and runs scripts from the CGI dir.
 manage_files_pattern(allplay_t, httpd_sys_content_t, httpd_sys_content_t);
 
+##### AVS #######
+gen_require(`
+    type alexa_data_t;
+')
 
+miscfiles_read_generic_certs(allplay_t) # openssl
+
+# below does not work with the mount stuff in alexa.te
+#manage_system_data_files(allplay_t, alexa_data_t)
+
+# curl
+sysnet_dns_name_resolve(allplay_t)
+allow allplay_t etc_t:lnk_file read_lnk_file_perms;
+sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
+
+create_fifo_files_pattern(allplay_t, var_run_t, var_run_t)
+write_fifo_files_pattern(allplay_t, var_run_t, var_run_t)
