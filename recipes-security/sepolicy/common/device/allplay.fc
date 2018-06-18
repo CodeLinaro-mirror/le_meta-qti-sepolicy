@@ -37,3 +37,6 @@
 /usr/bin/wifi_scan      --    gen_context(system_u:object_r:allplay_exec_t,s0)
 /sbin/wifi_try          --    gen_context(system_u:object_r:allplay_exec_t,s0)
 /var/www/websetup/cgi(/.*) -- gen_context(system_u:object_r:allplay_exec_t,s0)
+
+/usr/share/mdns_avs_functions.sh -- gen_context(system_u:object_r:bin_t,s0)
+/etc/resolv\.conf	--	gen_context(system_u:object_r:net_conf_t,s0)

@@ -32,7 +32,7 @@
 ## </summary>
 ########################################
 ## <summary>
-##      Read generic files in /etc
+##      Read Alexa data files
 ## </summary>
 ## <desc>
 ##      Read alexa_data_t file

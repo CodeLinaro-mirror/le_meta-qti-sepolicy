@@ -42,6 +42,14 @@ init_daemon_domain(alexa_t, alexa_exec_t)
 files_mountpoint(alexa_data_t)
 
 files_read_etc_files(alexa_t);
+manage_system_data_files(alexa_t, alexa_data_t)
+
 sysnet_read_config(alexa_t);
 allow alexa_t self:udp_socket { create write connect };
 allow alexa_t self:capability net_raw;
+
+gen_require(`
+    type var_run_t;
+')
+create_fifo_files_pattern(alexa_t, var_run_t, var_run_t)
+read_fifo_files_pattern(alexa_t, var_run_t, var_run_t)
