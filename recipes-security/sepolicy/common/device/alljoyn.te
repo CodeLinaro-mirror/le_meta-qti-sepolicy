@@ -49,6 +49,7 @@ corenet_tcp_bind_all_unreserved_ports(alljoyn_t)
 corenet_udp_bind_all_unreserved_ports(alljoyn_t)
 corenet_tcp_bind_generic_node(alljoyn_t)
 corenet_udp_bind_generic_node(alljoyn_t)
+corenet_tcp_connect_all_unreserved_ports(alljoyn_t)
 corenet_udp_bind_howl_port(alljoyn_t) # mDNS port
 
 allow alljoyn_t self:capability net_raw;
