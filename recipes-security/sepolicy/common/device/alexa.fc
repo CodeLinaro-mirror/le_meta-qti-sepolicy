@@ -26,5 +26,11 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /etc/alexa(/.*)?                   gen_context(system_u:object_r:alexa_data_t,s0)
+/data/alexa.uim                    gen_context(system_u:object_r:alexa_data_t,s0)
+/data/med_system_alerts_melodic_01._TTH_.mp3       gen_context(system_u:object_r:alexa_data_t,s0)
+/data/med_system_alerts_melodic_02._TTH_.mp3       gen_context(system_u:object_r:alexa_data_t,s0)
+/data/med_system_alerts_melodic_01_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
+/data/med_system_alerts_melodic_02_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
 /systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_data_t,s0)
 /usr/bin/AlexaClientApp    --      gen_context(system_u:object_r:alexa_exec_t,s0)
+
