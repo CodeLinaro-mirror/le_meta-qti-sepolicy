@@ -135,6 +135,12 @@ create_files_pattern(allplay_t, tmp_t, tmp_t)
 manage_files_pattern(allplay_t, tmp_t, tmp_t)
 manage_files_pattern(allplay_t, var_t, var_t)
 
+# Manage private files inside /data
+type allplay_data_t;
+user_data_files_type(allplay_data_t)
+manage_user_data_files(allplay_t, allplay_data_t)
+data_filetrans(allplay_t, allplay_data_t, { dir file })
+
 ######################################
 # canditates for qahw/qti_audio_server
 
