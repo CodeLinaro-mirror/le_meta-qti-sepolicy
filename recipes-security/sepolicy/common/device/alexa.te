@@ -48,6 +48,7 @@ sysnet_read_config(alexa_t);
 allow alexa_t self:udp_socket { read write create connect getattr };
 allow alexa_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
 allow alexa_t self:unix_dgram_socket { read write create bind listen ioctl connect  };
+allow alexa_t self:netlink_route_socket { read write create bind getattr setopt nlmsg_read };
 allow alexa_t self:capability net_raw;
 allow alexa_t self:fifo_file { read write ioctl getattr };
 
@@ -61,6 +62,15 @@ allow alexa_t alexa_var_run_t:fifo_file manage_file_perms;
 files_pid_filetrans(alexa_t, alexa_var_run_t, { file fifo_file })
 
 leprop_rw_props(alexa_t)
+kernel_read_system_state(alexa_t)
+dontaudit alexa_t self:capability sys_time;
+dontaudit alexa_t self:capability2 block_suspend;
+
+type alexa_tmp_t;
+files_type(alexa_tmp_t);
+files_var_filetrans(alexa_t, alexa_tmp_t, file)
+files_tmp_filetrans(alexa_t, alexa_tmp_t, file)
+allow alexa_t alexa_tmp_t:file { read write open create execute unlink };
 
 ######################################
 # canditates for qahw/qti_audio_server
@@ -80,6 +90,7 @@ allow audio-server-daemon_t alexa_t:fd use;
 allow alexa_t device_t:chr_file { read write ioctl open };
 dev_read_sound(alexa_t)
 dev_write_sound(alexa_t)
+dontaudit alexa_t self:capability dac_override;
 #######################################
 
 gen_require(`
@@ -106,6 +117,7 @@ allow alexa_t self:netlink_kobject_uevent_socket { create setopt bind getattr };
 dev_rw_sysfs(alexa_t)
 rw_video_dev(alexa_t)
 allow alexa_t udev_var_run_t:file { read open getattr };
+allow alexa_t udev_var_run_t:dir { search };
 allow alexa_t firmware_t:dir { search };
 dev_read_video_dev(alexa_t)
 dev_write_video_dev(alexa_t)
