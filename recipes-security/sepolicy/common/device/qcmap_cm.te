@@ -153,3 +153,10 @@ ifdef(`init_systemd', `
     files_var_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
 ')
 allow NetworkManager_t qcmap_tmp_t:sock_file { write };
+
+gen_require(`
+    type httpd_t;
+')
+type httpd_data_t;
+user_data_files_type(httpd_data_t)
+qcmap_manage_httpd_data_files(httpd_t)
