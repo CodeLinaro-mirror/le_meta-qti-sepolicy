@@ -57,3 +57,7 @@ device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
 leprop_rw_props(alogd_t)
 
 read_files_pattern(alogd_t, domain, domain)
+
+# Allow all domains to send messages to alogd (but not read)
+allow domain alogd_sock_t:sock_file write_sock_file_perms;
+allow domain alogd_t:unix_dgram_socket sendto;
