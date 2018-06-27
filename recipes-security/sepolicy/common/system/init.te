@@ -52,6 +52,12 @@ ifdef(`init_systemd',`
     allow initrc_t init_t:system { start status reboot halt reload };
 ')
 
+userdebug_or_eng(`
+    # Write everything to serial console in userdebug mode
+    allow domain init_t:fd use;
+    term_write_all_terms(domain)
+')
+
 # find_partitions
 data_mount_user(initrc_t)
 mount_domtrans(initrc_t)
@@ -60,14 +66,24 @@ seutil_domtrans_setfiles(initrc_t)
 gen_require(`
     attribute user_data;
     attribute system_data;
+    type httpd_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t user_data:file rw_file_perms;
+neverallow initrc_t { user_data -httpd_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 search_user_data_dir(init_t)
 search_system_data_dir(init_t)
 search_system_data_dir(initrc_t)
+
+# lighttpd files created before the lighttpd daemon starts as httpd_t
+qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.key")
+qcmap_httpd_data_filetrans(initrc_t, file, "nopwd.mdm9625.com.key")
+qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.crt")
+qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.pem")
+qcmap_httpd_data_filetrans(initrc_t, file, "openssl.cnf")
+qcmap_httpd_data_filetrans(initrc_t, dir, "www")
+qcmap_manage_httpd_data_files(initrc_t)

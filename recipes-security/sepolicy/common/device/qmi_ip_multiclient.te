@@ -25,20 +25,39 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/QCMAP_ConnectionManager  --  gen_context(system_u:object_r:qcmap_cm_exec_t,s0)
-/etc/data(/.*)?                       gen_context(system_u:object_r:qcmap_etc_data_t,s0)
-/systemrw/data(/.*)?                  gen_context(system_u:object_r:qcmap_etc_data_t,s0)
-/systemrw/rt_tables(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
-/systemrw/misc/wifi(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
+policy_module(qmi_ip_multiclient, 1.0)
 
-/data/hosts                       --  gen_context(system_u:object_r:qcmap_data_t,s0)
-/data/dhcp_hosts                  --  gen_context(system_u:object_r:qcmap_data_t,s0)
-/data/entropy_file                --  gen_context(system_u:object_r:qcmap_data_t,s0)
+type embms_device_t;
+dev_node(embms_device_t)
 
-/data/lighttpd\.conf              --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/mdm9625\.com\.crt           --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/mdm9625\.com\.key           --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/mdm9625\.com\.pem           --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/nopwd\.mdm9625\.com\.key    --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/openssl\.cnf                --  gen_context(system_u:object_r:httpd_data_t,s0)
-/data/www(/.*)?                       gen_context(system_u:object_r:httpd_data_t,s0)
+type qmi_ip_multiclient_t;
+type qmi_ip_multiclient_exec_t;
+
+init_daemon_domain(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
+inittab_domtrans(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(qmi_ip_multiclient_t)
+')
+
+corenet_tcp_bind_generic_node(qmi_ip_multiclient_t)
+corenet_udp_bind_generic_node(qmi_ip_multiclient_t)
+corenet_tcp_bind_all_unreserved_ports(qmi_ip_multiclient_t)
+corenet_udp_bind_all_unreserved_ports(qmi_ip_multiclient_t)
+
+qmi_rw_embms_dev(qmi_ip_multiclient_t)
+
+allow qmi_ip_multiclient_t self:capability { net_admin net_raw };
+allow qmi_ip_multiclient_t self:fifo_file rw_fifo_file_perms;
+allow qmi_ip_multiclient_t self:{ socket netlink_socket udp_socket unix_dgram_socket } create_socket_perms;
+allow qmi_ip_multiclient_t self:tcp_socket create_stream_socket_perms;
+
+files_rw_qcmap_etc_data_files(qmi_ip_multiclient_t)
+
+# Manage private files inside /var/run
+type qmi_ip_var_run_t;
+files_pid_file(qmi_ip_var_run_t)
+allow qmi_ip_multiclient_t qmi_ip_var_run_t:file manage_file_perms;
+allow qmi_ip_multiclient_t qmi_ip_var_run_t:sock_file manage_sock_file_perms;
+manage_dirs_pattern(qmi_ip_multiclient_t, qmi_ip_var_run_t, qmi_ip_var_run_t)
+files_pid_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })
