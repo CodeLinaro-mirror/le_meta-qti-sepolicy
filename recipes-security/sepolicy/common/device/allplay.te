@@ -169,7 +169,6 @@ gen_require(`
 
     type etc_t;
     type lib_t;
-    type var_run_t;
 ')
 
 # required for lighttpd to open
@@ -229,13 +228,11 @@ gen_require(`
 
 miscfiles_read_generic_certs(allplay_t) # openssl
 
-# below does not work with the mount stuff in alexa.te
-#manage_system_data_files(allplay_t, alexa_data_t)
+manage_system_data_files(allplay_t, alexa_data_t)
 
 # curl
 sysnet_dns_name_resolve(allplay_t)
 allow allplay_t etc_t:lnk_file read_lnk_file_perms;
 sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
 
-create_fifo_files_pattern(allplay_t, var_run_t, var_run_t)
-write_fifo_files_pattern(allplay_t, var_run_t, var_run_t)
+alexa_manage_avs_fifo(allplay_t)
