@@ -56,10 +56,9 @@ corenet_tcp_connect_http_port(alexa_t)
 
 #################
 
-type alexa_var_run_t;
-files_pid_file(alexa_var_run_t)
-allow alexa_t alexa_var_run_t:fifo_file manage_file_perms;
-files_pid_filetrans(alexa_t, alexa_var_run_t, { file fifo_file })
+type alexa_avs_fifo_t;
+files_pid_file(alexa_avs_fifo_t)
+alexa_manage_avs_fifo(alexa_t)
 
 leprop_rw_props(alexa_t)
 kernel_read_system_state(alexa_t)
