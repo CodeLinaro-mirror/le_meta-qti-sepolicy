@@ -68,3 +68,6 @@ gen_require(`
 #  attributes.
 neverallow initrc_t user_data:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
+search_user_data_dir(init_t)
+search_system_data_dir(init_t)
+search_system_data_dir(initrc_t)
