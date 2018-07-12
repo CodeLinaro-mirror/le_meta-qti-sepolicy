@@ -36,6 +36,7 @@ allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
 allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow alogd_t self:netlink_audit_socket create_netlink_socket_perms;
 allow alogd_t self:process { signal setsched };
+allow alogd_t self:capability audit_control;
 
 # read and write kernel logs
 kernel_read_messages(alogd_t)

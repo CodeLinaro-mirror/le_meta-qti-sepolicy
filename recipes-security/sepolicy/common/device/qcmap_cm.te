@@ -118,7 +118,6 @@ qcmap_cm_rw_sock_files(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(kmod_t)
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
-adbd_sendto_unix_dgram_socket(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(ifconfig_t)
 networkmanager_read_pid_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
