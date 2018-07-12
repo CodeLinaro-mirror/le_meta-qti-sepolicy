@@ -28,6 +28,9 @@
 fs_relabelfrom_firmware(mount_t)
 data_mount_volatile_bind(mount_t)
 
+# /dev/ubi*
+device_read_ubi_device(mount_t)
+
 ### mount-copybind ###
 
 type mount_copybind_t;
