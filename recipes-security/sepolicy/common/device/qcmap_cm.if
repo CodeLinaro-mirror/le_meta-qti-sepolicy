@@ -104,25 +104,6 @@ interface(`qcmap_cm_sendto_unix_dgram_socket',`
 
 ########################################
 ## <summary>
-##      Read and write sockets.
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <rolecap/>
-#
-interface(`adbd_sendto_unix_dgram_socket',`
-        gen_require(`
-                type adbd_t;
-                type NetworkManager_t;
-        ')
-         allow $1 { adbd_t NetworkManager_t }:unix_dgram_socket { sendto };
-')
-
-########################################
-## <summary>
 ##      Manage lighttpd files inside /data
 ## </summary>
 ## <param name="domain">

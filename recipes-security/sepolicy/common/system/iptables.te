@@ -25,12 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
-
-type atfwd_t;
-type atfwd_exec_t;
-
-init_daemon_domain(atfwd_t, atfwd_exec_t)
-
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+userdebug_or_eng(`
+    rw_diag_dev(iptables_t)
+')

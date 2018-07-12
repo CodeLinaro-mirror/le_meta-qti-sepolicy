@@ -25,12 +25,22 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
+## <summary> Reboot daemon interface </summary>
 
-type atfwd_t;
-type atfwd_exec_t;
-
-init_daemon_domain(atfwd_t, atfwd_exec_t)
-
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+########################################
+## <summary>
+##      Write to the reboot device.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`reboot_write_reboot_device',`
+    gen_require(`
+        type device_t;
+        type rebootd_pipe_t;
+    ')
+    write_files_pattern($1, device_t, rebootd_pipe_t)
+')

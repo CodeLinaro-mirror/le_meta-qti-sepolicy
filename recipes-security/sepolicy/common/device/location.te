@@ -48,9 +48,10 @@ corecmd_exec_bin(loc_t)
 dev_read_sysfs(loc_t)
 dev_read_urand(loc_t)
 files_read_etc_files(loc_t)
-allow loc_t self:{ socket unix_dgram_socket } create_socket_perms;
+logging_send_syslog_msg(loc_t)
+allow loc_t self:{ socket unix_dgram_socket udp_socket } create_socket_perms;
 allow loc_t self:fifo_file rw_fifo_file_perms;
-allow loc_t self:process setcap;
+allow loc_t self:process { setcap signal };
 
 # Drop from root
 allow loc_t self:capability { setuid setgid };
