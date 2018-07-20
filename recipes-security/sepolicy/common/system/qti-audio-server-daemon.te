@@ -66,9 +66,14 @@ allow audio-server-daemon_t self:process { setsched };
 allow audio-server-daemon_t alogd_t:dir search;
 allow audio-server-daemon_t tracefs_t:dir search;
 allow audio-server-daemon_t trace_marker_t:file { write open };
+allow audio-server-daemon_t self:process { signal_perms getsched setsched };
+allow audio-server-daemon_t tracefs_t:filesystem mount;
 
 userdebug_or_eng(`
     allow audio-server-daemon_t adbd_t:binder call;
     allow audio-server-daemon_t adbd_t:fd use;
     allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
 ')
+
+dontaudit audio-server-daemon_t self:capability dac_override;
+

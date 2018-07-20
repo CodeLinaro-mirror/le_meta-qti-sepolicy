@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,25 +25,19 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-data_mount_volatile_bind(mount_t)
+/usr/bin/orbPlayer    --      gen_context(system_u:object_r:allplay_exec_t,s0)
+/usr/bin/sam-systemd  --      gen_context(system_u:object_r:allplay_exec_t,s0)
+/etc/statemgr         --      gen_context(system_u:object_r:allplay_exec_t,s0)
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+/var/log/sam-systemd.log --   gen_context(system_u:object_r:allplay_var_log_t,s0)
+/data/\.alljoyn_keystore(/.*)?   gen_context(system_u:object_r:allplay_data_t,s0)
 
-### mount-copybind ###
+/etc/allplay(/.*)?            gen_context(system_u:object_r:allplay_files_t,s0)
+/systemrw/allplay(/.*)?       gen_context(system_u:object_r:allplay_files_t,s0)
 
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
+/usr/bin/wifi_scan      --    gen_context(system_u:object_r:allplay_exec_t,s0)
+/sbin/wifi_try          --    gen_context(system_u:object_r:allplay_exec_t,s0)
+/var/www/websetup/cgi(/.*) -- gen_context(system_u:object_r:allplay_exec_t,s0)
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
-
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
+/usr/share/mdns_avs_functions.sh -- gen_context(system_u:object_r:bin_t,s0)
+/etc/resolv\.conf	--	gen_context(system_u:object_r:net_conf_t,s0)

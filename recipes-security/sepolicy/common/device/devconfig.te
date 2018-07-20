@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,25 +25,61 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-data_mount_volatile_bind(mount_t)
+policy_module(devconfig , 1.0)
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+########################################
+#
+# Declarations
+#
 
-### mount-copybind ###
+type devconfig_t;
+type devconfig_exec_t;
 
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
+gen_require(`
+	type tmp_t, var_t;
+	type persist_t;
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
+	# for leprop
+	type socket_device_t;
+')
 
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
+init_system_domain(devconfig_t, devconfig_exec_t)
+
+# to run from /sbin/sh (which goes to /bin/busybox) ?
+corecmd_exec_bin(devconfig_t)
+
+dev_read_urand(devconfig_t)
+corecmd_exec_shell(devconfig_t)
+
+## /proc/cmdline
+kernel_read_system_state(devconfig_t)
+
+## /sys/class/net/wlan0/..
+dev_read_sysfs(devconfig_t)
+
+## load wlan to get MAC address
+wlan_start_stop(devconfig_t)
+
+## /persist/device.conf
+create_files_pattern(devconfig_t, persist_t, persist_t)
+rename_files_pattern(devconfig_t, persist_t, persist_t)
+rw_files_pattern(devconfig_t, persist_t, persist_t)
+delete_files_pattern(devconfig_t, persist_t, persist_t)
+
+allow devconfig_t self:fifo_file { read write ioctl getattr };
+
+## /tmp read,write,delete files
+files_manage_generic_tmp_files(devconfig_t)
+files_manage_generic_tmp_dirs(devconfig_t)
+files_delete_tmp_dir_entry(devconfig_t)
+create_files_pattern(devconfig_t, tmp_t, tmp_t)
+manage_files_pattern(devconfig_t, tmp_t, tmp_t)
+manage_files_pattern(devconfig_t, var_t, var_t)
+
+
+leprop_rw_props(devconfig_t)
+allow devconfig_t self:unix_dgram_socket create;
+allow devconfig_t socket_device_t:dir search;
+
+
+files_rw_qcmap_etc_data_files(devconfig_t)
