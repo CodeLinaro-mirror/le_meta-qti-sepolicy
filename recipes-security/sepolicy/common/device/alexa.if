@@ -32,7 +32,7 @@
 ## </summary>
 ########################################
 ## <summary>
-##      Read generic files in /etc
+##      Read Alexa data files
 ## </summary>
 ## <desc>
 ##      Read alexa_data_t file
@@ -50,4 +50,13 @@ interface(`files_read_alexa_data_files',`
     allow $1 alexa_data_t:dir list_dir_perms;
     read_files_pattern($1, alexa_data_t, alexa_data_t)
     read_lnk_files_pattern($1, alexa_data_t, alexa_data_t)
+')
+
+interface(`alexa_manage_avs_fifo',`
+     gen_require(`
+        type alexa_avs_fifo_t;
+     ')
+
+    files_pid_filetrans($1, alexa_avs_fifo_t, { fifo_file } )
+    manage_fifo_files_pattern($1, alexa_avs_fifo_t, alexa_avs_fifo_t)
 ')

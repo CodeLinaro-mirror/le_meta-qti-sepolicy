@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,25 +25,37 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-data_mount_volatile_bind(mount_t)
+policy_module(alljoyn , 1.0)
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+########################################
+#
+# Declarations
+#
 
-### mount-copybind ###
+type alljoyn_t;
+type alljoyn_exec_t;
+type alljoyn_conf_file_t;
 
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
+init_daemon_domain(alljoyn_t, alljoyn_exec_t)
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
+files_type(alljoyn_conf_file_t)
+allow alljoyn_t alljoyn_conf_file_t:file read_file_perms;
 
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
+dev_read_urand(alljoyn_t)
+corecmd_exec_shell(alljoyn_t)
+kernel_read_network_state(alljoyn_t)
+
+corenet_tcp_bind_all_unreserved_ports(alljoyn_t)
+corenet_udp_bind_all_unreserved_ports(alljoyn_t)
+corenet_tcp_bind_generic_node(alljoyn_t)
+corenet_udp_bind_generic_node(alljoyn_t)
+corenet_tcp_connect_all_unreserved_ports(alljoyn_t)
+corenet_udp_bind_howl_port(alljoyn_t) # mDNS port
+
+allow alljoyn_t self:capability net_raw;
+allow alljoyn_t self:netlink_route_socket { setopt write getattr read bind create nlmsg_read };
+allow alljoyn_t self:tcp_socket { connect connected_stream_socket_perms };
+allow alljoyn_t self:udp_socket { create read write bind ioctl setopt name_bind getattr };
+allow alljoyn_t self:unix_dgram_socket { create read write bind listen ioctl connect  };
+allow alljoyn_t self:unix_stream_socket { create read write bind listen ioctl connect };
+

@@ -82,6 +82,9 @@ dev_node(shared_log_device_t)
 type smd_device_t;
 dev_node(smd_device_t);
 
+type ubi_device_t;
+dev_node(ubi_device_t);
+
 type socket_device_t;
 files_type(socket_device_t);
 allow socket_device_t device_t:filesystem associate;
