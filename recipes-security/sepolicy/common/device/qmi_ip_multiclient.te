@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,12 +25,39 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
+policy_module(qmi_ip_multiclient, 1.0)
 
-type atfwd_t;
-type atfwd_exec_t;
+type embms_device_t;
+dev_node(embms_device_t)
 
-init_daemon_domain(atfwd_t, atfwd_exec_t)
+type qmi_ip_multiclient_t;
+type qmi_ip_multiclient_exec_t;
 
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+init_daemon_domain(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
+inittab_domtrans(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(qmi_ip_multiclient_t)
+')
+
+corenet_tcp_bind_generic_node(qmi_ip_multiclient_t)
+corenet_udp_bind_generic_node(qmi_ip_multiclient_t)
+corenet_tcp_bind_all_unreserved_ports(qmi_ip_multiclient_t)
+corenet_udp_bind_all_unreserved_ports(qmi_ip_multiclient_t)
+
+qmi_rw_embms_dev(qmi_ip_multiclient_t)
+
+allow qmi_ip_multiclient_t self:capability { net_admin net_raw };
+allow qmi_ip_multiclient_t self:fifo_file rw_fifo_file_perms;
+allow qmi_ip_multiclient_t self:{ socket netlink_socket udp_socket unix_dgram_socket } create_socket_perms;
+allow qmi_ip_multiclient_t self:tcp_socket create_stream_socket_perms;
+
+files_rw_qcmap_etc_data_files(qmi_ip_multiclient_t)
+
+# Manage private files inside /var/run
+type qmi_ip_var_run_t;
+files_pid_file(qmi_ip_var_run_t)
+allow qmi_ip_multiclient_t qmi_ip_var_run_t:file manage_file_perms;
+allow qmi_ip_multiclient_t qmi_ip_var_run_t:sock_file manage_sock_file_perms;
+manage_dirs_pattern(qmi_ip_multiclient_t, qmi_ip_var_run_t, qmi_ip_var_run_t)
+files_pid_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })

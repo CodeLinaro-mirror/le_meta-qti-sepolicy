@@ -5,6 +5,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://0004-selinux-update-the-getty.te-for-addressing.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
             file://common/ \
+            file://${BASEMACHINE}/ \
 "
 
 SRC_URI_append_sdxpoorwills = "file://Add-lib-busybox-to-subs_dist.patch"
@@ -48,6 +49,8 @@ def install_device_policy(d, src_root):
 
 do_patch_append() {
     install_device_policy(d, "common")
+    if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
+        install_device_policy(d, d.getVar("BASEMACHINE"))
 }
 
 python do_update_modules_conf () {

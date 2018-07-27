@@ -25,12 +25,5 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
-
-type atfwd_t;
-type atfwd_exec_t;
-
-init_daemon_domain(atfwd_t, atfwd_exec_t)
-
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+/usr/bin/btapp       --      gen_context(system_u:object_r:btapp_exec_t,s0)
+/usr/bin/btproperty  --      gen_context(system_u:object_r:btprop_exec_t,s0)

@@ -140,6 +140,7 @@ interface(`data_filetrans',`
 #
 interface(`manage_user_data_files',`
     gen_require(`
+        type data_t;
         attribute user_data;
         attribute domain_can_write_userdata;
     ')
@@ -147,6 +148,7 @@ interface(`manage_user_data_files',`
     read_user_data_files($1, $2)
 
     typeattribute $1 domain_can_write_userdata;
+    allow $1 data_t:dir create;
     manage_dirs_pattern($1, user_data, $2)
     manage_files_pattern($1, user_data, $2)
     manage_lnk_files_pattern($1, user_data, $2)
@@ -271,6 +273,7 @@ interface(`read_system_data_files',`
 #
 interface(`manage_system_data_files',`
     gen_require(`
+        type system_data_t;
         attribute system_data;
         attribute domain_can_write_systemdata;
     ')
@@ -278,6 +281,7 @@ interface(`manage_system_data_files',`
     read_system_data_files($1, $2)
 
     typeattribute $1 domain_can_write_systemdata;
+    allow $1 system_data_t:dir create;
     manage_dirs_pattern($1, system_data, $2)
     manage_files_pattern($1, system_data, $2)
     manage_sock_files_pattern($1, system_data, $2)
