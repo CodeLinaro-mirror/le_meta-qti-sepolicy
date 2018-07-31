@@ -31,3 +31,26 @@ type qtether_t;
 type qtether_exec_t;
 
 init_daemon_domain(qtether_t, qtether_exec_t)
+logging_send_syslog_msg(qtether_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(qtether_t)
+')
+
+dev_write_kmsg(qtether_t)
+dev_read_sysfs(qtether_t)
+files_rw_qcmap_etc_data_files(qtether_t)
+kernel_load_module(qtether_t)
+
+allow qtether_t self:{ socket udp_socket } create_socket_perms;
+allow qtether_t self:netlink_route_socket { create_socket_perms nlmsg_read nlmsg_write };
+allow qtether_t self:fifo_file rw_fifo_file_perms;
+allow qtether_t self:capability { net_raw net_admin };
+
+# Don't implicitly load kernel modules
+kernel_dontaudit_request_load_module(qtether_t)
+
+type qtether_log_t;
+user_data_files_type(qtether_log_t)
+data_filetrans(qtether_t, qtether_log_t, file)
+manage_user_data_files(qtether_t, qtether_log_t)

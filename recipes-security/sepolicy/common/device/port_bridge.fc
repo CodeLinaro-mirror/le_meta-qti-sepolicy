@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/port_bridge    --      gen_context(system_u:object_r:port_bridge_exec_t,s0)
+
+/dev/at_mdm0            -c      gen_context(system_u:object_r:modem_glink_device_t,s0)
