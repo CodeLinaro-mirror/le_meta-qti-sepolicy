@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,12 +25,24 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
+policy_module(wlan, 1.0)
 
-type atfwd_t;
-type atfwd_exec_t;
+########################################
+#
+# Declarations
+#
 
-init_daemon_domain(atfwd_t, atfwd_exec_t)
+type wlan_service_t;
+type wlan_service_exec_t;
 
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+init_daemon_domain(wlan_service_t, wlan_service_exec_t)
+inittab_domtrans(wlan_service_t, wlan_service_exec_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(wlan_service_t)
+')
+
+allow wlan_service_t self:capability net_admin;
+allow wlan_service_t self:fifo_file rw_fifo_file_perms;
+allow wlan_service_t self:netlink_socket create_socket_perms;
+allow wlan_service_t self:socket create_socket_perms;

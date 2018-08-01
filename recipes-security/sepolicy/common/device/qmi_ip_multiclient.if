@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,12 +25,25 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(atfwd, 1.0)
+## <summary>QMI IP Multiclient</summary>
 
-type atfwd_t;
-type atfwd_exec_t;
-
-init_daemon_domain(atfwd_t, atfwd_exec_t)
-
-corecmd_exec_bin(atfwd_t)
-shutdown_domtrans(atfwd_t)
+########################################
+## <summary>
+##      Read and write embms device node
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`qmi_rw_embms_dev',`
+    gen_require(`
+        type device_t;
+        type embms_device_t;
+    ')
+    rw_chr_files_pattern($1, device_t, embms_device_t)
+    # TODO: embms dev node needs to be relabeled after being created
+    rw_chr_files_pattern($1, device_t, device_t)
+')

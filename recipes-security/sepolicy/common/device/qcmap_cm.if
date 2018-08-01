@@ -104,7 +104,7 @@ interface(`qcmap_cm_sendto_unix_dgram_socket',`
 
 ########################################
 ## <summary>
-##      Read and write sockets.
+##      Manage lighttpd files inside /data
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -113,10 +113,37 @@ interface(`qcmap_cm_sendto_unix_dgram_socket',`
 ## </param>
 ## <rolecap/>
 #
-interface(`adbd_sendto_unix_dgram_socket',`
+interface(`qcmap_manage_httpd_data_files',`
         gen_require(`
-                type adbd_t;
-                type NetworkManager_t;
+                type httpd_data_t;
         ')
-         allow $1 { adbd_t NetworkManager_t }:unix_dgram_socket { sendto };
+         manage_user_data_files($1, httpd_data_t, httpd_data_t)
+')
+
+########################################
+## <summary>
+##      Transition created files to lighttpd domain
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain creating the file
+##      </summary>
+## </param>
+## <param name="filetype">
+##      <summary>
+##      Type of file being created
+##      </summary>
+## </param>
+## <param name="filename">
+##      <summary>
+##      (optional): String of filename to transition
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`qcmap_httpd_data_filetrans',`
+        gen_require(`
+                type httpd_data_t;
+        ')
+         data_filetrans($1, httpd_data_t, $2, $3)
 ')

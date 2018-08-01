@@ -31,6 +31,13 @@
 /data/med_system_alerts_melodic_02._TTH_.mp3       gen_context(system_u:object_r:alexa_data_t,s0)
 /data/med_system_alerts_melodic_01_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
 /data/med_system_alerts_melodic_02_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
+/data/AVSAudio.conf                gen_context(system_u:object_r:alexa_data_t,s0)
+/data/alerts.db                    gen_context(system_u:object_r:alexa_data_t,s0)
+/data/notifications.db             gen_context(system_u:object_r:alexa_data_t,s0)
+/data/certifiedsender.db           gen_context(system_u:object_r:alexa_data_t,s0)
+/data/settingsca.db                gen_context(system_u:object_r:alexa_data_t,s0)
+/data/SVA(/.*)?                    gen_context(system_u:object_r:alexa_data_t,s0)
+/data/time(/.*)?                   gen_context(system_u:object_r:alexa_data_t,s0)
 /systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_data_t,s0)
 /usr/bin/AlexaClientApp    --      gen_context(system_u:object_r:alexa_exec_t,s0)
 
