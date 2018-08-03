@@ -8,9 +8,9 @@ SRC_URI_append += " \
 "
 
 do_install_append() {
-    if ${@base_contains('DISTRO_FEATURES','selinux','true','false',d)}; then
-        if ${@base_contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-            if ${@base_contains('DISTRO_FEATURES','nand-boot','false','true',d)}; then
+    if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+            if ${@bb.utils.contains('DISTRO_FEATURES','nand-boot','false','true',d)}; then
                 install -m 0644 ${WORKDIR}/systemd/label-cache.service ${D}${sysconfdir}/systemd/system/label-cache.service
                 install -m 0644 ${WORKDIR}/systemd/label-persist.service ${D}${sysconfdir}/systemd/system/label-persist.service
                 install -m 0644 ${WORKDIR}/systemd/label-systemrw.service ${D}${sysconfdir}/systemd/system/label-systemrw.service

@@ -13,9 +13,9 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
 PROVIDES += "sepolicy"
 RPROVIDES_${PN} += "sepolicy"
 
-POLICY_MONOLITHIC = "${@base_conditional('BASEMACHINE', 'sdxpoorwills', 'y', 'n', d)}"
+POLICY_MONOLITHIC = "${@oe.utils.conditional('BASEMACHINE', 'sdxpoorwills', 'y', 'n', d)}"
 
-EXTRA_OEMAKE += "USER_BUILD=${@base_conditional('USER_BUILD', '1', 'y', 'n', d)}"
+EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 
 # Contrib modules not declared here are turned off
