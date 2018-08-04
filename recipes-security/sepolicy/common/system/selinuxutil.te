@@ -1,4 +1,4 @@
-# Copyright (c) 2016-17, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,9 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-# Appended to modules/system/selinuxutil.te in meta-selinux
-allow setfiles_t device_t:file { read write };
-init_rw_stream_sockets(setfiles_t)
-
 relabel_all_data_files(setfiles_t)
+
+allow setfiles_t self:capability sys_admin;
