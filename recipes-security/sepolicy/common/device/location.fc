@@ -28,3 +28,4 @@
 /usr/bin/loc_launcher      -- gen_context(system_u:object_r:loc_exec_t,s0)
 /usr/bin/xtwifi-inet-agent -- gen_context(system_u:object_r:xtwifi_agent_exec_t,s0)
 /usr/bin/xtwifi-client     -- gen_context(system_u:object_r:xtwifi_client_exec_t,s0)
+/usr/bin/location_hal_daemon -- gen_context(system_u:object_r:loc_hald_exec_t,s0)

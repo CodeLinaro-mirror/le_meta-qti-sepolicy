@@ -27,17 +27,69 @@
 
 policy_module(ipacm, 1.0)
 
+### ipa data directory
+
+type ipacm_data_t;
+user_data_files_type(ipacm_data_t)
+
+### ipacm
+
 type ipacm_t;
 type ipacm_exec_t;
 
 init_daemon_domain(ipacm_t, ipacm_exec_t)
+logging_send_syslog_msg(ipacm_t)
+
+allow ipacm_t self:capability net_raw;
+allow ipacm_t self:{ udp_socket netlink_route_socket } create_socket_perms;
+
+userdebug_or_eng(`
+    rw_diag_dev(ipacm_t)
+')
+files_rw_qcmap_etc_data_files(ipacm_t)
+data_filetrans(ipacm_t, ipacm_data_t, dir)
+manage_user_data_files(ipacm_t, ipacm_data_t)
+
+### ipacm_perf
 
 type ipacm_perf_t;
 type ipacm_perf_exec_t;
 
 init_daemon_domain(ipacm_perf_t, ipacm_perf_exec_t)
+logging_send_syslog_msg(ipacm_perf_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(ipacm_perf_t)
+')
+
+allow ipacm_perf_t self:capability net_raw;
+allow ipacm_perf_t self:netlink_route_socket r_netlink_socket_perms;
+allow ipacm_perf_t self:{ socket udp_socket } create_socket_perms;
+allow ipacm_perf_t self:fifo_file rw_fifo_file_perms;
+allow ipacm_perf_t self:unix_dgram_socket sendto;
+data_filetrans(ipacm_perf_t, ipacm_data_t, dir)
+manage_user_data_files(ipacm_perf_t, ipacm_data_t)
+
+### ipacm_diag
 
 type ipacm_diag_t;
 type ipacm_diag_exec_t;
 
 init_daemon_domain(ipacm_diag_t, ipacm_diag_exec_t)
+logging_send_syslog_msg(ipacm_diag_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(ipacm_diag_t)
+')
+
+allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
+data_filetrans(ipacm_diag_t, ipacm_data_t, dir)
+manage_user_data_files(ipacm_diag_t, ipacm_data_t)
+
+### /var/run sockets
+
+type ipacm_var_run_t;
+files_pid_file(ipacm_var_run_t)
+files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, sock_file)
+manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
+
