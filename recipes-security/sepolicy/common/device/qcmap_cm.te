@@ -87,6 +87,7 @@ allow qcmap_cm_t self:capability { setuid net_bind_service setgid kill sys_ptrac
 allow qcmap_cm_t node_t:tcp_socket { node_bind listen };
 allow qcmap_cm_t self:fifo_file { ioctl read getattr };
 allow qcmap_cm_t initrc_exec_t:file { read execute open execute_no_trans };
+allow qcmap_cm_t NetworkManager_t:unix_dgram_socket { sendto };
 
 dev_write_kmsg(qcmap_cm_t)
 files_read_generic_tmp_symlinks(qcmap_cm_t)
