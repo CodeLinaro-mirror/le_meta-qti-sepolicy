@@ -87,3 +87,7 @@ qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.pem")
 qcmap_httpd_data_filetrans(initrc_t, file, "openssl.cnf")
 qcmap_httpd_data_filetrans(initrc_t, dir, "www")
 qcmap_manage_httpd_data_files(initrc_t)
+
+userdebug_or_eng(`
+    reboot_write_reboot_pipe_device(init_t)
+')

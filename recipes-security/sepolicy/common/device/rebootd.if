@@ -44,3 +44,22 @@ interface(`reboot_write_reboot_device',`
     ')
     write_files_pattern($1, device_t, rebootd_pipe_t)
 ')
+
+########################################
+## <summary>
+##      Write to the reboot named pipe device.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`reboot_write_reboot_pipe_device',`
+    gen_require(`
+        type device_t;
+        type rebootd_pipe_t;
+    ')
+    write_fifo_files_pattern($1, device_t, rebootd_pipe_t)
+')
+
