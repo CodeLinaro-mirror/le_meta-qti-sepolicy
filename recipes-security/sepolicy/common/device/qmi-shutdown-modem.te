@@ -1,4 +1,4 @@
-# Copyright (c) 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,13 +27,18 @@
 
 policy_module(qmi-shutdown-modem, 1.0)
 
-########################################
-#
-# Declarations
-#
+type qmi_shutdown_modem_t;
+type qmi_shutdown_modem_exec_t;
 
-type qmi-shutdown-modem_t;
-type qmi-shutdown-modem_exec_t;
+init_daemon_domain(qmi_shutdown_modem_t, qmi_shutdown_modem_exec_t)
 
-init_daemon_domain(qmi-shutdown-modem_t, qmi-shutdown-modem_exec_t)
+userdebug_or_eng(`
+    rw_diag_dev(qmi_shutdown_modem_t)
+')
 
+logging_send_syslog_msg(qmi_shutdown_modem_t)
+dev_read_sysfs(qmi_shutdown_modem_t)
+dev_read_input(qmi_shutdown_modem_t)
+
+allow qmi_shutdown_modem_t self:fifo_file rw_fifo_file_perms;
+allow qmi_shutdown_modem_t self:{ socket unix_dgram_socket } create_socket_perms;

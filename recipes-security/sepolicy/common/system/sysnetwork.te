@@ -1,4 +1,4 @@
-# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,11 +25,12 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
-rw_diag_dev(ifconfig_t)
+userdebug_or_eng(`
+    rw_diag_dev(ifconfig_t)
+')
 dev_rw_null(ifconfig_t)
-allow ifconfig_t initrc_t:netlink_route_socket { read write };
-allow ifconfig_t initrc_t:packet_socket { read write };
-allow ifconfig_t initrc_t:udp_socket { read write };
-allow ifconfig_t init_t:unix_stream_socket { read write };
 rw_shared_memory_dev(ifconfig_t)
+
+files_rw_qcmap_etc_data_files(ifconfig_t)
+read_write_qcmap_cm_socket_files(ifconfig_t)
+qnetmgr_rw_netlink_sockets(ifconfig_t)

@@ -57,23 +57,20 @@ userdebug_or_eng(`
 ')
 
 rw_shared_memory_dev(qcmap_cm_t);
-dev_read_sysfs(qcmap_cm_t);
+dev_rw_sysfs(qcmap_cm_t);
 read_system_data_files(NetworkManager_t, qcmap_etc_data_t)
 ps_process_pattern(qcmap_cm_t, NetworkManager_t)
 
 corecmd_exec_shell(qcmap_cm_t)
 corecmd_exec_bin(qcmap_cm_t)
 
-allow qcmap_cm_t self:netlink_route_socket { bind read write nlmsg_read setopt create nlmsg_write };
+allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket { create ioctl };
 allow qcmap_cm_t self:socket { create ioctl bind read write };
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
-allow qcmap_cm_t sysfs_t:file write;
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
-allow qcmap_cm_t self:fifo_file write;
-allow qcmap_cm_t self:netlink_generic_socket { write getattr setopt read bind create };
 allow qcmap_cm_t self:process { setcap sigkill };
 allow qcmap_cm_t self:tcp_socket listen;
 allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
@@ -85,8 +82,9 @@ allow qcmap_cm_t init_var_run_t:sock_file { write };
 allow qcmap_cm_t self:packet_socket { create bind setopt read write };
 allow qcmap_cm_t self:capability { setuid net_bind_service setgid kill sys_ptrace net_admin net_raw };
 allow qcmap_cm_t node_t:tcp_socket { node_bind listen };
-allow qcmap_cm_t self:fifo_file { ioctl read getattr };
+allow qcmap_cm_t self:fifo_file rw_fifo_file_perms;
 allow qcmap_cm_t initrc_exec_t:file { read execute open execute_no_trans };
+allow qcmap_cm_t NetworkManager_t:unix_dgram_socket { sendto };
 
 dev_write_kmsg(qcmap_cm_t)
 files_read_generic_tmp_symlinks(qcmap_cm_t)
@@ -118,7 +116,6 @@ qcmap_cm_rw_sock_files(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(kmod_t)
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
-adbd_sendto_unix_dgram_socket(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(ifconfig_t)
 networkmanager_read_pid_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
@@ -127,6 +124,8 @@ sysnet_read_dhcpc_pid(qcmap_cm_t)
 sysnet_kill_dhcpc(qcmap_cm_t)
 networkmanager_signal(qcmap_cm_t)
 init_search_run(qcmap_cm_t)
+qnetmgr_write_data_sock_files(qcmap_cm_t)
+qnetmgr_use_unix_stream_sockets(qcmap_cm_t)
 
 # Manage private files inside /var/run
 type qcmap_var_run_t;
@@ -153,3 +152,10 @@ ifdef(`init_systemd', `
     files_var_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
 ')
 allow NetworkManager_t qcmap_tmp_t:sock_file { write };
+
+gen_require(`
+    type httpd_t;
+')
+type httpd_data_t;
+user_data_files_type(httpd_data_t)
+qcmap_manage_httpd_data_files(httpd_t)
