@@ -54,3 +54,8 @@ type qtether_log_t;
 user_data_files_type(qtether_log_t)
 data_filetrans(qtether_t, qtether_log_t, file)
 manage_user_data_files(qtether_t, qtether_log_t)
+
+userdebug_or_eng(`
+  rw_diag_dev(qtether_t);
+')
+corecmd_check_exec_shell(qtether_t);

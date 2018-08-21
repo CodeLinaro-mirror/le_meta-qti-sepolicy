@@ -64,3 +64,15 @@ modutils_domtrans_insmod(wlan_initrc_t)
 modutils_exec_insmod(wlan_initrc_t)
 
 allow wlan_initrc_t self:fifo_file rw_file_perms;
+
+gen_require(`
+  type unconfined_t;
+  type adbd_t;
+  type qcmap_etc_data_t;
+')
+allow wlan_initrc_t self:fifo_file rw_file_perms;
+files_search_default(NetworkManager_t);
+allow NetworkManager_t unconfined_t:unix_dgram_socket { sendto };
+allow NetworkManager_t adbd_t:unix_dgram_socket { sendto };
+allow NetworkManager_t qcmap_etc_data_t:file { write };
+read_write_qcmap_cm_socket_files(wlan_initrc_t);
