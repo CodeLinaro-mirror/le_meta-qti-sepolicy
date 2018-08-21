@@ -70,3 +70,4 @@ kernel_read_system_state(bootlogd_t)
 # Allow domains to use bootlogd hooks
 allow domain bootlogd_t:fd use;
 allow domain bootlogd_pty_t:chr_file write;
+logging_search_logs(bootlogd_t)
