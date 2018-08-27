@@ -40,6 +40,7 @@
 ### dev nodes ###
 
 /dev/subsys_modem    gen_context(system_u:object_r:subsys_modem_device_t,s0)
+/dev/subsys_wcnss    gen_context(system_u:object_r:subsys_ssr_device_t,s0)
 
 #/dev/msm_.*                gen_context(system_u:object_r:audio_device_t,s0)
 /dev/media([0-9])+    -c    gen_context(system_u:object_r:video_device_t,s0)
