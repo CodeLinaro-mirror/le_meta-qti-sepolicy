@@ -55,3 +55,4 @@ gen_require(`
     type etc_t;
 ')
 neverallow mount_copybind_t etc_t:file { create relabelto };
+fs_blk_getattr_tmpfs(mount_t)

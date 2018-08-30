@@ -79,3 +79,23 @@ interface(`fs_relabelfrom_firmware',`
 
         allow $1 firmware_t:filesystem relabelfrom;
 ')
+
+########################################
+## <summary>
+##      Get the attributes of a tmpfs
+##      filesystem for blk file.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`fs_blk_getattr_tmpfs',`
+        gen_require(`
+                type tmpfs_t;
+        ')
+
+        allow $1 tmpfs_t:blk_file getattr;
+')
