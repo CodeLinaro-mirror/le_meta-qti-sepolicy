@@ -36,3 +36,8 @@ type btprop_t;
 type btprop_exec_t;
 
 init_daemon_domain(btprop_t, btprop_exec_t)
+
+allow btprop_t self:unix_dgram_socket create_socket_perms;
+
+type bt_data_t;
+system_data_files_type(bt_data_t)
