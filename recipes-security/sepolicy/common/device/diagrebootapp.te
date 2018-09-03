@@ -43,4 +43,6 @@ allow diagrebootapp_t device_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid };
 allow diagrebootapp_t device_t:fifo_file { open write };
 rw_diag_dev(diagrebootapp_t)
-reboot_write_reboot_pipe_device(diagrebootapp_t)
+userdebug_or_eng(`
+    reboot_write_fifo_files_reboot_device(diagrebootapp_t)
+')

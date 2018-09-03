@@ -89,6 +89,6 @@ qcmap_httpd_data_filetrans(initrc_t, dir, "www")
 qcmap_manage_httpd_data_files(initrc_t)
 
 userdebug_or_eng(`
-    reboot_write_reboot_pipe_device(init_t)
+    reboot_write_fifo_files_reboot_device(init_t)
 ')
 alog_write_logdsocket(domain)

@@ -47,7 +47,7 @@ interface(`reboot_write_reboot_device',`
 
 ########################################
 ## <summary>
-##      Write to the reboot named pipe device.
+##      Write to the reboot named pipe device on fifo_file.
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -55,11 +55,10 @@ interface(`reboot_write_reboot_device',`
 ##      </summary>
 ## </param>
 #
-interface(`reboot_write_reboot_pipe_device',`
+interface(`reboot_write_fifo_files_reboot_device',`
     gen_require(`
         type device_t;
         type rebootd_pipe_t;
     ')
     write_fifo_files_pattern($1, device_t, rebootd_pipe_t)
 ')
-
