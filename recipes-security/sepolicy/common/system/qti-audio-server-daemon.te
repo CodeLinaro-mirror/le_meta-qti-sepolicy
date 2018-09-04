@@ -43,7 +43,6 @@ userdebug_or_eng(`
 ')
 
 gen_require(`
-         type adbd_t;
          type tracefs_t;
          type trace_marker_t;
          type alogd_t;
@@ -70,8 +69,11 @@ allow audio-server-daemon_t self:process { signal_perms getsched setsched };
 allow audio-server-daemon_t tracefs_t:filesystem mount;
 
 userdebug_or_eng(`
-    allow audio-server-daemon_t adbd_t:binder call;
-    allow audio-server-daemon_t adbd_t:fd use;
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow audio-server-daemon_t unconfined_t:binder call;
+    allow audio-server-daemon_t unconfined_t:fd use;
     allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
 ')
 

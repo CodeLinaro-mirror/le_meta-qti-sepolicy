@@ -33,6 +33,7 @@ type adbd_exec_t;
 init_daemon_domain(adbd_t, adbd_exec_t)
 
 userdebug_or_eng(`
+    unconfined_shell_domtrans(adbd_t)
     unconfined_domain(adbd_t)
 
     gen_require(`
@@ -41,24 +42,24 @@ userdebug_or_eng(`
     ')
     manage_user_data_files(adbd_t, user_data)
     manage_system_data_files(adbd_t, system_data)
-
-    wlan_start_stop(adbd_t)
 ')
 
-# Writable adb files are placed in /systemrw, but mounted to /etc
-type adbd_system_data_t;
-system_data_files_type(adbd_system_data_t)
-adb_read_data_files(adbd_t)
 files_read_config_files(adbd_t)
+kernel_read_system_state(adbd_t)
+allow adbd_t self:capability { dac_override setgid };
+allow adbd_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_bind_all_unreserved_ports(adbd_t)
+corenet_tcp_bind_generic_node(adbd_t)
+dev_read_sysfs(adbd_t)
 
-# for logcat
-alog_rw_log(adbd_t)
-
+# USB gadgets
+fs_manage_configfs_files(adbd_t)
 # /dev/usb-ffs/adb
 fs_search_functionfs_dirs(adbd_t)
 fs_rw_functionfs_files(adbd_t)
-# /dev/socket/leprop-service
-leprop_rw_props(adbd_t)
+
+type adbd_system_data_t;
+system_data_files_type(adbd_system_data_t)
 
 # usb initscript
 type adbd_initrc_exec_t;
@@ -73,13 +74,11 @@ data_filetrans(adbd_initrc_t, adbd_system_data_t, file)
 # The default initrc_t context is unconfined - do the same here.
 unconfined_domain(adbd_initrc_t)
 
-#This userdebug macro is for audio test app
-userdebug_or_eng(`
-    servicemanager_binder_use(adbd_t)
-    audio_binder_call_transfer(adbd_t)
-    allow adbd_t self:capability2 block_suspend;
-    allow adbd_t alogd_t:dir search;
+# /sys/class/android_usb/android0/*
+gen_require(`
+    type sysfs_t;
 ')
+create_files_pattern(adbd_initrc_t, sysfs_t, sysfs_t)
 
 # Allow all domains opened via adb shell to display log messages on adb shell
 type adbd_pty_t;

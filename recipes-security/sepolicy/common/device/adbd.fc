@@ -27,7 +27,7 @@
 
 /sbin/adbd              --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
 /sbin/usb_composition   --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
-/etc/launch_adbd        --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
+/etc/launch_adbd        --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 
 /etc/rc\.d/init\.d/usb  --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 /etc/initscripts/usb    --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
