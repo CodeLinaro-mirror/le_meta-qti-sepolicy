@@ -64,3 +64,11 @@ modutils_domtrans_insmod(wlan_initrc_t)
 modutils_exec_insmod(wlan_initrc_t)
 
 allow wlan_initrc_t self:fifo_file rw_file_perms;
+qcmap_cm_rw_unix_dgram_socket(NetworkManager_t)
+userdebug_or_eng(`
+    rw_diag_dev(dhcpc_t)
+')
+qcmap_cm_rw_unix_netlink_socket(dhcpc_t)
+qcmap_cm_rw_unix_netlink_socket(NetworkManager_t)
+qcmap_manage_var_run_qcmap_dir(NetworkManager_t)
+qcmap_delete_qcmap_pid(NetworkManager_t)
