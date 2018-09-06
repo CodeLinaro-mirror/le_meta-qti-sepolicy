@@ -72,5 +72,13 @@ neverallow ~{
 } system_data:file { create setattr write append rename link unlink };
 
 # Disallow execution from any writable partition
-neverallow domain user_data:file { execute execute_no_trans };
+gen_require(`
+     type unconfined_t;
+')
+neverallow { domain -unconfined_t } user_data:file { execute execute_no_trans };
 neverallow domain system_data:file { execute execute_no_trans };
+type test_data_t;
+user_data_files_type(test_data_t)
+allow unconfined_t test_data_t:file exec_file_perms;
+data_filetrans(unconfined_t, test_data_t, dir, "tests")
+neverallow unconfined_t { user_data -test_data_t }:file { execute execute_no_trans };
