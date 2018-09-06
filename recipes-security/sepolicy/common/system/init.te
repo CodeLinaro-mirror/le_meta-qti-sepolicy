@@ -68,6 +68,8 @@ gen_require(`
     attribute system_data;
     type httpd_data_t;
     type qcmap_etc_data_t;
+    type system_data_t;
+    type data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
@@ -94,3 +96,5 @@ userdebug_or_eng(`
 ')
 alog_write_logdsocket(domain)
 alog_setattr_logdsocket(initrc_t)
+dontaudit init_t system_data_t:dir {read write};
+dontaudit init_t data_t:dir read;
