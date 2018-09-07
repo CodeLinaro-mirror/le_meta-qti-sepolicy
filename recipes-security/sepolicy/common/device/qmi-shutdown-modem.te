@@ -38,6 +38,7 @@ userdebug_or_eng(`
 
 logging_send_syslog_msg(qmi_shutdown_modem_t)
 dev_read_sysfs(qmi_shutdown_modem_t)
+dev_read_input(qmi_shutdown_modem_t)
 
 allow qmi_shutdown_modem_t self:fifo_file rw_fifo_file_perms;
 allow qmi_shutdown_modem_t self:{ socket unix_dgram_socket } create_socket_perms;

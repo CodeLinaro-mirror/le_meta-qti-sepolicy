@@ -344,7 +344,7 @@ interface(`relabel_all_data_files',`
     ')
 
     search_user_data_dir($1)
-    allow $1 user_data:dir read;
+    allow $1 user_data:dir { read setattr };
     relabel_dirs_pattern($1, user_data, user_data)
     relabel_files_pattern($1, user_data, user_data)
     relabel_lnk_files_pattern($1, user_data, user_data)
@@ -352,7 +352,7 @@ interface(`relabel_all_data_files',`
     relabel_sock_files_pattern($1, user_data, user_data)
 
     search_system_data_dir($1)
-    allow $1 system_data:dir read;
+    allow $1 system_data:dir { read setattr };
     relabel_dirs_pattern($1, system_data, system_data)
     relabel_files_pattern($1, system_data, system_data)
     relabel_lnk_files_pattern($1, system_data, system_data)

@@ -26,3 +26,57 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## <summary>QTI Network Manager</summary>
+
+########################################
+## <summary>
+##      Write qti network manager data socket files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qnetmgr_write_data_sock_files',`
+    gen_require(`
+        type qnetmgrd_data_t;
+    ')
+
+    allow $1 qnetmgrd_data_t:sock_file write;
+')
+
+########################################
+## <summary>
+##      Send and receive netlink messages from qti network manager
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qnetmgr_rw_netlink_sockets',`
+    gen_require(`
+        type qnetmgrd_t;
+    ')
+
+    allow $1 qnetmgrd_t:{ netlink_route_socket netlink_socket } rw_socket_perms;
+')
+
+########################################
+## <summary>
+##      Use qti network manager unix datagram sockets
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qnetmgr_use_unix_stream_sockets',`
+    gen_require(`
+        type qnetmgrd_t;
+    ')
+
+    allow $1 qnetmgrd_t:unix_stream_socket { connectto rw_stream_socket_perms };
+')
