@@ -167,4 +167,7 @@ sysnet_manage_config(qcmap_cm_t)
 init_read_utmp(qcmap_cm_t)
 logging_send_syslog_msg(qcmap_cm_t)
 corenet_udp_bind_all_unreserved_ports(qcmap_cm_t)
-
+kernel_request_load_module(qcmap_cm_t)
+files_read_kernel_modules(qcmap_cm_t)
+allow qcmap_cm_t self:netlink_route_socket nlmsg_write;
+networkmanager_read_wifi_sysdata_files(qcmap_cm_t)

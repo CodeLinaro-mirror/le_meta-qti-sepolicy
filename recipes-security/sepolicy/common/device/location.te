@@ -139,3 +139,4 @@ allow { xtwifi_agent_t xtwifi_client_t } loc_socket_t:sock_file write;
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t })
 
 files_rw_qcmap_etc_data_files(loc_hald_t)
+allow loc_t self:netlink_route_socket read;
