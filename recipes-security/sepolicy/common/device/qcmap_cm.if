@@ -275,3 +275,22 @@ interface(`qcmap_read_qcmap_etc_data_files',`
          typeattribute $1 domain_can_read_systemdata;
         read_system_data_files($1, qcmap_etc_data_t)
 ')
+
+#######################################
+## <summary>
+##      manage the qcmap client pid file.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qcmap_manage_qcmap_pid',`
+        gen_require(`
+                type qcmap_var_run_t;
+        ')
+
+        allow $1 qcmap_var_run_t:file manage_file_perms;
+        allow $1 qcmap_var_run_t:sock_file manage_sock_file_perms;
+')

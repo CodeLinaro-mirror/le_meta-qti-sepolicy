@@ -30,3 +30,4 @@ userdebug_or_eng(`
 ')
 # Netlink sockets
 read_write_qcmap_cm_socket_files(kmod_t)
+

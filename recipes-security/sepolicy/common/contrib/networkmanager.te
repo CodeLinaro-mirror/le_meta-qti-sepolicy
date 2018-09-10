@@ -73,14 +73,15 @@ qcmap_cm_rw_unix_netlink_socket(NetworkManager_t)
 qcmap_manage_var_run_qcmap_dir(NetworkManager_t)
 qcmap_delete_qcmap_pid(NetworkManager_t)
 
-gen_require(`
-  type unconfined_t;
-  type adbd_t;
-  type qcmap_etc_data_t;
-')
 allow wlan_initrc_t self:fifo_file rw_file_perms;
 files_search_default(NetworkManager_t);
-allow NetworkManager_t unconfined_t:unix_dgram_socket { sendto };
-allow NetworkManager_t adbd_t:unix_dgram_socket { sendto };
-allow NetworkManager_t qcmap_etc_data_t:file { write };
-read_write_qcmap_cm_socket_files(wlan_initrc_t);
+files_rw_qcmap_etc_data_files(NetworkManager_t)
+read_write_qcmap_cm_socket_files(wlan_initrc_t)
+
+qcmap_manage_qcmap_pid(NetworkManager_t)
+userdebug_or_eng(`
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "wpa_supplicant.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd1.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd2.log")
+')
