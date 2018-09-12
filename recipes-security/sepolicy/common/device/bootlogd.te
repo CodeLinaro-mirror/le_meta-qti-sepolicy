@@ -39,6 +39,14 @@ init_daemon_domain(bootlogd_t, bootlogd_exec_t)
 init_getattr_initctl(bootlogd_t)
 files_read_etc_files(bootlogd_t)
 
+# Included in later versions as part of logging_log_filetrans
+gen_require(`
+    type var_log_t;
+')
+allow bootlogd_t var_log_t:lnk_file read_lnk_file_perms;
+
+allow bootlogd_t self:capability sys_admin;
+
 type bootlogd_log_t;
 logging_log_file(bootlogd_log_t)
 logging_log_filetrans(bootlogd_t, bootlogd_log_t, { file dir })
@@ -62,3 +70,4 @@ kernel_read_system_state(bootlogd_t)
 # Allow domains to use bootlogd hooks
 allow domain bootlogd_t:fd use;
 allow domain bootlogd_pty_t:chr_file write;
+logging_search_logs(bootlogd_t)

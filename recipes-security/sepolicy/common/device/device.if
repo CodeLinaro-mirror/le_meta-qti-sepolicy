@@ -47,6 +47,23 @@ interface(`rw_subsys_modem_dev',`
 
 ########################################
 ## <summary>
+##      Read and write the subsys_wcnss device.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`rw_subsys_ssr_dev',`
+    gen_require(`
+        type device_t, subsys_ssr_device_t;
+    ')
+
+    rw_chr_files_pattern($1, device_t, subsys_ssr_device_t)
+')
+########################################
+## <summary>
 ##      Read and write  audio device nodes
 ##      which are starting with msm_*
 ## </summary>
@@ -187,3 +204,22 @@ interface(`device_manage_socket_file',`
     type_transition $1 socket_device_t:sock_file $2 $3;
     manage_sock_files_pattern($1, socket_device_t, $2)
 ')
+
+########################################
+## <summary>
+##      Search for device sockets
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access
+##      </summary>
+## </param>
+#
+interface(`device_search_sockets',`
+    gen_require(`
+        type socket_device_t;
+    ')
+
+    allow $1 socket_device_t:dir search_dir_perms;
+')
+

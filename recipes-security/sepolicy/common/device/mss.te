@@ -41,6 +41,9 @@ init_daemon_domain(mss_t, mss_exec_t)
 #Read/Write /dev/subsys_modem
 rw_subsys_modem_dev(mss_t)
 
+#Read/Write /dev/subsys_wcnss
+rw_subsys_ssr_dev(mss_t)
+
 #Read firmware
 read_firmware_file(mss_t)
 dev_rw_null(mss_t)

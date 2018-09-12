@@ -30,4 +30,33 @@ policy_module(qnetmgrd, 1.0)
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
 
-init_daemon_domain(qnetmgrd_t, qnetmgrd_exec_t);
+init_daemon_domain(qnetmgrd_t, qnetmgrd_exec_t)
+logging_send_syslog_msg(qnetmgrd_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(qnetmgrd_t)
+')
+
+allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid };
+allow qnetmgrd_t self:{
+    socket
+    udp_socket
+    netlink_socket
+    netlink_route_socket
+} create_socket_perms;
+allow qnetmgrd_t self:fifo_file rw_fifo_file_perms;
+
+dev_read_sysfs(qnetmgrd_t)
+files_rw_qcmap_etc_data_files(qnetmgrd_t)
+kernel_load_module(qnetmgrd_t)
+kernel_rw_net_sysctls(qnetmgrd_t)
+kernel_read_vm_overcommit_sysctl(qnetmgrd_t)
+sysnet_domtrans_ifconfig(qnetmgrd_t)
+
+# Don't implicitly load kernel modules
+kernel_dontaudit_request_load_module(qnetmgrd_t)
+
+type qnetmgrd_data_t;
+user_data_files_type(qnetmgrd_data_t)
+data_filetrans(qnetmgrd_t, qnetmgrd_data_t, { dir sock_file })
+manage_user_data_files(qnetmgrd_t, qnetmgrd_data_t)

@@ -35,6 +35,7 @@ type qmi_ip_multiclient_exec_t;
 
 init_daemon_domain(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
 inittab_domtrans(qmi_ip_multiclient_t, qmi_ip_multiclient_exec_t)
+logging_send_syslog_msg(qmi_ip_multiclient_t)
 
 userdebug_or_eng(`
     rw_diag_dev(qmi_ip_multiclient_t)
@@ -49,7 +50,7 @@ qmi_rw_embms_dev(qmi_ip_multiclient_t)
 
 allow qmi_ip_multiclient_t self:capability { net_admin net_raw };
 allow qmi_ip_multiclient_t self:fifo_file rw_fifo_file_perms;
-allow qmi_ip_multiclient_t self:{ socket netlink_socket udp_socket unix_dgram_socket } create_socket_perms;
+allow qmi_ip_multiclient_t self:{ socket netlink_socket udp_socket } create_socket_perms;
 allow qmi_ip_multiclient_t self:tcp_socket create_stream_socket_perms;
 
 files_rw_qcmap_etc_data_files(qmi_ip_multiclient_t)
@@ -61,3 +62,4 @@ allow qmi_ip_multiclient_t qmi_ip_var_run_t:file manage_file_perms;
 allow qmi_ip_multiclient_t qmi_ip_var_run_t:sock_file manage_sock_file_perms;
 manage_dirs_pattern(qmi_ip_multiclient_t, qmi_ip_var_run_t, qmi_ip_var_run_t)
 files_pid_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })
+allow qmi_ip_multiclient_t self:unix_dgram_socket sendto;

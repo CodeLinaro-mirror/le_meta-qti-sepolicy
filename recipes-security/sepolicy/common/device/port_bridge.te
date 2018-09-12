@@ -31,3 +31,12 @@ type port_bridge_t;
 type port_bridge_exec_t;
 
 init_daemon_domain(port_bridge_t, port_bridge_exec_t)
+
+type modem_glink_device_t;
+dev_node(modem_glink_device_t)
+modem_rw_modem_glink_dev(port_bridge_t)
+files_rw_qcmap_etc_data_files(port_bridge_t)
+dev_read_sysfs(port_bridge_t)
+
+allow port_bridge_t self:fifo_file rw_fifo_file_perms;
+corecmd_exec_shell(port_bridge_t)

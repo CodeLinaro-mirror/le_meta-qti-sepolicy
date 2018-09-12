@@ -38,6 +38,7 @@ type mount_copybind_exec_t;
 init_system_domain(mount_copybind_t, mount_copybind_exec_t)
 term_use_all_terms(mount_copybind_t)
 kernel_read_system_state(mount_copybind_t)
+allow mount_copybind_t self:process setfscreate;
 
 # Copy files from /etc to /systemrw
 corecmd_exec_bin(mount_copybind_t)
@@ -53,4 +54,4 @@ files_read_alexa_data_files(mount_copybind_t)
 gen_require(`
     type etc_t;
 ')
-neverallow mount_copybind_t etc_t:file { create };
+neverallow mount_copybind_t etc_t:file { create relabelto };

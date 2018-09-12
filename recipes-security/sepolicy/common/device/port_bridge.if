@@ -26,3 +26,22 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## <summary>Port Bridge Interface</summary>
+
+########################################
+## <summary>
+##      Read ADB data files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`modem_rw_modem_glink_dev',`
+    gen_require(`
+        type device_t;
+        type modem_glink_device_t;
+    ')
+
+    rw_chr_files_pattern($1, device_t, modem_glink_device_t)
+')
