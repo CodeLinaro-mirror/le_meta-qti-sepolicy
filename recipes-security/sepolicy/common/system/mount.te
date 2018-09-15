@@ -44,3 +44,8 @@ relabel_all_data_files(mount_copybind_t)
 # Perform a bind mount with the real mount context
 mount_domtrans(mount_copybind_t)
 files_read_alexa_data_files(mount_copybind_t)
+
+userdebug_or_eng(`
+    # TODO: Transition the login shells to unconfined_u:unconfined_r?
+    role system_r types unconfined_mount_t;
+')
