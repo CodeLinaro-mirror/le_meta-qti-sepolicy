@@ -110,4 +110,4 @@ kernel_read_net_sysctls(ipacm_t)
 corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)
 dev_read_sysfs(ipacm_perf_t)
-
+files_tmpfs_file(ipacm_tmp_t)
