@@ -60,3 +60,22 @@ userdebug_or_eng(`
     manage_fifo_files_pattern(rebootd_t, init_var_run_t, init_var_run_t)
     manage_dirs_pattern(rebootd_t, init_var_run_t, init_var_run_t)
 ')
+## reset reboot cookie script ##
+type reset_reboot_initrc_exec_t;
+type reset_reboot_initrc_t;
+type reboot_cookie_data_t;
+user_data_files_type(reboot_cookie_data_t)
+init_script_domain(reset_reboot_initrc_t, reset_reboot_initrc_exec_t)
+manage_user_data_files(reset_reboot_initrc_t, reboot_cookie_data_t)
+corecmd_exec_shell(reset_reboot_initrc_t)
+dev_create_null_dev(reset_reboot_initrc_t)
+term_read_console(reset_reboot_initrc_t)
+kernel_read_system_state(reset_reboot_initrc_t)
+files_read_etc_files(reset_reboot_initrc_t)
+logging_list_logs(reset_reboot_initrc_t)
+auth_manage_login_records(reset_reboot_initrc_t)
+gen_require(`
+    type var_log_t;
+')
+create_lnk_files_pattern(reset_reboot_initrc_t, var_log_t, var_log_t)
+data_filetrans(reset_reboot_initrc_t, reboot_cookie_data_t, file)
