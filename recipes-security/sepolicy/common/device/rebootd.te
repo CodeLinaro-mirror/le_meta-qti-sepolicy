@@ -44,7 +44,6 @@ type_transition rebootd_t device_t:fifo_file rebootd_pipe_t "rebooterdev";
 manage_fifo_files_pattern(rebootd_t, device_t, rebootd_pipe_t)
 userdebug_or_eng(`
     gen_require(`
-         type proc_t;
          type var_run_t;
          type init_t;
          type init_var_run_t;
@@ -59,4 +58,12 @@ userdebug_or_eng(`
     manage_sock_files_pattern(rebootd_t, init_var_run_t, init_var_run_t)
     manage_fifo_files_pattern(rebootd_t, init_var_run_t, init_var_run_t)
     manage_dirs_pattern(rebootd_t, init_var_run_t, init_var_run_t)
+    shutdown_domtrans(rebootd_t)
+    kernel_read_system_state(rebootd_t)
+    init_exec(rebootd_t)
+    init_rw_initctl(rebootd_t)
+    init_read_utmp(rebootd_t)
+    allow rebootd_t self:capability setuid;
+    allow rebootd_t self:unix_dgram_socket create_socket_perms;
+    allow rebootd_t var_run_t:dir create_dir_perms;
 ')
