@@ -85,3 +85,14 @@ userdebug_or_eng(`
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd1.log")
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd2.log")
 ')
+#TODO properly con_mode node
+dev_rw_sysfs(wlan_initrc_t)
+gen_require(`
+    type firmware_t;
+')
+allow wlan_initrc_t firmware_t:dir { search getattr open };
+allow wlan_initrc_t firmware_t:file read_file_perms;
+files_search_home(wlan_initrc_t)
+kernel_search_debugfs(wlan_initrc_t)
+getty_use_fds(wlan_initrc_t)
+term_use_unallocated_ttys(wlan_initrc_t)
