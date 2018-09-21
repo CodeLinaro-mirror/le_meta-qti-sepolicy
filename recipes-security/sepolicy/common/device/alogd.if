@@ -48,3 +48,21 @@ interface(`alog_rw_log',`
     rw_sock_files_pattern($1, socket_device_t, alogd_sock_t)
 ')
 
+########################################
+## <summary>
+##      write the log to /dev/socket/alogd_socket
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain type allowed access
+##      </summary>
+## </param>
+#
+interface(`alog_write_logdsocket',`
+    gen_require(`
+        type alogd_sock_t;
+        type socket_device_t;
+    ')
+    write_sock_files_pattern($1, socket_device_t, alogd_sock_t)
+')
+

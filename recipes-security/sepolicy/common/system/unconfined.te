@@ -1,4 +1,4 @@
-# Copyright (c) 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,24 +25,21 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(diagrebootapp, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type diagrebootapp_t;
-type diagrebootapp_exec_t;
-
-init_daemon_domain(diagrebootapp_t, diagrebootapp_exec_t)
-
-#2putty.log
-##============= diagrebootapp_t ==============
-allow diagrebootapp_t device_t:chr_file { read write ioctl open };
-allow diagrebootapp_t self:capability { setuid setgid };
-allow diagrebootapp_t device_t:fifo_file { open write };
-rw_diag_dev(diagrebootapp_t)
 userdebug_or_eng(`
-    reboot_write_fifo_files_reboot_device(diagrebootapp_t)
+    gen_require(`
+        attribute user_data;
+        attribute system_data;
+        type alogd_t;
+    ')
+    manage_user_data_files(unconfined_t, user_data)
+    manage_system_data_files(unconfined_t, system_data)
+
+    wlan_start_stop(unconfined_t)
+
+    # Audio test app
+    servicemanager_binder_use(unconfined_t)
+    audio_binder_call_transfer(unconfined_t)
+    allow unconfined_t self:capability2 block_suspend;
+    allow unconfined_t alogd_t:dir search;
+    shutdown_domtrans(unconfined_t)
 ')

@@ -70,6 +70,9 @@ user_data_files_type(adsp_persist_t)
 type subsys_modem_device_t;
 dev_node(subsys_modem_device_t)
 
+type subsys_ssr_device_t;
+dev_node(subsys_ssr_device_t)
+
 type audio_device_t;
 dev_node(audio_device_t)
 
