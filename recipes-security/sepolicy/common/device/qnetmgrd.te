@@ -60,3 +60,5 @@ type qnetmgrd_data_t;
 user_data_files_type(qnetmgrd_data_t)
 data_filetrans(qnetmgrd_t, qnetmgrd_data_t, { dir sock_file })
 manage_user_data_files(qnetmgrd_t, qnetmgrd_data_t)
+allow qnetmgrd_t self:tcp_socket { create ioctl };
+kernel_read_system_state(qnetmgrd_t)
