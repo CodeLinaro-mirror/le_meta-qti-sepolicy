@@ -78,5 +78,5 @@ interface(`qnetmgr_use_unix_stream_sockets',`
         type qnetmgrd_t;
     ')
 
-    allow $1 qnetmgrd_t:unix_stream_socket { connectto rw_stream_socket_perms };
+    allow $1 qnetmgrd_t:unix_stream_socket { connectto read write };
 ')
