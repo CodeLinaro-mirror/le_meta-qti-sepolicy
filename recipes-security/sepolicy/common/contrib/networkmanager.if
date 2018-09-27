@@ -63,3 +63,32 @@ interface(`networkmanager_read_wifi_sysdata_files',`
     typeattribute $1 domain_can_read_systemdata;
     allow $1 wifi_system_data_t:file read_file_perms;
 ')
+
+########################################
+## <summary>
+##      Transition created files to wifi data domain
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain creating the file
+##      </summary>
+## </param>
+## <param name="filetype">
+##      <summary>
+##      Type of file being created
+##      </summary>
+## </param>
+## <param name="filename">
+##      <summary>
+##      (optional): String of filename to transition
+##      </summary>
+## </param>
+## <rolecap/>
+#
+
+interface(`networkmanager_wifi_data_filetrans',`
+        gen_require(`
+                type wifi_data_t;
+        ')
+         data_filetrans($1, wifi_data_t, $2, $3)
+')

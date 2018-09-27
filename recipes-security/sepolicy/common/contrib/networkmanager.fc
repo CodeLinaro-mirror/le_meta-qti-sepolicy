@@ -32,4 +32,5 @@
 /etc/rc\.d/init\.d/wlan         gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
 /etc/misc/wifi(/.*)?            gen_context(system_u:object_r:wifi_system_data_t,s0)
-/data/wpa_supplicant\.log        --  gen_context(system_u:object_r:wifi_data_t,s0)
+/data/wpa_supplicant\.log   --  gen_context(system_u:object_r:wifi_data_t,s0)
+/data/hostapd[0-9]?\.log         --  gen_context(system_u:object_r:wifi_data_t,s0)

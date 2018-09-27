@@ -42,4 +42,7 @@ userdebug_or_eng(`
     allow unconfined_t self:capability2 block_suspend;
     allow unconfined_t alogd_t:dir search;
     shutdown_domtrans(unconfined_t)
+
+    allow domain unconfined_t:unix_dgram_socket sendto;
+    allow unconfined_t self:process execmem;
 ')

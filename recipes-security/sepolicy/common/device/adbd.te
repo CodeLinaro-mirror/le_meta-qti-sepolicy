@@ -85,3 +85,4 @@ type adbd_pty_t;
 term_create_pty(adbd_t, adbd_pty_t)
 allow domain adbd_pty_t:chr_file rw_term_perms;
 allow domain adbd_t:fd use;
+qcmap_read_qcmap_etc_data_files(adbd_initrc_t)

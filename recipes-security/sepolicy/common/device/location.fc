@@ -29,3 +29,10 @@
 /usr/bin/xtwifi-inet-agent -- gen_context(system_u:object_r:xtwifi_agent_exec_t,s0)
 /usr/bin/xtwifi-client     -- gen_context(system_u:object_r:xtwifi_client_exec_t,s0)
 /usr/bin/location_hal_daemon -- gen_context(system_u:object_r:loc_hald_exec_t,s0)
+/usr/bin/xtra-daemon       -- gen_context(system_u:object_r:xtra_daemon_exec_t,s0)
+/usr/bin/lowi-server       -- gen_context(system_u:object_r:lowi_server_exec_t,s0)
+/usr/bin/engine-service    -- gen_context(system_u:object_r:engine_service_exec_t,s0)
+
+## location data files
+/data/vendor/location(/.*)?             gen_context(system_u:object_r:loc_data_t,s0)
+/data/vendor/location-partner(/.*)?     gen_context(system_u:object_r:loc_data_t,s0)
