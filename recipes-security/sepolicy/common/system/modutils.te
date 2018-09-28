@@ -28,6 +28,9 @@
 userdebug_or_eng(`
     rw_diag_dev(kmod_t)
 ')
-
 # Netlink sockets
 read_write_qcmap_cm_socket_files(kmod_t)
+qcmap_cm_rw_unix_netlink_socket(kmod_t)
+qcmap_cm_rw_netlink_socket_files(kmod_t)
+qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
+networkmanager_read_wifi_sysdata_files(kmod_t)

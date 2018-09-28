@@ -67,14 +67,15 @@ gen_require(`
     attribute user_data;
     attribute system_data;
     type httpd_data_t;
+    type qcmap_etc_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -httpd_data_t }:file rw_file_perms;
-neverallow initrc_t system_data:file rw_file_perms;
+neverallow initrc_t { user_data -httpd_data_t -qcmap_etc_data_t }:file rw_file_perms;
+neverallow initrc_t { system_data -qcmap_etc_data_t }:file rw_file_perms;
 search_user_data_dir(init_t)
 search_system_data_dir(init_t)
 search_system_data_dir(initrc_t)
@@ -91,3 +92,5 @@ qcmap_manage_httpd_data_files(initrc_t)
 userdebug_or_eng(`
     reboot_write_fifo_files_reboot_device(init_t)
 ')
+alog_write_logdsocket(domain)
+alog_setattr_logdsocket(initrc_t)

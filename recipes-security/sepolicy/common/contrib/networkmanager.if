@@ -44,3 +44,51 @@ interface(`wlan_start_stop',`
     files_search_etc($1)
     domtrans_pattern($1, wlan_initrc_exec_t, wlan_initrc_t)
 ')
+
+########################################
+## <summary>
+##       Read wifi system data file
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`networkmanager_read_wifi_sysdata_files',`
+    gen_require(`
+        type wifi_system_data_t;
+        attribute domain_can_read_systemdata;
+    ')
+    typeattribute $1 domain_can_read_systemdata;
+    allow $1 wifi_system_data_t:file read_file_perms;
+')
+
+########################################
+## <summary>
+##      Transition created files to wifi data domain
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain creating the file
+##      </summary>
+## </param>
+## <param name="filetype">
+##      <summary>
+##      Type of file being created
+##      </summary>
+## </param>
+## <param name="filename">
+##      <summary>
+##      (optional): String of filename to transition
+##      </summary>
+## </param>
+## <rolecap/>
+#
+
+interface(`networkmanager_wifi_data_filetrans',`
+        gen_require(`
+                type wifi_data_t;
+        ')
+         data_filetrans($1, wifi_data_t, $2, $3)
+')

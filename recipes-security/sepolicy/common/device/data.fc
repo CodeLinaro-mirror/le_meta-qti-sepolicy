@@ -27,3 +27,4 @@
 
 /data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
 /systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)
+/data/test(/.*)?       gen_context(system_u:object_r:test_data_t,s0)

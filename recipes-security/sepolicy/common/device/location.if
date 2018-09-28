@@ -27,8 +27,28 @@
 
 ## <summary>location daemon</summary>
 
-#######################################
+########################################
 ## <summary>
-##	location daemon interface
+##       Read location data  files
 ## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <param name="type">
+##      <summary>
+##      File type allowed to read
+##      </summary>
+## </param>
 #
+interface(`location_read_loc_data_files',`
+    gen_require(`
+        attribute user_data;
+        type loc_data_t;
+        attribute domain_can_read_userdata;
+    ')
+    typeattribute $1 domain_can_read_userdata;
+    read_files_pattern($1, user_data, loc_data_t)
+    read_lnk_files_pattern($1, user_data, loc_data_t)
+')

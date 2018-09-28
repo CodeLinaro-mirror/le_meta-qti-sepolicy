@@ -76,9 +76,9 @@ allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_tran
 allow qcmap_cm_t node_t:udp_socket node_bind;
 allow qcmap_cm_t var_t:dir { add_name remove_name };
 allow qcmap_cm_t self:process { signal };
-allow qcmap_cm_t self:rawip_socket { create setopt getopt write read };
+allow qcmap_cm_t self:rawip_socket { create setopt getopt write read ioctl };
 allow qcmap_cm_t init_var_run_t:sock_file { write };
-allow qcmap_cm_t self:packet_socket { create bind setopt read write };
+allow qcmap_cm_t self:packet_socket { create bind setopt read write ioctl };
 allow qcmap_cm_t self:capability { setuid net_bind_service setgid kill sys_ptrace net_admin net_raw chown };
 allow qcmap_cm_t node_t:tcp_socket { node_bind listen };
 allow qcmap_cm_t self:fifo_file rw_fifo_file_perms;
@@ -162,3 +162,23 @@ gen_require(`
 type httpd_data_t;
 user_data_files_type(httpd_data_t)
 qcmap_manage_httpd_data_files(httpd_t)
+
+read_write_qcmap_cm_socket_files(ifconfig_t)
+# /run/resolve.conf
+sysnet_manage_config(qcmap_cm_t)
+
+init_read_utmp(qcmap_cm_t)
+logging_send_syslog_msg(qcmap_cm_t)
+corenet_udp_bind_all_unreserved_ports(qcmap_cm_t)
+kernel_request_load_module(qcmap_cm_t)
+files_read_kernel_modules(qcmap_cm_t)
+allow qcmap_cm_t self:netlink_route_socket nlmsg_write;
+networkmanager_read_wifi_sysdata_files(qcmap_cm_t)
+
+gen_require(`
+    type wlan_service_t;
+    type kmod_exec_t;
+')
+allow qcmap_cm_t self:capability2 block_suspend;
+allow qcmap_cm_t wlan_service_t:process sigkill;
+modutils_domtrans_insmod(qcmap_cm_t)
