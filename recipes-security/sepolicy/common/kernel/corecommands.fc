@@ -27,3 +27,5 @@
 
 /lib/busybox/bin(/.*)?  --      gen_context(system_u:object_r:bin_t,s0)
 /lib/busybox/bin/sh     --      gen_context(system_u:object_r:shell_exec_t,s0)
+
+/target                 --      gen_context(system_u:object_r:etc_t,s0)
