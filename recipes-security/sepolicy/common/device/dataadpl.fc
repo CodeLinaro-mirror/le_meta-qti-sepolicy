@@ -25,24 +25,5 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## <summary>IPACM</summary>
-
-########################################
-## <summary>
-##      Read and write for ipa config file in /data/misc/ipa.
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <rolecap/>
-#
-interface(`rw_ipacm_data_config_files',`
-        gen_require(`
-                type ipacm_data_t;
-        ')
-
-        allow $1 ipacm_data_t:file manage_file_perms;
-')
+/usr/bin/adpl    --      gen_context(system_u:object_r:dataadpl_exec_t,s0)
 

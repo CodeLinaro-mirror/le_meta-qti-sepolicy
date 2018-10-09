@@ -25,24 +25,23 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## <summary>IPACM</summary>
+policy_module(dataadpl, 1.0)
 
-########################################
-## <summary>
-##      Read and write for ipa config file in /data/misc/ipa.
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <rolecap/>
-#
-interface(`rw_ipacm_data_config_files',`
-        gen_require(`
-                type ipacm_data_t;
-        ')
+type dataadpl_t;
+type dataadpl_exec_t;
+type dataadpl_device_t;
 
-        allow $1 ipacm_data_t:file manage_file_perms;
+init_daemon_domain(dataadpl_t, dataadpl_exec_t)
+dev_node(dataadpl_device_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(dataadpl_t)
 ')
 
+dev_read_sysfs(dataadpl_t)
+allow dataadpl_t self:unix_dgram_socket { create connect };
+allow dataadpl_t self:socket { create read ioctl write };
+rw_chr_files_pattern(dataadpl_t, device_t, device_t)
+allow dataadpl_t self:fifo_file { write read };
+corecmd_exec_shell(dataadpl_t)
+dev_write_kmsg(dataadpl_t)
