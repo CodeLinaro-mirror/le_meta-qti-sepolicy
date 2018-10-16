@@ -39,3 +39,5 @@ files_rw_qcmap_etc_data_files(port_bridge_t)
 dev_read_sysfs(port_bridge_t)
 
 allow port_bridge_t self:fifo_file rw_fifo_file_perms;
+corecmd_exec_shell(port_bridge_t)
+dev_rw_generic_chr_files(port_bridge_t)

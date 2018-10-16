@@ -46,3 +46,4 @@ allow wlan_service_t self:capability net_admin;
 allow wlan_service_t self:fifo_file rw_fifo_file_perms;
 allow wlan_service_t self:netlink_socket create_socket_perms;
 allow wlan_service_t self:socket create_socket_perms;
+dev_read_sysfs(wlan_service_t)

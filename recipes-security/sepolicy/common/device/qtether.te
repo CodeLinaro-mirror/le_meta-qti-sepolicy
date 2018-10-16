@@ -57,3 +57,7 @@ manage_user_data_files(qtether_t, qtether_log_t)
 
 dev_write_kmsg(qtether_t)
 dev_rw_generic_chr_files(qtether_t)
+userdebug_or_eng(`
+  rw_diag_dev(qtether_t);
+')
+corecmd_check_exec_shell(qtether_t);

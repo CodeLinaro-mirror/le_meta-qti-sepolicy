@@ -64,3 +64,35 @@ modutils_domtrans_insmod(wlan_initrc_t)
 modutils_exec_insmod(wlan_initrc_t)
 
 allow wlan_initrc_t self:fifo_file rw_file_perms;
+qcmap_cm_rw_unix_dgram_socket(NetworkManager_t)
+userdebug_or_eng(`
+    rw_diag_dev(dhcpc_t)
+')
+qcmap_cm_rw_unix_netlink_socket(dhcpc_t)
+qcmap_cm_rw_unix_netlink_socket(NetworkManager_t)
+qcmap_manage_var_run_qcmap_dir(NetworkManager_t)
+qcmap_delete_qcmap_pid(NetworkManager_t)
+
+allow wlan_initrc_t self:fifo_file rw_file_perms;
+files_search_default(NetworkManager_t);
+files_rw_qcmap_etc_data_files(NetworkManager_t)
+read_write_qcmap_cm_socket_files(wlan_initrc_t)
+
+qcmap_manage_qcmap_pid(NetworkManager_t)
+userdebug_or_eng(`
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "wpa_supplicant.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd1.log")
+    networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd2.log")
+')
+#TODO properly con_mode node
+dev_rw_sysfs(wlan_initrc_t)
+gen_require(`
+    type firmware_t;
+')
+allow wlan_initrc_t firmware_t:dir { search getattr open };
+allow wlan_initrc_t firmware_t:file read_file_perms;
+files_search_home(wlan_initrc_t)
+kernel_search_debugfs(wlan_initrc_t)
+getty_use_fds(wlan_initrc_t)
+term_use_unallocated_ttys(wlan_initrc_t)
