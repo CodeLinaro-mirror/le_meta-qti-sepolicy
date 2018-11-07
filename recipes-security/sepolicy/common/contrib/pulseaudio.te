@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,51 +25,56 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-fs_relabelfrom_dsp(mount_t)
+#policy_module(pulseaudio, 1.0)
 
-data_mount_volatile_bind(mount_t)
+########################################
+#
+# Declarations
+#
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+files_mountpoint(pulseaudio_var_lib_t)
 
-### mount-copybind ###
+files_type(pulseaudio_tmp_t);
 
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
-kernel_read_system_state(mount_copybind_t)
-allow mount_copybind_t self:process setfscreate;
+init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 
-##allow mount-copybind till creation of directory /systemrw/var/lib/pulse (in systemrw-var-lib-pulse.service)
 gen_require(`
-    type pulseaudio_var_lib_t;
-    type var_lib_t;
+	type debugfs_t;
+	type device_t;
 ')
-allow mount_copybind_t var_lib_t:dir search;
-allow mount_copybind_t pulseaudio_var_lib_t:dir { search getattr read };
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
+allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
+allow pulseaudio_t self:process { getcap getsched setcap setrlimit setsched signal signull };
 
-allow mount_copybind_t  self:capability { chown fowner fsetid };
+allow pulseaudio_t self:fifo_file rw_fifo_file_perms;
+allow pulseaudio_t self:unix_stream_socket { accept connectto listen };
+allow pulseaudio_t self:unix_dgram_socket sendto;
+allow pulseaudio_t self:tcp_socket { accept listen };
+allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
+allow pulseaudio_t device_t:chr_file { read write  open ioctl };
 
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
+###########################
+# Files / Dirs
 
-# Files made writable using mount-copybind must have a unique label
-gen_require(`
-    type etc_t;
-')
-neverallow mount_copybind_t etc_t:file { create relabelto };
-fs_blk_getattr_tmpfs(mount_t)
+files_type(pulseaudio_var_lib_t)
+files_manage_etc_dirs(pulseaudio_t);
+files_manage_urandom_seed(pulseaudio_t);
+files_read_var_lib_symlinks(pulseaudio_t);
+files_search_var_lib(pulseaudio_t);
+files_getattr_var_lib_dirs(pulseaudio_t);
 
-userdebug_or_eng(`
-    # TODO: Transition the login shells to unconfined_u:unconfined_r?
-    role system_r types unconfined_mount_t;
-')
+allow pulseaudio_t debugfs_t:dir search;
+allow pulseaudio_t init_var_run_t:file { read open write getattr};
+allow pulseaudio_t init_var_run_t:sock_file { open read write getattr };
+
+leprop_rw_props(pulseaudio_t);
+
+corecmd_exec_shell(pulseaudio_t)
+
+allow pulseaudio_t self:process { signal getsched };
+
+## for DBus
+init_dbus_chat(pulseaudio_t)
+
+
+

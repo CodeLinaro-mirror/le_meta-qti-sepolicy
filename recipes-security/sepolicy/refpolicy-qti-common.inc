@@ -19,7 +19,7 @@ EXTRA_OEMAKE += "USER_BUILD=${@base_conditional('USER_BUILD', '1', 'y', 'n', d)}
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 
 # Contrib modules not declared here are turned off
-CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus"
+CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
