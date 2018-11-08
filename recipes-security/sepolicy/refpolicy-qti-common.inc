@@ -6,6 +6,8 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
             file://Restrict-console-shell-to-userdebug.patch \
             file://Add-lib-busybox-to-subs_dist.patch \
+            file://Move-root-user-to-unconfined-context.patch \
+            file://Allow-adbd-to-transition-to-root-user.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
 "

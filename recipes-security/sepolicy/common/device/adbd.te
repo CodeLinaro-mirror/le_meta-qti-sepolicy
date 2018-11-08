@@ -35,6 +35,9 @@ init_daemon_domain(adbd_t, adbd_exec_t)
 userdebug_or_eng(`
     unconfined_shell_domtrans(adbd_t)
     unconfined_domain(adbd_t)
+    # ADB shell user transition
+    domain_subj_id_change_exemption(adbd_t)
+    domain_role_change_exemption(adbd_t)
 
     gen_require(`
         attribute user_data;
