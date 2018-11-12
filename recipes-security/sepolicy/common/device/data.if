@@ -383,6 +383,7 @@ interface(`data_rw_system_data_files',`
 
     typeattribute $1 domain_can_write_systemdata;
     search_system_data_dir($1)
+    list_dirs_pattern($1, system_data, $2)
     rw_files_pattern($1, system_data, $2)
     read_lnk_files_pattern($1, system_data, $2)
 ')

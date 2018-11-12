@@ -179,6 +179,10 @@ gen_require(`
     type wlan_service_t;
     type kmod_exec_t;
     type ipacm_data_t;
+    type httpd_user_content_t;
+    type configfs_t;
+    type usr_t;
+    type system_dbusd_var_run_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -195,3 +199,49 @@ kernel_read_vm_overcommit_sysctl(qcmap_cm_t);
 allow iptables_t qcmap_tmp_t:file { read };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
+
+dnsmasq_domtrans(qcmap_cm_t)
+
+##### qti_ppp
+
+corenet_rw_ppp_dev(qcmap_cm_t)
+ppp_exec(qcmap_cm_t)
+ppp_read_rw_config(qcmap_cm_t)
+allow qcmap_cm_t pppd_etc_t:dir { search };
+userdom_search_user_home_dirs(qcmap_cm_t)
+#TODO: Need to take care of this root FR
+#allow qcmap_cm_t pppd_initrc_exec_t:file { read_file_perms execute };
+ppp_read_secrets(qcmap_cm_t)
+
+
+#Managing private files in /run/lock
+type pppd_run_lock_t;
+files_lock_file(pppd_run_lock_t)
+files_lock_filetrans(qcmap_cm_t, pppd_run_lock_t, { lnk_file dir file })
+allow qcmap_cm_t pppd_run_lock_t:file { create rw_file_perms unlink };
+
+##### WEB_CLIENT
+# allow httpd_t var_run_t:sock_file { write };
+# allow httpd_t httpd_t:capability { sys_chroot };
+# allow httpd_t httpd_user_content_t:file { execute execute_no_trans };
+
+##### IP_PASSTHROUGH
+userdom_write_user_tmp_sockets(qcmap_cm_t)
+create_files_pattern(qcmap_cm_t, configfs_t, configfs_t)
+
+##### TINYPROXY
+type qcmap_var_log_t;
+logging_log_file(qcmap_var_log_t);
+logging_log_filetrans(qcmap_cm_t, qcmap_var_log_t, { file dir } );
+manage_files_pattern(qcmap_cm_t, qcmap_var_log_t, qcmap_var_log_t)
+logging_list_logs(qcmap_cm_t)
+manage_dirs_pattern(qcmap_cm_t, qcmap_var_log_t, qcmap_var_log_t);
+corenet_tcp_connect_http_cache_port(qcmap_cm_t)
+allow qcmap_cm_t usr_t:file { read open getattr };
+
+##### MDNS
+#TODO: Need to take care of this root FR
+#allow qcmap_cm_t avahi_initrc_exec_t:file { execute read open execute_no_trans };
+#allow qcmap_cm_t avahi_exec_t:file { getattr execute read open execute_no_trans };
+allow qcmap_cm_t self:process { setrlimit };
+allow qcmap_cm_t system_dbusd_var_run_t:sock_file { write };

@@ -42,4 +42,8 @@
 /data/nopwd\.mdm9625\.com\.key    --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/openssl\.cnf                --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/www(/.*)?                       gen_context(system_u:object_r:httpd_data_t,s0)
-/run/resolv\.conf                --  gen_context(system_u:object_r:net_conf_t,s0)
+#/WEBSERVER(/.*)?                      gen_context(system_u:object_r:httpd_user_content_t,s0)
+/run/resolv\.conf                 --  gen_context(system_u:object_r:net_conf_t,s0)
+
+/run/lock(/.*)                        gen_context(system_u:object_r:pppd_run_lock_t,s0)
+
