@@ -25,8 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-dev_relabelto_irsc_util(kernel_t)
-
 allow init_t self:system { reboot halt };
 
 # Included in later upstream versions
@@ -35,10 +33,10 @@ kernel_load_module(initrc_t)
 # Systemd policies
 ifdef(`init_systemd',`
     ifdef(`enable_mls',`
+        # Systemd performs a dyntransition to init_t
         mls_process_set_level(kernel_t)
-        mls_file_upgrade(init_t)
     ')
-    
+
     # Should be included in later upstream versions
     allow init_t {
         systemd_unit_t
@@ -66,28 +64,17 @@ seutil_domtrans_setfiles(initrc_t)
 gen_require(`
     attribute user_data;
     attribute system_data;
-    type httpd_data_t;
-    type qcmap_etc_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -httpd_data_t -qcmap_etc_data_t }:file rw_file_perms;
-neverallow initrc_t { system_data -qcmap_etc_data_t }:file rw_file_perms;
-search_user_data_dir(init_t)
-search_system_data_dir(init_t)
-search_system_data_dir(initrc_t)
-
-# lighttpd files created before the lighttpd daemon starts as httpd_t
-qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.key")
-qcmap_httpd_data_filetrans(initrc_t, file, "nopwd.mdm9625.com.key")
-qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.crt")
-qcmap_httpd_data_filetrans(initrc_t, file, "mdm9625.com.pem")
-qcmap_httpd_data_filetrans(initrc_t, file, "openssl.cnf")
-qcmap_httpd_data_filetrans(initrc_t, dir, "www")
-qcmap_manage_httpd_data_files(initrc_t)
+neverallow initrc_t user_data:file rw_file_perms;
+neverallow initrc_t system_data:file rw_file_perms;
+#search_user_data_dir(init_t)
+#search_system_data_dir(init_t)
+#search_system_data_dir(initrc_t)
 
 userdebug_or_eng(`
     reboot_write_fifo_files_reboot_device(init_t)

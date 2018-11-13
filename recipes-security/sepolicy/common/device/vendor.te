@@ -27,6 +27,10 @@
 
 policy_module(vendor, 1.0)
 
+### common domain policies
+
+allow domain self:unix_dgram_socket { create_socket_perms sendto };
+
 ### tftp server ###
 
 type tftp_server_t;

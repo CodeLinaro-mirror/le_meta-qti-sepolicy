@@ -25,11 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-allow chronyd_t self:capability net_raw;
-allow chronyd_t chronyd_tmpfs_t:sock_file { create unlink};
-allow chronyd_t var_log_t:lnk_file read;
 files_read_etc_runtime_files(chronyd_t)
-allow chronyd_t initrc_t:unix_dgram_socket sendto;
 dev_read_urand(chronyd_t)
 init_write_utmp(chronyd_t);
 init_read_utmp(chronyd_t);

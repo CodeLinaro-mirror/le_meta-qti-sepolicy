@@ -1,4 +1,4 @@
-# Copyright (c) 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -36,15 +36,3 @@ type irsc_util_t;
 type irsc_util_exec_t;
 
 init_daemon_domain(irsc_util_t, irsc_util_exec_t)
-
-allow init_t file_type:{ file lnk_file } relabelto;
-
-#02putty.log
-##============= init_t ==============
-allow init_t irsc_util_t:file { execute execute_no_trans relabelto };
-#
-##============= initrc_t ==============
-allow initrc_t irsc_util_t:file { execute execute_no_trans };
-#03putty.log for adbd
-allow initrc_t self:process { execstack execmem };
-fs_associate(irsc_util_t);

@@ -270,9 +270,7 @@ interface(`qcmap_cm_rw_unix_dgram_socket_files',`
 interface(`qcmap_read_qcmap_etc_data_files',`
         gen_require(`
                 type qcmap_etc_data_t;
-                attribute domain_can_read_systemdata;
         ')
-         typeattribute $1 domain_can_read_systemdata;
         read_system_data_files($1, qcmap_etc_data_t)
 ')
 

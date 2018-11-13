@@ -26,5 +26,3 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /bin/sh                 --      gen_context(system_u:object_r:shell_exec_t,s0)
-
-/target                 --      gen_context(system_u:object_r:etc_t,s0)
