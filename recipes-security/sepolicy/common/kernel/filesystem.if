@@ -82,6 +82,26 @@ interface(`fs_relabelfrom_firmware',`
 
 ########################################
 ## <summary>
+##      Allow changing of the label of a
+##      ADSPRPCD filesystem using the context= mount option.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`fs_relabelfrom_dsp',`
+        gen_require(`
+                type adsprpcd_t;
+        ')
+
+        allow $1 adsprpcd_t:filesystem relabelfrom;
+')
+
+
+########################################
+## <summary>
 ##      Get the attributes of a tmpfs
 ##      filesystem for blk file.
 ## </summary>
