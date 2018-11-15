@@ -35,5 +35,22 @@ policy_module(adsprpcd , 1.0)
 type adsprpcd_t;
 files_mountpoint(adsprpcd_t);
 
+type sensors_persist_data_t;
+files_type(sensors_persist_data_t)
 
+files_mountpoint(sensors_persist_data_t)
 
+gen_require(`
+    type debugfs_t;
+    type sound_device_t;
+    type data_t;
+')
+
+allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
+allow adsprpcd_t debugfs_t:dir { search };
+allow adsprpcd_t sound_device_t:chr_file { read write open ioctl getattr};
+
+manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
+
+# Manage private files inside /data
+data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
