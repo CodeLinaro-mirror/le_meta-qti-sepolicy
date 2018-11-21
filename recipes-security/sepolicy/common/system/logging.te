@@ -43,4 +43,7 @@ ifdef(`init_systemd',`
     #  systemd-journal to turn it back on.
     dontaudit syslogd_t self:capability audit_control;
     dontaudit syslogd_t self:netlink_audit_socket nlmsg_write;
+
+    allow syslogd_t var_t:dir { write read add_name };
+    allow syslogd_t var_t:file { create append };
 ')
