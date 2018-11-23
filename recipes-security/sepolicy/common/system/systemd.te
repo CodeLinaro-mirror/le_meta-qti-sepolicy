@@ -64,3 +64,14 @@ ifdef(`init_systemd',`
 
     allow systemd_tmpfiles_t etc_t:lnk_file create;
 ')
+
+userdebug_or_eng(`
+        gen_require(`
+             type init_var_run_t;
+             type initrc_t;
+             type systemd_logind_var_run_t;
+        ')
+        allow systemd_logind_t init_var_run_t:sock_file write;
+        allow systemd_logind_t initrc_t:unix_stream_socket connectto;
+        allow systemd_logind_t systemd_logind_var_run_t:sock_file write;
+ ')
