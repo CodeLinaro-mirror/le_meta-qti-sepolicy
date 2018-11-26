@@ -46,6 +46,7 @@ init_stream_connect_script(NetworkManager_t)
 # This needs to have its own context
 allow wpa_cli_t var_run_t:dir { write search read remove_name open getattr add_name };
 allow wpa_cli_t var_run_t:sock_file { write create unlink };
+allow initrc_t wifi_data_t:dir { search };
 manage_user_data_files(wpa_cli_t, wifi_data_t)
 manage_user_data_files(dhcpc_t, wifi_data_t)
 

@@ -70,3 +70,4 @@ neverallow initrc_t user_data:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 
 allow initrc_t user_data:fifo_file { create };
+allow init_t data_t:dir { search getattr };
