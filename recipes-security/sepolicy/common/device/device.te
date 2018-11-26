@@ -94,3 +94,6 @@ allow socket_device_t device_t:filesystem associate;
 
 type diag_device_t;
 dev_node(diag_device_t);
+
+type ion_device_t;
+dev_node(ion_device_t);

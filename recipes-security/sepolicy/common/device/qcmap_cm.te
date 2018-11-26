@@ -147,7 +147,7 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-allow qcmap_cm_t qcmap_tmp_t:file manage_file_perms;
+allow qcmap_cm_t qcmap_tmp_t:file { manage_file_perms execute };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
 ifdef(`init_systemd', `

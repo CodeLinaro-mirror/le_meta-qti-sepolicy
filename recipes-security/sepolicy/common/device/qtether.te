@@ -61,3 +61,7 @@ userdebug_or_eng(`
   rw_diag_dev(qtether_t);
 ')
 corecmd_check_exec_shell(qtether_t);
+
+sysnet_exec_ifconfig(qtether_t)
+corecmd_exec_shell(qtether_t)
+kernel_read_system_state(qtether_t)
