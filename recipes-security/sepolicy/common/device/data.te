@@ -30,6 +30,7 @@ policy_module(data, 1.0)
 gen_require(`
     type mount_t;
     type automount_t;
+    type initrc_t;
     attribute mountpoint;
     attribute domain;
 ')
@@ -48,11 +49,13 @@ neverallow ~{
     domain_can_write_userdata
     mount_t
     automount_t
+    initrc_t
 } user_data:file read_file_perms;
 neverallow ~{
     domain_can_write_userdata
     mount_t
     automount_t
+    initrc_t
 } user_data:file { create setattr write append rename link unlink };
 
 attribute system_data;
