@@ -80,5 +80,5 @@ neverallow ~{
 } system_data:file { create setattr write append rename link unlink };
 
 # Disallow execution from any writable partition
-neverallow domain user_data:file { execute execute_no_trans };
+#neverallow domain user_data:file { execute execute_no_trans };
 neverallow domain system_data:file { execute execute_no_trans };
