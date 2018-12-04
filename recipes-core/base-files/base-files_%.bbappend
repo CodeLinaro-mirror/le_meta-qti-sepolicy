@@ -19,7 +19,9 @@ do_install_append() {
                 ln -sf  ../label-cache.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-cache.service
                 ln -sf  ../label-persist.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-persist.service
                 ln -sf  ../label-systemrw.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-systemrw.service
-                ln -sf  ../label-data.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-data.service
+                if ${@base_contains('DISTRO_FEATURES','full-disk-encryption','false','true',d)}; then
+                    ln -sf  ../label-data.service  ${D}${sysconfdir}/systemd/system/local-fs.target.requires/label-data.service
+                fi
             fi
         fi
     fi
