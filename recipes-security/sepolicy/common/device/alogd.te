@@ -57,6 +57,7 @@ device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
 
 leprop_rw_props(alogd_t)
 
+# Needed to display /proc/## info in logcat
 read_files_pattern(alogd_t, domain, domain)
 
 # Allow all domains to send messages to alogd (but not read)

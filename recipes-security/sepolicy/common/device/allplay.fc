@@ -32,8 +32,8 @@
 /var/log/sam-systemd.log --   gen_context(system_u:object_r:allplay_var_log_t,s0)
 /data/\.alljoyn_keystore(/.*)?   gen_context(system_u:object_r:allplay_data_t,s0)
 
-/etc/allplay(/.*)?            gen_context(system_u:object_r:allplay_files_t,s0)
-/systemrw/allplay(/.*)?       gen_context(system_u:object_r:allplay_files_t,s0)
+/etc/allplay(/.*)?            gen_context(system_u:object_r:allplay_system_data_t,s0)
+/systemrw/allplay(/.*)?       gen_context(system_u:object_r:allplay_system_data_t,s0)
 
 /usr/bin/wifi_scan      --    gen_context(system_u:object_r:allplay_exec_t,s0)
 /sbin/wifi_try          --    gen_context(system_u:object_r:allplay_exec_t,s0)

@@ -29,7 +29,7 @@
 
 ########################################
 ## <summary>
-##      Read and clear logs collected by alogd
+##      Manage alog logs
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -37,48 +37,11 @@
 ##      </summary>
 ## </param>
 #
-interface(`alog_rw_log',`
-    gen_require(`
-        type alogd_t;
-        type alogd_sock_t;
-        type socket_device_t;
-    ')
-
-    allow $1 alogd_t:unix_dgram_socket { sendto rw_socket_perms };
-    rw_sock_files_pattern($1, socket_device_t, alogd_sock_t)
-')
-
-########################################
-## <summary>
-##      write the log to /dev/socket/alogd_socket
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain type allowed access
-##      </summary>
-## </param>
-#
-interface(`alog_write_logdsocket',`
+interface(`alog_manage_log',`
     gen_require(`
         type alogd_sock_t;
         type socket_device_t;
     ')
-    write_sock_files_pattern($1, socket_device_t, alogd_sock_t)
-')
 
-########################################
-## <summary>
-##      setattribute the log to /dev/socket/alogd_socket
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain type allowed access
-##      </summary>
-## </param>
-#
-interface(`alog_setattr_logdsocket',`
-    gen_require(`
-        type alogd_sock_t;
-    ')
-    allow $1 alogd_sock_t:sock_file  setattr_sock_file_perms;
+    manage_sock_files_pattern($1, socket_device_t, alogd_sock_t)
 ')

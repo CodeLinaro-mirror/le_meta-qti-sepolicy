@@ -1,4 +1,4 @@
-# Copyright (c) 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -45,5 +45,5 @@ rw_subsys_modem_dev(mss_t)
 rw_subsys_ssr_dev(mss_t)
 
 #Read firmware
-read_firmware_file(mss_t)
+firmware_read_files(mss_t)
 dev_rw_null(mss_t)

@@ -72,7 +72,7 @@ init_script_domain(adbd_initrc_t, adbd_initrc_exec_t)
 domtrans_pattern(adbd_initrc_t, adbd_exec_t, adbd_t)
 adb_manage_data_files(adbd_initrc_t)
 leprop_rw_props(adbd_initrc_t)
-alog_rw_log(adbd_initrc_t)
+alog_manage_log(adbd_initrc_t)
 data_filetrans(adbd_initrc_t, adbd_system_data_t, file)
 # The default initrc_t context is unconfined - do the same here.
 unconfined_domain(adbd_initrc_t)

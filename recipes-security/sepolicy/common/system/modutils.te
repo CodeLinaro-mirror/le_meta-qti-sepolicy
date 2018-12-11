@@ -36,3 +36,5 @@ qcmap_cm_rw_unix_netlink_socket(kmod_t)
 qcmap_cm_rw_netlink_socket_files(kmod_t)
 qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
 networkmanager_read_wifi_sysdata_files(kmod_t)
+
+firmware_read_files(kmod_t)

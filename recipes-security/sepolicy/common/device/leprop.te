@@ -46,7 +46,10 @@ leprop_rw_props(leprop_t)
 device_manage_socket_file(leprop_t, leprop_sock_t, "leprop-service")
 
 # /var/volatile/tmp/core.leprop-service.*
-files_manage_generic_tmp_files(leprop_t)
+type leprop_tmp_t;
+files_tmp_file(leprop_tmp_t)
+files_tmp_filetrans(leprop_t, leprop_tmp_t)
+manage_files_pattern(leprop_t, leprop_tmp_t, leprop_tmp_t)
 # proptrigger.conf
 files_read_etc_files(leprop_t)
 
@@ -56,10 +59,9 @@ type setprop_exec_t;
 
 init_system_domain(setprop_t, setprop_exec_t)
 leprop_rw_props(setprop_t)
-alog_rw_log(setprop_t)
 
 allow setprop_t self:unix_dgram_socket create_socket_perms;
-allow setprop_t self:capability dac_override;  # TODO: why is this needed?
+#allow setprop_t self:capability dac_override;  # TODO: why is this needed?
 
 init_dontaudit_use_fds(setprop_t)
 term_dontaudit_use_unallocated_ttys(setprop_t)

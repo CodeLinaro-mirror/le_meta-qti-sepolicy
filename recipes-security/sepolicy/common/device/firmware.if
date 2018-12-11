@@ -30,7 +30,7 @@
 
 ########################################
 ## <summary>
-##      Read and write the subsys_modem device.
+##      Search through firmware directories
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -38,10 +38,28 @@
 ##      </summary>
 ## </param>
 #
-interface(`read_firmware_file',`
+interface(`firmware_search_dirs',`
     gen_require(`
         type firmware_t;
     ')
+    allow $1 firmware_t:dir search_dir_perms;
+')
+
+########################################
+## <summary>
+##      Read firmware files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`firmware_read_files',`
+    gen_require(`
+        type firmware_t;
+    ')
+    firmware_search_dirs($1)
     read_files_pattern($1, firmware_t, firmware_t)
     read_lnk_files_pattern($1, firmware_t, firmware_t)
 ')

@@ -79,5 +79,3 @@ neverallow initrc_t system_data:file rw_file_perms;
 userdebug_or_eng(`
     reboot_write_fifo_files_reboot_device(init_t)
 ')
-alog_write_logdsocket(domain)
-alog_setattr_logdsocket(initrc_t)

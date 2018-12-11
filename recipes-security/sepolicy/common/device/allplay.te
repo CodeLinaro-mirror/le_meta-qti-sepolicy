@@ -34,14 +34,13 @@ policy_module(allplay , 1.0)
 
 type allplay_t;
 type allplay_exec_t;
-type allplay_files_t;
+type allplay_system_data_t;
 type allplay_var_log_t;
 
 init_daemon_domain(allplay_t, allplay_exec_t)
-system_data_files_type(allplay_files_t)
+system_data_files_type(allplay_system_data_t)
 
 gen_require(`
-    type node_t;
     type alljoyn_t;
     type devconfig_t;
     type persist_t;
@@ -59,10 +58,10 @@ gen_require(`
 read_files_pattern(allplay_t, persist_t, persist_t)
 
 # /etc/allplay/
-manage_system_data_files(allplay_t, allplay_files_t)
+manage_system_data_files(allplay_t, allplay_system_data_t)
 
 # for /etc/device_configure.d/300-allplay
-manage_system_data_files(devconfig_t, allplay_files_t)
+manage_system_data_files(devconfig_t, allplay_system_data_t)
 
 kernel_read_network_state(allplay_t)
 
@@ -94,12 +93,8 @@ kernel_read_system_state(allplay_t)
 
 # var/log/sam-systemd
 logging_write_generic_logs(allplay_t)
-allow allplay_t var_log_t:dir { add_name write };
-allow allplay_t var_log_t:file { create read setattr };
-# TODO: get this to work
-#logging_log_filetrans(allplay_t, allplay_var_log_t, file)
-#allow allplay_t allplay_var_log_t:file rw_file_perms;
-
+logging_log_filetrans(allplay_t, allplay_var_log_t, file)
+allow allplay_t allplay_var_log_t:file rw_file_perms;
 
 
 ##### TCP ######
@@ -110,14 +105,13 @@ corenet_tcp_connect_all_unreserved_ports(allplay_t)
 corenet_tcp_connect_http_port(allplay_t)
 corenet_tcp_sendrecv_all_ports(allplay_t)
 corenet_tcp_bind_all_unreserved_ports(allplay_t)
-allow allplay_t node_t:tcp_socket node_bind;
-
+corenet_tcp_bind_generic_node(allplay_t)
 allow allplay_t self:tcp_socket { connect connected_stream_socket_perms };
 
 
 ##### UDP #####
-allow allplay_t memcache_port_t:udp_socket name_bind;
-allow allplay_t node_t:udp_socket node_bind;
+corenet_udp_bind_memcache_port(allplay_t)
+corenet_udp_bind_generic_node(allplay_t)
 corenet_udp_bind_all_unreserved_ports(allplay_t)
 allow allplay_t self:udp_socket { create read write bind ioctl setopt name_bind };
 
@@ -125,16 +119,16 @@ allow allplay_t self:udp_socket { create read write bind ioctl setopt name_bind 
 ### RAW sockets : usrsctp
 allow allplay_t self:capability net_raw;
 allow allplay_t self:rawip_socket { read bind write create setopt };
-allow allplay_t node_t:rawip_socket node_bind;
+corenet_raw_bind_generic_node(allplay_t)
 
 
 ## /tmp read,write,delete files
-files_manage_generic_tmp_files(allplay_t)
-files_manage_generic_tmp_dirs(allplay_t)
-files_delete_tmp_dir_entry(allplay_t)
-create_files_pattern(allplay_t, tmp_t, tmp_t)
-manage_files_pattern(allplay_t, tmp_t, tmp_t)
-manage_files_pattern(allplay_t, var_t, var_t)
+#files_manage_generic_tmp_files(allplay_t)
+#files_manage_generic_tmp_dirs(allplay_t)
+#files_delete_tmp_dir_entry(allplay_t)
+#create_files_pattern(allplay_t, tmp_t, tmp_t)
+#manage_files_pattern(allplay_t, tmp_t, tmp_t)
+#manage_files_pattern(allplay_t, var_t, var_t)
 
 # Manage private files inside /data
 type allplay_data_t;
@@ -146,14 +140,14 @@ data_filetrans(allplay_t, allplay_data_t, { dir file })
 # canditates for qahw/qti_audio_server
 
 servicemanager_binder_use(allplay_t)
-alog_rw_log(allplay_t) # allplay does not access android logs
 leprop_rw_props(allplay_t) # pretty sure this is audio_server
 
 allow audio-server-daemon_t allplay_t:binder call;
 allow audio-server-daemon_t allplay_t:fd use;
 
-allow allplay_t device_t:chr_file { read write ioctl open };
-allow allplay_t sound_device_t:chr_file { read write }; # definitely qahw
+#allow allplay_t device_t:chr_file { read write ioctl open };
+dev_read_sound(allplay_t) # definitely qahw
+dev_write_sound(allplay_t)
 dontaudit allplay_t self:capability dac_override;
 #######################################
 
@@ -161,14 +155,10 @@ dontaudit allplay_t self:capability dac_override;
 # Lighttp Web Server and CGI for onboarding
 gen_require(`
     type httpd_t;
-    type httpd_sys_content_t;
-
     type NetworkManager_t;
     type NetworkManager_var_run_t;
-    type wpa_cli_t, wpa_cli_exec_t;
-
-    type etc_t;
-    type lib_t;
+    type wpa_cli_t;
+    type wpa_cli_exec_t;
 ')
 
 # required for lighttpd to open
@@ -177,17 +167,12 @@ allow httpd_t self:capability net_raw;
 # execute CGI in allplay domain
 domtrans_pattern(httpd_t, allplay_exec_t, allplay_t)
 
-# unused pipes
-dontaudit NetworkManager_t httpd_t:fd use;
-dontaudit wpa_cli_t httpd_t:fd use;
-dontaudit wpa_cli_t httpd_t:fifo_file { read write };
-
 # /persist/websetup.pem
 read_files_pattern(httpd_t, persist_t, persist_t)
 
 # wifi_scan
 allow allplay_t self:netlink_generic_socket { write getattr setopt read bind create };
-allow allplay_t etc_t:file { read getattr open };
+files_read_etc_files(allplay_t)
 allow allplay_t self:capability net_admin;
 
 #### wifi_try
@@ -197,7 +182,7 @@ networkmanager_domtrans(allplay_t) # wpa_supplicant
 kernel_search_proc(allplay_t) # pidof
 dontaudit allplay_t domain:dir search;
 # this is also needed for "pidof wpa_supplicant" (/proc/XX/ has files of type NetworkManager_t)
-read_files_pattern(allplay_t, NetworkManager_t, NetworkManager_t)
+networkmanager_read_state(allplay_t)
 
 kernel_read_system_state(allplay_t)
 allow allplay_t NetworkManager_t:process sigkill;
@@ -208,18 +193,18 @@ allow allplay_t NetworkManager_var_run_t:sock_file unlink;
 #### end wifi_try
 
 # wpa_cli ???
-allow wpa_cli_t var_t:dir { write add_name remove_name };
-allow wpa_cli_t var_t:sock_file { create unlink };
+#allow wpa_cli_t var_t:dir { write add_name remove_name };
+#allow wpa_cli_t var_t:sock_file { create unlink };
 
 # for /etc/misc/wifi/wpa_supplicant.conf
 files_rw_qcmap_etc_data_files(allplay_t)
 
 sysnet_domtrans_ifconfig(allplay_t)
-allow allplay_t var_t:file { write getattr read create unlink open append };
-allow allplay_t lib_t:file { execute_no_trans }; # /lib/busybox/sbin/ifconfig
+#allow allplay_t var_t:file { write getattr read create unlink open append };
+#allow allplay_t lib_t:file { execute_no_trans }; # /lib/busybox/sbin/ifconfig
 
 # CGI searches and runs scripts from the CGI dir.
-manage_files_pattern(allplay_t, httpd_sys_content_t, httpd_sys_content_t);
+apache_manage_sys_content(allplay_t)
 
 ##### AVS #######
 gen_require(`
@@ -232,7 +217,6 @@ manage_system_data_files(allplay_t, alexa_data_t)
 
 # curl
 sysnet_dns_name_resolve(allplay_t)
-allow allplay_t etc_t:lnk_file read_lnk_file_perms;
 sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
 
 alexa_manage_avs_fifo(allplay_t)

@@ -45,7 +45,6 @@ userdebug_or_eng(`
 gen_require(`
          type tracefs_t;
          type trace_marker_t;
-         type alogd_t;
     ')
 
 dev_write_sound(audio-server-daemon_t)
@@ -53,16 +52,13 @@ dev_read_sound(audio-server-daemon_t)
 dev_read_sysfs(audio-server-daemon_t)
 files_read_etc_files(audio-server-daemon_t)
 kernel_read_system_state(audio-server-daemon_t)
-read_firmware_file(audio-server-daemon_t)
+firmware_read_files(audio-server-daemon_t)
 servicemanager_binder_use(audio-server-daemon_t)
-leprop_read_props(audio-server-daemon_t)
 leprop_rw_props(audio-server-daemon_t)
-alog_rw_log(audio-server-daemon_t)
 allow audio-server-daemon_t self:unix_dgram_socket { create connect write};
 allow audio-server-daemon_t self:process { signal };
 allow audio-server-daemon_t self:capability { sys_nice };
 allow audio-server-daemon_t self:process { setsched };
-allow audio-server-daemon_t alogd_t:dir search;
 allow audio-server-daemon_t tracefs_t:dir search;
 allow audio-server-daemon_t trace_marker_t:file { write open };
 allow audio-server-daemon_t self:process { signal_perms getsched setsched };
@@ -74,7 +70,7 @@ userdebug_or_eng(`
     ')
     allow audio-server-daemon_t unconfined_t:binder call;
     allow audio-server-daemon_t unconfined_t:fd use;
-    allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
+    #allow audio-server-daemon_t device_t:chr_file { read write open ioctl };
 ')
 
 dontaudit audio-server-daemon_t self:capability dac_override;

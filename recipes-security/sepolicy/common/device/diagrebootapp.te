@@ -37,12 +37,10 @@ type diagrebootapp_exec_t;
 
 init_daemon_domain(diagrebootapp_t, diagrebootapp_exec_t)
 
-#2putty.log
-##============= diagrebootapp_t ==============
-allow diagrebootapp_t device_t:chr_file { read write ioctl open };
+#allow diagrebootapp_t device_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid };
-allow diagrebootapp_t device_t:fifo_file { open write };
-rw_diag_dev(diagrebootapp_t)
+#allow diagrebootapp_t device_t:fifo_file { open write };
 userdebug_or_eng(`
+    rw_diag_dev(diagrebootapp_t)
     reboot_write_fifo_files_reboot_device(diagrebootapp_t)
 ')

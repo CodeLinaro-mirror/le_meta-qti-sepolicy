@@ -33,16 +33,17 @@ policy_module(alexa , 1.0)
 #
 
 type alexa_data_t;
-files_type(alexa_data_t)
+user_data_files_type(alexa_data_t)
+
+type alexa_system_data_t;
+system_data_files_type(alexa_system_data_t)
 
 type alexa_t;
 type alexa_exec_t;
 init_daemon_domain(alexa_t, alexa_exec_t)
 
-files_mountpoint(alexa_data_t)
-
 files_read_etc_files(alexa_t);
-manage_system_data_files(alexa_t, alexa_data_t)
+manage_system_data_files(alexa_t, alexa_system_data_t)
 
 sysnet_read_config(alexa_t);
 allow alexa_t self:udp_socket { read write create connect getattr };
@@ -74,39 +75,23 @@ allow alexa_t alexa_tmp_t:file { read write open create execute unlink };
 ######################################
 # canditates for qahw/qti_audio_server
 
-gen_require(`
-    type sound_device_t;
-')
-
 audio_binder_call_transfer(alexa_t)
 
 servicemanager_binder_use(alexa_t)
-alog_rw_log(alexa_t) # Alexa does not access android logs
 
 allow audio-server-daemon_t alexa_t:binder call;
 allow audio-server-daemon_t alexa_t:fd use;
 
-allow alexa_t device_t:chr_file { read write ioctl open };
+#allow alexa_t device_t:chr_file { read write ioctl open };
 dev_read_sound(alexa_t)
 dev_write_sound(alexa_t)
 dontaudit alexa_t self:capability dac_override;
 #######################################
 
-gen_require(`
-    type clock_device_t;
-    type event_device_t;
-    type dhcpc_var_run_t;
-    type init_var_run_t;
-    type udev_var_run_t;
-    type firmware_t;
-    type v4l_device_t;
-    type debugfs_t;
-')
-
-allow alexa_t clock_device_t:chr_file { read write ioctl open };
-allow alexa_t event_device_t:chr_file { read write ioctl open getattr };
-allow alexa_t dhcpc_var_run_t:file { read open getattr };
-allow alexa_t debugfs_t:dir { search };
+dev_rw_realtime_clock(alexa_t)
+dev_rw_input_dev(alexa_t)
+sysnet_read_dhcpc_pid(alexa_t)
+#allow alexa_t debugfs_t:dir { search };
 
 ##required for wake_lock request
 corecmd_exec_shell(alexa_t)
@@ -115,9 +100,9 @@ corecmd_exec_shell(alexa_t)
 allow alexa_t self:netlink_kobject_uevent_socket { create setopt bind getattr };
 dev_rw_sysfs(alexa_t)
 rw_video_dev(alexa_t)
-allow alexa_t udev_var_run_t:file { read open getattr };
-allow alexa_t udev_var_run_t:dir { search };
+udev_read_pid_files(alexa_t)
 allow alexa_t firmware_t:dir { search };
+firmware_search_dirs(alexa_t)
 dev_read_video_dev(alexa_t)
 dev_write_video_dev(alexa_t)
 gnome_stream_connect_gconf(alexa_t)
@@ -134,7 +119,7 @@ userdebug_or_eng(`
   rw_diag_dev(alexa_t);
 ')
 
-allow alexa_t init_var_run_t:dir { search };
+init_search_run(alexa_t)
 dev_read_urand(alexa_t)
 miscfiles_read_generic_certs(alexa_t)
 

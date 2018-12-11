@@ -45,7 +45,7 @@ allow tftp_server_t self:capability2 block_suspend;
 # /system/rfs/msm/mpss
 system_read_link_files(tftp_server_t)
 
-read_firmware_file(tftp_server_t)
+firmware_read_files(tftp_server_t)
 logging_send_syslog_msg(tftp_server_t)
 
 allow tftp_server_t self:socket create_socket_perms;
@@ -59,8 +59,9 @@ manage_user_data_files(tftp_server_t, adsp_persist_t)
 
 type tombstone_data_t;
 user_data_files_type(tombstone_data_t)
-# TODO: userdebug_or_eng?
-manage_user_data_files(tftp_server_t, tombstone_data_t)
+userdebug_or_eng(`
+    manage_user_data_files(tftp_server_t, tombstone_data_t)
+')
 
 ### misc properties ###
 
@@ -94,7 +95,7 @@ dev_node(ubi_device_t);
 
 type socket_device_t;
 files_type(socket_device_t);
-allow socket_device_t device_t:filesystem associate;
+dev_node(socket_device_t);
 
 type diag_device_t;
 dev_node(diag_device_t);

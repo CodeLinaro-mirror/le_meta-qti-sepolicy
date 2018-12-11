@@ -38,6 +38,6 @@
 /data/settingsca.db                gen_context(system_u:object_r:alexa_data_t,s0)
 /data/SVA(/.*)?                    gen_context(system_u:object_r:alexa_data_t,s0)
 /data/time(/.*)?                   gen_context(system_u:object_r:alexa_data_t,s0)
-/systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_data_t,s0)
+/systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_system_data_t,s0)
 /usr/bin/AlexaClientApp    --      gen_context(system_u:object_r:alexa_exec_t,s0)
 

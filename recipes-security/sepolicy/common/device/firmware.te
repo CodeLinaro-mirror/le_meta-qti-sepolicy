@@ -29,10 +29,6 @@ policy_module(firmware, 1.0)
 
 type firmware_t;
 files_mountpoint(firmware_t)
-gen_require(`
-    type kmod_t;
-')
-read_firmware_file(kmod_t)
 
 type firmware_persist_t;
 user_data_files_type(firmware_persist_t)

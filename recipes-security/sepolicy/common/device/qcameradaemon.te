@@ -27,16 +27,15 @@
 
 policy_module(qcameradaemon, 1.0)
 
-gen_require(`
-       type socket_device_t;
-  ')
+#gen_require(`
+#       type socket_device_t;
+#  ')
 
 type qcameradaemon_t;
 type qcameradaemon_exec_t;
 init_daemon_domain(qcameradaemon_t, qcameradaemon_exec_t)
 inittab_domtrans(qcameradaemon_t, qcameradaemon_exec_t)
 
-alog_rw_log(qcameradaemon_t)
 leprop_rw_props(qcameradaemon_t)
 dev_read_video_dev(qcameradaemon_t)
 dev_write_video_dev(qcameradaemon_t )
@@ -45,4 +44,4 @@ rw_video_dev(qcameradaemon_t);
 files_list_tmp(qcameradaemon_t);
 
 allow qcameradaemon_t self:unix_dgram_socket { write connect create };
-allow qcameradaemon_t socket_device_t:dir search;
+#allow qcameradaemon_t socket_device_t:dir search;

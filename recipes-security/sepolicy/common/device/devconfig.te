@@ -35,13 +35,10 @@ policy_module(devconfig , 1.0)
 type devconfig_t;
 type devconfig_exec_t;
 
-gen_require(`
-	type tmp_t, var_t;
-	type persist_t;
-
-	# for leprop
-	type socket_device_t;
-')
+#gen_require(`
+#	type tmp_t, var_t;
+#	type persist_t;
+#')
 
 init_system_domain(devconfig_t, devconfig_exec_t)
 
@@ -61,25 +58,25 @@ dev_read_sysfs(devconfig_t)
 wlan_start_stop(devconfig_t)
 
 ## /persist/device.conf
-create_files_pattern(devconfig_t, persist_t, persist_t)
-rename_files_pattern(devconfig_t, persist_t, persist_t)
-rw_files_pattern(devconfig_t, persist_t, persist_t)
-delete_files_pattern(devconfig_t, persist_t, persist_t)
+#create_files_pattern(devconfig_t, persist_t, persist_t)
+#rename_files_pattern(devconfig_t, persist_t, persist_t)
+#rw_files_pattern(devconfig_t, persist_t, persist_t)
+#delete_files_pattern(devconfig_t, persist_t, persist_t)
 
 allow devconfig_t self:fifo_file { read write ioctl getattr };
 
 ## /tmp read,write,delete files
-files_manage_generic_tmp_files(devconfig_t)
-files_manage_generic_tmp_dirs(devconfig_t)
-files_delete_tmp_dir_entry(devconfig_t)
-create_files_pattern(devconfig_t, tmp_t, tmp_t)
-manage_files_pattern(devconfig_t, tmp_t, tmp_t)
-manage_files_pattern(devconfig_t, var_t, var_t)
+#files_manage_generic_tmp_files(devconfig_t)
+#files_manage_generic_tmp_dirs(devconfig_t)
+#files_delete_tmp_dir_entry(devconfig_t)
+#create_files_pattern(devconfig_t, tmp_t, tmp_t)
+#manage_files_pattern(devconfig_t, tmp_t, tmp_t)
+#manage_files_pattern(devconfig_t, var_t, var_t)
 
 
 leprop_rw_props(devconfig_t)
 allow devconfig_t self:unix_dgram_socket create;
-allow devconfig_t socket_device_t:dir search;
+#allow devconfig_t socket_device_t:dir search;
 
 
 files_rw_qcmap_etc_data_files(devconfig_t)

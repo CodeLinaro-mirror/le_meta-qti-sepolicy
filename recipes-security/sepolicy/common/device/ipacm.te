@@ -95,12 +95,11 @@ manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t
 
 allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
 allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
-rw_diag_dev(ipacm_diag_t)
 allow ipacm_diag_t self:unix_dgram_socket { create setopt };
 allow ipacm_t self:capability net_admin;
 allow ipacm_t self:fifo_file write;
-dev_rw_generic_chr_files(ipacm_perf_t)
-dev_rw_generic_chr_files(ipacm_t)
+#dev_rw_generic_chr_files(ipacm_perf_t)
+#dev_rw_generic_chr_files(ipacm_t)
 type ipacm_tmp_t;
 allow ipacm_t ipacm_tmp_t:dir manage_dir_perms;
 allow ipacm_t ipacm_tmp_t:file manage_file_perms;
@@ -110,4 +109,4 @@ kernel_read_net_sysctls(ipacm_t)
 corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)
 dev_read_sysfs(ipacm_perf_t)
-files_tmpfs_file(ipacm_tmp_t)
+files_tmp_file(ipacm_tmp_t)
