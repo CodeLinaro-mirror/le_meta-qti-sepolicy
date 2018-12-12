@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,51 +25,41 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-fs_relabelfrom_dsp(mount_t)
+policy_module(button_manager, 1.0)
 
-data_mount_volatile_bind(mount_t)
+########################################
+#
+# Declarations
+#
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+type button_manager_t;
+type button_manager_exec_t;
+type button_manager_data_t;
 
-### mount-copybind ###
+# Manage private files inside /data
+user_data_files_type(button_manager_data_t)
+manage_user_data_files(button_manager_t, button_manager_data_t)
+data_filetrans(button_manager_t, button_manager_data_t, { file dir })
 
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
-kernel_read_system_state(mount_copybind_t)
-allow mount_copybind_t self:process setfscreate;
+init_daemon_domain(button_manager_t, button_manager_exec_t)
 
-##allow mount-copybind till creation of directory /systemrw/var/lib/pulse (in systemrw-var-lib-pulse.service)
 gen_require(`
-    type pulseaudio_var_lib_t;
-    type var_lib_t;
+	type event_device_t;
+	type voice-ui-app_t;
 ')
-allow mount_copybind_t var_lib_t:dir search;
-allow mount_copybind_t pulseaudio_var_lib_t:dir { search getattr read };
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
+#============= button_manager_t ==============
+allow button_manager_t event_device_t:chr_file { read open };
+kernel_read_system_state(button_manager_t)
 
-allow mount_copybind_t  self:capability { chown fowner fsetid };
 
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
-
-# Files made writable using mount-copybind must have a unique label
-gen_require(`
-    type etc_t;
-')
-neverallow mount_copybind_t etc_t:file { create relabelto };
-fs_blk_getattr_tmpfs(mount_t)
-
-userdebug_or_eng(`
-    # TODO: Transition the login shells to unconfined_u:unconfined_r?
-    role system_r types unconfined_mount_t;
-')
+## for DBus
+init_dbus_chat(button_manager_t)
+dbus_system_domain(button_manager_t, button_manager_exec_t)
+adk_audio_manager_dbus_chat(button_manager_t);
+init_dbus_send_script(button_manager_t);
+adk_dbus_send_rules_manager(button_manager_t);
+allow button_manager_t voice-ui-app_t:dbus send_msg;
+adk_dbus_send_led_manager(button_manager_t);
+adk_dbus_send_connectivity_manager(button_manager_t);
+unconfined_dbus_chat(button_manager_t)

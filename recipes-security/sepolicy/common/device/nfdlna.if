@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,51 +25,55 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-fs_relabelfrom_firmware(mount_t)
-fs_relabelfrom_dsp(mount_t)
+######################################
+## <summary>
+##      nfdlna daemon interface
+## </summary>
+#
 
-data_mount_volatile_bind(mount_t)
 
-# /dev/ubi*
-device_read_ubi_device(mount_t)
+########################################
+## <summary>
+##      Send messages to nfdlna over dbus.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`adk_dbus_send_nfdlna',`
+        gen_require(`
+                type nfdlna_t;
+                class dbus send_msg;
+        ')
 
-### mount-copybind ###
-
-type mount_copybind_t;
-type mount_copybind_exec_t;
-init_system_domain(mount_copybind_t, mount_copybind_exec_t)
-term_use_all_terms(mount_copybind_t)
-kernel_read_system_state(mount_copybind_t)
-allow mount_copybind_t self:process setfscreate;
-
-##allow mount-copybind till creation of directory /systemrw/var/lib/pulse (in systemrw-var-lib-pulse.service)
-gen_require(`
-    type pulseaudio_var_lib_t;
-    type var_lib_t;
+        allow $1 nfdlna_t:dbus send_msg;
 ')
-allow mount_copybind_t var_lib_t:dir search;
-allow mount_copybind_t pulseaudio_var_lib_t:dir { search getattr read };
 
-# Copy files from /etc to /systemrw
-corecmd_exec_bin(mount_copybind_t)
-files_read_etc_files(mount_copybind_t)
-data_manage_generic_system_files(mount_copybind_t)
-relabel_all_data_files(mount_copybind_t)
 
-allow mount_copybind_t  self:capability { chown fowner fsetid };
+########################################
+## <summary>
+##      Send and receive messages from
+##      rules_manager over dbus.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
 
-# Perform a bind mount with the real mount context
-mount_domtrans(mount_copybind_t)
-files_read_alexa_data_files(mount_copybind_t)
+interface(`adk_nfdlna_dbus_chat',`
+	gen_require(`
+		type nfdlna_t;
+		class dbus send_msg;
+		class dbus recv_msg;
+	')
 
-# Files made writable using mount-copybind must have a unique label
-gen_require(`
-    type etc_t;
+	allow $1 nfdlna_t:dbus { send_msg recv_msg };
+	allow nfdlna_t $1:dbus { send_msg recv_msg };
 ')
-neverallow mount_copybind_t etc_t:file { create relabelto };
-fs_blk_getattr_tmpfs(mount_t)
 
-userdebug_or_eng(`
-    # TODO: Transition the login shells to unconfined_u:unconfined_r?
-    role system_r types unconfined_mount_t;
-')
+
+
