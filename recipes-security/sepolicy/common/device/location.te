@@ -85,6 +85,7 @@ userdebug_or_eng(`
 dev_read_sysfs(loc_hald_t)
 files_read_etc_files(loc_hald_t)
 files_rw_qcmap_etc_data_files(loc_hald_t)
+leprop_rw_props(loc_hald_t)
 
 allow loc_hald_t self:capability { net_admin setgid setuid };
 allow loc_hald_t self:process setcap;
@@ -123,6 +124,7 @@ dontaudit xtwifi_agent_t system_dir_t:dir search;
 
 files_read_etc_files(xtwifi_agent_t)
 allow xtwifi_agent_t self:{ udp_socket unix_dgram_socket } create_socket_perms;
+allow xtwifi_agent_t proc_t:file read_file_perms;
 
 data_filetrans(xtwifi_agent_t, loc_data_t, file)
 manage_user_data_files(xtwifi_agent_t, loc_data_t)
@@ -141,6 +143,7 @@ dontaudit xtwifi_client_t system_dir_t:dir search;
 
 files_read_etc_files(xtwifi_client_t)
 dev_read_sysfs(xtwifi_client_t)
+leprop_rw_props(xtwifi_client_t)
 
 allow xtwifi_client_t self:fifo_file rw_fifo_file_perms;
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
@@ -196,6 +199,7 @@ dev_read_urand(xtra_daemon_t)
 dev_read_rand(xtra_daemon_t)
 miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
+leprop_rw_props(xtra_daemon_t)
 
 type loc_tmp_t;
 files_tmp_file(loc_tmp_t)
@@ -219,7 +223,7 @@ domtrans_pattern(loc_t, lowi_server_exec_t, lowi_server_t)
 logging_send_syslog_msg(lowi_server_t)
 
 kernel_read_network_state(lowi_server_t)
-allow lowi_server_t self:{ netlink_route_socket udp_socket } create_socket_perms;
+allow lowi_server_t self:{ netlink_route_socket udp_socket netlink_generic_socket } create_socket_perms;
 allow lowi_server_t self:capability net_admin;
 allow lowi_server_t self:fifo_file rw_fifo_file_perms;
 
