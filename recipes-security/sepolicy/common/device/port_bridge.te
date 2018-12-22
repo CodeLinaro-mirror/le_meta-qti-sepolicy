@@ -38,6 +38,9 @@ modem_rw_modem_glink_dev(port_bridge_t)
 files_rw_qcmap_etc_data_files(port_bridge_t)
 dev_read_sysfs(port_bridge_t)
 
+type port_bridge_usb_device_t;
+dev_node(port_bridge_usb_device_t)
+allow port_bridge_t port_bridge_usb_device_t:chr_file rw_file_perms;
+
 allow port_bridge_t self:fifo_file rw_fifo_file_perms;
 corecmd_exec_shell(port_bridge_t)
-#dev_rw_generic_chr_files(port_bridge_t)

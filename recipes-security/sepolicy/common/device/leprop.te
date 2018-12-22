@@ -48,7 +48,7 @@ device_manage_socket_file(leprop_t, leprop_sock_t, "leprop-service")
 # /var/volatile/tmp/core.leprop-service.*
 type leprop_tmp_t;
 files_tmp_file(leprop_tmp_t)
-files_tmp_filetrans(leprop_t, leprop_tmp_t)
+files_tmp_filetrans(leprop_t, leprop_tmp_t, file)
 manage_files_pattern(leprop_t, leprop_tmp_t, leprop_tmp_t)
 # proptrigger.conf
 files_read_etc_files(leprop_t)
