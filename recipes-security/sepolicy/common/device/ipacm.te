@@ -36,13 +36,16 @@ user_data_files_type(ipacm_data_t)
 
 type ipa_fw_initrc_exec_t;
 type ipa_fw_initrc_t;
+type ipa_fw_device_t;
 
 init_script_domain(ipa_fw_initrc_t, ipa_fw_initrc_exec_t)
+dev_node(ipa_fw_device_t)
 
 term_read_console(ipa_fw_initrc_t);
 files_read_etc_files(ipa_fw_initrc_t);
 kernel_read_system_state(ipa_fw_initrc_t);
-dev_rw_generic_chr_files(ipa_fw_initrc_t);
+allow ipa_fw_initrc_t ipa_fw_device_t:chr_file { open write };
+rw_chr_files_pattern(ipacm_t, ipa_fw_device_t, ipa_fw_device_t);
 allow ipa_fw_initrc_t self:fifo_file { write read };
 read_user_data_files(ipa_fw_initrc_t, ipacm_data_t);
 
@@ -61,10 +64,8 @@ allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
 allow ipacm_t self:unix_dgram_socket write;
 allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
 allow ipacm_t self:udp_socket { create ioctl };
-allow ipacm_t var_run_t:sock_file write;
 allow ipacm_t self:fifo_file rw_fifo_file_perms;
 allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
-allow ipacm_t tmpfs_t:sock_file write;
 kernel_read_system_state(ipacm_t);
 
 userdebug_or_eng(`
