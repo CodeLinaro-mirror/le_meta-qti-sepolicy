@@ -31,6 +31,7 @@ ifdef(`init_systemd',`
 
     # Allowed in later versions upstream
     allow syslogd_t syslogd_var_run_t:dir create_dir_perms;
+    allow syslogd_t syslogd_var_run_t:sock_file  { create setattr };
 
     # In permissive mode, /run/log is relabeled as var_log_t. In
     #  enforcing mode, /run/log inherits var_run_t from the parent.
@@ -43,4 +44,7 @@ ifdef(`init_systemd',`
     #  systemd-journal to turn it back on.
     dontaudit syslogd_t self:capability audit_control;
     dontaudit syslogd_t self:netlink_audit_socket nlmsg_write;
+
+    allow syslogd_t var_t:dir { write read add_name };
+    allow syslogd_t var_t:file { create append };
 ')

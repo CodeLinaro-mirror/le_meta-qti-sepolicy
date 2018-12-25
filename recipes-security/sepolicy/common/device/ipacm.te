@@ -32,6 +32,20 @@ policy_module(ipacm, 1.0)
 type ipacm_data_t;
 user_data_files_type(ipacm_data_t)
 
+### ipa fws
+
+type ipa_fw_initrc_exec_t;
+type ipa_fw_initrc_t;
+
+init_script_domain(ipa_fw_initrc_t, ipa_fw_initrc_exec_t)
+
+term_read_console(ipa_fw_initrc_t);
+files_read_etc_files(ipa_fw_initrc_t);
+kernel_read_system_state(ipa_fw_initrc_t);
+dev_rw_generic_chr_files(ipa_fw_initrc_t);
+allow ipa_fw_initrc_t self:fifo_file { write read };
+read_user_data_files(ipa_fw_initrc_t, ipacm_data_t);
+
 ### ipacm
 
 type ipacm_t;
@@ -40,8 +54,18 @@ type ipacm_exec_t;
 init_daemon_domain(ipacm_t, ipacm_exec_t)
 logging_send_syslog_msg(ipacm_t)
 
+
 allow ipacm_t self:capability { net_raw net_admin };
 allow ipacm_t self:{ udp_socket netlink_route_socket } create_socket_perms;
+allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
+allow ipacm_t self:unix_dgram_socket write;
+allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
+allow ipacm_t self:udp_socket { create ioctl };
+allow ipacm_t var_run_t:sock_file write;
+allow ipacm_t self:fifo_file rw_fifo_file_perms;
+allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
+allow ipacm_t tmpfs_t:sock_file write;
+kernel_read_system_state(ipacm_t);
 
 userdebug_or_eng(`
     rw_diag_dev(ipacm_t)
@@ -67,6 +91,8 @@ allow ipacm_perf_t self:netlink_route_socket r_netlink_socket_perms;
 allow ipacm_perf_t self:{ socket udp_socket } create_socket_perms;
 allow ipacm_perf_t self:fifo_file rw_fifo_file_perms;
 allow ipacm_perf_t self:unix_dgram_socket { create_socket_perms sendto };
+dev_read_sysfs(ipacm_perf_t);
+allow ipacm_perf_t data_t:dir { write remove_name };
 data_filetrans(ipacm_perf_t, ipacm_data_t, dir)
 manage_user_data_files(ipacm_perf_t, ipacm_data_t)
 
@@ -82,7 +108,10 @@ userdebug_or_eng(`
     rw_diag_dev(ipacm_diag_t)
 ')
 
-allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
+dev_read_sysfs(ipacm_diag_t);
+fs_manage_tmpfs_dirs(ipacm_diag_t);
+allow ipacm_diag_t tmpfs_t:sock_file create;
+allow ipacm_diag_t self:unix_dgram_socket create_socket_perms;
 data_filetrans(ipacm_diag_t, ipacm_data_t, dir)
 manage_user_data_files(ipacm_diag_t, ipacm_data_t)
 
@@ -93,19 +122,16 @@ files_pid_file(ipacm_var_run_t)
 files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, { sock_file file })
 manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
 
-allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
-allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
 rw_diag_dev(ipacm_diag_t)
-allow ipacm_diag_t self:unix_dgram_socket { create setopt };
 allow ipacm_t self:capability net_admin;
-allow ipacm_t self:fifo_file write;
-dev_rw_generic_chr_files(ipacm_perf_t)
-dev_rw_generic_chr_files(ipacm_t)
+dev_rw_generic_chr_files(ipacm_perf_t);
+dev_rw_generic_chr_files(ipacm_t);
 type ipacm_tmp_t;
 allow ipacm_t ipacm_tmp_t:dir manage_dir_perms;
 allow ipacm_t ipacm_tmp_t:file manage_file_perms;
 files_tmp_filetrans(ipacm_t, ipacm_tmp_t, { file dir })
 allow ipacm_t self:netlink_route_socket nlmsg_read;
+allow ipacm_t var_run_t:file { create rw_file_perms };
 kernel_read_net_sysctls(ipacm_t)
 corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)

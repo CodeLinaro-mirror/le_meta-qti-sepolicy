@@ -29,3 +29,4 @@ locallogin_allow_sigops(getty_t)
 
 #============= getty_t ==============
 allow getty_t self:capability kill;
+files_rw_var_files(getty_t)
