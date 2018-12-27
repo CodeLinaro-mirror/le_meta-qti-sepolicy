@@ -29,5 +29,35 @@ policy_module(mbim, 1.0)
 
 type mbim_t;
 type mbim_exec_t;
+type mbim_device_t;
 init_daemon_domain(mbim_t, mbim_exec_t)
 inittab_domtrans(mbim_t, mbim_exec_t)
+
+# Manage private files inside /data/mbimd
+type mbim_data_t;
+user_data_files_type(mbim_data_t)
+manage_user_data_files(mbim_t, mbim_data_t)
+data_filetrans(mbim_t, mbim_data_t, { file dir })
+
+# Manage private files inside /var/run
+type mbim_var_run_t;
+files_pid_file(mbim_var_run_t)
+allow mbim_t mbim_var_run_t:file manage_file_perms;
+files_pid_filetrans(mbim_t, mbim_var_run_t, { file dir })
+
+userdebug_or_eng('
+   rw_diag_dev(mbim_t)
+')
+
+
+logging_send_syslog_msg(mbim_t)
+dev_rw_sysfs(mbim_t)
+dev_write_kmsg(mbim_t)
+dev_node(mbim_device_t)
+rw_chr_files_pattern(mbim_t, device_t, mbim_device_t)
+
+allow mbim_t firmware_t:file { read open getattr };
+allow mbim_t self:socket { read write create ioctl };
+allow mbim_t self:fifo_file { read write };
+allow mbim_t self:unix_dgram_socket { create connect write sendto };
+allow mbim_t self:capability2 { block_suspend };
