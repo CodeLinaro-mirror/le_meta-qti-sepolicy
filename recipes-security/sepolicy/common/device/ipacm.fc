@@ -31,3 +31,5 @@
 /etc/rc\.d/init\.d/ipa_fws_le     --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
 
 /data/misc/ipa(/.*)?                  gen_context(system_u:object_r:ipacm_data_t,s0)
+
+/dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
