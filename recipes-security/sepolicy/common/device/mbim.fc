@@ -26,3 +26,8 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/mbimd                   --  gen_context(system_u:object_r:mbim_exec_t,s0)
+/dev/gps                         -c  gen_context(system_u:object_r:mbim_device_t,s0)
+/dev/smdcntl0                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
+/dev/smdcntl1                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
+/dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
+
