@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -33,3 +33,4 @@
 /data/misc/ipa(/.*)?                  gen_context(system_u:object_r:ipacm_data_t,s0)
 
 /dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
+/dev/wwan_ioctl                  -c   gen_context(system_u:object_r:ipa_wwan_device_t,s0)
