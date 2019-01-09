@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -119,14 +119,26 @@ manage_user_data_files(ipacm_diag_t, ipacm_data_t)
 ### /var/run sockets
 
 type ipacm_var_run_t;
+type ipa_wwan_device_t;
+
+dev_node(ipa_wwan_device_t)
 files_pid_file(ipacm_var_run_t)
 files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, { sock_file file })
 manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
 
-rw_diag_dev(ipacm_diag_t)
+gen_require(`
+    type device_t;
+')
+
+userdebug_or_eng(`
+    rw_diag_dev(ipacm_diag_t)
+')
+
 allow ipacm_t self:capability net_admin;
-dev_rw_generic_chr_files(ipacm_perf_t);
-dev_rw_generic_chr_files(ipacm_t);
+rw_chr_files_pattern(ipacm_perf_t, device_t, ipa_wwan_device_t);
+rw_chr_files_pattern(ipacm_t, device_t, ipa_fw_device_t);
+rw_chr_files_pattern(ipacm_t, device_t, ipa_wwan_device_t);
+
 type ipacm_tmp_t;
 allow ipacm_t ipacm_tmp_t:dir manage_dir_perms;
 allow ipacm_t ipacm_tmp_t:file manage_file_perms;
@@ -137,4 +149,4 @@ kernel_read_net_sysctls(ipacm_t)
 corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)
 dev_read_sysfs(ipacm_perf_t)
-files_tmpfs_file(ipacm_tmp_t)
+files_tmp_file(ipacm_tmp_t)
