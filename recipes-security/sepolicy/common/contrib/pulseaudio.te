@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -74,7 +74,6 @@ corecmd_exec_shell(pulseaudio_t)
 allow pulseaudio_t self:process { signal getsched };
 
 ## for DBus
-init_dbus_chat(pulseaudio_t)
-
-
-
+ifdef(`init_systemd', `
+    init_dbus_chat(pulseaudio_t)
+')

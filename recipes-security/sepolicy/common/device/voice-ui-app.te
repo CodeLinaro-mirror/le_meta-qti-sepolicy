@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -64,7 +64,9 @@ gen_require(`
 	type user_home_t;
 	type user_home_dir_t;
 	type udev_var_run_t;
-	class dbus send_msg;
+        ifdef(`init_systemd', `
+            class dbus send_msg;
+        ')
 ')
 
 manage_files_pattern(voice-ui-app_t, voice-ui-app_data_t, voice-ui-app_data_t)
@@ -143,16 +145,18 @@ allow voice-ui-app_t self:process { signal getsched };
 allow voice-ui-app_t voice-ui-app_exec_t:file { read write open create };
 
 ## for DBus
-init_dbus_chat(voice-ui-app_t)
-dbus_system_domain(voice-ui-app_t, voice-ui-app_exec_t)
+ifdef(`init_systemd', `
+    init_dbus_chat(voice-ui-app_t)
+    dbus_system_domain(voice-ui-app_t, voice-ui-app_exec_t)
 
-adk_audio_manager_dbus_chat(voice-ui-app_t);
-pulseaudio_dbus_chat(voice-ui-app_t);
-unconfined_dbus_chat(voice-ui-app_t);
-init_dbus_send_script(voice-ui-app_t)
-adk_dbus_send_led_manager(voice-ui-app_t);
-adk_dbus_send_rules_manager(voice-ui-app_t);
-allow voice-ui-app_t self:dbus send_msg;
+    adk_audio_manager_dbus_chat(voice-ui-app_t);
+    pulseaudio_dbus_chat(voice-ui-app_t);
+    unconfined_dbus_chat(voice-ui-app_t);
+    init_dbus_send_script(voice-ui-app_t)
+    adk_dbus_send_led_manager(voice-ui-app_t);
+    adk_dbus_send_rules_manager(voice-ui-app_t);
+    allow voice-ui-app_t self:dbus send_msg;
+')
 
 ## for Pulseaudio
 #adk_pulseaudio_rw_voice_ui_files(voice-ui-app_data_t);
