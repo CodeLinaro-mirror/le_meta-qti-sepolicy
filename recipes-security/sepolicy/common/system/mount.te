@@ -56,3 +56,8 @@ gen_require(`
 ')
 neverallow mount_copybind_t etc_t:file { create relabelto };
 fs_blk_getattr_tmpfs(mount_t)
+
+userdebug_or_eng(`
+    # TODO: Transition the login shells to unconfined_u:unconfined_r?
+    role system_r types unconfined_mount_t;
+')
