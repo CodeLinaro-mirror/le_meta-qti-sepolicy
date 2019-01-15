@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,3 +26,22 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## <summary>system directory</summary>
+
+########################################
+## <summary>
+##      Read and write to mbim device node
+## </summary>
+## <param name="domain">
+##      <summary>
+##      The domain to allow access for
+##      </summary>
+## </param>
+#
+interface(`mbim_rw_device',`
+    gen_require(`
+        type device_t;
+        type mbim_device_t;
+    ')
+
+    rw_chr_files_pattern($1, device_t, mbim_device_t)
+')

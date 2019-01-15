@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -32,13 +32,13 @@ type qmuxbridge_exec_t;
 init_daemon_domain(qmuxbridge_t, qmuxbridge_exec_t)
 inittab_domtrans(qmuxbridge_t, qmuxbridge_exec_t)
 
-userdebug_or_eng('
+userdebug_or_eng(`
    rw_diag_dev(qmuxbridge_t)
 ')
 
 dev_read_sysfs(qmuxbridge_t)
 logging_send_syslog_msg(qmuxbridge_t)
-rw_chr_files_pattern(qmuxbridge_t, device_t, mbim_device_t)
+mbim_rw_device(qmuxbridge_t)
 
 allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto };
 allow qmuxbridge_t self:socket { read write create ioctl };
