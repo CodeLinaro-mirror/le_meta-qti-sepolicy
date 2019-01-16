@@ -360,3 +360,30 @@ interface(`relabel_all_data_files',`
     relabel_sock_files_pattern($1, system_data, system_data)
 ')
 
+########################################
+## <summary>
+##      Read and write system data files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <param name="type">
+##      <summary>
+##      File type allowed access.
+##      </summary>
+## </param>
+#
+interface(`data_rw_system_data_files',`
+    gen_require(`
+        attribute system_data;
+        attribute domain_can_write_systemdata;
+    ')
+
+    typeattribute $1 domain_can_write_systemdata;
+    search_system_data_dir($1)
+    rw_files_pattern($1, system_data, $2)
+    read_lnk_files_pattern($1, system_data, $2)
+')
+
