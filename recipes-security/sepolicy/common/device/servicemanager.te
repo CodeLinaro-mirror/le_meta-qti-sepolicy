@@ -30,7 +30,7 @@ policy_module(servicemanager, 1.0)
 type servicemanager_t;
 type servicemanager_exec_t;
 
-init_daemon_domain(servicemanager_t, servicemanager_exec_t)
+init_vendor_domain(servicemanager_t, servicemanager_exec_t)
 
 allow servicemanager_t self:binder set_context_mgr;
 allow servicemanager_t {daemon -initrc_t}:binder transfer;

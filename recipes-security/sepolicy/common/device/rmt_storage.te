@@ -35,7 +35,7 @@ policy_module(rmt_storage, 1.0)
 type rmt_storage_t;
 type rmt_storage_exec_t;
 
-init_daemon_domain(rmt_storage_t, rmt_storage_exec_t)
+init_vendor_domain(rmt_storage_t, rmt_storage_exec_t)
 
 ########################################
 #

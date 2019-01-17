@@ -30,7 +30,7 @@ policy_module(port_bridge, 1.0)
 type port_bridge_t;
 type port_bridge_exec_t;
 
-init_daemon_domain(port_bridge_t, port_bridge_exec_t)
+init_vendor_domain(port_bridge_t, port_bridge_exec_t)
 
 type modem_glink_device_t;
 dev_node(modem_glink_device_t)

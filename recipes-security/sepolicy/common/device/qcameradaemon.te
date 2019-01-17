@@ -33,7 +33,7 @@ policy_module(qcameradaemon, 1.0)
 
 type qcameradaemon_t;
 type qcameradaemon_exec_t;
-init_daemon_domain(qcameradaemon_t, qcameradaemon_exec_t)
+init_vendor_domain(qcameradaemon_t, qcameradaemon_exec_t)
 inittab_domtrans(qcameradaemon_t, qcameradaemon_exec_t)
 
 leprop_rw_props(qcameradaemon_t)

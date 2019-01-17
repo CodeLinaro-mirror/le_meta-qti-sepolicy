@@ -54,7 +54,7 @@ read_user_data_files(ipa_fw_initrc_t, ipacm_data_t);
 type ipacm_t;
 type ipacm_exec_t;
 
-init_daemon_domain(ipacm_t, ipacm_exec_t)
+init_vendor_domain(ipacm_t, ipacm_exec_t)
 logging_send_syslog_msg(ipacm_t)
 
 
@@ -80,7 +80,7 @@ manage_user_data_files(ipacm_t, ipacm_data_t)
 type ipacm_perf_t;
 type ipacm_perf_exec_t;
 
-init_daemon_domain(ipacm_perf_t, ipacm_perf_exec_t)
+init_vendor_domain(ipacm_perf_t, ipacm_perf_exec_t)
 logging_send_syslog_msg(ipacm_perf_t)
 
 userdebug_or_eng(`
@@ -102,7 +102,7 @@ manage_user_data_files(ipacm_perf_t, ipacm_data_t)
 type ipacm_diag_t;
 type ipacm_diag_exec_t;
 
-init_daemon_domain(ipacm_diag_t, ipacm_diag_exec_t)
+init_vendor_domain(ipacm_diag_t, ipacm_diag_exec_t)
 logging_send_syslog_msg(ipacm_diag_t)
 
 userdebug_or_eng(`

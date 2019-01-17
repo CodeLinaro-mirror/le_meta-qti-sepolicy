@@ -35,7 +35,7 @@ policy_module(wlan, 1.0)
 type wlan_service_t;
 type wlan_service_exec_t;
 
-init_daemon_domain(wlan_service_t, wlan_service_exec_t)
+init_vendor_domain(wlan_service_t, wlan_service_exec_t)
 inittab_domtrans(wlan_service_t, wlan_service_exec_t)
 
 userdebug_or_eng(`

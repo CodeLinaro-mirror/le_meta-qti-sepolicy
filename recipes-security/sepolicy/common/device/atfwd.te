@@ -30,7 +30,7 @@ policy_module(atfwd, 1.0)
 type atfwd_t;
 type atfwd_exec_t;
 
-init_daemon_domain(atfwd_t, atfwd_exec_t)
+init_vendor_domain(atfwd_t, atfwd_exec_t)
 
 corecmd_exec_bin(atfwd_t)
 shutdown_domtrans(atfwd_t)

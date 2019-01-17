@@ -35,4 +35,4 @@ policy_module(irsc_util, 1.0)
 type irsc_util_t;
 type irsc_util_exec_t;
 
-init_daemon_domain(irsc_util_t, irsc_util_exec_t)
+init_vendor_domain(irsc_util_t, irsc_util_exec_t)

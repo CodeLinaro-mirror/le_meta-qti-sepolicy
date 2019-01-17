@@ -35,7 +35,7 @@ policy_module(bootlogd, 1.0)
 type bootlogd_t;
 type bootlogd_exec_t;
 
-init_daemon_domain(bootlogd_t, bootlogd_exec_t)
+init_vendor_domain(bootlogd_t, bootlogd_exec_t)
 init_getattr_initctl(bootlogd_t)
 files_read_etc_files(bootlogd_t)
 

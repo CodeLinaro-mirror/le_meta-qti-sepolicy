@@ -35,7 +35,7 @@ policy_module(qti-audio-server-daemon, 1.0)
 type audio-server-daemon_t;
 type audio-server-daemon_exec_t;
 
-init_daemon_domain(audio-server-daemon_t, audio-server-daemon_exec_t)
+init_vendor_domain(audio-server-daemon_t, audio-server-daemon_exec_t)
 
 userdebug_or_eng(`
   kernel_search_debugfs(audio-server-daemon_t);
