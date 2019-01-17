@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -54,12 +54,14 @@ kernel_read_system_state(button_manager_t)
 
 
 ## for DBus
-init_dbus_chat(button_manager_t)
-dbus_system_domain(button_manager_t, button_manager_exec_t)
-adk_audio_manager_dbus_chat(button_manager_t);
-init_dbus_send_script(button_manager_t);
-adk_dbus_send_rules_manager(button_manager_t);
-allow button_manager_t voice-ui-app_t:dbus send_msg;
-adk_dbus_send_led_manager(button_manager_t);
-adk_dbus_send_connectivity_manager(button_manager_t);
-unconfined_dbus_chat(button_manager_t)
+ifdef(`init_systemd', `
+    init_dbus_chat(button_manager_t)
+    dbus_system_domain(button_manager_t, button_manager_exec_t)
+    adk_audio_manager_dbus_chat(button_manager_t);
+    init_dbus_send_script(button_manager_t);
+    adk_dbus_send_rules_manager(button_manager_t);
+    allow button_manager_t voice-ui-app_t:dbus send_msg;
+    adk_dbus_send_led_manager(button_manager_t);
+    adk_dbus_send_connectivity_manager(button_manager_t);
+    unconfined_dbus_chat(button_manager_t)
+')

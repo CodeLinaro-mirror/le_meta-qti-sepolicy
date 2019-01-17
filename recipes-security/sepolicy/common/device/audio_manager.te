@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -46,7 +46,9 @@ gen_require(`
 	type random_device_t;
 	type urandom_device_t;
 	type home_root_t;
-	class dbus send_msg;
+        ifdef(`init_systemd', `
+            class dbus send_msg;
+        ')
 ')
 
 #manage_system_data_files(audio_manager_t, audio_manager_data_t)
@@ -89,18 +91,20 @@ dev_read_sound(audio_manager_t)
 dev_write_sound(audio_manager_t)
 
 ## for DBus
-init_dbus_chat(audio_manager_t)
-dbus_system_domain(audio_manager_t, audio_manager_exec_t)
+ifdef(`init_systemd', `
+    init_dbus_chat(audio_manager_t)
+    dbus_system_domain(audio_manager_t, audio_manager_exec_t)
 
-adk_voice_ui_dbus_chat(audio_manager_t);
-unconfined_dbus_chat(audio_manager_t);
-adk_dbus_send_connectivity_manager(audio_manager_t);
-init_dbus_send_script(audio_manager_t)
+    adk_voice_ui_dbus_chat(audio_manager_t);
+    unconfined_dbus_chat(audio_manager_t);
+    adk_dbus_send_connectivity_manager(audio_manager_t);
+    init_dbus_send_script(audio_manager_t)
 
-adk_dbus_send_led_manager(audio_manager_t);
-allow audio_manager_t self:dbus send_msg;
-adk_dbus_send_nfdlna(audio_manager_t);
-adk_dbus_send_rules_manager(audio_manager_t);
+    adk_dbus_send_led_manager(audio_manager_t);
+    allow audio_manager_t self:dbus send_msg;
+    adk_dbus_send_nfdlna(audio_manager_t);
+    adk_dbus_send_rules_manager(audio_manager_t);
+')
 
 ## for Pulseaudio
 pulseaudio_rw_tmpfs_files(audio_manager_t);

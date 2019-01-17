@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -88,11 +88,9 @@ dev_read_sound(nfdlna_t)
 dev_write_sound(nfdlna_t)
 
 ## for DBus
-init_dbus_chat(nfdlna_t)
-dbus_system_domain(nfdlna_t, nfdlna_exec_t)
-#allow nfdlna_t audio_manager_t:dbus send_msg;
-adk_audio_manager_dbus_chat(nfdlna_t);
-
-
-
-
+ifdef(`init_systemd', `
+    init_dbus_chat(nfdlna_t)
+    dbus_system_domain(nfdlna_t, nfdlna_exec_t)
+    #allow nfdlna_t audio_manager_t:dbus send_msg;
+    adk_audio_manager_dbus_chat(nfdlna_t);
+')
