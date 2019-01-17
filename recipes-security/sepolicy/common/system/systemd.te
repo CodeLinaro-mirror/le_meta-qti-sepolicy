@@ -1,4 +1,4 @@
-# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -31,27 +31,14 @@ ifdef(`init_systemd',`
     allow systemd_passwd_agent_t init_var_run_t:dir { create open read add_name write getattr search };
     allow systemd_passwd_agent_t proc_t:file { read open };
 
-    # Since we use systemd-tmpfiles to populate "/data", we have the systemd_tmpfiles_manage_all
-    # flag enabled, we may as well let it manage "/data" too.
-    tunable_policy(`systemd_tmpfiles_manage_all',`
-        gen_require(`
-            attribute user_data;
-            type data_t;
-        ')
-        ## Note: Adding macro manage_user_data_files(systemd_tmpfiles_t, user_data); was giving
-        ## compilation error. Instead of using macro, we add the changes for that macro directly
-        ## here and comment the two lines which is causing compilation error.
-        ## Original definition of macro manage_user_data_files is - sepolicy/common/device/data.if
-        ## In expanding macro here, commented the below lines from that macro which was causing
-        ## errors.
-        ##  - read_user_data_files(systemd_tmpfiles_t, user_data)
-        ##  - typeattribute systemd_tmpfiles_t domain_can_write_userdata;
-        allow systemd_tmpfiles_t data_t:dir create;
-        manage_dirs_pattern(systemd_tmpfiles_t, user_data, user_data)
-        manage_files_pattern(systemd_tmpfiles_t, user_data, user_data)
-        manage_lnk_files_pattern(systemd_tmpfiles_t, user_data, user_data)
-        manage_sock_files_pattern(systemd_tmpfiles_t, user_data, user_data)
+    # This should respect systemd_tmpfiles_manage_all tunable, but
+    #  typeattribute does not work in that context.
+    gen_require(`
+        attribute user_data;
     ')
+    manage_user_data_files(systemd_tmpfiles_t, user_data)
+    relabel_all_data_files(systemd_tmpfiles_t)
+
     files_manage_var_dirs(systemd_tmpfiles_t)
     files_read_generic_tmp_symlinks(systemd_tmpfiles_t)
     allow daemon init_t:unix_dgram_socket sendto;
