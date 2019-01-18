@@ -67,3 +67,5 @@ corecmd_check_exec_shell(qtether_t);
 sysnet_exec_ifconfig(qtether_t)
 corecmd_exec_shell(qtether_t)
 kernel_read_system_state(qtether_t)
+ifndef(`init_systemd', `dev_rw_generic_chr_files(qtether_t)')
+files_dontaudit_getattr_default_dirs(qtether_t)
