@@ -63,3 +63,9 @@ read_files_pattern(alogd_t, domain, domain)
 # Allow all domains to send messages to alogd (but not read)
 allow domain alogd_sock_t:sock_file write_sock_file_perms;
 allow domain alogd_t:unix_dgram_socket sendto;
+
+# Allow initscripts to modify alogd socket permissions
+gen_require(`
+    type initrc_t;
+')
+allow initrc_t alogd_sock_t:sock_file setattr;

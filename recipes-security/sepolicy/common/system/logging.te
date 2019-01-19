@@ -39,6 +39,11 @@ ifdef(`init_systemd',`
     allow syslogd_t var_run_t:dir create_dir_perms;
     type_transition syslogd_t var_run_t:dir var_log_t "log";
 
+    # Create logging subdirectories in /var and transition to var_log_t
+    files_manage_var_dirs(syslogd_t)
+    files_manage_var_files(syslogd_t)
+    files_var_filetrans(syslogd_t, var_log_t, { file dir })
+
     # If auditd is not running, don't report attempts from
     #  systemd-journal to turn it back on.
     dontaudit syslogd_t self:capability audit_control;
