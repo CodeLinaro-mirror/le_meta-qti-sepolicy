@@ -30,7 +30,7 @@ policy_module(mbim, 1.0)
 type mbim_t;
 type mbim_exec_t;
 type mbim_device_t;
-init_daemon_domain(mbim_t, mbim_exec_t)
+init_vendor_domain(mbim_t, mbim_exec_t)
 inittab_domtrans(mbim_t, mbim_exec_t)
 
 # Manage private files inside /data/mbimd

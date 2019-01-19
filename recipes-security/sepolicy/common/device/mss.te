@@ -36,7 +36,7 @@ policy_module(mss, 1.0)
 type mss_t;
 type mss_exec_t;
 
-init_daemon_domain(mss_t, mss_exec_t)
+init_vendor_domain(mss_t, mss_exec_t)
 
 #Read/Write /dev/subsys_modem
 rw_subsys_modem_dev(mss_t)

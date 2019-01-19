@@ -29,6 +29,30 @@
 
 ########################################
 ## <summary>
+##      Transition to a new vendor_domain. See init_daemon_domain
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Type to be used as a daemon domain.
+##      </summary>
+## </param>
+## <param name="entry_point">
+##      <summary>
+##      Type of the program to be used as an entry point to this domain.
+##      </summary>
+## </param>
+#
+interface(`init_vendor_domain',`
+    gen_require(`
+        attribute vendor_domain;
+    ')
+
+    init_daemon_domain($1, $2)
+    typeattribute $1 vendor_domain;
+')
+
+########################################
+## <summary>
 ##      Read and write the subsys_modem device.
 ## </summary>
 ## <param name="domain">

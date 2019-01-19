@@ -40,7 +40,7 @@ gen_require(`
 type loc_t;
 type loc_exec_t;
 
-init_daemon_domain(loc_t, loc_exec_t)
+init_vendor_domain(loc_t, loc_exec_t)
 inittab_domtrans(loc_t, loc_exec_t)
 
 dontaudit loc_t system_dir_t:dir search;
@@ -70,7 +70,7 @@ manage_user_data_files(loc_t, loc_data_t)
 type loc_hald_t;
 type loc_hald_exec_t;
 
-init_daemon_domain(loc_hald_t, loc_hald_exec_t)
+init_vendor_domain(loc_hald_t, loc_hald_exec_t)
 inittab_domtrans(loc_hald_t, loc_hald_exec_t)
 logging_send_syslog_msg(loc_hald_t)
 
@@ -110,7 +110,7 @@ dontaudit loc_hald_t system_dir_t:dir search;
 type xtwifi_agent_t;
 type xtwifi_agent_exec_t;
 
-init_daemon_domain(xtwifi_agent_t, xtwifi_agent_exec_t)
+init_vendor_domain(xtwifi_agent_t, xtwifi_agent_exec_t)
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, xtwifi_agent_exec_t, xtwifi_agent_t)
 logging_send_syslog_msg(xtwifi_agent_t)
@@ -129,7 +129,7 @@ manage_user_data_files(xtwifi_agent_t, loc_data_t)
 type xtwifi_client_t;
 type xtwifi_client_exec_t;
 
-init_daemon_domain(xtwifi_client_t, xtwifi_client_exec_t)
+init_vendor_domain(xtwifi_client_t, xtwifi_client_exec_t)
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, xtwifi_client_exec_t, xtwifi_client_t)
 logging_send_syslog_msg(xtwifi_client_t)
@@ -151,7 +151,7 @@ dev_read_urand(xtwifi_client_t)
 type engine_service_t;
 type engine_service_exec_t;
 
-init_daemon_domain(engine_service_t, engine_service_exec_t)
+init_vendor_domain(engine_service_t, engine_service_exec_t)
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, engine_service_exec_t, engine_service_t)
 logging_send_syslog_msg(engine_service_t)
@@ -172,7 +172,7 @@ dontaudit engine_service_t system_dir_t:dir search;
 ### xtra-daemon
 type xtra_daemon_t;
 type xtra_daemon_exec_t;
-init_daemon_domain(xtra_daemon_t, xtra_daemon_exec_t)
+init_vendor_domain(xtra_daemon_t, xtra_daemon_exec_t)
 
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, xtra_daemon_exec_t, xtra_daemon_t)
@@ -211,7 +211,7 @@ dontaudit xtra_daemon_t system_dir_t:dir search;
 ### lowi-server
 type lowi_server_t;
 type lowi_server_exec_t;
-init_daemon_domain(lowi_server_t, lowi_server_exec_t)
+init_vendor_domain(lowi_server_t, lowi_server_exec_t)
 
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, lowi_server_exec_t, lowi_server_t)

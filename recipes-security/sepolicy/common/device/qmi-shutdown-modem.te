@@ -30,7 +30,7 @@ policy_module(qmi-shutdown-modem, 1.0)
 type qmi_shutdown_modem_t;
 type qmi_shutdown_modem_exec_t;
 
-init_daemon_domain(qmi_shutdown_modem_t, qmi_shutdown_modem_exec_t)
+init_vendor_domain(qmi_shutdown_modem_t, qmi_shutdown_modem_exec_t)
 
 userdebug_or_eng(`
     rw_diag_dev(qmi_shutdown_modem_t)

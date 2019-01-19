@@ -31,7 +31,7 @@ type qtether_t;
 type qtether_exec_t;
 type dataqti_device_t;
 
-init_daemon_domain(qtether_t, qtether_exec_t)
+init_vendor_domain(qtether_t, qtether_exec_t)
 logging_send_syslog_msg(qtether_t)
 dev_node(dataqti_device_t)
 

@@ -31,7 +31,7 @@ type dataadpl_t;
 type dataadpl_exec_t;
 type dataadpl_device_t;
 
-init_daemon_domain(dataadpl_t, dataadpl_exec_t)
+init_vendor_domain(dataadpl_t, dataadpl_exec_t)
 dev_node(dataadpl_device_t)
 
 userdebug_or_eng(`

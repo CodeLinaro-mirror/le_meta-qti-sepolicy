@@ -30,7 +30,7 @@ policy_module(qnetmgrd, 1.0)
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
 
-init_daemon_domain(qnetmgrd_t, qnetmgrd_exec_t)
+init_vendor_domain(qnetmgrd_t, qnetmgrd_exec_t)
 logging_send_syslog_msg(qnetmgrd_t)
 
 userdebug_or_eng(`

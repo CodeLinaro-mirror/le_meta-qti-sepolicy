@@ -30,7 +30,7 @@ policy_module(alogd, 1.0)
 type alogd_t;
 type alogd_exec_t;
 
-init_daemon_domain(alogd_t, alogd_exec_t)
+init_vendor_domain(alogd_t, alogd_exec_t)
 
 allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
 allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };

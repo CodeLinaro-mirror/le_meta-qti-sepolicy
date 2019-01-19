@@ -30,7 +30,7 @@ policy_module(rebootd, 1.0)
 type rebootd_t;
 type rebootd_exec_t;
 
-init_daemon_domain(rebootd_t, rebootd_exec_t)
+init_vendor_domain(rebootd_t, rebootd_exec_t)
 
 allow rebootd_t self:capability chown;
 

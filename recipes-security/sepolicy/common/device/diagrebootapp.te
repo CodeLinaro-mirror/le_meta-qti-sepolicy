@@ -35,7 +35,7 @@ policy_module(diagrebootapp, 1.0)
 type diagrebootapp_t;
 type diagrebootapp_exec_t;
 
-init_daemon_domain(diagrebootapp_t, diagrebootapp_exec_t)
+init_vendor_domain(diagrebootapp_t, diagrebootapp_exec_t)
 
 #allow diagrebootapp_t device_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid };

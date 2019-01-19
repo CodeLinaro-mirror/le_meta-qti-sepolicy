@@ -29,7 +29,7 @@ policy_module(qmuxbridge, 1.0)
 
 type qmuxbridge_t;
 type qmuxbridge_exec_t;
-init_daemon_domain(qmuxbridge_t, qmuxbridge_exec_t)
+init_vendor_domain(qmuxbridge_t, qmuxbridge_exec_t)
 inittab_domtrans(qmuxbridge_t, qmuxbridge_exec_t)
 
 userdebug_or_eng(`

@@ -36,7 +36,7 @@ type alljoyn_t;
 type alljoyn_exec_t;
 type alljoyn_conf_file_t;
 
-init_daemon_domain(alljoyn_t, alljoyn_exec_t)
+init_vendor_domain(alljoyn_t, alljoyn_exec_t)
 
 files_type(alljoyn_conf_file_t)
 allow alljoyn_t alljoyn_conf_file_t:file read_file_perms;

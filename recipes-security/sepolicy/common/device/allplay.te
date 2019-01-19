@@ -37,7 +37,7 @@ type allplay_exec_t;
 type allplay_system_data_t;
 type allplay_var_log_t;
 
-init_daemon_domain(allplay_t, allplay_exec_t)
+init_vendor_domain(allplay_t, allplay_exec_t)
 system_data_files_type(allplay_system_data_t)
 
 gen_require(`

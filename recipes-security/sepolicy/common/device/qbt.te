@@ -30,9 +30,9 @@ policy_module(qbt, 1.0)
 type btapp_t;
 type btapp_exec_t;
 
-init_daemon_domain(btapp_t, btapp_exec_t)
+init_vendor_domain(btapp_t, btapp_exec_t)
 
 type btprop_t;
 type btprop_exec_t;
 
-init_daemon_domain(btprop_t, btprop_exec_t)
+init_vendor_domain(btprop_t, btprop_exec_t)

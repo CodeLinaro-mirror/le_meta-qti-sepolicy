@@ -30,7 +30,7 @@ policy_module(leprop, 1.0)
 # leprop-service
 type leprop_t;
 type leprop_exec_t;
-init_daemon_domain(leprop_t, leprop_exec_t)
+init_vendor_domain(leprop_t, leprop_exec_t)
 inittab_domtrans(leprop_t, leprop_exec_t)
 
 allow leprop_t self:unix_dgram_socket create_socket_perms;

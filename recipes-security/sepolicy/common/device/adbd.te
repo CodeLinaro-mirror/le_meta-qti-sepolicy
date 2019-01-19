@@ -30,7 +30,7 @@ policy_module(adbd, 1.0)
 type adbd_t;
 type adbd_exec_t;
 
-init_daemon_domain(adbd_t, adbd_exec_t)
+init_vendor_domain(adbd_t, adbd_exec_t)
 
 userdebug_or_eng(`
     unconfined_shell_domtrans(adbd_t)

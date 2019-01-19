@@ -31,11 +31,13 @@ policy_module(vendor, 1.0)
 
 allow domain self:unix_dgram_socket { create_socket_perms sendto };
 
+attribute vendor_domain;
+
 ### tftp server ###
 
 type tftp_server_t;
 type tftp_server_exec_t;
-init_daemon_domain(tftp_server_t, tftp_server_exec_t)
+init_vendor_domain(tftp_server_t, tftp_server_exec_t)
 inittab_domtrans(tftp_server_t, tftp_server_exec_t)
 
 # /sys/power/wakelock

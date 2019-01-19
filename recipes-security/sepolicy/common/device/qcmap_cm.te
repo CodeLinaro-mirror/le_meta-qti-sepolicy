@@ -30,7 +30,7 @@ policy_module(qcmap_cm, 1.0)
 type qcmap_cm_t;
 type qcmap_cm_exec_t;
 type qcmap_etc_data_t;
-init_daemon_domain(qcmap_cm_t, qcmap_cm_exec_t)
+init_vendor_domain(qcmap_cm_t, qcmap_cm_exec_t)
 system_data_files_type(qcmap_etc_data_t);
 
 wlan_start_stop(qcmap_cm_t)

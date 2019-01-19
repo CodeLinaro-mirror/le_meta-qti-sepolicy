@@ -40,7 +40,7 @@ system_data_files_type(alexa_system_data_t)
 
 type alexa_t;
 type alexa_exec_t;
-init_daemon_domain(alexa_t, alexa_exec_t)
+init_vendor_domain(alexa_t, alexa_exec_t)
 
 files_read_etc_files(alexa_t);
 manage_system_data_files(alexa_t, alexa_system_data_t)
