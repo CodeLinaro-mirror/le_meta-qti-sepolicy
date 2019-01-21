@@ -40,7 +40,6 @@ init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 
 gen_require(`
 	type debugfs_t;
-	type device_t;
 ')
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
@@ -51,7 +50,10 @@ allow pulseaudio_t self:unix_stream_socket { accept connectto listen };
 allow pulseaudio_t self:unix_dgram_socket sendto;
 allow pulseaudio_t self:tcp_socket { accept listen };
 allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
-allow pulseaudio_t device_t:chr_file { read write  open ioctl };
+
+audio_hal_access(pulseaudio_t)
+
+non_audio_hal_access(pulseaudio_t)
 
 ###########################
 # Files / Dirs
