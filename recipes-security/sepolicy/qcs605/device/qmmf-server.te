@@ -51,9 +51,7 @@ gen_require(`
  type dri_device_t;
  type ion_device_t;
  type gpu_device_t;
- type sound_device_t;
  type diag_device_t;
- type audio_devices_t;
  type ashmem_devices_t;
 ')
 
@@ -80,9 +78,11 @@ allow qmmf_server_t firmware_t:file read_file_perms;
 
 files_read_etc_files(qmmf_server_t);
 
+#For audio access
+audio_hal_access(qmmf_server_t)
+non_audio_hal_access(qmmf_server_t)
+
 #For /dev node permissions
-rw_chr_files_pattern(qmmf_server_t, device_t, audio_devices_t);
-rw_chr_files_pattern(qmmf_server_t, device_t, sound_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, dri_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, ion_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, gpu_device_t);
