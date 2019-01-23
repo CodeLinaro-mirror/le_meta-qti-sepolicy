@@ -54,6 +54,7 @@ dev_rw_sysfs(mbim_t)
 dev_write_kmsg(mbim_t)
 dev_node(mbim_device_t)
 mbim_rw_device(mbim_t)
+dev_read_urand(mbim_t)
 
 firmware_read_files(mbim_t)
 allow mbim_t self:socket { read write create ioctl };
