@@ -30,6 +30,9 @@ policy_module(location, 1.0)
 gen_require(`
     type system_dir_t;
     type adbd_t;
+    type systemd_resolved_var_run_t;
+    type default_t;
+    type dhcpc_var_run_t;
 ')
 
 ########################################
@@ -50,6 +53,7 @@ dev_read_sysfs(loc_t)
 dev_read_urand(loc_t)
 files_read_etc_files(loc_t)
 logging_send_syslog_msg(loc_t)
+leprop_rw_props(loc_t)
 allow loc_t self:{ socket udp_socket } create_socket_perms;
 allow loc_t self:fifo_file rw_fifo_file_perms;
 allow loc_t self:process { setcap signal };
@@ -97,7 +101,10 @@ allow loc_t loc_hald_t:unix_dgram_socket sendto;
 allow loc_hald_t self:unix_dgram_socket sendto;
 allow loc_hald_t xtra_daemon_t:unix_dgram_socket sendto;
 allow loc_hald_t adbd_t:unix_dgram_socket sendto;
-allow loc_hald_t socket_device_t:sock_file write;
+allow loc_hald_t socket_device_t:sock_file { write unlink };
+# temporary fix till /target changes are made cr#2387138
+read_files_pattern(loc_hald_t, default_t, default_t);
+
 search_user_data_dir(loc_hald_t)
 userdebug_or_eng(`
     gen_require(`
@@ -105,6 +112,7 @@ userdebug_or_eng(`
         class service { start status stop };
     ')
     allow unconfined_t loc_hald_exec_t:service { start status stop };
+    allow unconfined_t loc_exec_t:service { start status stop };
 ')
 
 dontaudit loc_hald_t self:capability { dac_override dac_read_search };
@@ -183,6 +191,7 @@ init_daemon_domain(xtra_daemon_t, xtra_daemon_exec_t)
 domtrans_pattern(loc_t, xtra_daemon_exec_t, xtra_daemon_t)
 logging_send_syslog_msg(xtra_daemon_t)
 
+allow xtra_daemon_t dhcpc_var_run_t:file { read open getattr };
 allow xtra_daemon_t loc_hald_t:unix_dgram_socket sendto;
 allow xtra_daemon_t self:{ socket udp_socket } create_socket_perms;
 allow xtra_daemon_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
@@ -192,6 +201,12 @@ leprop_read_props(xtra_daemon_t)
 ## this is for access to /run/resolv.conf
 files_read_generic_pids(xtra_daemon_t)
 allow xtra_daemon_t self:process signal;
+allow xtra_daemon_t socket_device_t:sock_file write;
+read_files_pattern(xtra_daemon_t, init_var_run_t, init_var_run_t);
+read_files_pattern(xtra_daemon_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
+
+# temporary fix till /target changes are made cr#2387138
+read_files_pattern(xtra_daemon_t, default_t, default_t);
 
 corenet_tcp_connect_http_port(xtra_daemon_t)
 sysnet_read_config(xtra_daemon_t)
