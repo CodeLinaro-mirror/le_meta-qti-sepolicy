@@ -40,6 +40,8 @@ dev_read_sysfs(qmuxbridge_t)
 logging_send_syslog_msg(qmuxbridge_t)
 mbim_rw_device(qmuxbridge_t)
 
-allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto };
-allow qmuxbridge_t self:socket { read write create ioctl };
-allow qmuxbridge_t self:fifo_file { read write };
+allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto getattr };
+allow qmuxbridge_t self:socket { read write create ioctl getattr };
+allow qmuxbridge_t self:fifo_file { read write getattr };
+allow qmuxbridge_t self:process { signal };
+files_dontaudit_list_default(qmuxbridge_t);
