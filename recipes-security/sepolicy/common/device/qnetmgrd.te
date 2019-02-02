@@ -49,6 +49,7 @@ allow qnetmgrd_t self:netlink_route_socket { setopt write getattr read bind crea
 
 dev_read_sysfs(qnetmgrd_t)
 files_rw_qcmap_etc_data_files(qnetmgrd_t)
+vendor_kernel_load_exempt(qnetmgrd_t)  # TODO: Request init to load the module
 kernel_load_module(qnetmgrd_t)
 kernel_rw_net_sysctls(qnetmgrd_t)
 kernel_read_vm_overcommit_sysctl(qnetmgrd_t)

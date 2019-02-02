@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -32,6 +32,35 @@ policy_module(vendor, 1.0)
 allow domain self:unix_dgram_socket { create_socket_perms sendto };
 
 attribute vendor_domain;
+
+# Common neverallows
+
+gen_require(`
+    type device_t;
+    type unlabeled_t;
+    type sysfs_t;
+    type proc_t;
+    type device_t;
+    type rebootd_t;
+')
+# No rw access to generic files in /dev
+attribute vendor_device_rw_exception;
+neverallow { vendor_domain -vendor_device_rw_exception } device_t:devfile_class_set rw_file_perms;
+# No creation of unlabeled directories or files
+neverallow vendor_domain unlabeled_t:dir_file_class_set create;
+# Restricted permissions
+neverallow vendor_domain self:capability { mknod dac_override };
+neverallow vendor_domain self:process { execstack execheap };
+# Do not load kernel modules - request init to do this instead
+attribute vendor_kernel_load_exception;
+neverallow { vendor_domain -vendor_kernel_load_exception } self:system { module_load module_request };
+# Do not allow userspace creation of files in kernel managed directories (outside of initscripts)
+#   rebootd creates a fifo_file in /dev - allow this for now
+neverallow {
+    vendor_domain
+    -rebootd_t
+} { sysfs_t proc_t device_t }:dir { add_name create link remove_name rename reparent rmdir write };
+dontaudit vendor_domain { sysfs_t proc_t }:dir write;
 
 ### tftp server ###
 
