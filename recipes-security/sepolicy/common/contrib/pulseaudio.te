@@ -40,6 +40,9 @@ init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 
 gen_require(`
 	type debugfs_t;
+        type initrc_t;
+#        type socket_device_t;
+        type systemd_logind_var_run_t;
 ')
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
@@ -54,6 +57,10 @@ allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
 audio_hal_access(pulseaudio_t)
 
 non_audio_hal_access(pulseaudio_t)
+
+#allow pulseaudio_t initrc_t:unix_stream_socket connectto; # /dev/socket/almservice
+#allow pulseaudio_t socket_device_t:sock_file write; # /dev/socket/almservice
+allow pulseaudio_t systemd_logind_var_run_t:sock_file write; # /run/dbus/system_bus_socket
 
 ###########################
 # Files / Dirs

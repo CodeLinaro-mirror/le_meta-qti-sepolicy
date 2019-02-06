@@ -27,9 +27,15 @@
 
 /usr/bin/connectivity-manager                --   gen_context(system_u:object_r:connectivity_manager_exec_t,s0)
 /data/adk\.connectivity\.wifi\.db            --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
-/data/adk\.device\.db                        --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/adk\.connectivity\.wifi\.db-journal    --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/adk\.connectivity\.bt\.db              --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/adk\.connectivity\.bt\.db-journal      --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/adk\.connectivity\.zigbee\.db          --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/adk\.connectivity\.coex\.db            --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
 /data/adk\.connectivity\.states\.db          --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
 /data/adk\.connectivity\.states\.db-journal  --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/wpa_supplicant\.conf\.tmp              --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
+/data/wpa_supplicant_home_ap\.conf           --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
 
 /data/sta_mode_hostapd\.conf                 --   gen_context(system_u:object_r:connectivity_manager_data_t,s0)
 

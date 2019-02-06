@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/audio-manager    --   gen_context(system_u:object_r:audio_manager_exec_t,s0)
+/data/adk\.audiomanager\.db          --   gen_context(system_u:object_r:audio_manager_data_t,s0)

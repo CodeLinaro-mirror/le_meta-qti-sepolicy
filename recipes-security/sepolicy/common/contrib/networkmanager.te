@@ -96,3 +96,14 @@ files_search_home(wlan_initrc_t)
 kernel_search_debugfs(wlan_initrc_t)
 getty_use_fds(wlan_initrc_t)
 term_use_unallocated_ttys(wlan_initrc_t)
+
+gen_require(`
+    type init_var_run_t;
+    type systemd_resolved_var_run_t;
+')
+#For the /run/systemd files, 2.0 component has an issue where this could be either init_var_run_t or systemd_*_t context depending on whether or not you are running in permissive or enforcing mode. Hence adding policies for both the contexts, but on 3.0 component these should be labeled the same in both modes and we won’t need init_var_run_t context.
+
+#/run/systemd/resolve/resolv.conf
+allow dhcpc_t init_var_run_t:file { write getattr open setattr };
+allow dhcpc_t systemd_resolved_var_run_t:file { write getattr open setattr };
+

@@ -34,8 +34,12 @@ policy_module(system_manager, 1.0)
 
 type system_manager_t;
 type system_manager_exec_t;
+type system_manager_data_t;
 
 init_daemon_domain(system_manager_t, system_manager_exec_t)
+
+user_data_files_type(system_manager_data_t)
+manage_user_data_files(system_manager_t, system_manager_data_t)
 
 #============= system_manager_t ==============
 ifdef(`init_systemd', `
