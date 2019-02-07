@@ -83,6 +83,8 @@ logging_list_logs(reset_reboot_initrc_t)
 auth_manage_login_records(reset_reboot_initrc_t)
 gen_require(`
     type var_log_t;
+    type initrc_t;
 ')
 create_lnk_files_pattern(reset_reboot_initrc_t, var_log_t, var_log_t)
 data_filetrans(reset_reboot_initrc_t, reboot_cookie_data_t, file)
+allow initrc_t reboot_cookie_data_t:file { read open };

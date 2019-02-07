@@ -70,13 +70,14 @@ gen_require(`
     type qcmap_etc_data_t;
     type system_data_t;
     type data_t;
+    type reboot_cookie_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -httpd_data_t -qcmap_etc_data_t }:file rw_file_perms;
+neverallow initrc_t { user_data -httpd_data_t -qcmap_etc_data_t -reboot_cookie_data_t }:file rw_file_perms;
 neverallow initrc_t { system_data -qcmap_etc_data_t }:file rw_file_perms;
 search_user_data_dir(init_t)
 search_system_data_dir(init_t)
