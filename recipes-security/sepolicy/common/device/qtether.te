@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -42,6 +42,7 @@ userdebug_or_eng(`
 dev_write_kmsg(qtether_t)
 dev_read_sysfs(qtether_t)
 files_rw_qcmap_etc_data_files(qtether_t)
+vendor_kernel_load_exempt(qtether_t)  # TODO: Request init to load the module
 kernel_load_module(qtether_t)
 
 allow qtether_t self:{ socket udp_socket } create_socket_perms;
