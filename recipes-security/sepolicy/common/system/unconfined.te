@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -45,4 +45,23 @@ userdebug_or_eng(`
 
     allow domain unconfined_t:unix_dgram_socket sendto;
     allow unconfined_t self:process execmem;
+
+    ifdef(`init_systemd', `
+        gen_require(`
+            type init_t;
+            type systemd_unit_t;
+            type etc_t;
+            type power_unit_t;
+            class service { start status stop enable disable reload };
+        ')
+
+        # Allow unconfined type full access to systemctl commands
+        allow unconfined_domain_type {
+            init_t
+            systemd_unit_t
+            power_unit_t
+            etc_t
+        }:{ system service } { start stop status enable disable reload };
+        allow unconfined_domain_type init_t:system { reboot halt };
+    ')
 ')
