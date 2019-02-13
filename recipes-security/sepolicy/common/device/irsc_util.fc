@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/irsc_util           gen_context(system_u:object_r:irsc_util_exec_t,s0)
+
+/etc/sec_config              gen_context(system_u:object_r:qmi_sec_config_t,mls_systemhigh)
