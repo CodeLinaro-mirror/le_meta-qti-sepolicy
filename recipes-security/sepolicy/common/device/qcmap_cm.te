@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -183,6 +183,8 @@ gen_require(`
     type configfs_t;
     type usr_t;
     type system_dbusd_var_run_t;
+    type systemd_resolved_var_run_t;
+    type dnsmasq_var_run_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -245,3 +247,18 @@ allow qcmap_cm_t usr_t:file { read open getattr };
 #allow qcmap_cm_t avahi_exec_t:file { getattr execute read open execute_no_trans };
 allow qcmap_cm_t self:process { setrlimit };
 allow qcmap_cm_t system_dbusd_var_run_t:sock_file { write };
+
+##### DNSMASQ
+manage_files_pattern(qcmap_cm_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
+allow init_t qcmap_etc_data_t:dir { getattr search write };
+# allow qcmap_cm_t { dnsmasq_t iptables_t ifconfig_t }:process { noatsecure };
+allow { iptables_t dnsmasq_t } qcmap_cm_t:{ netlink_route_socket packet_socket } { read write };
+data_rw_system_data_files(dnsmasq_t, qcmap_etc_data_t)
+# allow qcmap_cm_t { dnsmasq_t iptables_t }:process { rlimitinh siginh };
+# allow qcmap_cm_t { init_t kernel_t }:dir { search };
+# allow qcmap_cm_t { init_t kernel_t }:file { read open };
+# allow qcmap_cm_t init_t:lnk_file { read };
+read_user_data_files(dnsmasq_t, qcmap_data_t)
+read_write_qcmap_cm_socket_files(iptables_t)
+allow qcmap_cm_t dnsmasq_var_run_t:file { read open };
+allow qcmap_cm_t dnsmasq_t:process { sigkill };
