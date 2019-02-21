@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,6 +27,10 @@
 
 policy_module(qmmf-server, 1.0)
 
+gen_require(`
+    type system_dir_t;
+')
+
 ########################################
 #
 # Declarations
@@ -40,6 +44,10 @@ servicemanager_binder_use(qmmf_server_t)
 
 type qmmf_data_file_t;
 user_data_files_type(qmmf_data_file_t)
+
+type qmmf_config_file_t;
+allow qmmf_server_t system_dir_t:dir search_dir_perms;
+read_files_pattern(qmmf_server_t, qmmf_config_file_t, qmmf_config_file_t)
 
 gen_require(`
  type tmp_t;
