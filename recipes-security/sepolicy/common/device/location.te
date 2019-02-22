@@ -46,8 +46,6 @@ type loc_exec_t;
 init_vendor_domain(loc_t, loc_exec_t)
 inittab_domtrans(loc_t, loc_exec_t)
 
-dontaudit loc_t system_dir_t:dir search;
-
 corecmd_exec_bin(loc_t)
 dev_read_sysfs(loc_t)
 dev_read_urand(loc_t)
@@ -55,7 +53,6 @@ files_read_etc_files(loc_t)
 logging_send_syslog_msg(loc_t)
 leprop_rw_props(loc_t)
 allow loc_t self:{ socket udp_socket } create_socket_perms;
-allow loc_t self:fifo_file rw_fifo_file_perms;
 allow loc_t self:process { setcap signal };
 allow loc_t self:netlink_route_socket read;
 allow loc_t xtra_daemon_t:process signal;
@@ -85,10 +82,10 @@ dev_read_sysfs(loc_hald_t)
 files_read_etc_files(loc_hald_t)
 files_rw_qcmap_etc_data_files(loc_hald_t)
 leprop_rw_props(loc_hald_t)
+dev_read_realtime_clock(loc_hald_t)
 
 allow loc_hald_t self:capability { net_admin setgid setuid net_bind_service};
 allow loc_hald_t self:process setcap;
-allow loc_hald_t self:fifo_file rw_fifo_file_perms;
 allow loc_hald_t self:{ socket unix_dgram_socket } create_socket_perms;
 allow loc_hald_t self:netlink_socket create_socket_perms;
 allow loc_hald_t { loc_t engine_service_t }:unix_dgram_socket sendto;
@@ -111,7 +108,6 @@ userdebug_or_eng(`
 ')
 
 dontaudit loc_hald_t self:capability { dac_override dac_read_search };
-dontaudit loc_hald_t system_dir_t:dir search;
 
 ### xtwifi_agent
 
@@ -122,8 +118,6 @@ init_vendor_domain(xtwifi_agent_t, xtwifi_agent_exec_t)
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, xtwifi_agent_exec_t, xtwifi_agent_t)
 logging_send_syslog_msg(xtwifi_agent_t)
-
-dontaudit xtwifi_agent_t system_dir_t:dir search;
 
 files_read_etc_files(xtwifi_agent_t)
 allow xtwifi_agent_t self:{ udp_socket unix_dgram_socket } create_socket_perms;
@@ -142,13 +136,10 @@ init_vendor_domain(xtwifi_client_t, xtwifi_client_exec_t)
 domtrans_pattern(loc_t, xtwifi_client_exec_t, xtwifi_client_t)
 logging_send_syslog_msg(xtwifi_client_t)
 
-dontaudit xtwifi_client_t system_dir_t:dir search;
-
 files_read_etc_files(xtwifi_client_t)
 dev_read_sysfs(xtwifi_client_t)
 leprop_rw_props(xtwifi_client_t)
 
-allow xtwifi_client_t self:fifo_file rw_fifo_file_perms;
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
 
 data_filetrans(xtwifi_client_t, loc_data_t, file)
@@ -181,8 +172,8 @@ dev_read_sysfs(engine_service_t)
 files_read_etc_files(engine_service_t)
 data_filetrans(engine_service_t, loc_data_t, file)
 manage_user_data_files(engine_service_t, loc_data_t)
-
-dontaudit engine_service_t system_dir_t:dir search;
+## Read virtual memory overcommit sysctl - /proc/sys/vm/overcommit_memory
+kernel_read_vm_overcommit_sysctl(engine_service_t)
 
 ### xtra-daemon
 type xtra_daemon_t;
@@ -197,7 +188,6 @@ allow xtra_daemon_t dhcpc_var_run_t:file { read open getattr };
 allow xtra_daemon_t loc_hald_t:unix_dgram_socket sendto;
 allow xtra_daemon_t self:{ socket udp_socket } create_socket_perms;
 allow xtra_daemon_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
-allow xtra_daemon_t self:fifo_file rw_fifo_file_perms;
 # read build.prop
 leprop_read_props(xtra_daemon_t)
 ## this is for access to /run/resolv.conf
@@ -228,8 +218,6 @@ files_read_etc_files(xtra_daemon_t)
 data_filetrans(xtra_daemon_t, loc_data_t, file)
 manage_user_data_files(xtra_daemon_t, loc_data_t)
 
-dontaudit xtra_daemon_t system_dir_t:dir search;
-
 ### lowi-server
 type lowi_server_t;
 type lowi_server_exec_t;
@@ -242,13 +230,39 @@ logging_send_syslog_msg(lowi_server_t)
 kernel_read_network_state(lowi_server_t)
 allow lowi_server_t self:{ netlink_route_socket udp_socket netlink_generic_socket } create_socket_perms;
 allow lowi_server_t self:capability net_admin;
-allow lowi_server_t self:fifo_file rw_fifo_file_perms;
 
 files_read_etc_files(lowi_server_t)
 
 kernel_dontaudit_request_load_module(lowi_server_t)
-dontaudit lowi_server_t system_dir_t:dir search;
 
+### slim_daemon
+type slim_daemon_t;
+type slim_daemon_exec_t;
+init_vendor_domain(slim_daemon_t, slim_daemon_exec_t)
+
+# Launched by loc_launcher instead of init
+domtrans_pattern(loc_t, slim_daemon_exec_t, slim_daemon_t)
+logging_send_syslog_msg(slim_daemon_t)
+
+files_read_etc_files(slim_daemon_t)
+manage_user_data_files(slim_daemon_t, loc_data_t)
+data_filetrans(slim_daemon_t, loc_data_t, file)
+
+userdebug_or_eng(`
+    rw_diag_dev(slim_daemon_t)
+')
+
+allow slim_daemon_t self:capability { setuid setgid net_bind_service };
+allow slim_daemon_t self:process { setcap getcap };
+allow slim_daemon_t self:socket create_socket_perms;
+# read, write /sys/devices/platform/*/i2c*/iio:device*/*, read lnk file
+dev_rw_sysfs(slim_daemon_t)
+# Read input event devices - /dev/input/event*
+dev_read_input(slim_daemon_t)
+## read /proc/bus/input/devices
+allow slim_daemon_t proc_t:file read_file_perms;
+## read char device files /dev/iio:deviceXX
+device_read_iio_device(slim_daemon_t)
 
 ### location socket
 type loc_socket_t;
@@ -256,8 +270,12 @@ files_type(loc_socket_t)
 device_manage_socket_file({ loc_t loc_hald_t xtra_daemon_t engine_service_t }, loc_socket_t)
 allow loc_socket_t device_t:filesystem associate;
 allow { loc_t loc_hald_t xtra_daemon_t engine_service_t } loc_socket_t:dir manage_dir_perms;
+allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t } self:fifo_file rw_fifo_file_perms;
 
-allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t } loc_socket_t:sock_file write;
-allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t } loc_socket_t:dir search_dir_perms;
-allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
-device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t }, loc_socket_t)
+allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
+allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
+allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
+device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
+
+## common rules
+dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
