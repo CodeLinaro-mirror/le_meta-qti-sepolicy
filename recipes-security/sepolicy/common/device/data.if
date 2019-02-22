@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -175,7 +175,7 @@ interface(`data_manage_generic_user_files',`
 
 ########################################
 ## <summary>
-##      Create and mount /data
+##      Mount /data directory
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -183,13 +183,12 @@ interface(`data_manage_generic_user_files',`
 ##      </summary>
 ## </param>
 #
-interface(`data_mount_user',`
+interface(`data_mount_user_dir',`
     gen_require(`
         type data_t;
     ')
 
-    manage_dirs_pattern($1, data_t, data_t)
-    allow $1 data_t:dir mounton;
+    allow $1 data_t:dir { mounton getattr };
 ')
 
 ########################################
@@ -309,7 +308,7 @@ interface(`data_manage_generic_system_files',`
 
 ########################################
 ## <summary>
-##      Perform bind mounts on files within /systemrw
+##      Mount /systemrw directory and perform bind mounts
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -320,11 +319,11 @@ interface(`data_manage_generic_system_files',`
 interface(`data_mount_volatile_bind',`
     gen_require(`
         attribute system_data;
+        attribute domain_can_read_systemdata;
     ')
 
-    manage_dirs_pattern($1, system_data, system_data)
-    allow $1 system_data:{ dir file } mounton;
-    allow $1 system_data:file getattr;
+    typeattribute $1 domain_can_read_systemdata;
+    allow $1 system_data:{ file dir } { mounton getattr };
 ')
 
 ########################################
