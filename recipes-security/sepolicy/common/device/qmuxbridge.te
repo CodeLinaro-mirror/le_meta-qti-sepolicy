@@ -32,6 +32,12 @@ type qmuxbridge_exec_t;
 init_vendor_domain(qmuxbridge_t, qmuxbridge_exec_t)
 inittab_domtrans(qmuxbridge_t, qmuxbridge_exec_t)
 
+# Manage private files inside /data
+type qmuxbridge_data_t;
+user_data_files_type(qmuxbridge_data_t)
+manage_user_data_files(qmuxbridge_t, qmuxbridge_data_t)
+data_filetrans(qmuxbridge_t, qmuxbridge_data_t, { file dir })
+
 userdebug_or_eng(`
    rw_diag_dev(qmuxbridge_t)
 ')
@@ -43,5 +49,6 @@ mbim_rw_device(qmuxbridge_t)
 allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto getattr };
 allow qmuxbridge_t self:socket { read write create ioctl getattr };
 allow qmuxbridge_t self:fifo_file { read write getattr };
+allow qmuxbridge_t qmuxbridge_data_t:{ file dir } { create open read write getattr };
 allow qmuxbridge_t self:process { signal };
 files_dontaudit_list_default(qmuxbridge_t);

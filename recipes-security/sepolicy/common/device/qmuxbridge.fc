@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/qmuxbridge                   --  gen_context(system_u:object_r:qmuxbridge_exec_t,s0)
+/data/qmuxbridge(/.*)?                    gen_context(system_u:object_r:qmuxbridge_data_t,s0)
+
