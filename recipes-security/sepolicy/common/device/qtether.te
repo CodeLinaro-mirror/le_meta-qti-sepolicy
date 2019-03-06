@@ -39,6 +39,11 @@ userdebug_or_eng(`
     rw_diag_dev(qtether_t)
 ')
 
+gen_require(`
+    type default_t;
+')
+dontaudit qtether_t default_t:dir { search };
+
 dev_write_kmsg(qtether_t)
 dev_read_sysfs(qtether_t)
 files_rw_qcmap_etc_data_files(qtether_t)

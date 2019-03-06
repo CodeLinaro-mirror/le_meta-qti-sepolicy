@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -40,6 +40,13 @@ logging_send_syslog_msg(qmi_ip_multiclient_t)
 userdebug_or_eng(`
     rw_diag_dev(qmi_ip_multiclient_t)
 ')
+
+gen_require(`
+    type sysfs_t;
+    type default_t;
+')
+read_files_pattern(qmi_ip_multiclient_t, sysfs_t, sysfs_t)
+dontaudit qmi_ip_multiclient_t default_t:dir { search };
 
 corenet_tcp_bind_generic_node(qmi_ip_multiclient_t)
 corenet_udp_bind_generic_node(qmi_ip_multiclient_t)

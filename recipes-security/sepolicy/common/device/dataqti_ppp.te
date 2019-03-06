@@ -42,7 +42,10 @@ userdebug_or_eng(`
 gen_require(`
     type qcmap_etc_data_t;
     type sysfs_t;
+    type default_t;
 ')
+
+dontaudit dataqti_ppp_t default_t:dir { search };
 
 dev_write_kmsg(dataqti_ppp_t)
 

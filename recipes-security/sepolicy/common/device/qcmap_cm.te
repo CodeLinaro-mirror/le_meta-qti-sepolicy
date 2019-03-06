@@ -185,6 +185,8 @@ gen_require(`
     type system_dbusd_var_run_t;
     type systemd_resolved_var_run_t;
     type dnsmasq_var_run_t;
+    type default_t;
+    type dnsmasq_tmp_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -260,5 +262,8 @@ data_rw_system_data_files(dnsmasq_t, qcmap_etc_data_t)
 # allow qcmap_cm_t init_t:lnk_file { read };
 read_user_data_files(dnsmasq_t, qcmap_data_t)
 read_write_qcmap_cm_socket_files(iptables_t)
-allow qcmap_cm_t dnsmasq_var_run_t:file { read open };
-allow qcmap_cm_t dnsmasq_t:process { sigkill };
+allow qcmap_cm_t dnsmasq_var_run_t:file manage_file_perms;
+allow qcmap_cm_t dnsmasq_t:process { sigkill signal };
+allow qcmap_cm_t dnsmasq_tmp_t:file { read_file_perms unlink };
+
+dontaudit qcmap_cm_t default_t:dir { search };
