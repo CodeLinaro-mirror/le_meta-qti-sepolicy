@@ -1,0 +1,117 @@
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(audio_manager, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type audio_manager_t;
+type audio_manager_exec_t;
+#type audio_manager_data_t;
+type audio_manager_tmp_t;
+
+init_daemon_domain(audio_manager_t, audio_manager_exec_t)
+
+gen_require(`
+	type var_lib_t;
+	type init_var_run_t;
+	type initrc_var_run_t;
+	type random_device_t;
+	type urandom_device_t;
+	type home_root_t;
+        ifdef(`init_systemd', `
+            class dbus send_msg;
+        ')
+')
+
+#manage_system_data_files(audio_manager_t, audio_manager_data_t)
+#data_filetrans(audio_manager_t, audio_manager_data_t, { file dir })
+
+files_read_etc_files(audio_manager_t)
+kernel_read_system_state(audio_manager_t)
+allow audio_manager_t random_device_t:chr_file { open read write };
+#allow audio_manager_t tmpfs_t:dir { read search open getattr };
+#allow audio_manager_t tmpfs_t:file { read write open };
+allow audio_manager_t urandom_device_t:chr_file { open read write };
+allow audio_manager_t home_root_t:dir { search getattr };
+
+allow audio_manager_t self:capability net_admin;
+init_stream_connect_script(audio_manager_t)
+allow audio_manager_t initrc_var_run_t:sock_file { open read write getattr };
+
+allow audio_manager_t self:fifo_file { write read open getattr };
+allow audio_manager_t self:process signal;
+
+# Manage private files inside /tmp
+files_tmp_filetrans(audio_manager_t, audio_manager_tmp_t, { file dir })
+
+#allow audio_manager_t user_home_dir_t:dir { read write add_name search getattr };
+#allow audio_manager_t user_home_dir_t:file { read write create open lock };
+#allow audio_manager_t user_home_dir_t:lnk_file { read write create open getattr };
+#allow audio_manager_t user_home_t:file { read write create open getattr };
+
+allow audio_manager_t init_var_run_t:dir { search read };
+allow audio_manager_t var_lib_t:dir { search read };
+files_var_filetrans(audio_manager_t, audio_manager_tmp_t, { file dir })
+allow audio_manager_t init_var_run_t:file { open read getattr};
+
+###########################
+
+corecmd_exec_shell(audio_manager_t)
+corecmd_exec_bin(audio_manager_t)
+
+dev_read_sound(audio_manager_t)
+dev_write_sound(audio_manager_t)
+
+## for DBus
+ifdef(`init_systemd', `
+    init_dbus_chat(audio_manager_t)
+    dbus_system_domain(audio_manager_t, audio_manager_exec_t)
+
+    adk_voice_ui_dbus_chat(audio_manager_t);
+    unconfined_dbus_chat(audio_manager_t);
+    adk_dbus_send_connectivity_manager(audio_manager_t);
+    init_dbus_send_script(audio_manager_t)
+
+    adk_dbus_send_led_manager(audio_manager_t);
+    allow audio_manager_t self:dbus send_msg;
+    adk_dbus_send_nfdlna(audio_manager_t);
+    adk_dbus_send_rules_manager(audio_manager_t);
+')
+
+## for Pulseaudio
+pulseaudio_rw_tmpfs_files(audio_manager_t);
+pulseaudio_manage_home(audio_manager_t);
+pulseaudio_rw_home_files(audio_manager_t);
+pulseaudio_setattr_home_dir(audio_manager_t);
+pulseaudio_dbus_chat(audio_manager_t);
+pulseaudio_stream_connect(audio_manager_t);
+
+

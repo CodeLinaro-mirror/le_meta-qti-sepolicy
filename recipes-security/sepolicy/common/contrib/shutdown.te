@@ -2,3 +2,4 @@
 
 allow shutdown_t bin_t:lnk_file read;
 allow shutdown_t self:unix_dgram_socket create_socket_perms;
+logging_send_syslog_msg(shutdown_t)

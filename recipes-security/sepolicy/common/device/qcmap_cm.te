@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -37,6 +37,7 @@ wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
 dontaudit qcmap_cm_t domain:file read_file_perms;
+dontaudit qcmap_cm_t self:capability sys_module;
 
 gen_require(`
   type lib_t;
@@ -54,6 +55,7 @@ gen_require(`
 
 userdebug_or_eng(`
   rw_diag_dev(qcmap_cm_t);
+  allow qcmap_cm_t self:capability { mknod };
 ')
 
 rw_shared_memory_dev(qcmap_cm_t);
@@ -71,11 +73,10 @@ allow qcmap_cm_t self:socket { create ioctl bind read write getattr };
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
-allow qcmap_cm_t self:process { setcap sigkill };
+allow qcmap_cm_t self:process { setcap sigkill signal setfscreate };
 allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
 allow qcmap_cm_t node_t:udp_socket node_bind;
 allow qcmap_cm_t var_t:dir { add_name remove_name };
-allow qcmap_cm_t self:process { signal };
 allow qcmap_cm_t self:rawip_socket { create setopt getopt write read ioctl };
 allow qcmap_cm_t init_var_run_t:sock_file { write };
 allow qcmap_cm_t self:packet_socket { create bind setopt read write ioctl };
@@ -147,7 +148,7 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-allow qcmap_cm_t qcmap_tmp_t:file { manage_file_perms execute };
+allow qcmap_cm_t qcmap_tmp_t:file { manage_file_perms execute relabelfrom relabelto };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
 ifdef(`init_systemd', `
@@ -178,7 +179,24 @@ networkmanager_read_wifi_sysdata_files(qcmap_cm_t)
 gen_require(`
     type wlan_service_t;
     type kmod_exec_t;
+    type ipacm_data_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
 modutils_domtrans_insmod(qcmap_cm_t)
+
+#Manage Socket Files
+corenet_tcp_bind_all_unreserved_ports(qcmap_cm_t)
+corenet_tcp_connect_http_port(qcmap_cm_t);
+
+#Mange VLAN/MPDN use cases
+kernel_read_vm_overcommit_sysctl(qcmap_cm_t);
+
+#Miscellaneous
+allow iptables_t qcmap_tmp_t:file { read };
+rw_ipacm_data_config_files(qcmap_cm_t)
+shutdown_domtrans(qcmap_cm_t)
+
+# Manage resolv.conf file for dnsmasq service
+read_files_pattern(qcmap_cm_t, init_var_run_t, init_var_run_t)
+allow qcmap_cm_t init_var_run_t:dir read;

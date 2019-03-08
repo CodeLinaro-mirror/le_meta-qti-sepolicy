@@ -1,0 +1,180 @@
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(voice-ui-app, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type voice-ui-app_t;
+type voice-ui-app_exec_t;
+type voice-ui-app_data_t;
+type voice-ui-app_fifo_t;
+
+user_data_files_type(voice-ui-app_data_t)
+manage_user_data_files(voice-ui-app_t, voice-ui-app_data_t)
+data_filetrans(voice-ui-app_t, voice-ui-app_data_t, { file dir })
+
+init_daemon_domain(voice-ui-app_t, voice-ui-app_exec_t)
+
+gen_require(`
+	type cert_t;
+	type node_t;
+	type lib_t;
+	type etc_t;
+	type init_var_run_t;
+	type initrc_var_run_t;
+	type syslogd_var_run_t;
+	type dhcpc_var_run_t;
+	type syslogd_t;
+	type devlog_t;
+	type net_conf_t;
+	type sysfs_t;
+	type gatekeeper_port_t;
+	type httpd_t;
+	type random_device_t;
+	type urandom_device_t;
+	type home_root_t;
+	type user_home_t;
+	type user_home_dir_t;
+	type udev_var_run_t;
+        ifdef(`init_systemd', `
+            class dbus send_msg;
+        ')
+')
+
+manage_files_pattern(voice-ui-app_t, voice-ui-app_data_t, voice-ui-app_data_t)
+allow voice-ui-app_t etc_t:file { open read getattr };
+allow voice-ui-app_t etc_t:lnk_file read;
+
+files_read_alexa_data_files(voice-ui-app_t)
+write_files_pattern(voice-ui-app_t, alexa_data_t, alexa_data_t)
+
+voiceui_manage_avs_fifo(voice-ui-app_t)
+allow voice-ui-app_t device_t:chr_file { read write ioctl open };
+allow voice-ui-app_t random_device_t:chr_file { open read getattr };
+allow voice-ui-app_t urandom_device_t:chr_file { open read getattr };
+
+type voice-ui-app_tmp_t;
+files_type(voice-ui-app_tmp_t);
+files_var_filetrans(voice-ui-app_t, voice-ui-app_tmp_t, file)
+files_tmp_filetrans(voice-ui-app_t, voice-ui-app_tmp_t, file)
+allow voice-ui-app_t voice-ui-app_tmp_t:file { read write open create unlink };
+
+
+allow voice-ui-app_t self:capability2 block_suspend;
+#allow voice-ui-app_t tmpfs_t:dir read;
+#allow voice-ui-app_t tmpfs_t:file { open write read getattr };
+#allow voice-ui-app_t user_home_dir_t:dir { read write add_name remove_name search getattr };
+#allow voice-ui-app_t user_home_dir_t:file { write rename lock create open read getattr };
+#allow voice-ui-app_t user_home_dir_t:lnk_file { create open read getattr };
+#allow voice-ui-app_t var_t:dir { read write create add_name remove_name search rmdir };
+
+###########################
+
+corecmd_exec_shell(voice-ui-app_t)
+corecmd_exec_bin(voice-ui-app_t)
+
+#policy required for gstreamer
+allow voice-ui-app_t lib_t:file execute_no_trans;
+
+allow voice-ui-app_t http_port_t:tcp_socket name_connect;
+allow httpd_t gatekeeper_port_t:tcp_socket name_bind;
+
+#============= voice-ui-app_t ==============
+dev_read_sound(voice-ui-app_t)
+dev_write_sound(voice-ui-app_t)
+
+allow voice-ui-app_t self:unix_stream_socket { connectto read write bind listen create connect getattr ioctl };
+allow voice-ui-app_t self:netlink_kobject_uevent_socket { create setopt bind getattr };
+allow voice-ui-app_t sysfs_t:dir read;
+allow voice-ui-app_t udev_var_run_t:dir search;
+dev_rw_sysfs(voice-ui-app_t)
+init_stream_connect_script(voice-ui-app_t)
+allow voice-ui-app_t home_root_t:dir { search getattr };
+allow voice-ui-app_t user_home_t:dir { search getattr };
+allow voice-ui-app_t user_home_t:file { read getattr open };
+
+allow voice-ui-app_t cert_t:dir search;
+allow voice-ui-app_t cert_t:file { open read getattr };
+allow voice-ui-app_t dhcpc_var_run_t:file { open read getattr };
+allow voice-ui-app_t net_conf_t:file { open read getattr };
+
+allow voice-ui-app_t self:capability { net_raw net_admin };
+allow voice-ui-app_t devlog_t:sock_file write;
+allow voice-ui-app_t syslogd_var_run_t:dir search;
+allow voice-ui-app_t init_var_run_t:dir search;
+allow voice-ui-app_t init_var_run_t:file { read getattr open write };
+allow voice-ui-app_t initrc_var_run_t:dir search;
+allow voice-ui-app_t initrc_var_run_t:sock_file write;
+allow voice-ui-app_t voice-ui-app_data_t:dir search;
+kernel_read_system_state(voice-ui-app_t)
+allow voice-ui-app_t self:udp_socket { read write create connect getattr };
+allow voice-ui-app_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow voice-ui-app_t self:unix_dgram_socket { read write create bind listen ioctl connect };
+allow voice-ui-app_t syslogd_t:unix_dgram_socket sendto;
+allow voice-ui-app_t self:netlink_route_socket { read write create bind getattr setopt nlmsg_read };
+
+allow voice-ui-app_t self:process { signal getsched };
+allow voice-ui-app_t voice-ui-app_exec_t:file { read write open create };
+
+## for DBus
+ifdef(`init_systemd', `
+    init_dbus_chat(voice-ui-app_t)
+    dbus_system_domain(voice-ui-app_t, voice-ui-app_exec_t)
+
+    adk_audio_manager_dbus_chat(voice-ui-app_t);
+    pulseaudio_dbus_chat(voice-ui-app_t);
+    unconfined_dbus_chat(voice-ui-app_t);
+    init_dbus_send_script(voice-ui-app_t)
+    adk_dbus_send_led_manager(voice-ui-app_t);
+    adk_dbus_send_rules_manager(voice-ui-app_t);
+    allow voice-ui-app_t self:dbus send_msg;
+')
+
+## for Pulseaudio
+#adk_pulseaudio_rw_voice_ui_files(voice-ui-app_data_t);
+pulseaudio_rw_tmpfs_files(voice-ui-app_t);
+pulseaudio_manage_home(voice-ui-app_t);
+pulseaudio_rw_home_files(voice-ui-app_t);
+pulseaudio_setattr_home_dir(voice-ui-app_t);
+pulseaudio_stream_connect(voice-ui-app_t);
+
+## TCP
+corenet_sendrecv_all_server_packets(voice-ui-app_t)
+corenet_tcp_bind_all_unreserved_ports(voice-ui-app_t)
+corenet_sendrecv_all_client_packets(voice-ui-app_t)
+corenet_tcp_connect_all_unreserved_ports(voice-ui-app_t)
+corenet_tcp_connect_http_port(voice-ui-app_t)
+corenet_tcp_sendrecv_all_ports(voice-ui-app_t)
+corenet_tcp_bind_all_unreserved_ports(voice-ui-app_t)
+allow voice-ui-app_t node_t:tcp_socket node_bind;
+allow voice-ui-app_t self:tcp_socket { connect connected_stream_socket_perms };
+
+
