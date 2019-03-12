@@ -245,6 +245,9 @@ gen_require(`
     type user_home_dir_t;
 ')
 
+# For almservice
+alm_write_sock_file(allplay_t)
+
 allow allplay_t audio_manager_data_t:file { read open write lock getattr};
 
 allow allplay_t system_dbusd_t:unix_stream_socket connectto;
