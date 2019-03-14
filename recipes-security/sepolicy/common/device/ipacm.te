@@ -53,6 +53,7 @@ read_user_data_files(ipa_fw_initrc_t, ipacm_data_t);
 
 type ipacm_t;
 type ipacm_exec_t;
+type ipa_nat_table_device_t;
 
 init_daemon_domain(ipacm_t, ipacm_exec_t)
 logging_send_syslog_msg(ipacm_t)
@@ -67,6 +68,9 @@ allow ipacm_t self:udp_socket { create ioctl };
 allow ipacm_t self:fifo_file rw_fifo_file_perms;
 allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
 kernel_read_system_state(ipacm_t);
+
+dev_node(ipa_nat_table_device_t)
+ipa_nat_table_rw_dev(ipacm_t)
 
 userdebug_or_eng(`
     rw_diag_dev(ipacm_t)
