@@ -208,6 +208,9 @@ miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
 
+##access qdma socket
+rw_vendor_qdma_sock_file(xtra_daemon_t);
+
 type loc_tmp_t;
 files_tmp_file(loc_tmp_t)
 files_tmp_filetrans(xtra_daemon_t, loc_tmp_t, file)
