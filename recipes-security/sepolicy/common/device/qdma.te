@@ -1,0 +1,82 @@
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qdma, 1.0)
+
+type vendor_qdma_t;
+type vendor_qdma_exec_t;
+
+init_daemon_domain(vendor_qdma_t, vendor_qdma_exec_t)
+
+gen_require(`
+    type etc_t;
+    type socket_device_t;
+    type net_conf_t;
+    type http_port_t;
+')
+
+type vendor_qdma_data_t;
+data_filetrans(vendor_qdma_t, vendor_qdma_data_t, file)
+user_data_files_type(vendor_qdma_data_t)
+manage_user_data_files(vendor_qdma_t, vendor_qdma_data_t)
+
+type vendor_qdma_sock_t;
+files_type(vendor_qdma_sock_t);
+device_manage_socket_file(vendor_qdma_t, vendor_qdma_sock_t)
+
+type vendor_qdma_var_run_t;
+files_pid_file(vendor_qdma_var_run_t)
+files_pid_filetrans(vendor_qdma_t, vendor_qdma_var_run_t, sock_file)
+
+type vendor_qdma_tmp_t;
+files_tmp_file(vendor_qdma_tmp_t);
+files_tmp_filetrans(vendor_qdma_t, vendor_qdma_tmp_t, file)
+
+userdebug_or_eng(`
+  rw_diag_dev(vendor_qdma_t);
+')
+dev_read_sysfs(vendor_qdma_t)
+dev_read_urand(vendor_qdma_t);
+dev_read_rand(vendor_qdma_t);
+kernel_read_vm_overcommit_sysctl(vendor_qdma_t)
+miscfiles_read_generic_certs(vendor_qdma_t)
+kernel_read_system_state(vendor_qdma_t)
+
+allow vendor_qdma_t self:fifo_file rw_fifo_file_perms;
+allow vendor_qdma_t vendor_qdma_var_run_t:sock_file create;
+allow vendor_qdma_t vendor_qdma_tmp_t:file { read write create open };
+allow vendor_qdma_t etc_t:lnk_file read_lnk_file_perms;
+allow vendor_qdma_t self:netlink_route_socket r_netlink_socket_perms;
+sysnet_read_config(vendor_qdma_t)
+files_read_etc_files(vendor_qdma_t)
+
+## manage qdma socket
+allow vendor_qdma_t socket_device_t:dir create;
+allow vendor_qdma_t vendor_qdma_sock_t:dir { create open read add_name write getattr search };
+allow vendor_qdma_t self:capability { net_admin net_raw };
+allow vendor_qdma_t self:{ socket unix_dgram_socket unix_stream_socket udp_socket } create_socket_perms;
+allow vendor_qdma_t { self http_port_t }:tcp_socket { read write create connect getattr setopt name_connect getopt };
