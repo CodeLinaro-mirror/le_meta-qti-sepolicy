@@ -52,6 +52,7 @@ gen_require(`
 allow button_manager_t event_device_t:chr_file { read open };
 kernel_read_system_state(button_manager_t)
 
+dev_read_urand(button_manager_t)
 
 ## for DBus
 ifdef(`init_systemd', `

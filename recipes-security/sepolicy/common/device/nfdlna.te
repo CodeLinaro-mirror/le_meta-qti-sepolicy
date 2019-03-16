@@ -48,10 +48,13 @@ gen_require(`
 	type sysfs_t;
 	type home_root_t;
 	type user_home_dir_t;
-	type node_t;
 	type init_var_run_t;
 	type udev_var_run_t;
 	type usr_t;
+        type node_t;
+	type proc_net_t;
+	type sysctl_vm_t;
+	type sysctl_vm_overcommit_t;
 ')
 
 manage_system_data_files(nfdlna_t, nfdlna_data_t)
@@ -68,17 +71,28 @@ allow nfdlna_t home_root_t:dir {search getattr };
 allow nfdlna_t self:fifo_file { read write open getattr };
 allow nfdlna_t self:capability { net_raw net_admin };
 allow nfdlna_t node_t:udp_socket node_bind;
-allow nfdlna_t self:udp_socket { write ioctl setopt read bind create };
+allow nfdlna_t node_t:tcp_socket node_bind;
+allow nfdlna_t self:udp_socket { write ioctl setopt read bind create connect};
+allow nfdlna_t self:tcp_socket { create setopt bind listen accept };
 
 allow nfdlna_t self:netlink_kobject_uevent_socket { read write ioctl create bind getattr setopt };
 allow nfdlna_t self:unix_dgram_socket { create write };
-allow nfdlna_t self:netlink_route_socket { create bind getattr read };
+allow nfdlna_t self:netlink_route_socket { create bind getattr read nlmsg_read write };
 allow nfdlna_t sysfs_t:dir read;
 allow nfdlna_t udev_var_run_t:dir search;
 allow nfdlna_t user_home_dir_t:dir { search getattr };
 allow nfdlna_t user_home_dir_t:file { read write getattr open };
 allow nfdlna_t usr_t:file { read write getattr open };
 
+corenet_tcp_bind_all_ports(nfdlna_t)
+corenet_udp_bind_all_ports(nfdlna_t)
+
+allow nfdlna_t proc_net_t:file read;
+allow nfdlna_t sysctl_vm_overcommit_t:file { read open };
+allow nfdlna_t sysctl_vm_t:dir search;
+
+dev_read_urand(nfdlna_t)
+dev_read_rand(nfdlna_t)
 ###########################
 
 corecmd_exec_shell(nfdlna_t)

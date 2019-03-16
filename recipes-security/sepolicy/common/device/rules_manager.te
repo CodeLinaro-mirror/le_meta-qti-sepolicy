@@ -57,6 +57,8 @@ files_tmp_filetrans(rules_manager_t, rules_manager_tmp_t, { file dir })
 #allow rules_manager_t var_t:file { read write create open };
 files_var_filetrans(rules_manager_t, rules_manager_tmp_t, { file dir })
 
+dev_read_urand(rules_manager_t)
+
 ## for DBus
 ifdef(`init_systemd', `
     init_dbus_chat(rules_manager_t)
