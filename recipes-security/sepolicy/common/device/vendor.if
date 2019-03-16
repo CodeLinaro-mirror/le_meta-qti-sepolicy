@@ -219,6 +219,25 @@ interface(`rw_diag_dev',`
 
 ########################################
 ## <summary>
+##      Read iio char devices
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`device_read_iio_device',`
+    gen_require(`
+        type device_t;
+        type iio_device;
+    ')
+
+    read_chr_files_pattern($1, device_t, iio_device)
+')
+
+########################################
+## <summary>
 ##      Read ubifs control devices
 ## </summary>
 ## <param name="domain">
