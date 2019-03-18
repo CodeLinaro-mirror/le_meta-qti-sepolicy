@@ -43,3 +43,62 @@ data_filetrans(spotify_t, spotify_data_t, { file dir })
 
 init_daemon_domain(spotify_t, spotify_exec_t)
 
+#============= spotify_t ==============
+
+gen_require(`
+        type etc_t;
+        type user_home_dir_t;
+        type home_root_t;
+        type sysfs_t;
+        type lib_t;
+        type proc_t;
+        type udev_var_run_t;
+	type init_var_run_t;
+	type systemd_resolved_var_run_t;
+	type net_conf_t;
+')
+
+#self
+allow spotify_t self:fifo_file { read write };
+allow spotify_t self:netlink_kobject_uevent_socket { bind create setopt getattr };
+allow spotify_t self:capability { net_raw net_admin };
+allow spotify_t self:tcp_socket { bind create getattr listen };
+allow spotify_t self:udp_socket { bind create setopt connect write };
+allow spotify_t self:unix_dgram_socket { create write };
+
+allow spotify_t system_dbusd_t:unix_stream_socket connectto;
+
+corenet_udp_bind_howl_port(spotify_t)
+corenet_tcp_bind_generic_node(spotify_t)
+corenet_udp_bind_generic_node(spotify_t)
+
+system_manager_rw_data_files(spotify_t) #/data/adk.device.db
+
+dev_read_urand(spotify_t)
+
+#allow spotify_t etc_t:file { read getattr open }; #/etc/nsswitch.conf
+files_read_etc_files(spotify_t)
+allow spotify_t etc_t:lnk_file read; #/etc/resolv.conf
+
+allow spotify_t sysfs_t:dir read;
+allow spotify_t net_conf_t:file { read open getattr }; #/etc/hosts
+allow spotify_t user_home_dir_t:dir { getattr search }; #/home/root, /home/root/.cache
+allow spotify_t home_root_t:dir {search getattr }; #/home
+
+allow spotify_t proc_t:file { open read getattr }; #/proc/filesystems
+allow spotify_t udev_var_run_t:dir search; #/run/udev
+allow spotify_t init_var_run_t:dir search; #/run/systemd
+allow spotify_t init_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
+allow spotify_t systemd_resolved_var_run_t:dir search; #/run/systemd/resolve
+allow spotify_t systemd_resolved_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
+
+# policy require for gstreamer
+allow spotify_t lib_t:file execute_no_trans; # /usr/lib/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner
+
+## for DBus
+ifdef(`init_systemd', `
+     dbus_connect_system_bus(spotify_t)
+     dbus_send_system_bus(spotify_t)
+     adk_audio_manager_dbus_chat(spotify_t)
+')
+
