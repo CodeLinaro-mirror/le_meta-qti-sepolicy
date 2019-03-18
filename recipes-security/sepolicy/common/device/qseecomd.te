@@ -30,12 +30,14 @@ policy_module(qseecomd, 1.0)
 type qseecomd_t;
 type qseecomd_exec_t;
 type qseecomd_data_t;
+type qseecomd_persist_t;
 
 init_daemon_domain(qseecomd_t, qseecomd_exec_t)
 logging_send_syslog_msg(qseecomd_t)
 
 gen_require(`
        type ion_device_t;
+       type qseecom_device_t;
        type proc_t;
 
        class process setcap;
@@ -45,6 +47,9 @@ allow qseecomd_t self:process setcap;
 
 #allow qseecomd_t ion_device_t:chr_file read;
 rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);
+
+#allow qseecomd_t to acces /dev/qseecom
+rw_chr_files_pattern(qseecomd_t, device_t, qseecom_device_t);
 
 # allow qseecomd to read commandline from /proc/cmdline
 allow qseecomd_t proc_t:file read_file_perms;
@@ -72,3 +77,7 @@ files_search_default(qseecomd_t)
 
 # allow qseecomd to read/write leproperties
 leprop_rw_props(qseecomd_t)
+
+# allow qseecomd to read/write to persist partition
+user_data_files_type(qseecomd_persist_t)
+manage_user_data_files(qseecomd_t, qseecomd_persist_t)
