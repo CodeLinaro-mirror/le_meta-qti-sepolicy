@@ -267,3 +267,8 @@ allow qcmap_cm_t dnsmasq_t:process { sigkill signal };
 allow qcmap_cm_t dnsmasq_tmp_t:file { read_file_perms unlink };
 
 dontaudit qcmap_cm_t default_t:dir { search };
+
+##### Reboot the device
+allow qcmap_cm_t init_t:unix_stream_socket { connectto };
+systemd_start_power_units(qcmap_cm_t)
+systemd_status_power_units(qcmap_cm_t)
