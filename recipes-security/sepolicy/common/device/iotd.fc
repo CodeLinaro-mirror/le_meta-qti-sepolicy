@@ -25,4 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/iotd    --   gen_context(system_u:object_r:iotd_exec_t,s0)
+/usr/bin/iotd           --     gen_context(system_u:object_r:iotd_exec_t,s0)
+/dev/spidev1.0          -c     gen_context(system_u:object_r:iotd_device_t,s0)
+/etc/iotd_config.ini    --     gen_context(system_u:object_r:iotd_etc_t,s0)
