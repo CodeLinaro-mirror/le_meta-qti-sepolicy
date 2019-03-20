@@ -85,6 +85,15 @@ userdebug_or_eng(`
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd1.log")
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd2.log")
 ')
+# dhcpc_t access syslogd_var_run_t, systemd_resolved_var_run_t, init_var_run_t
+gen_require(`
+    type syslogd_var_run_t;
+    type systemd_resolved_var_run_t;
+    type init_var_run_t;
+')
+allow dhcpc_t syslogd_var_run_t:sock_file { write };
+allow dhcpc_t systemd_resolved_var_run_t:file { open write };
+allow dhcpc_t init_var_run_t:file { getattr setattr open write };
 #TODO properly con_mode node
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`
