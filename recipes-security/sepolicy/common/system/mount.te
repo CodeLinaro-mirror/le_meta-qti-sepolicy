@@ -26,7 +26,12 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 fs_relabelfrom_firmware(mount_t)
+data_mount_user_dir(mount_t)
 data_mount_volatile_bind(mount_t)
+persist_mount_dir(mount_t)
+
+# Needed when launched from mount-copybind
+search_system_data_dir(mount_t)
 
 # /dev/ubi*
 device_read_ubi_device(mount_t)
