@@ -35,6 +35,7 @@ policy_module(connectivity_manager, 1.0)
 type connectivity_manager_t;
 type connectivity_manager_exec_t;
 type connectivity_manager_data_t;
+type connectivity_manager_tmp_t;
 
 # Manage private files inside /data
 user_data_files_type(connectivity_manager_data_t)
@@ -43,9 +44,11 @@ data_filetrans(connectivity_manager_t, connectivity_manager_data_t, { file dir }
 
 init_daemon_domain(connectivity_manager_t, connectivity_manager_exec_t)
 
+system_manager_rw_data_files(connectivity_manager_t)
+
 gen_require(`
-	type var_t;
 	type proc_net_t;
+        type tmpfs_t;
 ')
 
 corecmd_exec_shell(connectivity_manager_t)
@@ -60,6 +63,17 @@ allow connectivity_manager_t proc_net_t:file { open read getattr };
 kernel_read_system_state(connectivity_manager_t)
 allow connectivity_manager_t self:socket { getattr read write create };
 allow connectivity_manager_t self:unix_dgram_socket { create connect };
+allow connectivity_manager_t self:fifo_file { read write getattr };
+allow connectivity_manager_t self:process signal;
+
+allow connectivity_manager_t tmpfs_t:dir search; # /dev/mqueue
+
+# Manage private files inside /tmp
+files_tmp_filetrans(connectivity_manager_t, connectivity_manager_tmp_t, { file dir })
+
+files_var_filetrans(connectivity_manager_t, connectivity_manager_tmp_t, { file dir })
+
+files_rw_qcmap_etc_data_files(connectivity_manager_t)
 
 ## for DBus
 ifdef(`init_systemd', `

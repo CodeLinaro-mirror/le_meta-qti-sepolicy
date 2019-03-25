@@ -200,3 +200,8 @@ shutdown_domtrans(qcmap_cm_t)
 # Manage resolv.conf file for dnsmasq service
 read_files_pattern(qcmap_cm_t, init_var_run_t, init_var_run_t)
 allow qcmap_cm_t init_var_run_t:dir read;
+
+# WEB_CLIENT
+# allow httpd_t var_run_t:sock_file { write };
+allow httpd_t httpd_t:capability { sys_chroot };
+# allow httpd_t httpd_user_content_t:file { execute execute_no_trans };

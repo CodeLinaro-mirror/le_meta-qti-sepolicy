@@ -31,5 +31,21 @@
 ## </summary>
 #
 
+########################################
+## <summary>
+##      Read and writesystem manager data files.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
 
+interface(`system_manager_rw_data_files',`
+    gen_require(`
+        type system_manager_data_t;
+    ')
+     manage_user_data_files($1, system_manager_data_t)
+')
 

@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/system-manager -- gen_context(system_u:object_r:system_manager_exec_t,s0)
+/data/adk\.device\.db   -- gen_context(system_u:object_r:system_manager_data_t,s0)
