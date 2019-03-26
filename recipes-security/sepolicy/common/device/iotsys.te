@@ -34,6 +34,51 @@ policy_module(iotsys, 1.0)
 
 type iotsys_t;
 type iotsys_exec_t;
+type iotsys_data_t;
+type iotsys_tmp_t;
 
 init_daemon_domain(iotsys_t, iotsys_exec_t)
+
+#============= iotsys_t ==============
+
+gen_require(`
+        type proc_net_t;
+        type proc_t;
+        type sysctl_t;
+        type unreserved_port_t;
+        type init_var_run_t;
+')
+
+# self
+allow iotsys_t self:netlink_route_socket { write getattr read bind create nlmsg_read };
+allow iotsys_t self:unix_dgram_socket { create ioctl };
+allow iotsys_t self:udp_socket { bind create setopt getattr connect read write };
+allow iotsys_t self:capability net_raw;
+allow iotsys_t self:process signal;
+
+allow iotsys_t proc_net_t:file read;
+allow iotsys_t proc_t:file read_file_perms; #/proc/filesystems
+allow iotsys_t sysctl_t:dir search; #/proc/sys
+allow iotsys_t unreserved_port_t:udp_socket name_bind;
+
+dev_read_urand(iotsys_t)
+
+system_manager_rw_data_files(iotsys_t)
+manage_voice_ui_data_files(iotsys_t)
+
+files_read_etc_files(iotsys_t)
+
+corenet_udp_bind_generic_node(iotsys_t)
+
+sysnet_read_config(iotsys_t)
+
+allow iotsys_t init_var_run_t:file { read getattr open };
+allow iotsys_t init_var_run_t:dir search;
+
+files_tmp_filetrans(iotsys_t, iotsys_tmp_t, file)
+files_var_filetrans(iotsys_t, iotsys_tmp_t, { file dir })
+
+allow iotsys_t system_dbusd_t:unix_stream_socket connectto;
+dbus_connect_system_bus(iotsys_t)
+dbus_send_system_bus(iotsys_t)
 
