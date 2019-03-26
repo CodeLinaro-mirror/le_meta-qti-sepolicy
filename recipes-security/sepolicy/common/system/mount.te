@@ -73,3 +73,8 @@ userdebug_or_eng(`
     # TODO: Transition the login shells to unconfined_u:unconfined_r?
     role system_r types unconfined_mount_t;
 ')
+
+gen_require(`
+   type mount_runtime_t;
+')
+manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
