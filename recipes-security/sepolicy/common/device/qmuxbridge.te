@@ -51,4 +51,5 @@ allow qmuxbridge_t self:socket { read write create ioctl getattr };
 allow qmuxbridge_t self:fifo_file { read write getattr };
 allow qmuxbridge_t qmuxbridge_data_t:{ file dir } { create open read write getattr };
 allow qmuxbridge_t self:process { signal };
+allow qmuxbridge_t self:netlink_kobject_uevent_socket { create read setopt bind };
 files_dontaudit_list_default(qmuxbridge_t);
