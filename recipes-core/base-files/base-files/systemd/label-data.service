@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,16 +25,16 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 [Unit]
 Description=label-data
-After=data.mount
+Before=local-fs.target
 ConditionSecurity=selinux
+RequiresMountsFor=/data
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/sbin/restorecon -R /data
+ExecStart=/sbin/restorecon -RD /data
 
 [Install]
-RequiredBy=local-fs.target
+WantedBy=local-fs.target
