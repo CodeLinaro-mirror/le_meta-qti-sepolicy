@@ -31,19 +31,30 @@ gen_require(`
     type default_t;
     type devlog_t;
     type diag_device_t;
+    type syslogd_t;
+    type sysfs_t;
 ')
 
 type mcm_ril_service_t;
 type mcm_ril_service_exec_t;
-type mcm_ril_device_t;
+type mcm_ril_sock_t;
+dev_node(mcm_ril_sock_t);
 
 init_daemon_domain(mcm_ril_service_t, mcm_ril_service_exec_t)
 
 allow mcm_ril_service_t default_t:dir search;
-allow mcm_ril_service_t mcm_ril_device_t:dir { write add_name };
-allow mcm_ril_service_t mcm_ril_device_t:sock_file create;
+device_manage_socket_file(mcm_ril_service_t, mcm_ril_sock_t)
 allow mcm_ril_service_t devlog_t:sock_file write;
 userdebug_or_eng(`
 rw_chr_files_pattern(mcm_ril_service_t, device_t, diag_device_t)
+gen_require(`
+type unconfined_t;
+class service { start status stop };
+')
+allow unconfined_t mcm_ril_service_exec_t:service { status start stop};
+allow unconfined_t mcm_ril_sock_t:sock_file getattr;
 ')
 allow mcm_ril_service_t self:socket { create write read getattr };
+allow mcm_ril_service_t self:fifo_file rw_fifo_file_perms;
+allow mcm_ril_service_t syslogd_t:unix_dgram_socket sendto;
+allow mcm_ril_service_t sysfs_t:file { read open };
