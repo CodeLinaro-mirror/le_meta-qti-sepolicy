@@ -45,11 +45,12 @@ term_use_all_terms(mount_copybind_t)
 kernel_read_system_state(mount_copybind_t)
 allow mount_copybind_t self:process setfscreate;
 
-# Copy files from /etc to /systemrw
+# Copy files from /etc to /systemrw while preserving attributes
 corecmd_exec_bin(mount_copybind_t)
 files_read_etc_files(mount_copybind_t)
 data_manage_generic_system_files(mount_copybind_t)
 relabel_all_data_files(mount_copybind_t)
+allow mount_copybind_t self:capability { chown fowner dac_read_search fsetid };
 
 # Perform a bind mount with the real mount context
 mount_domtrans(mount_copybind_t)
