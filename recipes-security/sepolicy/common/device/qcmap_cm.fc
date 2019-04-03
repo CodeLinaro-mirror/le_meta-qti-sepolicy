@@ -31,8 +31,7 @@
 /systemrw/rt_tables(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
 /systemrw/misc/wifi(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
 
-/data/hosts                       --  gen_context(system_u:object_r:qcmap_data_t,s0)
-/data/dhcp_hosts                  --  gen_context(system_u:object_r:qcmap_data_t,s0)
+/data/data_qcmap(/.*)?                gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/entropy_file                --  gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/entropy_file1               --  gen_context(system_u:object_r:qcmap_data_t,s0)
 
@@ -47,3 +46,6 @@
 /run/resolv\.conf                 --  gen_context(system_u:object_r:net_conf_t,s0)
 /run/lock(/.*)                        gen_context(system_u:object_r:pppd_run_lock_t,s0)
 /dev/gsb                         -c   gen_context(system_u:object_r:datadpo_device_t,s0)
+/var/run/data(/.*)?                   gen_context(system_u:object_r:qcmap_var_run_t,s0)
+/run/data(/.*)?                       gen_context(system_u:object_r:qcmap_var_run_t,s0)
+/tmp/data(/.*)?                       gen_context(system_u:object_r:qcmap_tmp_t,s0)

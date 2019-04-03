@@ -292,3 +292,57 @@ interface(`qcmap_manage_qcmap_pid',`
         allow $1 qcmap_var_run_t:file manage_file_perms;
         allow $1 qcmap_var_run_t:sock_file manage_sock_file_perms;
 ')
+
+#######################################
+## <summary>
+##      manage the files in /tmp/data.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qcmap_manage_tmp_data_files',`
+        gen_require(`
+           type qcmap_tmp_t;
+        ')
+        manage_dirs_pattern($1, tmp_t, qcmap_tmp_t)
+        manage_files_pattern($1, tmp_t, qcmap_tmp_t)
+')
+
+#######################################
+## <summary>
+##      manage QCMAP files and directories in /var/run.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qcmap_manage_var_run_data_files',`
+        gen_require(`
+           type qcmap_var_run_t;
+           type var_run_t;
+        ')
+        manage_dirs_pattern($1, var_run_t, qcmap_var_run_t)
+        manage_files_pattern($1, var_run_t, qcmap_var_run_t)
+')
+
+#######################################
+## <summary>
+##      manage QCMAP files and directories in /data/data_qcmap.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qcmap_manage_user_data_files',`
+        gen_require(`
+           type qcmap_data_t;
+        ')
+        manage_user_data_files($1, qcmap_data_t)
+')

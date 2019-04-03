@@ -303,3 +303,20 @@ interface(`device_search_sockets',`
     allow $1 socket_device_t:dir search_dir_perms;
 ')
 
+########################################
+## <summary>
+##      read/write for device sockets
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access
+##      </summary>
+## </param>
+#
+interface(`device_rw_socket_files',`
+    gen_require(`
+        type socket_device_t;
+    ')
+
+    rw_sock_files_pattern($1, socket_device_t, $2)
+')
