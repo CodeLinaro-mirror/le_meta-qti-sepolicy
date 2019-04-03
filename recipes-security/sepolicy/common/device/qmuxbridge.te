@@ -49,4 +49,4 @@ allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto };
 allow qmuxbridge_t self:socket { read write create ioctl };
 allow qmuxbridge_t self:fifo_file { read write };
 allow qmuxbridge_t data_t:dir search;
-
+allow qmuxbridge_t self:netlink_kobject_uevent_socket { read bind create setopt };
