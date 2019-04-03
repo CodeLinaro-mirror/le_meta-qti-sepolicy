@@ -43,4 +43,5 @@ allow diagrebootapp_t self:capability { setuid setgid };
 userdebug_or_eng(`
     rw_diag_dev(diagrebootapp_t)
     reboot_write_fifo_files_reboot_device(diagrebootapp_t)
+    dev_rw_sysfs(diagrebootapp_t)
 ')
