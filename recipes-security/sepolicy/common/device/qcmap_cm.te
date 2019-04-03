@@ -187,6 +187,7 @@ gen_require(`
     type dnsmasq_var_run_t;
     type default_t;
     type dnsmasq_tmp_t;
+    type var_lib_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -268,6 +269,7 @@ allow qcmap_cm_t dnsmasq_tmp_t:file { read_file_perms unlink };
 
 dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
+search_dirs_pattern(qcmap_cm_t, var_lib_t, var_lib_t)
 
 ##### Reboot the device
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
