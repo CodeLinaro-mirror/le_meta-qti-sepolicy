@@ -30,8 +30,11 @@
 /usr/bin/ipacm_perf               --  gen_context(system_u:object_r:ipacm_perf_exec_t,s0)
 /etc/rc\.d/init\.d/ipa_fws_le     --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
 
+/var/run/data/ipa(/.*)?               gen_context(system_u:object_r:ipacm_var_run_t,s0)
+/run/data/ipa(/.*)?                   gen_context(system_u:object_r:ipacm_var_run_t,s0)
 /data/misc/ipa(/.*)?                  gen_context(system_u:object_r:ipacm_data_t,s0)
 
 /dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
 /dev/wwan_ioctl                  -c   gen_context(system_u:object_r:ipa_wwan_device_t,s0)
 /dev/ipaNatTable                 -c   gen_context(system_u:object_r:ipa_nat_table_device_t,s0)
+/dev/socket/data/ipa(/.*)?            gen_context(system_u:object_r:ipacm_socket_device_t,s0)

@@ -58,8 +58,14 @@ type ipa_nat_table_device_t;
 init_vendor_domain(ipacm_t, ipacm_exec_t)
 logging_send_syslog_msg(ipacm_t)
 
+gen_require(`
+       type socket_device_t;
+       type qcmap_var_run_t;
+')
 
-allow ipacm_t self:capability { net_raw net_admin };
+dontaudit ipacm_t self:capability { setuid setgid };
+allow ipacm_t self:capability { net_admin };
+allow ipacm_t qcmap_var_run_t:dir { search };
 allow ipacm_t self:{ udp_socket netlink_route_socket } create_socket_perms;
 allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
 allow ipacm_t self:unix_dgram_socket write;
@@ -91,7 +97,6 @@ userdebug_or_eng(`
     rw_diag_dev(ipacm_perf_t)
 ')
 
-allow ipacm_perf_t self:capability net_raw;
 allow ipacm_perf_t self:netlink_route_socket r_netlink_socket_perms;
 allow ipacm_perf_t self:{ socket udp_socket } create_socket_perms;
 allow ipacm_perf_t self:fifo_file rw_fifo_file_perms;
@@ -127,18 +132,26 @@ type ipa_wwan_device_t;
 
 dev_node(ipa_wwan_device_t)
 files_pid_file(ipacm_var_run_t)
-files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, { sock_file file })
+files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, { sock_file file dir })
 manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
+manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
 
 gen_require(`
     type device_t;
 ')
 
+### Manage socket files inside /dev/socket
+type ipacm_socket_device_t;
+files_type(ipacm_socket_device_t);
+dev_node(ipacm_socket_device_t);
+device_manage_socket_file({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_socket_device_t);
+manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_socket_device_t, ipacm_socket_device_t);
+allow { ipacm_t ipacm_diag_t ipacm_perf_t } socket_device_t:dir { search };
+
 userdebug_or_eng(`
     rw_diag_dev(ipacm_diag_t)
 ')
 
-allow ipacm_t self:capability net_admin;
 rw_chr_files_pattern(ipacm_perf_t, device_t, ipa_wwan_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_fw_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_wwan_device_t);
