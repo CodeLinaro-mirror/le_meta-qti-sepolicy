@@ -46,6 +46,5 @@
 /data/www(/.*)?                       gen_context(system_u:object_r:httpd_data_t,s0)
 #/WEBSERVER(/.*)?                      gen_context(system_u:object_r:httpd_user_content_t,s0)
 /run/resolv\.conf                 --  gen_context(system_u:object_r:net_conf_t,s0)
-
 /run/lock(/.*)                        gen_context(system_u:object_r:pppd_run_lock_t,s0)
-
+/dev/gsb                         -c   gen_context(system_u:object_r:datadpo_device_t,s0)
