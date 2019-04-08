@@ -34,3 +34,4 @@
 
 /dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
 /dev/wwan_ioctl                  -c   gen_context(system_u:object_r:ipa_wwan_device_t,s0)
+/dev/ipaNatTable                 -c   gen_context(system_u:object_r:ipa_nat_table_device_t,s0)

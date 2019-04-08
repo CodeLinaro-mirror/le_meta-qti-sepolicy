@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -44,7 +44,6 @@ data_filetrans(led_manager_t, led_manager_data_t, { file dir })
 
 init_daemon_domain(led_manager_t, led_manager_exec_t)
 
-
 #============= led_manager_t ==============
 kernel_read_system_state(led_manager_t)
 allow led_manager_t self:capability kill;
@@ -55,8 +54,13 @@ dev_manage_sysfs_dirs(led_manager_t)
 files_tmp_filetrans(led_manager_t, led_manager_tmp_t, file)
 files_var_filetrans(led_manager_t, led_manager_tmp_t, { file dir })
 
-## for DBus
-init_dbus_chat(led_manager_t)
-dbus_system_domain(led_manager_t, led_manager_exec_t)
-unconfined_dbus_chat(led_manager_t);
+dev_read_urand(led_manager_t)
 
+dontaudit led_manager_t sysfs_t:file create;
+
+## for DBus
+ifdef(`init_systemd', `
+    init_dbus_chat(led_manager_t)
+    dbus_system_domain(led_manager_t, led_manager_exec_t)
+    unconfined_dbus_chat(led_manager_t);
+')

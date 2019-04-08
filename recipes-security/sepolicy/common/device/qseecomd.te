@@ -1,0 +1,74 @@
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qseecomd, 1.0)
+
+type qseecomd_t;
+type qseecomd_exec_t;
+type qseecomd_data_t;
+
+init_daemon_domain(qseecomd_t, qseecomd_exec_t)
+logging_send_syslog_msg(qseecomd_t)
+
+gen_require(`
+       type ion_device_t;
+       type proc_t;
+
+       class process setcap;
+')
+
+allow qseecomd_t self:process setcap;
+
+#allow qseecomd_t ion_device_t:chr_file read;
+rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);
+
+# allow qseecomd to read commandline from /proc/cmdline
+allow qseecomd_t proc_t:file read_file_perms;
+
+files_getattr_all_files(qseecomd_t)
+files_read_default_files(qseecomd_t)
+
+dev_write_raw_memory(qseecomd_t)
+dev_read_raw_memory(qseecomd_t)
+
+# Allow SFS to write to data partition
+search_user_data_dir(qseecomd_t);
+user_data_files_type(qseecomd_data_t)
+manage_user_data_files(qseecomd_t, qseecomd_data_t)
+
+# allow qseecomd to read/write to ssd partition
+storage_raw_read_removable_device(qseecomd_t)
+storage_raw_write_removable_device(qseecomd_t)
+
+dev_read_sysfs(qseecomd_t)
+dev_rw_generic_chr_files(qseecomd_t)
+allow qseecomd_t self:capability { setuid setgid };
+
+files_search_default(qseecomd_t)
+
+# allow qseecomd to read/write leproperties
+leprop_rw_props(qseecomd_t)

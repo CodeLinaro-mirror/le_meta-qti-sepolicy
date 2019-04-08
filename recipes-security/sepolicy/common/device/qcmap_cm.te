@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -195,3 +195,12 @@ kernel_read_vm_overcommit_sysctl(qcmap_cm_t);
 allow iptables_t qcmap_tmp_t:file { read };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
+
+# Manage resolv.conf file for dnsmasq service
+read_files_pattern(qcmap_cm_t, init_var_run_t, init_var_run_t)
+allow qcmap_cm_t init_var_run_t:dir read;
+
+# WEB_CLIENT
+# allow httpd_t var_run_t:sock_file { write };
+allow httpd_t httpd_t:capability { sys_chroot };
+# allow httpd_t httpd_user_content_t:file { execute execute_no_trans };

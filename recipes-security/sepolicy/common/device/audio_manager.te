@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -34,20 +34,31 @@ policy_module(audio_manager, 1.0)
 
 type audio_manager_t;
 type audio_manager_exec_t;
-#type audio_manager_data_t;
+type audio_manager_data_t;
 type audio_manager_tmp_t;
 
 init_daemon_domain(audio_manager_t, audio_manager_exec_t)
 
 gen_require(`
+	type tmpfs_t;
 	type var_lib_t;
 	type init_var_run_t;
 	type initrc_var_run_t;
 	type random_device_t;
 	type urandom_device_t;
 	type home_root_t;
-	class dbus send_msg;
+	type systemd_logind_var_run_t;
+        ifdef(`init_systemd', `
+            class dbus send_msg;
+        ')
 ')
+
+# Manage private files inside /data
+user_data_files_type(audio_manager_data_t)
+manage_user_data_files(audio_manager_t, audio_manager_data_t)
+data_filetrans(audio_manager_t, audio_manager_data_t, { file })
+
+allow audio_manager_t systemd_logind_var_run_t:sock_file write; # /run/dbus/system_bus_socket
 
 #manage_system_data_files(audio_manager_t, audio_manager_data_t)
 #data_filetrans(audio_manager_t, audio_manager_data_t, { file dir })
@@ -57,6 +68,12 @@ kernel_read_system_state(audio_manager_t)
 allow audio_manager_t random_device_t:chr_file { open read write };
 #allow audio_manager_t tmpfs_t:dir { read search open getattr };
 #allow audio_manager_t tmpfs_t:file { read write open };
+
+#Allow caller to modify hardware state information.
+dev_rw_sysfs(audio_manager_t) # /sys/class/gpio/export
+dontaudit audio_manager_t sysfs_t:dir { add_name write };
+dontaudit audio_manager_t sysfs_t:file create;
+
 allow audio_manager_t urandom_device_t:chr_file { open read write };
 allow audio_manager_t home_root_t:dir { search getattr };
 
@@ -89,18 +106,20 @@ dev_read_sound(audio_manager_t)
 dev_write_sound(audio_manager_t)
 
 ## for DBus
-init_dbus_chat(audio_manager_t)
-dbus_system_domain(audio_manager_t, audio_manager_exec_t)
+ifdef(`init_systemd', `
+    init_dbus_chat(audio_manager_t)
+    dbus_system_domain(audio_manager_t, audio_manager_exec_t)
 
-adk_voice_ui_dbus_chat(audio_manager_t);
-unconfined_dbus_chat(audio_manager_t);
-adk_dbus_send_connectivity_manager(audio_manager_t);
-init_dbus_send_script(audio_manager_t)
+    adk_voice_ui_dbus_chat(audio_manager_t);
+    unconfined_dbus_chat(audio_manager_t);
+    adk_dbus_send_connectivity_manager(audio_manager_t);
+    init_dbus_send_script(audio_manager_t)
 
-adk_dbus_send_led_manager(audio_manager_t);
-allow audio_manager_t self:dbus send_msg;
-adk_dbus_send_nfdlna(audio_manager_t);
-adk_dbus_send_rules_manager(audio_manager_t);
+    adk_dbus_send_led_manager(audio_manager_t);
+    allow audio_manager_t self:dbus send_msg;
+    adk_dbus_send_nfdlna(audio_manager_t);
+    adk_dbus_send_rules_manager(audio_manager_t);
+')
 
 ## for Pulseaudio
 pulseaudio_rw_tmpfs_files(audio_manager_t);

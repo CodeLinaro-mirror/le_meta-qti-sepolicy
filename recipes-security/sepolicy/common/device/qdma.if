@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,14 +25,25 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(hal-audio, 1.0)
+## <summary>qdma</summary>
+
 
 ########################################
+## <summary>
+##      Communicate with qdma socket file
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
 #
-# Declarations
-#
-
-type audio_devices_t;
-dev_node(audio_devices_t)
-type audio_data_files_t;
-user_data_files_type(audio_data_files_t)
+interface(`rw_vendor_qdma_sock_file',`
+        gen_require(`
+                type vendor_qdma_t;
+                type vendor_qdma_sock_t;
+        ')
+    allow $1 vendor_qdma_t:unix_stream_socket connectto;
+    allow $1 vendor_qdma_sock_t:sock_file write;
+')

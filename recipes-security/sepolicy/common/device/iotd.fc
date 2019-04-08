@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,7 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/dev/msm_.*                            gen_context(system_u:object_r:audio_devices_t,s0)
-/dev/wcd_dsp0_control      --          gen_context(system_u:object_r:audio_devices_t,s0)
-/dev/wcd-dsp-glink         --          gen_context(system_u:object_r:audio_devices_t,s0)
-/data/audio(/.*)?                      gen_context(system_u:object_r:audio_data_files_t,s0)
+/usr/bin/iotd    --   gen_context(system_u:object_r:iotd_exec_t,s0)

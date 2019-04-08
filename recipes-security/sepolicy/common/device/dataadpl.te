@@ -38,10 +38,20 @@ userdebug_or_eng(`
     rw_diag_dev(dataadpl_t)
 ')
 
+gen_require(`
+    type system_data_t;
+    type qcmap_etc_data_t;
+')
+
 dev_read_sysfs(dataadpl_t)
-allow dataadpl_t self:unix_dgram_socket { create connect };
+allow dataadpl_t self:unix_dgram_socket { create connect write  };
 allow dataadpl_t self:socket { create read ioctl write };
 rw_chr_files_pattern(dataadpl_t, device_t, device_t)
-allow dataadpl_t self:fifo_file { write read };
+allow dataadpl_t self:fifo_file { write read getattr };
 corecmd_exec_shell(dataadpl_t)
 dev_write_kmsg(dataadpl_t)
+
+allow dataadpl_t system_data_t:dir { read };
+data_rw_system_data_files(dataadpl_t, qcmap_etc_data_t)
+kernel_read_system_state(dataadpl_t)
+
