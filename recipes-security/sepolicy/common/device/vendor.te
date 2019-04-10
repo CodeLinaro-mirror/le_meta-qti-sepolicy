@@ -133,3 +133,6 @@ dev_node(diag_device_t);
 
 type iio_device;
 dev_node(iio_device);
+
+type ion_device_t;
+dev_node(ion_device_t);
