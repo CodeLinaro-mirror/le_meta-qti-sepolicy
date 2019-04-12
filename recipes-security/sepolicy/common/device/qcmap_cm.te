@@ -73,7 +73,7 @@ rw_chr_files_pattern(qcmap_cm_t, device_t, datadpo_device_t)
 allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket { create ioctl listen accept };
-allow qcmap_cm_t self:socket { create ioctl bind read write getattr };
+allow qcmap_cm_t self:socket connected_socket_perms;
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
