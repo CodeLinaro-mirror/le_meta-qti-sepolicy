@@ -58,6 +58,7 @@ gen_require(`
  type reserved_port_t;
  type sysctl_vm_t;
  type sysctl_vm_overcommit_t;
+ type fs_t;
 ')
 
 # For leprop permissions
@@ -97,6 +98,7 @@ allow qmmf_webserver_t init_var_run_t:file  { getattr open read };
 
 allow qmmf_webserver_t net_conf_t:file { read open getattr };
 allow qmmf_webserver_t sysctl_vm_overcommit_t:file { open read };
+allow qmmf_webserver_t fs_t:filesystem getattr;
 
 userdebug_or_eng(`
     gen_require(`
