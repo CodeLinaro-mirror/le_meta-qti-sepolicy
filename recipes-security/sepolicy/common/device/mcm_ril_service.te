@@ -33,6 +33,8 @@ gen_require(`
     type diag_device_t;
     type syslogd_t;
     type sysfs_t;
+    type device_t;
+    type dataqti_ppp_device_t;
 ')
 
 type mcm_ril_service_t;
@@ -54,7 +56,14 @@ class service { start status stop };
 allow unconfined_t mcm_ril_service_exec_t:service { status start stop};
 allow unconfined_t mcm_ril_sock_t:sock_file getattr;
 ')
-allow mcm_ril_service_t self:socket { create write read getattr };
+allow mcm_ril_service_t self:socket { create write read getattr setopt };
 allow mcm_ril_service_t self:fifo_file rw_fifo_file_perms;
 allow mcm_ril_service_t syslogd_t:unix_dgram_socket sendto;
 allow mcm_ril_service_t sysfs_t:file { read open };
+kernel_read_system_state(mcm_ril_service_t)
+
+# MCM_ATCOP service
+corecmd_exec_shell(mcm_ril_service_t)
+qcmap_read_qcmap_etc_data_files(mcm_ril_service_t)
+rw_chr_files_pattern(mcm_ril_service_t, device_t, dataqti_ppp_device_t)
+allow mcm_ril_service_t self:unix_stream_socket { connectto };
