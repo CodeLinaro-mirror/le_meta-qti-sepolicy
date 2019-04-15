@@ -27,6 +27,7 @@
 
 [Unit]
 Description=label-cache
+DefaultDependencies=no
 Before=local-fs.target
 ConditionSecurity=selinux
 RequiresMountsFor=/cache

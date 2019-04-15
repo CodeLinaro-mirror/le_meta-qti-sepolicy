@@ -27,6 +27,7 @@
 
 [Unit]
 Description=label-systemrw
+DefaultDependencies=no
 Before=local-fs.target
 ConditionSecurity=selinux
 RequiresMountsFor=/systemrw
