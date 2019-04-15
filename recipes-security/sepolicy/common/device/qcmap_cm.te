@@ -193,6 +193,8 @@ gen_require(`
     type default_t;
     type dnsmasq_tmp_t;
     type var_lib_t;
+    type ipa_fw_device_t;
+    type ipa_wwan_device_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -204,6 +206,13 @@ corenet_tcp_connect_http_port(qcmap_cm_t);
 
 #Mange VLAN/MPDN use cases
 kernel_read_vm_overcommit_sysctl(qcmap_cm_t);
+rw_chr_files_pattern(qcmap_cm_t, device_t, ipa_fw_device_t)
+rw_chr_files_pattern(qcmap_cm_t, device_t, ipa_wwan_device_t)
+
+#Rules needed  for multicast_querier
+rw_files_pattern(qcmap_cm_t, sysfs_t, sysfs_t)
+dontaudit qcmap_cm_t sysfs_t:dir { add_name };
+dontaudit qcmap_cm_t sysfs_t:file { create };
 
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
