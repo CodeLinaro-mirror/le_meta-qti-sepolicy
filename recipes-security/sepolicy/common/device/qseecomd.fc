@@ -27,3 +27,4 @@
 
 /usr/bin/qseecomd               --      gen_context(system_u:object_r:qseecomd_exec_t,s0)
 /data/vendor/tzstorage(/.*)?            gen_context(system_u:object_r:qseecomd_data_t,s0)
+/persist/data(/.*)?                     gen_context(system_u:object_r:qseecomd_persist_t,s0)
