@@ -35,6 +35,9 @@ gen_require(`
     type sysfs_t;
     type device_t;
     type dataqti_ppp_device_t;
+    type data_t;
+    type qnetmgrd_t;
+    type qnetmgrd_data_t;
 ')
 
 type mcm_ril_service_t;
@@ -59,7 +62,7 @@ allow unconfined_t mcm_ril_sock_t:sock_file getattr;
 allow mcm_ril_service_t self:socket { create write read getattr setopt };
 allow mcm_ril_service_t self:fifo_file rw_fifo_file_perms;
 allow mcm_ril_service_t syslogd_t:unix_dgram_socket sendto;
-allow mcm_ril_service_t sysfs_t:file { read open };
+allow mcm_ril_service_t sysfs_t:file { read open getattr };
 kernel_read_system_state(mcm_ril_service_t)
 
 # MCM_ATCOP service
@@ -67,3 +70,15 @@ corecmd_exec_shell(mcm_ril_service_t)
 qcmap_read_qcmap_etc_data_files(mcm_ril_service_t)
 rw_chr_files_pattern(mcm_ril_service_t, device_t, dataqti_ppp_device_t)
 allow mcm_ril_service_t self:unix_stream_socket { connectto };
+
+#MCM_DATA service
+type mcm_data_t;
+user_data_files_type(mcm_data_t);
+allow mcm_ril_service_t mcm_data_t:dir { search write create read add_name };
+allow mcm_ril_service_t self:netlink_socket { create bind read };
+allow mcm_ril_service_t mcm_data_t:sock_file { create write };
+filetrans_pattern( mcm_ril_service_t, data_t, mcm_data_t, { sock_file dir })
+allow mcm_ril_service_t qnetmgrd_t:unix_stream_socket { connectto };
+allow mcm_ril_service_t self:capability { net_admin };
+allow mcm_ril_service_t qnetmgrd_data_t:sock_file { write };
+
