@@ -52,3 +52,30 @@ interface(`location_read_loc_data_files',`
     read_files_pattern($1, user_data, loc_data_t)
     read_lnk_files_pattern($1, user_data, loc_data_t)
 ')
+
+########################################
+## <summary>
+##    Read location conf files in /etc.
+## </summary>
+## <desc>
+##    <p>
+##    Allow the specified domain to read location conf
+##    files in /etc. These files are location framework
+##    related system configuration files
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Domain allowed access for location conf files.
+##    </summary>
+## </param>
+#
+interface(`files_read_loc_etc_files',`
+    gen_require(`
+        type etc_t, loc_etc_t;
+    ')
+
+    allow $1 etc_t:dir list_dir_perms;
+    read_files_pattern($1, etc_t, loc_etc_t)
+    read_lnk_files_pattern($1, etc_t, loc_etc_t)
+')
