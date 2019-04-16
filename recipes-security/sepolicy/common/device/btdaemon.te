@@ -43,3 +43,47 @@ data_filetrans(btdaemon_t, btdaemon_data_t, { file dir })
 
 init_daemon_domain(btdaemon_t, btdaemon_exec_t)
 
+#============= btdaemon_t ==============
+
+gen_require(`
+        type systemd_logind_var_run_t;
+	type system_dbusd_var_run_t;
+	type system_dbusd_t;
+	type leprop_sock_t;
+	type leprop_t;
+	type default_t;
+	type bt_data_t;
+	type proc_t;
+')
+
+
+#self
+allow btdaemon_t self:capability { net_admin sys_nice };
+allow btdaemon_t self:capability2 wake_alarm;
+allow btdaemon_t self:socket create;
+allow btdaemon_t self:unix_dgram_socket { connect write create };
+allow btdaemon_t self:process { signal setsched };
+
+read_system_data_files(btdaemon_t, bt_data_t)
+
+allow btdaemon_t systemd_logind_var_run_t:sock_file write; #/run/dbus/system_bus_socket
+allow btdaemon_t system_dbusd_var_run_t:dir search; #/run/dbus
+
+allow btdaemon_t default_t:dir search;
+
+allow btdaemon_t leprop_sock_t:sock_file write; #/dev/socket/leprop-service
+allow btdaemon_t leprop_t:unix_stream_socket connectto;
+
+allow btdaemon_t proc_t:file { read open getattr }; #/proc/filesystems
+dev_read_urand(btdaemon_t)
+
+allow btdaemon_t system_dbusd_t:unix_stream_socket connectto;
+
+## for DBus
+ifdef(`init_systemd', `
+    dbus_connect_system_bus(btdaemon_t)
+    dbus_send_system_bus(btdaemon_t)
+    adk_audio_manager_dbus_chat(btdaemon_t)
+    pulseaudio_dbus_chat(btdaemon_t)
+    adk_connectivity_manager_dbus_chat(btdaemon_t)
+')
