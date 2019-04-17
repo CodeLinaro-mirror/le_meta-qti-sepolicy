@@ -47,7 +47,7 @@ logging_send_syslog_msg(qmuxbridge_t)
 mbim_rw_device(qmuxbridge_t)
 
 allow qmuxbridge_t self:unix_dgram_socket { create connect write sendto getattr };
-allow qmuxbridge_t self:socket { read write create ioctl getattr };
+allow qmuxbridge_t self:socket { read write create ioctl getattr setopt };
 allow qmuxbridge_t self:fifo_file { read write getattr };
 allow qmuxbridge_t qmuxbridge_data_t:{ file dir } { create open read write getattr };
 allow qmuxbridge_t self:process { signal };
