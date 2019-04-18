@@ -55,9 +55,10 @@ dev_write_kmsg(mbim_t)
 dev_node(mbim_device_t)
 mbim_rw_device(mbim_t)
 dev_read_urand(mbim_t)
+fs_manage_configfs_files(mbim_t)
 
 firmware_read_files(mbim_t)
-allow mbim_t self:socket { read write create ioctl getattr };
+allow mbim_t self:socket { read write create ioctl getattr setopt };
 allow mbim_t self:fifo_file { read write getattr };
 allow mbim_t self:unix_dgram_socket { create connect write sendto getattr };
 allow mbim_t self:capability2 { block_suspend };
