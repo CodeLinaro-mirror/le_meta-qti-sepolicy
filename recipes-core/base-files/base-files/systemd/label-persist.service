@@ -27,6 +27,7 @@
 
 [Unit]
 Description=label-persist
+DefaultDependencies=no
 Before=local-fs.target
 ConditionSecurity=selinux
 RequiresMountsFor=/persist

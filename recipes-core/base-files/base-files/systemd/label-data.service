@@ -27,6 +27,7 @@
 
 [Unit]
 Description=label-data
+DefaultDependencies=no
 Before=local-fs.target
 ConditionSecurity=selinux
 RequiresMountsFor=/data
