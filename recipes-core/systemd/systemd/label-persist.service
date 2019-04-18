@@ -28,7 +28,7 @@
 [Unit]
 Description=label-persist
 DefaultDependencies=no
-Before=local-fs.target
+Before=multi-user.target
 ConditionSecurity=selinux
 RequiresMountsFor=/persist
 
@@ -38,4 +38,4 @@ RemainAfterExit=yes
 ExecStart=/sbin/restorecon -RD /persist
 
 [Install]
-WantedBy=local-fs.target
+WantedBy=multi-user.target

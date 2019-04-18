@@ -26,5 +26,6 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /firmware(/.*)?  gen_context(system_u:object_r:firmware_t,s0)
+/dsp(/.*)?       gen_context(system_u:object_r:dsp_firmware_t,s0)
 
 /data/persist/rfs/shared(/.*)?  gen_context(system_u:object_r:firmware_persist_t,s0)

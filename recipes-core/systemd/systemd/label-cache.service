@@ -28,7 +28,7 @@
 [Unit]
 Description=label-cache
 DefaultDependencies=no
-Before=local-fs.target
+Before=multi-user.target
 ConditionSecurity=selinux
 RequiresMountsFor=/cache
 
@@ -38,4 +38,4 @@ RemainAfterExit=yes
 ExecStart=/sbin/restorecon -RD /cache
 
 [Install]
-WantedBy=local-fs.target
+WantedBy=multi-user.target
