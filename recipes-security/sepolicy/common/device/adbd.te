@@ -81,8 +81,11 @@ unconfined_domain(adbd_initrc_t)
 # /sys/class/android_usb/android0/*
 gen_require(`
     type sysfs_t;
+    type mount_copybind_exec_t;
+    type mount_copybind_t;
 ')
 create_files_pattern(adbd_initrc_t, sysfs_t, sysfs_t)
+domtrans_pattern(adbd_initrc_t, mount_copybind_exec_t, mount_copybind_t);
 
 # Allow all domains opened via adb shell to display log messages on adb shell
 type adbd_pty_t;
