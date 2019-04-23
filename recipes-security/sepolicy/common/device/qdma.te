@@ -30,7 +30,7 @@ policy_module(qdma, 1.0)
 type vendor_qdma_t;
 type vendor_qdma_exec_t;
 
-init_daemon_domain(vendor_qdma_t, vendor_qdma_exec_t)
+init_vendor_domain(vendor_qdma_t, vendor_qdma_exec_t)
 
 gen_require(`
     type etc_t;
