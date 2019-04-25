@@ -27,5 +27,6 @@
 
 /sbin/reboot-daemon     -- gen_context(system_u:object_r:rebootd_exec_t,mls_systemhigh)
 /etc/rc\.d/init\.d/reset_reboot_cookie   -- gen_context(system_u:object_r:reset_reboot_initrc_exec_t,s0)
+/etc/initscripts/reset_reboot_cookie   -- gen_context(system_u:object_r:reset_reboot_initrc_exec_t,s0)
 /data/reboot-cookie         gen_context(system_u:object_r:reboot_cookie_data_t,s0)
 
