@@ -64,6 +64,7 @@ gen_require(`
  type syslogd_t;
  type sysctl_t;
  type qmmf_webserver_t;
+ type vendor_camera_config_t;
 ')
 
 # For video related files
@@ -113,6 +114,10 @@ files_type(qmmf_server_tmp_t);
 files_var_filetrans(qmmf_server_t, qmmf_server_tmp_t, { dir file })
 allow qmmf_server_t qmmf_server_tmp_t:dir { write add_name remove_name };
 allow qmmf_server_t syslogd_t:unix_dgram_socket sendto;
+
+#For camx config read perms
+allow qmmf_server_t vendor_camera_config_t:dir search;
+allow qmmf_server_t vendor_camera_config_t:file { open read getattr };
 
 userdebug_or_eng(`
     gen_require(`

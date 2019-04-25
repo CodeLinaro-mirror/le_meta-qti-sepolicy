@@ -26,3 +26,6 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /data/misc/camera(/.*)?            gen_context(system_u:object_r:camera_data_t,s0)
+
+#vendor camera config
+/vendor/etc/camera(/.*)?           gen_context(system_u:object_r:vendor_camera_config_t,s0)
