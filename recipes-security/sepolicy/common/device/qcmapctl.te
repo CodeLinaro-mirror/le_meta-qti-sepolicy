@@ -44,7 +44,7 @@ gen_require(`
 
 #self
 allow qcmapctl_t self:fifo_file rw_fifo_file_perms ;
-allow qcmapctl_t self:socket { read write create getattr setopt };
+allow qcmapctl_t self:socket create_socket_perms;
 
 userdebug_or_eng(`
   rw_diag_dev(qcmapctl_t);

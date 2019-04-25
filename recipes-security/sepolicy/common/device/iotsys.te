@@ -47,6 +47,7 @@ gen_require(`
         type sysctl_t;
         type unreserved_port_t;
         type init_var_run_t;
+        type systemd_resolved_var_run_t;
 ')
 
 # self
@@ -72,6 +73,7 @@ corenet_udp_bind_generic_node(iotsys_t)
 
 sysnet_read_config(iotsys_t)
 
+allow iotsys_t systemd_resolved_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
 allow iotsys_t init_var_run_t:file { read getattr open };
 allow iotsys_t init_var_run_t:dir search;
 

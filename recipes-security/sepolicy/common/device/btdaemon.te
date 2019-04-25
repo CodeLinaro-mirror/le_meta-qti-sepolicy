@@ -48,6 +48,8 @@ init_daemon_domain(btdaemon_t, btdaemon_exec_t)
 gen_require(`
         type systemd_logind_var_run_t;
 	type system_dbusd_var_run_t;
+        type init_var_run_t;
+        type syslogd_var_run_t;
 	type system_dbusd_t;
 	type leprop_sock_t;
 	type leprop_t;
@@ -59,8 +61,8 @@ gen_require(`
 
 #self
 allow btdaemon_t self:capability { net_admin sys_nice };
-allow btdaemon_t self:capability2 wake_alarm;
-allow btdaemon_t self:socket create;
+allow btdaemon_t self:capability2 { wake_alarm };
+allow btdaemon_t self:socket create_socket_perms;
 allow btdaemon_t self:unix_dgram_socket { connect write create };
 allow btdaemon_t self:process { signal setsched };
 
@@ -68,6 +70,9 @@ read_system_data_files(btdaemon_t, bt_data_t)
 
 allow btdaemon_t systemd_logind_var_run_t:sock_file write; #/run/dbus/system_bus_socket
 allow btdaemon_t system_dbusd_var_run_t:dir search; #/run/dbus
+allow btdaemon_t init_var_run_t:dir search; #/run/systemd
+logging_send_syslog_msg(btdaemon_t)
+allow btdaemon_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
 
 allow btdaemon_t default_t:dir search;
 
@@ -78,6 +83,8 @@ allow btdaemon_t proc_t:file { read open getattr }; #/proc/filesystems
 dev_read_urand(btdaemon_t)
 
 allow btdaemon_t system_dbusd_t:unix_stream_socket connectto;
+
+use_wakelock(btdaemon_t)
 
 ## for DBus
 ifdef(`init_systemd', `

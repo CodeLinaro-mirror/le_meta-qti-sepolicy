@@ -223,3 +223,19 @@ interface(`device_search_sockets',`
     allow $1 socket_device_t:dir search_dir_perms;
 ')
 
+########################################
+## <summary>
+##      use wake lock
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`use_wakelock',`
+
+        dev_rw_sysfs($1) #/sys/power/wake_lock
+        allow $1 self:capability2 block_suspend;
+')
+
