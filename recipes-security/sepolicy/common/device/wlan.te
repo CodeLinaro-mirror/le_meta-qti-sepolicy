@@ -34,16 +34,30 @@ policy_module(wlan, 1.0)
 
 type wlan_service_t;
 type wlan_service_exec_t;
+type wlan_service_tmp_t;
 
 init_vendor_domain(wlan_service_t, wlan_service_exec_t)
 inittab_domtrans(wlan_service_t, wlan_service_exec_t)
+
+gen_require(`
+type socket_device_t;
+type default_t;
+')
 
 userdebug_or_eng(`
     rw_diag_dev(wlan_service_t)
 ')
 
+files_tmp_file(wlan_service_tmp_t)
+
 allow wlan_service_t self:capability net_admin;
 allow wlan_service_t self:fifo_file rw_fifo_file_perms;
 allow wlan_service_t self:netlink_socket create_socket_perms;
 allow wlan_service_t self:socket create_socket_perms;
+search_dirs_pattern(wlan_service_t, socket_device_t, socket_device_t)
+search_dirs_pattern(wlan_service_t, default_t, default_t)
+userdom_manage_user_tmp_files(wlan_service_t)
+
+manage_files_pattern(wlan_service_t, wlan_service_tmp_t, wlan_service_tmp_t)
+files_tmp_filetrans(wlan_service_t, wlan_service_tmp_t, { file lnk_file dir })
 dev_read_sysfs(wlan_service_t)
