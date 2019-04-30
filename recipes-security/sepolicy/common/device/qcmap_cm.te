@@ -328,3 +328,47 @@ kernel_rw_fs_sysctls(qcmap_cm_t)
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
 systemd_start_power_units(qcmap_cm_t)
 systemd_status_power_units(qcmap_cm_t)
+
+#TODO:get the policies from upstream and running in permissive mode for now
+gen_require(`
+	type random_device_t;
+	type urandom_device_t;
+	type syslogd_t;
+	type var_run_t;
+	type devlog_t;
+	type etc_t;
+	type proc_net_t;
+')
+type hostapd_qcmap_t;
+type hostapd_qcmap_exec_t;
+init_daemon_domain(hostapd_qcmap_t, hostapd_qcmap_exec_t)
+permissive hostapd_qcmap_t;
+can_exec(qcmap_cm_t, hostapd_qcmap_exec_t)
+ifdef(`init_systemd',`
+    allow qcmap_cm_t hostapd_qcmap_exec_t:service { start stop status };
+')
+allow hostapd_qcmap_t random_device_t:chr_file manage_chr_file_perms;
+allow hostapd_qcmap_t urandom_device_t:chr_file manage_chr_file_perms;
+allow hostapd_qcmap_t self:netlink_route_socket create_netlink_socket_perms;
+allow hostapd_qcmap_t syslogd_t:unix_dgram_socket { sendto };
+allow hostapd_qcmap_t self:netlink_generic_socket { read setopt write create bind getattr };
+manage_sock_files_pattern(hostapd_qcmap_t, var_run_t, var_run_t);
+networkmanager_read_wifi_sysdata_files(hostapd_qcmap_t)
+allow hostapd_qcmap_t devlog_t:sock_file manage_sock_file_perms;
+allow hostapd_qcmap_t self:udp_socket connected_socket_perms;
+allow hostapd_qcmap_t etc_t:file rw_file_perms;
+allow hostapd_qcmap_t self:capability { net_raw net_admin };
+allow hostapd_qcmap_t proc_net_t:file { read };
+allow hostapd_qcmap_t self:packet_socket connected_socket_perms;
+
+type hostapd_cli_qcmap_exec_t;
+type hostapd_cli_qcmap_t;
+init_daemon_domain(hostapd_cli_qcmap_t, hostapd_cli_qcmap_exec_t)
+permissive hostapd_cli_qcmap_t;
+can_exec(qcmap_cm_t, hostapd_cli_qcmap_exec_t)
+ifdef(`init_systemd',`
+    allow qcmap_cm_t hostapd_cli_qcmap_exec_t:service { start stop status };
+')
+manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
+allow hostapd_cli_qcmap_t hostapd_qcmap_t:unix_dgram_socket { sendto };
+allow hostapd_qcmap_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };

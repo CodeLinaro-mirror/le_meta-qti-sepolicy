@@ -49,3 +49,7 @@
 /var/run/data(/.*)?                   gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /run/data(/.*)?                       gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /tmp/data(/.*)?                       gen_context(system_u:object_r:qcmap_tmp_t,s0)
+
+#TODO:moved to hostapd.fc file
+/usr/sbin/hostapd               --    gen_context(system_u:object_r:hostapd_qcmap_exec_t,s0)
+/usr/sbin/hostapd_cli           --    gen_context(system_u:object_r:hostapd_cli_qcmap_exec_t,s0)
