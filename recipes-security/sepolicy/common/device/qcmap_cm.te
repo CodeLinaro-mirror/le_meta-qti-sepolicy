@@ -97,6 +97,7 @@ allow qcmap_cm_t self:netlink_route_socket { nlmsg_write };
 init_rw_utmp(qcmap_cm_t);
 sysnet_signal_dhcpc(qcmap_cm_t);
 sysnet_delete_dhcpc_pid(qcmap_cm_t);
+dontaudit dhcpc_t self:capability { fowner };
 
 dev_write_kmsg(qcmap_cm_t)
 files_read_generic_tmp_symlinks(qcmap_cm_t)
@@ -169,10 +170,12 @@ type qcmap_socket_device_t;
 files_type(qcmap_socket_device_t)
 dev_node(qcmap_socket_device_t)
 device_manage_socket_file(qcmap_cm_t, qcmap_socket_device_t)
+device_rw_socket_files(qcmap_cm_t, netmgrd_socket_device_t)
 
 gen_require(`
     type httpd_t;
     class dbus send_msg;
+    type netmgrd_socket_device_t;
 ')
 
 #Manage Dbus sockets
@@ -220,6 +223,13 @@ gen_require(`
     type dhcpc_exec_t;
     type mnt_t;
     type sdcard_t;
+    type wpa_cli_exec_t;
+    type NetworkManager_exec_t;
+    type avahi_exec_t;
+    type pppd_exec_t;
+    type adbd_initrc_exec_t;
+    type wlan_initrc_exec_t;
+    type wpa_cli_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -312,6 +322,11 @@ ifdef(`init_systemd',`
     allow qcmap_cm_t dnsmasq_exec_t:service { start stop status reload };
     allow qcmap_cm_t dhcpc_exec_t:service { start stop status reload };
     allow qcmap_cm_t ddclient_exec_t:service { start stop status reload };
+    allow qcmap_cm_t wpa_cli_exec_t:service { start stop status reload };
+    allow qcmap_cm_t NetworkManager_exec_t:service { start stop status reload };
+    allow qcmap_cm_t avahi_exec_t:service { start stop status reload };
+    allow qcmap_cm_t pppd_exec_t:service { start stop status reload };
+    allow qcmap_cm_t wlan_initrc_exec_t:service { start stop status reload };
 ')
 read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 
@@ -333,6 +348,13 @@ kernel_rw_fs_sysctls(qcmap_cm_t)
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
 systemd_start_power_units(qcmap_cm_t)
 systemd_status_power_units(qcmap_cm_t)
+
+##### WLAN
+allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
+device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
+
+##### USB
+can_exec(qcmap_cm_t, adbd_initrc_exec_t)
 
 #TODO:get the policies from upstream and running in permissive mode for now
 gen_require(`
