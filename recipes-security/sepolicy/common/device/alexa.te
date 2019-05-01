@@ -63,7 +63,7 @@ alexa_manage_avs_fifo(alexa_t)
 
 leprop_rw_props(alexa_t)
 kernel_read_system_state(alexa_t)
-dontaudit alexa_t self:capability sys_time;
+allow alexa_t self:capability sys_time;
 dontaudit alexa_t self:capability2 block_suspend;
 
 type alexa_tmp_t;

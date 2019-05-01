@@ -34,8 +34,7 @@
 /data/hosts                       --  gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/dhcp_hosts                  --  gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/entropy_file                --  gen_context(system_u:object_r:qcmap_data_t,s0)
-
-/usr/bin/dnsmasq                  --  gen_context(system_u:object_r:dnsmasq_exec_t,s0)
+/data/entropy_file1               --  gen_context(system_u:object_r:qcmap_data_t,s0)
 
 /data/lighttpd\.conf              --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/mdm9625\.com\.crt           --  gen_context(system_u:object_r:httpd_data_t,s0)

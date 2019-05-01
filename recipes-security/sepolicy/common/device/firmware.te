@@ -32,6 +32,3 @@ files_mountpoint(firmware_t)
 
 type firmware_persist_t;
 user_data_files_type(firmware_persist_t)
-
-type dsp_firmware_t;
-files_mountpoint(dsp_firmware_t)

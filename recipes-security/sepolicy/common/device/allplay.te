@@ -220,3 +220,30 @@ sysnet_dns_name_resolve(allplay_t)
 sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
 
 alexa_manage_avs_fifo(allplay_t)
+
+
+gen_require(`
+    type audio_manager_data_t;
+    type system_dbusd_t;
+    type home_root_t;
+    type user_home_dir_t;
+')
+
+# For almservice
+alm_write_sock_file(allplay_t)
+
+allow allplay_t audio_manager_data_t:file { read open write lock getattr};
+
+allow allplay_t system_dbusd_t:unix_stream_socket connectto;
+
+allow allplay_t home_root_t:dir getattr; #/home
+allow allplay_t user_home_dir_t:dir search_dir_perms; #/home/root
+
+allow allplay_t self:netlink_kobject_uevent_socket { bind create setopt getattr };
+
+# for dbus
+ifdef(`init_systemd', `
+    dbus_connect_system_bus(allplay_t)
+    dbus_send_system_bus(allplay_t)
+    adk_audio_manager_dbus_chat(allplay_t)
+')

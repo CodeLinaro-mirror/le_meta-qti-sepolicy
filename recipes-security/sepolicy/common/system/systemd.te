@@ -56,6 +56,7 @@ ifdef(`init_systemd',`
     gen_require(`
         type init_var_run_t;
         type udev_var_run_t;
+        type etc_t;
     ')
     # init_write_pid_socket
     rw_sock_files_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
@@ -63,4 +64,17 @@ ifdef(`init_systemd',`
     create_dirs_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
     # udev_list_pids
     allow systemd_logind_t udev_var_run_t:dir { read };
+
+    allow systemd_tmpfiles_t etc_t:lnk_file create;
 ')
+
+userdebug_or_eng(`
+        gen_require(`
+             type init_var_run_t;
+             type initrc_t;
+             type systemd_logind_var_run_t;
+        ')
+        allow systemd_logind_t init_var_run_t:sock_file write;
+        allow systemd_logind_t initrc_t:unix_stream_socket connectto;
+        allow systemd_logind_t systemd_logind_var_run_t:sock_file write;
+ ')

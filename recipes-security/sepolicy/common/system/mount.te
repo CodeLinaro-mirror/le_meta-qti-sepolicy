@@ -26,6 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 fs_relabelfrom_firmware(mount_t)
+fs_relabelfrom_dsp(mount_t)
 data_mount_user_dir(mount_t)
 data_mount_volatile_bind(mount_t)
 persist_mount_dir(mount_t)
@@ -62,8 +63,6 @@ gen_require(`
 ')
 neverallow mount_copybind_t etc_t:file { create relabelto };
 fs_blk_getattr_tmpfs(mount_t)
-
-allow mount_t mount_runtime_t:{ dir file } read;
 
 userdebug_or_eng(`
     # TODO: Transition the login shells to unconfined_u:unconfined_r?

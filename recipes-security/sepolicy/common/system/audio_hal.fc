@@ -25,7 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+/data/audio(/.*)?                           gen_context(system_u:object_r:audio_data_file_t,s0)
 /etc/mixer_.*                               gen_context(system_u:object_r:audio_hal_etc_t,s0)
 /etc/audio_.*                               gen_context(system_u:object_r:audio_hal_etc_t,s0)
 /etc/sound_.*                               gen_context(system_u:object_r:audio_hal_etc_t,s0)
 /etc/acdbdata/MTP(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)
+/etc/acdbdata/IDP(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)

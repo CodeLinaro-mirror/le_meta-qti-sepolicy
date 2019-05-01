@@ -35,6 +35,11 @@ init_vendor_domain(servicemanager_t, servicemanager_exec_t)
 allow servicemanager_t self:binder set_context_mgr;
 allow servicemanager_t {daemon -initrc_t}:binder transfer;
 
+kernel_read_system_state(servicemanager_t)
+userdebug_or_eng(`
+    kernel_search_debugfs(servicemanager_t)
+')
+
 type binder_device_t;
 dev_node(binder_device_t)
 
