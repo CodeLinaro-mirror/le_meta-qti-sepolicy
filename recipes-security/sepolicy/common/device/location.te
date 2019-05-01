@@ -72,6 +72,33 @@ type loc_data_t;
 user_data_files_type(loc_data_t)
 data_filetrans(loc_t, loc_data_t, { file dir })
 manage_user_data_files(loc_t, loc_data_t)
+gen_require(`
+    type systemd_tmpfiles_t;
+')
+allow systemd_tmpfiles_t loc_data_t:dir { relabelfrom relabelto };
+allow systemd_tmpfiles_t loc_data_t:file { relabelfrom relabelto };
+
+# location init script for sysvinit systems
+ifndef(`init_systemd', `
+    type loc_initrc_exec_t;
+    type loc_initrc_t;
+
+    init_script_domain(loc_initrc_t, loc_initrc_exec_t)
+    domtrans_pattern(loc_initrc_t, loc_exec_t, loc_t)
+    corecmd_exec_shell(loc_initrc_t)
+    corecmd_exec_bin(loc_initrc_t)
+    data_filetrans(loc_initrc_t, loc_data_t, { file dir })
+    files_read_etc_files(loc_initrc_t)
+    dev_write_kmsg(loc_initrc_t)
+    manage_user_data_files(loc_initrc_t, loc_data_t)
+    read_user_data_files(loc_initrc_t, loc_data_t);
+    allow loc_initrc_t data_t:dir { setattr };
+    allow loc_initrc_t loc_data_t:file { getattr setattr };
+    allow loc_initrc_t self:capability { chown fowner fsetid dac_override };
+    allow loc_initrc_t socket_device_t:dir { create setattr };
+
+    dontaudit loc_initrc_t console_device_t:chr_file read;
+')
 
 # location init script for sysvinit systems
 ifndef(`init_systemd', `

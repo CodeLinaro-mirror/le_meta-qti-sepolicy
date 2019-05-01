@@ -31,4 +31,4 @@
 /dev/smdcntl1                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/mhi_pipe_12                 -c  gen_context(system_u:object_r:mbim_device_t,s0)
-
+/data/mbimd(/.*)?                    gen_context(system_u:object_r:mbim_data_t,s0)

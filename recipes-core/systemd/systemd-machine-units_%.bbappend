@@ -67,7 +67,7 @@ do_install_append() {
 
         mount_file="${D}${systemd_system_unitdir}/dsp.mount"
         if [ -e $mount_file ]; then
-            append_selinux_mount_option $mount_file context=system_u:object_r:dsp_firmware_t:s0
+            append_selinux_mount_option $mount_file context=system_u:object_r:adsprpcd_t:s0
             # Not all firmware filesystems support xattrs. Don't use restorecon or rootcontext here
         fi
 

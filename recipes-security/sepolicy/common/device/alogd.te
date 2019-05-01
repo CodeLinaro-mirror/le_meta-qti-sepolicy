@@ -35,7 +35,7 @@ init_vendor_domain(alogd_t, alogd_exec_t)
 allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
 allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow alogd_t self:netlink_audit_socket create_netlink_socket_perms;
-allow alogd_t self:process { signal setsched };
+allow alogd_t self:process { signal setsched setcap };
 allow alogd_t self:capability audit_control;
 
 # read and write kernel logs
@@ -46,7 +46,7 @@ dev_read_kmsg(alogd_t)
 dev_write_kmsg(alogd_t)
 
 # change logd* sockets to system:system
-allow alogd_t self:capability { chown fowner fsetid setuid setgid };
+allow alogd_t self:capability { chown fowner fsetid setuid setgid sys_nice };
 
 # Label and manage /dev/socket nodes
 type alogd_sock_t;

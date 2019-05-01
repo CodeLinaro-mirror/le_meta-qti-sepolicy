@@ -59,6 +59,8 @@ allow hal_rec_test_t tracefs_t:filesystem mount;
 allow hal_rec_test_t tracefs_t:dir search;
 allow hal_rec_test_t trace_marker_t:file { write open };
 
+allow hal_rec_test_t sysfs_t:file write; #/sys/power/wake_lock
+
 type hal_play_test_t;
 type hal_play_test_exec_t;
 
@@ -86,3 +88,5 @@ audio_data_files_access(hal_play_test_t)
 allow hal_play_test_t tracefs_t:filesystem mount;
 allow hal_play_test_t tracefs_t:dir search;
 allow hal_play_test_t trace_marker_t:file { write open };
+
+allow hal_play_test_t sysfs_t:file write; #/sys/power/wake_lock

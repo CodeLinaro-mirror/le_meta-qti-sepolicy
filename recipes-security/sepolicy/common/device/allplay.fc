@@ -25,12 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/orbPlayer    --      gen_context(system_u:object_r:allplay_exec_t,s0)
-/usr/bin/sam-systemd  --      gen_context(system_u:object_r:allplay_exec_t,s0)
-/etc/statemgr         --      gen_context(system_u:object_r:allplay_exec_t,s0)
+/usr/bin/allplay      --      gen_context(system_u:object_r:allplay_exec_t,s0)
 
-/var/log/sam-systemd.log --   gen_context(system_u:object_r:allplay_var_log_t,s0)
-/data/\.alljoyn_keystore(/.*)?   gen_context(system_u:object_r:allplay_data_t,s0)
+/data/allplay\.db*      --      gen_context(system_u:object_r:allplay_data_t,s0)
 
 /etc/allplay(/.*)?            gen_context(system_u:object_r:allplay_system_data_t,s0)
 /systemrw/allplay(/.*)?       gen_context(system_u:object_r:allplay_system_data_t,s0)

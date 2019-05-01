@@ -28,7 +28,7 @@
 ### tftp server ###
 
 /sbin/tftp_server     --    gen_context(system_u:object_r:tftp_server_exec_t,s0)
-/data/tombstone(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
+/data/tombstones(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
 
 ### misc properties ###
 
@@ -56,3 +56,5 @@
 /dev/ubi.*             -c    gen_context(system_u:object_r:ubi_device_t,mls_systemhigh)
 /dev/iio:device([0-9])+     -c   gen_context(system_u:object_r:iio_device,s0)
 /dev/ion               -c  gen_context(system_u:object_r:ion_device_t,s0)
+/dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
+/dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)

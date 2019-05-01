@@ -29,3 +29,8 @@ files_read_etc_runtime_files(chronyd_t)
 dev_read_urand(chronyd_t)
 init_write_utmp(chronyd_t);
 init_read_utmp(chronyd_t);
+gen_require(`
+    type systemd_resolved_var_run_t;
+')
+allow chronyd_t systemd_resolved_var_run_t:file { open read getattr };
+allow chronyd_t init_var_run_t:file { open read getattr };

@@ -44,3 +44,4 @@ allow port_bridge_t port_bridge_usb_device_t:chr_file rw_file_perms;
 
 allow port_bridge_t self:fifo_file rw_fifo_file_perms;
 corecmd_exec_shell(port_bridge_t)
+kernel_read_system_state(port_bridge_t)

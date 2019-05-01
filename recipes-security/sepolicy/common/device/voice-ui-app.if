@@ -1,0 +1,79 @@
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+######################################
+## <summary>
+##      voice-ui-app daemon interface
+## </summary>
+#
+
+interface(`adk_pulseaudio_rw_voice_ui_files',`
+	gen_require(`
+		type pulseaudio_t;
+	')
+	manage_dirs_pattern(pulseaudio_t, $1, $1)
+	manage_files_pattern(pulseaudio_t, $1, $1)
+')
+
+interface(`voiceui_manage_avs_fifo',`
+     gen_require(`
+        type voice-ui-app_fifo_t;
+     ')
+
+    files_pid_filetrans($1, voice-ui-app_fifo_t, { fifo_file } )
+    manage_fifo_files_pattern($1, voice-ui-app_fifo_t, voice-ui-app_fifo_t)
+	allow $1 self:fifo_file { read write };
+')
+
+interface(`adk_voice_ui_dbus_chat',`
+	gen_require(`
+		type voice-ui-app_t;
+		class dbus send_msg;
+		class dbus recv_msg;
+	')
+
+	allow $1 voice-ui-app_t:dbus { send_msg recv_msg };
+	allow voice-ui-app_t $1:dbus { send_msg recv_msg };
+')
+
+########################################
+## <summary>
+##      manage voice UI data files.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+
+interface(`manage_voice_ui_data_files',`
+    gen_require(`
+        type voice-ui-app_data_t;
+    ')
+     manage_user_data_files($1, voice-ui-app_data_t)
+')
