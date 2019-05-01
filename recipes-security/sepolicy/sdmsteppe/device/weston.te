@@ -35,7 +35,7 @@ policy_module(weston, 1.0)
 type weston_t;
 type weston_exec_t;
 
-init_daemon_domain(weston_t, weston_exec_t)
+init_vendor_domain(weston_t, weston_exec_t)
 
 gen_require(`
  type qmmf_data_file_t;

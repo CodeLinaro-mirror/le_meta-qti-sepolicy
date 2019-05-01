@@ -39,7 +39,7 @@ gen_require(`
 type qmmf_server_t;
 type qmmf_server_exec_t;
 
-init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
+init_vendor_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
 
 type qmmf_data_file_t;
@@ -141,3 +141,16 @@ userdebug_or_eng(`
 
 manage_qmmf_data_files(qmmf_server_t)
 manage_camera_files_data(qmmf_server_t)
+
+gen_require(`
+        type ipc_webserver_t;
+        type systemd_logind_t;
+	type systemd_logind_var_run_t;
+        type ipc_webserver_exec_t;
+        type socket_device_t;
+')
+
+
+allow ipc_webserver_t ipc_webserver_exec_t:file execmod;
+allow systemd_logind_t systemd_logind_var_run_t:dir create;
+allow qmmf_server_t socket_device_t:dir search;
