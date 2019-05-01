@@ -35,5 +35,5 @@ policy_module(recorder_test, 1.0)
 type recorder_test_t;
 type recorder_test_exec_t;
 
-init_daemon_domain(recorder_test_t, recorder_test_exec_t)
+init_vendor_domain(recorder_test_t, recorder_test_exec_t)
 servicemanager_binder_use(recorder_test_t)

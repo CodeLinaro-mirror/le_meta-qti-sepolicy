@@ -41,7 +41,7 @@ type qmmf_webserver_t;
 type qmmf_webserver_exec_t;
 
 allow qmmf_webserver_t system_dir_t:dir search_dir_perms;
-init_daemon_domain(qmmf_webserver_t, qmmf_webserver_exec_t)
+init_vendor_domain(qmmf_webserver_t, qmmf_webserver_exec_t)
 read_files_pattern(qmmf_webserver_t, qmmf_config_file_t, qmmf_config_file_t)
 
 gen_require(`
@@ -60,6 +60,8 @@ gen_require(`
  type sysctl_vm_overcommit_t;
  type fs_t;
  type urandom_device_t;
+ type systemd_resolved_var_run_t;
+ type socket_device_t;
 ')
 
 # For leprop permissions
@@ -102,6 +104,10 @@ allow qmmf_webserver_t sysctl_vm_overcommit_t:file { open read };
 allow qmmf_webserver_t fs_t:filesystem getattr;
 
 allow qmmf_webserver_t urandom_device_t:chr_file { read open };
+allow qmmf_webserver_t qmmf_webserver_exec_t:file execmod;
+allow qmmf_webserver_t systemd_resolved_var_run_t:dir search;
+allow qmmf_webserver_t systemd_resolved_var_run_t:file { read getattr open };
+allow qmmf_webserver_t socket_device_t:dir search;
 
 userdebug_or_eng(`
     gen_require(`
