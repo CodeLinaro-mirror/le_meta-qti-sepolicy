@@ -153,6 +153,8 @@ allow voice-ui-app_t self:netlink_route_socket { read write create bind getattr 
 allow voice-ui-app_t self:process { signal getsched };
 allow voice-ui-app_t voice-ui-app_exec_t:file { read write open create };
 
+manage_mediaplayer_data_files(voice-ui-app_t)
+
 ## for DBus
 ifdef(`init_systemd', `
     init_dbus_chat(voice-ui-app_t)
