@@ -71,3 +71,5 @@ allow system_manager_t power_unit_t:service { start stop status enable disable r
 kernel_read_system_state(system_manager_t)
 allow system_manager_t self:capability net_admin;
 write_sock_files_pattern(system_manager_t,systemd_logind_var_run_t,systemd_logind_var_run_t);
+
+use_wakelock(system_manager_t)

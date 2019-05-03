@@ -46,6 +46,8 @@ init_daemon_domain(button_manager_t, button_manager_exec_t)
 gen_require(`
 	type event_device_t;
 	type voice-ui-app_t;
+        type init_var_run_t;
+        type syslogd_var_run_t;
 ')
 
 #============= button_manager_t ==============
@@ -53,6 +55,13 @@ allow button_manager_t event_device_t:chr_file { read open };
 kernel_read_system_state(button_manager_t)
 
 dev_read_urand(button_manager_t)
+
+use_wakelock(button_manager_t)
+allow button_manager_t self:unix_dgram_socket { create connect write };
+
+allow button_manager_t init_var_run_t:dir search; #/run/systemd
+allow button_manager_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
+logging_send_syslog_msg(button_manager_t)
 
 ## for DBus
 ifdef(`init_systemd', `

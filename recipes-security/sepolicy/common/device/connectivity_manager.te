@@ -49,6 +49,12 @@ system_manager_rw_data_files(connectivity_manager_t)
 gen_require(`
 	type proc_net_t;
         type tmpfs_t;
+        type init_var_run_t;
+        type syslogd_var_run_t;
+        type systemd_logind_var_run_t;
+        type NetworkManager_t;
+        type NetworkManager_var_run_t;
+        type wpa_cli_exec_t;
 ')
 
 corecmd_exec_shell(connectivity_manager_t)
@@ -61,12 +67,25 @@ userdebug_or_eng(`
 ')
 allow connectivity_manager_t proc_net_t:file { open read getattr };
 kernel_read_system_state(connectivity_manager_t)
-allow connectivity_manager_t self:socket { getattr read write create };
-allow connectivity_manager_t self:unix_dgram_socket { create connect };
+allow connectivity_manager_t self:socket create_socket_perms;
+allow connectivity_manager_t self:unix_dgram_socket { create connect write read bind };
 allow connectivity_manager_t self:fifo_file { read write getattr };
 allow connectivity_manager_t self:process signal;
+use_wakelock(connectivity_manager_t)
 
 allow connectivity_manager_t tmpfs_t:dir search; # /dev/mqueue
+allow connectivity_manager_t systemd_logind_var_run_t:sock_file write; #/run/dbus/system_bus_socket
+allow connectivity_manager_t init_var_run_t:dir search; #/run/systemd
+logging_send_syslog_msg(connectivity_manager_t)
+allow connectivity_manager_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
+
+allow connectivity_manager_t NetworkManager_var_run_t:dir { read getattr open search };
+allow connectivity_manager_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
+allow connectivity_manager_t NetworkManager_t:unix_dgram_socket sendto;
+allow connectivity_manager_t NetworkManager_var_run_t:sock_file write;
+
+allow connectivity_manager_t connectivity_manager_tmp_t:file create;
+allow connectivity_manager_t var_t:sock_file { create unlink };
 
 # Manage private files inside /tmp
 files_tmp_filetrans(connectivity_manager_t, connectivity_manager_tmp_t, { file dir })

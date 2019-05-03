@@ -44,20 +44,28 @@ data_filetrans(rules_manager_t, rules_manager_data_t, { file dir })
 
 init_daemon_domain(rules_manager_t, rules_manager_exec_t)
 
+gen_require(`
+        type init_var_run_t;
+        type syslogd_var_run_t;
+')
+
 #============= rules_manager_t ==============
 kernel_read_system_state(rules_manager_t)
 
 # Manage private files inside /tmp
-#allow rules_manager_t tmp_t:dir { write add_name };
-#allow rules_manager_t tmp_t:file { read write create open };
-#allow rules_manager_t tmp_t:lnk_file read;
 files_tmp_filetrans(rules_manager_t, rules_manager_tmp_t, { file dir })
 
-#allow rules_manager_t var_t:dir { write add_name };
-#allow rules_manager_t var_t:file { read write create open };
 files_var_filetrans(rules_manager_t, rules_manager_tmp_t, { file dir })
 
 dev_read_urand(rules_manager_t)
+
+allow rules_manager_t self:unix_dgram_socket { create connect write };
+
+use_wakelock(rules_manager_t)
+
+allow rules_manager_t init_var_run_t:dir search; #/run/systemd
+logging_send_syslog_msg(rules_manager_t)
+allow rules_manager_t syslogd_var_run_t:sock_file write;
 
 ## for DBus
 ifdef(`init_systemd', `

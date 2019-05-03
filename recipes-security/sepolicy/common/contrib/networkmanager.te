@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -109,6 +109,7 @@ term_use_unallocated_ttys(wlan_initrc_t)
 gen_require(`
     type init_var_run_t;
     type systemd_resolved_var_run_t;
+    type connectivity_manager_t;
 ')
 #For the /run/systemd files, 2.0 component has an issue where this could be either init_var_run_t or systemd_*_t context depending on whether or not you are running in permissive or enforcing mode. Hence adding policies for both the contexts, but on 3.0 component these should be labeled the same in both modes and we won’t need init_var_run_t context.
 
@@ -116,3 +117,4 @@ gen_require(`
 allow dhcpc_t init_var_run_t:file { write getattr open setattr };
 allow dhcpc_t systemd_resolved_var_run_t:file { write getattr open setattr };
 
+allow NetworkManager_t connectivity_manager_t:unix_dgram_socket sendto;
