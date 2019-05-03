@@ -53,11 +53,10 @@ interface(`adk_voice_ui_dbus_chat',`
 	gen_require(`
 		type voice-ui-app_t;
 		class dbus send_msg;
-		class dbus recv_msg;
 	')
 
-	allow $1 voice-ui-app_t:dbus { send_msg recv_msg };
-	allow voice-ui-app_t $1:dbus { send_msg recv_msg };
+	allow $1 voice-ui-app_t:dbus send_msg;
+	allow voice-ui-app_t $1:dbus send_msg;
 ')
 
 ########################################
