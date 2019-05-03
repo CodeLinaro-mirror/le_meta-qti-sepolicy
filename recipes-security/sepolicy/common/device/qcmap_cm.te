@@ -80,7 +80,7 @@ allow qcmap_cm_t self:socket connected_socket_perms;
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
-allow qcmap_cm_t self:process { setcap sigkill signal setfscreate setcap getcap setrlimit setsched };
+allow qcmap_cm_t self:process { setcap sigkill signal setfscreate setcap getcap setrlimit setsched signull };
 allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
 allow qcmap_cm_t node_t:udp_socket node_bind;
 allow qcmap_cm_t var_t:dir { add_name remove_name };
@@ -217,6 +217,8 @@ gen_require(`
     class service { start status stop reload };
     type ddclient_exec_t;
     type dhcpc_exec_t;
+    type mnt_t;
+    type sdcard_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -322,6 +324,8 @@ allow qcmap_cm_t { unreserved_port_t }:tcp_socket { name_connect };
 
 ##### MINIDLNA
 allow qcmap_cm_t minidlna_initrc_exec_t:file { execute read open execute_no_trans };
+allow qcmap_cm_t sdcard_t:dir list_dir_perms;
+read_files_pattern(qcmap_cm_t, { mnt_t sdcard_t }, sdcard_t )
 kernel_search_fs_sysctls(qcmap_cm_t)
 kernel_rw_fs_sysctls(qcmap_cm_t)
 ##### Reboot the device
