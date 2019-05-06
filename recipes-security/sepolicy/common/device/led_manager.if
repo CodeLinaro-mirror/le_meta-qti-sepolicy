@@ -68,11 +68,10 @@ interface(`adk_led_manager_dbus_chat',`
 	gen_require(`
 		type led_manager_t;
 		class dbus send_msg;
-		class dbus recv_msg;
 	')
 
-	allow $1 led_manager_t:dbus { send_msg recv_msg };
-	allow led_manager_t $1:dbus { send_msg recv_msg };
+	allow $1 led_manager_t:dbus send_msg;
+	allow led_manager_t $1:dbus send_msg;
 ')
 
 

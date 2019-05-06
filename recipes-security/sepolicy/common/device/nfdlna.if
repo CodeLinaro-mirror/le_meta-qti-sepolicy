@@ -68,11 +68,10 @@ interface(`adk_nfdlna_dbus_chat',`
 	gen_require(`
 		type nfdlna_t;
 		class dbus send_msg;
-		class dbus recv_msg;
 	')
 
-	allow $1 nfdlna_t:dbus { send_msg recv_msg };
-	allow nfdlna_t $1:dbus { send_msg recv_msg };
+	allow $1 nfdlna_t:dbus send_msg;
+	allow nfdlna_t $1:dbus send_msg;
 ')
 
 
