@@ -39,3 +39,4 @@ type qmi_sec_config_t;
 init_vendor_domain(irsc_util_t, irsc_util_exec_t)
 files_type(qmi_sec_config_t)
 allow irsc_util_t qmi_sec_config_t:file read_file_perms;
+allow irsc_util_t self:socket { ioctl create };
