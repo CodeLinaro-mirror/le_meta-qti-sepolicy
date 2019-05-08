@@ -54,7 +54,7 @@ gen_require(`
  type unreserved_port_t;
 ')
 
-init_daemon_domain(ipc_webserver_t, ipc_webserver_exec_t)
+init_vendor_domain(ipc_webserver_t, ipc_webserver_exec_t)
 servicemanager_binder_use(ipc_webserver_t)
 manage_qmmf_data_files(ipc_webserver_t)
 
