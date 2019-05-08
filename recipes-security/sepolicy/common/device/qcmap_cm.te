@@ -77,6 +77,7 @@ allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_sock
 allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket connected_stream_socket_perms;
 allow qcmap_cm_t self:socket connected_stream_socket_perms;
+allow qcmap_cm_t self:socket create_socket_perms;
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
@@ -376,3 +377,6 @@ ifdef(`init_systemd',`
 manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
 allow hostapd_cli_qcmap_t hostapd_qcmap_t:unix_dgram_socket { sendto };
 allow hostapd_qcmap_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
+
+allow qcmap_cm_t qcmap_var_run_t:sock_file { create write };
+allow qcmap_cm_t qcmap_var_run_t:socket { setopt };

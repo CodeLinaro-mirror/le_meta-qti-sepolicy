@@ -42,6 +42,8 @@ gen_require(`
     type system_data_t;
     type qcmap_etc_data_t;
     type default_t;
+    type event_device_t;
+    type socket_device_t;
 ')
 
 logging_send_syslog_msg(dataadpl_t);
@@ -59,3 +61,14 @@ kernel_read_system_state(dataadpl_t)
 
 dontaudit dataadpl_t default_t:dir { search };
 allow dataadpl_t self:sock_file rw_sock_file_perms;
+
+allow dataadpl_t event_device_t:chr_file { read write };
+allow dataadpl_t socket_device_t:dir { search };
+
+# Manage private files inside /var/run
+type dataadpl_var_run_t;
+files_pid_file(dataadpl_var_run_t)
+allow dataadpl_t dataadpl_var_run_t:sock_file { create write };
+qcmap_manage_var_run_data_files(dataadpl_t)
+files_pid_filetrans(dataadpl_t, dataadpl_var_run_t, { file sock_file dir })
+
