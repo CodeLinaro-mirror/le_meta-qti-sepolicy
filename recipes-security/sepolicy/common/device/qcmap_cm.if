@@ -61,7 +61,7 @@ interface(`read_write_qcmap_cm_socket_files',`
         gen_require(`
                 type qcmap_cm_t;
         ')
-         allow $1 qcmap_cm_t:{ netlink_route_socket udp_socket packet_socket rawip_socket netlink_socket } {read write };
+         allow $1 qcmap_cm_t:{ netlink_route_socket udp_socket packet_socket rawip_socket netlink_socket } connected_stream_socket_perms;
 ')
 
 ########################################
@@ -328,6 +328,7 @@ interface(`qcmap_manage_var_run_data_files',`
         ')
         manage_dirs_pattern($1, var_run_t, qcmap_var_run_t)
         manage_files_pattern($1, var_run_t, qcmap_var_run_t)
+        manage_sock_files_pattern($1, var_run_t, qcmap_var_run_t)
 ')
 
 #######################################
