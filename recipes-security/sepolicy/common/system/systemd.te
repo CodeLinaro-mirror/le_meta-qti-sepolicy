@@ -43,6 +43,7 @@ ifdef(`init_systemd',`
     fs_getattr_all_xattr_fs(systemd_tmpfiles_t)
     fs_getattr_noxattr_fs(systemd_tmpfiles_t)
     selinux_getattr_fs(systemd_tmpfiles_t)
+    kernel_getattr_proc(systemd_tmpfiles_t)
 
     allow daemon init_t:unix_dgram_socket sendto;
     fs_getattr_cgroup(systemd_logind_t)
