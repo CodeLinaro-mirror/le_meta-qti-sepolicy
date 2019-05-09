@@ -59,6 +59,7 @@ type setprop_exec_t;
 
 init_system_domain(setprop_t, setprop_exec_t)
 leprop_rw_props(setprop_t)
+alog_manage_log(setprop_t)
 
 allow setprop_t self:unix_dgram_socket create_socket_perms;
 #allow setprop_t self:capability dac_override;  # TODO: why is this needed?
