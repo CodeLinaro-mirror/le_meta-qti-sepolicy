@@ -72,5 +72,7 @@ userdebug_or_eng(`
 
 gen_require(`
    type mount_runtime_t;
+   type sdcard_t;
 ')
+allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
