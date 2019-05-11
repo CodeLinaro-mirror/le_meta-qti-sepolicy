@@ -445,3 +445,9 @@ dontaudit data_path_opt_t debugfs_t:dir { search };
 allow data_path_opt_t data_path_opt_t:chr_file { write getattr };
 allow data_path_opt_t data_path_opt_t:fifo_file {  getattr read write };
 allow qcmap_cm_t data_path_opt_exec_t:file { getattr execute read open execute_no_trans };
+
+#allow exectution of mtd tools
+mtd_tools_exec(qcmap_cm_t)
+userdebug_or_eng(`
+     rw_diag_dev(qcmap_cm_t)
+')

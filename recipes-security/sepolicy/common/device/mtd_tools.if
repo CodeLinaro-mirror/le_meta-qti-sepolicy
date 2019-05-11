@@ -39,10 +39,14 @@
 #
 interface(`mtd_tools_exec',`
         gen_require(`
-                type mtd_utils_exec_t;
-		type mtd_utils_t;
+                type mtd_tools_exec_t;
+		type mtd_tools_t;
+		type device_t;
+		type datamtd_device_t;
+		type tmp_t;
+		type qcmap_tmp_t;
         ')
 
-        domtrans_pattern($1, mtd_utils_exec_t, mtd_utils_t)
+	domtrans_pattern($1, mtd_tools_exec_t, mtd_tools_t)
 ')
 

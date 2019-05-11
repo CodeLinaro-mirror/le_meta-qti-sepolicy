@@ -34,5 +34,18 @@ policy_module(mtd_tools, 1.0)
 
 type mtd_tools_t;
 type mtd_tools_exec_t;
+gen_require(`
+	type qcmap_cm_t;
+	type datamtd_device_t;
+	type qcmap_tmp_t;
+        ')
 
 init_vendor_domain(mtd_tools_t, mtd_tools_exec_t)
+dev_read_sysfs(mtd_tools_t)
+userdebug_or_eng(`
+   rw_diag_dev(mtd_tools_t)
+')
+rw_chr_files_pattern(mtd_tools_t, device_t, datamtd_device_t)
+files_read_generic_tmp_symlinks(mtd_tools_t)
+rw_files_pattern(mtd_tools_t, tmp_t, qcmap_tmp_t)
+allow mtd_tools_t qcmap_cm_t:{netlink_route_socket packet_socket udp_socket rawip_socket netlink_socket } { read write };
