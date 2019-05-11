@@ -100,7 +100,7 @@ ifndef(`init_systemd', `
     dontaudit loc_initrc_t console_device_t:chr_file read;
 ')
 
-## location hal
+### location hal
 
 type loc_hald_t;
 type loc_hald_exec_t;
@@ -132,6 +132,8 @@ allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 # temporary fix till /target changes are made cr#2387138
 read_files_pattern(loc_hald_t, default_t, default_t);
+data_filetrans(loc_hald_t, loc_data_t, { file dir })
+manage_user_data_files(loc_hald_t, loc_data_t)
 
 search_user_data_dir(loc_hald_t)
 userdebug_or_eng(`
@@ -207,6 +209,7 @@ allow engine_service_t self:socket create_socket_perms;
 sysnet_read_config(engine_service_t);
 allow engine_service_t self:tcp_socket create_socket_perms;
 allow engine_service_t unreserved_port_t:tcp_socket name_connect;
+read_files_pattern(engine_service_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
 
 dev_read_sysfs(engine_service_t)
 files_read_etc_files(engine_service_t)
@@ -274,6 +277,9 @@ init_daemon_domain(lowi_server_t, lowi_server_exec_t)
 domtrans_pattern(loc_t, lowi_server_exec_t, lowi_server_t)
 logging_send_syslog_msg(lowi_server_t)
 
+data_filetrans(lowi_server_t, loc_data_t, { file dir })
+manage_user_data_files(lowi_server_t, loc_data_t)
+
 kernel_read_network_state(lowi_server_t)
 allow lowi_server_t self:{ netlink_route_socket udp_socket netlink_generic_socket } create_socket_perms;
 allow lowi_server_t self:capability net_admin;
@@ -298,6 +304,7 @@ files_read_etc_files(slim_daemon_t)
 files_read_loc_etc_files(slim_daemon_t)
 manage_user_data_files(slim_daemon_t, loc_data_t)
 data_filetrans(slim_daemon_t, loc_data_t, { file dir })
+read_files_pattern(slim_daemon_t, default_t, default_t)
 
 userdebug_or_eng(`
     rw_diag_dev(slim_daemon_t)
