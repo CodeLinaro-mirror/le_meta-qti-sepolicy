@@ -35,12 +35,9 @@ policy_module(diag, 1.0)
 type diag_t;
 type diag_exec_t;
 type sdcard_t;
+files_mountpoint(sdcard_t)
 gen_require(`
    type default_t;
-   type diag_device_t;
-   type mnt_t;
-   type sysfs_t;
-   type unreserved_port_t;
 ')
 
 init_vendor_domain(diag_t, diag_exec_t)
@@ -48,12 +45,12 @@ init_vendor_domain(diag_t, diag_exec_t)
 #============= diag_t ==============
 userdebug_or_eng(`
    allow diag_t default_t:lnk_file read;
-   allow diag_t diag_device_t:chr_file { read write ioctl open getattr };
+   rw_diag_dev(diag_t)
    allow diag_t self:capability { setuid setgid };
    allow diag_t self:capability2 block_suspend;
    allow diag_t self:process signal;
    allow diag_t self:tcp_socket { create setopt connect };
-   allow diag_t sysfs_t:file { read open append };
-   allow diag_t unreserved_port_t:tcp_socket name_connect;
+   dev_rw_sysfs(diag_t)
+   corenet_tcp_connect_all_unreserved_ports(diag_t)
    manage_files_pattern(diag_t, sdcard_t, sdcard_t)
 ')
