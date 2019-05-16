@@ -67,6 +67,7 @@ ifdef(`init_systemd',`
     allow systemd_logind_t udev_var_run_t:dir { read };
 
     allow systemd_tmpfiles_t etc_t:lnk_file create;
+    allow systemd_logind_t systemd_logind_var_run_t:dir manage_dir_perms;
 ')
 
 userdebug_or_eng(`
