@@ -75,12 +75,13 @@ rw_chr_files_pattern(qcmap_cm_t, device_t, datadpo_device_t)
 
 allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
-allow qcmap_cm_t self:tcp_socket { create ioctl listen accept };
-allow qcmap_cm_t self:socket connected_socket_perms;
+allow qcmap_cm_t self:tcp_socket connected_stream_socket_perms;
+allow qcmap_cm_t self:socket connected_stream_socket_perms;
+allow qcmap_cm_t self:socket create_socket_perms;
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
-allow qcmap_cm_t self:process { setcap sigkill signal setfscreate setsched };
+allow qcmap_cm_t self:process { setcap sigkill signal setfscreate setcap getcap setrlimit setsched signull };
 allow qcmap_cm_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans };
 allow qcmap_cm_t node_t:udp_socket node_bind;
 allow qcmap_cm_t var_t:dir { add_name remove_name };
@@ -141,32 +142,46 @@ qnetmgr_use_unix_stream_sockets(qcmap_cm_t)
 # Manage private files inside /var/run
 type qcmap_var_run_t;
 files_pid_file(qcmap_var_run_t)
-allow qcmap_cm_t qcmap_var_run_t:file manage_file_perms;
-allow qcmap_cm_t qcmap_var_run_t:sock_file manage_sock_file_perms;
-manage_dirs_pattern(qcmap_cm_t, qcmap_var_run_t, qcmap_var_run_t)
+qcmap_manage_var_run_data_files(qcmap_cm_t)
 files_pid_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file dir })
 
 # Manage private files inside /data
 type qcmap_data_t;
 user_data_files_type(qcmap_data_t)
-manage_user_data_files(qcmap_cm_t, qcmap_data_t)
+qcmap_manage_user_data_files(qcmap_cm_t)
 data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-allow qcmap_cm_t qcmap_tmp_t:file { manage_file_perms relabelfrom relabelto };
+allow qcmap_cm_t qcmap_tmp_t:file { relabelfrom relabelto };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
+qcmap_manage_tmp_data_files(qcmap_cm_t)
 ifdef(`init_systemd', `
     # /tmp is not always labeled correctly on systemd (TODO)
     files_var_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
 ')
 allow NetworkManager_t qcmap_tmp_t:sock_file { write };
 
+# Manage socket files inside /dev/socket
+type qcmap_socket_device_t;
+files_type(qcmap_socket_device_t)
+dev_node(qcmap_socket_device_t)
+device_manage_socket_file(qcmap_cm_t, qcmap_socket_device_t)
+
 gen_require(`
     type httpd_t;
+    class dbus send_msg;
 ')
+
+#Manage Dbus sockets
+ifdef(`init_systemd',`
+    dbus_system_bus_client(qcmap_cm_t)
+    init_dbus_chat(qcmap_cm_t)
+    allow qcmap_cm_t self:dbus send_msg;
+')
+
 type httpd_data_t;
 user_data_files_type(httpd_data_t)
 qcmap_manage_httpd_data_files(httpd_t)
@@ -198,6 +213,13 @@ gen_require(`
     type var_lib_t;
     type ipa_fw_device_t;
     type ipa_wwan_device_t;
+    type dnsmasq_exec_t;
+    type dnsmasq_t;
+    class service { start status stop reload };
+    type ddclient_exec_t;
+    type dhcpc_exec_t;
+    type mnt_t;
+    type sdcard_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -282,11 +304,16 @@ data_rw_system_data_files(dnsmasq_t, qcmap_etc_data_t)
 # allow qcmap_cm_t { init_t kernel_t }:dir { search };
 # allow qcmap_cm_t { init_t kernel_t }:file { read open };
 # allow qcmap_cm_t init_t:lnk_file { read };
-read_user_data_files(dnsmasq_t, qcmap_data_t)
 read_write_qcmap_cm_socket_files(iptables_t)
 allow qcmap_cm_t dnsmasq_var_run_t:file manage_file_perms;
 allow qcmap_cm_t dnsmasq_t:process { sigkill signal };
 allow qcmap_cm_t dnsmasq_tmp_t:file { read_file_perms unlink };
+ifdef(`init_systemd',`
+    allow qcmap_cm_t dnsmasq_exec_t:service { start stop status reload };
+    allow qcmap_cm_t dhcpc_exec_t:service { start stop status reload };
+    allow qcmap_cm_t ddclient_exec_t:service { start stop status reload };
+')
+read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 
 dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
@@ -298,9 +325,58 @@ allow qcmap_cm_t { unreserved_port_t }:tcp_socket { name_connect };
 
 ##### MINIDLNA
 allow qcmap_cm_t minidlna_initrc_exec_t:file { execute read open execute_no_trans };
+allow qcmap_cm_t sdcard_t:dir list_dir_perms;
+read_files_pattern(qcmap_cm_t, { mnt_t sdcard_t }, sdcard_t )
 kernel_search_fs_sysctls(qcmap_cm_t)
 kernel_rw_fs_sysctls(qcmap_cm_t)
 ##### Reboot the device
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
 systemd_start_power_units(qcmap_cm_t)
 systemd_status_power_units(qcmap_cm_t)
+
+#TODO:get the policies from upstream and running in permissive mode for now
+gen_require(`
+	type random_device_t;
+	type urandom_device_t;
+	type syslogd_t;
+	type var_run_t;
+	type devlog_t;
+	type etc_t;
+	type proc_net_t;
+')
+type hostapd_qcmap_t;
+type hostapd_qcmap_exec_t;
+init_daemon_domain(hostapd_qcmap_t, hostapd_qcmap_exec_t)
+permissive hostapd_qcmap_t;
+can_exec(qcmap_cm_t, hostapd_qcmap_exec_t)
+ifdef(`init_systemd',`
+    allow qcmap_cm_t hostapd_qcmap_exec_t:service { start stop status };
+')
+allow hostapd_qcmap_t random_device_t:chr_file manage_chr_file_perms;
+allow hostapd_qcmap_t urandom_device_t:chr_file manage_chr_file_perms;
+allow hostapd_qcmap_t self:netlink_route_socket create_netlink_socket_perms;
+allow hostapd_qcmap_t syslogd_t:unix_dgram_socket { sendto };
+allow hostapd_qcmap_t self:netlink_generic_socket { read setopt write create bind getattr };
+manage_sock_files_pattern(hostapd_qcmap_t, var_run_t, var_run_t);
+networkmanager_read_wifi_sysdata_files(hostapd_qcmap_t)
+allow hostapd_qcmap_t devlog_t:sock_file manage_sock_file_perms;
+allow hostapd_qcmap_t self:udp_socket connected_socket_perms;
+allow hostapd_qcmap_t etc_t:file rw_file_perms;
+allow hostapd_qcmap_t self:capability { net_raw net_admin };
+allow hostapd_qcmap_t proc_net_t:file { read };
+allow hostapd_qcmap_t self:packet_socket connected_socket_perms;
+
+type hostapd_cli_qcmap_exec_t;
+type hostapd_cli_qcmap_t;
+init_daemon_domain(hostapd_cli_qcmap_t, hostapd_cli_qcmap_exec_t)
+permissive hostapd_cli_qcmap_t;
+can_exec(qcmap_cm_t, hostapd_cli_qcmap_exec_t)
+ifdef(`init_systemd',`
+    allow qcmap_cm_t hostapd_cli_qcmap_exec_t:service { start stop status };
+')
+manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
+allow hostapd_cli_qcmap_t hostapd_qcmap_t:unix_dgram_socket { sendto };
+allow hostapd_qcmap_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
+
+allow qcmap_cm_t qcmap_var_run_t:sock_file { create write };
+allow qcmap_cm_t qcmap_var_run_t:socket { setopt };

@@ -41,6 +41,7 @@ userdebug_or_eng(`
 
 gen_require(`
     type default_t;
+    type qti_ppp_socket_device_t;
 ')
 dontaudit qtether_t default_t:dir { search };
 
@@ -76,3 +77,21 @@ kernel_read_system_state(qtether_t)
 ifndef(`init_systemd', `dev_rw_generic_chr_files(qtether_t)')
 files_dontaudit_getattr_default_dirs(qtether_t)
 kernel_read_network_state(qtether_t)
+qcmap_manage_user_data_files(qtether_t)
+
+# Manage socket files inside /dev/socket
+type qtether_socket_device_t;
+files_type(qtether_socket_device_t)
+dev_node(qtether_socket_device_t)
+device_manage_socket_file(qtether_t, qtether_socket_device_t)
+device_rw_socket_files(qtether_t, qti_ppp_socket_device_t)
+
+allow qtether_t self:netlink_kobject_uevent_socket create_socket_perms;
+
+#Manage private files inside /var/run
+type qtether_var_run_t;
+files_pid_file(qtether_var_run_t)
+allow qtether_t qtether_var_run_t:sock_file { create write };
+qcmap_manage_var_run_data_files(qtether_t)
+files_pid_filetrans(qtether_t, qtether_var_run_t, { file sock_file dir })
+

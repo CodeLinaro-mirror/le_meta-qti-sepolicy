@@ -36,8 +36,14 @@ logging_send_syslog_msg(qnetmgrd_t)
 userdebug_or_eng(`
     rw_diag_dev(qnetmgrd_t)
 ')
+gen_require(`
+      type default_t;
+      type socket_device_t;
+')
 
-allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid };
+allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
+allow qnetmgrd_t self:process { setcap getcap };
+dontaudit qnetmgrd_t default_t:dir { search };
 allow qnetmgrd_t self:{
     socket
     udp_socket
@@ -65,3 +71,16 @@ manage_user_data_files(qnetmgrd_t, qnetmgrd_data_t)
 allow qnetmgrd_t self:tcp_socket { create ioctl };
 kernel_read_system_state(qnetmgrd_t)
 kernel_read_network_state(qnetmgrd_t)
+
+type netmgrd_socket_device_t;
+files_type(netmgrd_socket_device_t);
+dev_node(netmgrd_socket_device_t);
+allow qnetmgrd_t netmgrd_socket_device_t:dir { search write create read add_name };
+allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr };
+filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_file dir })
+
+gen_require(`
+    type default_t;
+')
+allow qnetmgrd_t self:process getcap;
+dontaudit qnetmgrd_t default_t:dir { search };
