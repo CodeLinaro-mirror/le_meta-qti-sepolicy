@@ -27,3 +27,4 @@
 
 /usr/bin/mcm_ril_service       --      gen_context(system_u:object_r:mcm_ril_service_exec_t,s0)
 /dev/socket/mcm_ssr       --      gen_context(system_u:object_r:mcm_ril_sock_t,s0)
+/dev/socket/mcm/mcm_data_dsi_uds_file  -- gen_context(system_u:object_r:mcm_ril_sock_t,s0)
