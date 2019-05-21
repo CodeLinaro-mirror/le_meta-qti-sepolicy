@@ -41,6 +41,7 @@ type ipa_fw_device_t;
 init_script_domain(ipa_fw_initrc_t, ipa_fw_initrc_exec_t)
 dev_node(ipa_fw_device_t)
 
+files_rw_qcmap_etc_data_files(ipa_fw_initrc_t);
 term_read_console(ipa_fw_initrc_t);
 files_read_etc_files(ipa_fw_initrc_t);
 kernel_read_system_state(ipa_fw_initrc_t);
