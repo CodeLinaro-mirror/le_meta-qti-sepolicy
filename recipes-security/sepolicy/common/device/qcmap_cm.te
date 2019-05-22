@@ -176,6 +176,7 @@ gen_require(`
     type httpd_t;
     class dbus send_msg;
     type netmgrd_socket_device_t;
+    type systemd_logind_var_run_t;
 ')
 
 #Manage Dbus sockets
@@ -183,6 +184,7 @@ ifdef(`init_systemd',`
     dbus_system_bus_client(qcmap_cm_t)
     init_dbus_chat(qcmap_cm_t)
     allow qcmap_cm_t self:dbus send_msg;
+    rw_sock_files_pattern(qcmap_cm_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
 ')
 
 type httpd_data_t;
