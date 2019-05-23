@@ -340,3 +340,4 @@ device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server
 
 ## common rules
 dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
+dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} default_t:dir search;
