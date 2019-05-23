@@ -45,5 +45,24 @@ read_files_pattern(ipc_webserver_t, qmmf_config_file_t, qmmf_config_file_t)
 
 init_daemon_domain(ipc_webserver_t, ipc_webserver_exec_t)
 servicemanager_binder_use(ipc_webserver_t)
+manage_qmmf_data_files(ipc_webserver_t)
 
+#self
 allow ipc_webserver_t self:process getsched;
+allow ipc_webserver_t self:fifo_file { write read getattr };
+allow ipc_webserver_t self:capability net_raw;
+allow ipc_webserver_t self:socket create_socket_perms;
+allow ipc_webserver_t self:unix_dgram_socket create_socket_perms;
+allow ipc_webserver_t self:tcp_socket { connected_stream_socket_perms node_bind name_bind };
+allow ipc_webserver_t self:udp_socket { create ioctl };
+logging_send_syslog_msg(ipc_webserver_t)
+
+kernel_read_net_sysctls(ipc_webserver_t)
+read_firmware_file(ipc_webserver_t)
+corenet_tcp_bind_all_unreserved_ports(ipc_webserver_t)
+corenet_tcp_connect_all_unreserved_ports(ipc_webserver_t)
+dev_read_urand(ipc_webserver_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(ipc_webserver_t)
+')

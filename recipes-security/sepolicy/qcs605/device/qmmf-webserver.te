@@ -41,9 +41,55 @@ type qmmf_webserver_t;
 type qmmf_webserver_exec_t;
 
 allow qmmf_webserver_t system_dir_t:dir search_dir_perms;
+init_daemon_domain(qmmf_webserver_t, qmmf_webserver_exec_t)
 read_files_pattern(qmmf_webserver_t, qmmf_config_file_t, qmmf_config_file_t)
 
-init_daemon_domain(qmmf_webserver_t, qmmf_webserver_exec_t)
+gen_require(`
+ type device_t;
+ type ion_device_t;
+ type sysctl_t;
+ type qmmf_server_t;
+ type init_var_run_t;
+# type sysctl_vm_t;
+# type fs_t;
+')
+
+# For leprop permissions
+leprop_rw_props(qmmf_webserver_t)
+
+rw_chr_files_pattern(qmmf_webserver_t, device_t, ion_device_t);
+
 servicemanager_binder_use(qmmf_webserver_t)
+servicemanager_binder_call(qmmf_webserver_t, qmmf_server_t)
+
+manage_qmmf_data_files(qmmf_webserver_t)
+manage_camera_files_data(qmmf_webserver_t)
 
 allow qmmf_webserver_t self:process getsched;
+allow qmmf_webserver_t self:unix_dgram_socket create_socket_perms;
+allow qmmf_webserver_t self:tcp_socket { connected_stream_socket_perms node_bind name_bind};
+allow qmmf_webserver_t self:udp_socket create_socket_perms;
+allow qmmf_webserver_t self:process signal;
+allow qmmf_webserver_t self:capability net_raw;
+
+#TODO: Need to re-validate below rule
+#allow qmmf_webserver_t sysctl_vm_t:dir search;
+kernel_read_net_sysctls(qmmf_webserver_t)
+dev_rw_sysfs(qmmf_webserver_t)
+
+corenet_tcp_bind_generic_node(qmmf_webserver_t)
+corenet_udp_bind_generic_node(qmmf_webserver_t)
+corenet_tcp_bind_all_unreserved_ports(qmmf_webserver_t)
+corenet_udp_bind_all_unreserved_ports(qmmf_webserver_t)
+corenet_udp_bind_reserved_port(qmmf_webserver_t)
+
+files_read_etc_files(qmmf_webserver_t);
+#TODO: init_var_run_t needs clean up once migrated to 3.0
+allow qmmf_webserver_t init_var_run_t:dir search;
+allow qmmf_webserver_t init_var_run_t:file  { getattr open read };
+
+sysnet_read_config(qmmf_webserver_t)
+kernel_read_vm_overcommit_sysctl(qmmf_webserver_t)
+#TODO: Need to re-validate
+#allow qmmf_webserver_t fs_t:filesystem getattr;
+dev_read_urand(qmmf_webserver_t)

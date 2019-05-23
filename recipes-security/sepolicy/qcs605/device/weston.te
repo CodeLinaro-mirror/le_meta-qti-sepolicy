@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -36,4 +36,9 @@ type weston_t;
 type weston_exec_t;
 
 init_daemon_domain(weston_t, weston_exec_t)
-#servicemanager_binder_use(weston_t)
+
+gen_require(`
+ type qmmf_data_file_t;
+')
+
+manage_qmmf_data_files(weston_t)
