@@ -54,13 +54,14 @@ gen_require(`
  type sysfs_t;
  type firmware_t;
  type device_t;
- type tracefs_t;
- type trace_marker_t;
  type dri_device_t;
  type ion_device_t;
  type gpu_device_t;
  type diag_device_t;
  type ashmem_devices_t;
+ type syslogd_t;
+ type qmmf_webserver_t;
+ type vendor_camera_config_t;
 ')
 
 # For video related files
@@ -70,14 +71,13 @@ rw_video_dev(qmmf_server_t)
 leprop_rw_props(qmmf_server_t)
 
 # self
-allow qmmf_server_t self:unix_dgram_socket { create_socket_perms connect write };
+allow qmmf_server_t self:unix_dgram_socket { create_socket_perms };
 allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
 
 #For tmp file permissions
 allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
 
 # other context
-
 allow qmmf_server_t sysfs_t:file { read getattr open };
 
 # Temp for other modules
@@ -96,21 +96,32 @@ rw_chr_files_pattern(qmmf_server_t, device_t, ion_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, gpu_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, ashmem_devices_t);
 
-allow qmmf_server_t tracefs_t:dir search;
-allow qmmf_server_t tracefs_t:filesystem mount;
-allow qmmf_server_t trace_marker_t:file { write open };
 allow qmmf_server_t self:process signal;
+
+servicemanager_binder_call(qmmf_server_t, qmmf_webserver_t)
+
+logging_send_syslog_msg(qmmf_server_t)
+allow qmmf_server_t self:socket {create getattr write read setopt};
+dev_read_urand(qmmf_server_t)
+kernel_read_net_sysctls(qmmf_server_t)
 
 type qmmf_server_tmp_t;
 files_type(qmmf_server_tmp_t);
 files_var_filetrans(qmmf_server_t, qmmf_server_tmp_t, { dir file })
 allow qmmf_server_t qmmf_server_tmp_t:dir { write add_name remove_name };
+allow qmmf_server_t syslogd_t:unix_dgram_socket sendto;
+
+#For camx config read perms
+allow qmmf_server_t vendor_camera_config_t:dir search;
+allow qmmf_server_t vendor_camera_config_t:file { open read getattr };
 
 userdebug_or_eng(`
     gen_require(`
         type unconfined_t;
         type default_t;
         type debugfs_t;
+        type tracefs_t;
+        type trace_marker_t;
     ')
 
     rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
@@ -119,4 +130,10 @@ userdebug_or_eng(`
     allow qmmf_server_t default_t:dir { search };
     allow qmmf_server_t default_t:file { read getattr open };
     allow qmmf_server_t unconfined_t:binder call;
+    allow qmmf_server_t tracefs_t:dir search;
+    allow qmmf_server_t tracefs_t:filesystem mount;
+    allow qmmf_server_t trace_marker_t:file { write open };
 ')
+
+manage_qmmf_data_files(qmmf_server_t)
+manage_camera_files_data(qmmf_server_t)

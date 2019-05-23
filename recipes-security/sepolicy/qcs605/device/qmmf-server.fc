@@ -29,6 +29,7 @@
 
 # qmmf data files
 /data/misc/qmmf(/.*)?              gen_context(system_u:object_r:qmmf_data_file_t,s0)
+/data/misc/vam(/.*)?               gen_context(system_u:object_r:qmmf_data_file_t,s0)
 
 # qmmf config files
 /system/etc/qmmf(/.*)?             gen_context(system_u:object_r:qmmf_config_file_t,s0)
