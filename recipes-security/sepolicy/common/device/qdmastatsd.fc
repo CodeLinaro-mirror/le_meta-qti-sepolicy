@@ -25,26 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## <summary>qdma</summary>
-
-
-########################################
-## <summary>
-##      Communicate with qdma socket file
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <rolecap/>
-#
-interface(`rw_vendor_qdma_sock_file',`
-        gen_require(`
-                type vendor_qdma_t;
-                type vendor_qdma_sock_t;
-        ')
-    allow $1 vendor_qdma_t:unix_stream_socket connectto;
-    allow $1 vendor_qdma_sock_t:sock_file write;
-    allow $1 vendor_qdma_sock_t:dir search;
-')
+/usr/bin/qdmastatsd                 --      gen_context(system_u:object_r:vendor_qdmastatsd_exec_t,s0)
+/data/vendor/qdmastats(/.*)?                gen_context(system_u:object_r:vendor_qdmastatsd_data_t,s0)
+/dev/ramdump_microdump_modem        --      gen_context(system_u:object_r:vendor_qdmastatsd_ramdump_device_t,s0)

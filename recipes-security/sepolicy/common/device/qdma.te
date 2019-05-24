@@ -37,6 +37,12 @@ gen_require(`
     type socket_device_t;
     type net_conf_t;
     type http_port_t;
+    type cache_t;
+    type device_t;
+    type default_t;
+    type init_var_run_t;
+    type systemd_resolved_var_run_t;
+    type vendor_qdmastatsd_data_t;
 ')
 
 type vendor_qdma_data_t;
@@ -47,10 +53,6 @@ manage_user_data_files(vendor_qdma_t, vendor_qdma_data_t)
 type vendor_qdma_sock_t;
 files_type(vendor_qdma_sock_t);
 device_manage_socket_file(vendor_qdma_t, vendor_qdma_sock_t)
-
-type vendor_qdma_var_run_t;
-files_pid_file(vendor_qdma_var_run_t)
-files_pid_filetrans(vendor_qdma_t, vendor_qdma_var_run_t, sock_file)
 
 type vendor_qdma_tmp_t;
 files_tmp_file(vendor_qdma_tmp_t);
@@ -65,18 +67,27 @@ dev_read_rand(vendor_qdma_t);
 kernel_read_vm_overcommit_sysctl(vendor_qdma_t)
 miscfiles_read_generic_certs(vendor_qdma_t)
 kernel_read_system_state(vendor_qdma_t)
+corecmd_exec_shell(vendor_qdma_t)
 
 allow vendor_qdma_t self:fifo_file rw_fifo_file_perms;
-allow vendor_qdma_t vendor_qdma_var_run_t:sock_file create;
 allow vendor_qdma_t vendor_qdma_tmp_t:file { read write create open };
 allow vendor_qdma_t etc_t:lnk_file read_lnk_file_perms;
 allow vendor_qdma_t self:netlink_route_socket r_netlink_socket_perms;
 sysnet_read_config(vendor_qdma_t)
 files_read_etc_files(vendor_qdma_t)
+firmware_read_files(vendor_qdma_t)
+rw_files_pattern(vendor_qdma_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
 
 ## manage qdma socket
 allow vendor_qdma_t socket_device_t:dir create;
-allow vendor_qdma_t vendor_qdma_sock_t:dir { create open read add_name write getattr search };
-allow vendor_qdma_t self:capability { net_admin net_raw };
+allow vendor_qdma_t vendor_qdma_sock_t:dir manage_dir_perms;
+allow vendor_qdma_t self:capability { net_admin net_raw};
+dontaudit vendor_qdma_t self:capability {setuid setgid};
 allow vendor_qdma_t self:{ socket unix_dgram_socket unix_stream_socket udp_socket } create_socket_perms;
 allow vendor_qdma_t { self http_port_t }:tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow vendor_qdma_sock_t device_t:filesystem associate;
+allow vendor_qdma_t cache_t:dir {search getattr};
+dontaudit vendor_qdma_t default_t:dir search;
+mount_domtrans(vendor_qdma_t)
+allow vendor_qdma_t init_var_run_t:dir search;
+allow vendor_qdma_t vendor_qdmastatsd_data_t:file { read getattr unlink open };
