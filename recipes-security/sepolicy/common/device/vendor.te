@@ -61,6 +61,7 @@ neverallow {
     -rebootd_t
 } { sysfs_t proc_t device_t }:dir { add_name create link remove_name rename reparent rmdir write };
 dontaudit vendor_domain { sysfs_t proc_t }:dir write;
+kernel_dontaudit_request_load_module(vendor_domain)
 
 ### tftp server ###
 
