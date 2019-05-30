@@ -67,6 +67,7 @@ seutil_domtrans_setfiles(initrc_t)
 gen_require(`
     attribute user_data;
     attribute system_data;
+    type sdcard_t;
 ')
 
 # Use systemd-tmpfiles or mount-copybind for this instead
@@ -82,3 +83,5 @@ neverallow initrc_t system_data:file rw_file_perms;
 userdebug_or_eng(`
     reboot_write_fifo_files_reboot_device(init_t)
 ')
+
+allow initrc_t sdcard_t:dir getattr;
