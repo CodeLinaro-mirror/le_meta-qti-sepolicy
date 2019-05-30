@@ -67,6 +67,7 @@ allow wlan_initrc_t self:fifo_file rw_file_perms;
 qcmap_cm_rw_unix_dgram_socket(NetworkManager_t)
 userdebug_or_eng(`
     rw_diag_dev(dhcpc_t)
+    rw_chr_files_pattern(wlan_initrc_t, device_t, diag_device_t);
 ')
 qcmap_cm_rw_unix_netlink_socket(dhcpc_t)
 qcmap_cm_rw_unix_netlink_socket(NetworkManager_t)
