@@ -51,6 +51,7 @@
 /var/run/data(/.*)?                   gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /run/data(/.*)?                       gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /tmp/data(/.*)?                       gen_context(system_u:object_r:qcmap_tmp_t,s0)
+/dev/mtd24                       -c   gen_context(system_u:object_r:datamtd_device_t,s0)
 
 #WLAN scripts
 /etc/initscripts/start_qcmap_wlan_le              --    gen_context(system_u:object_r:wlan_initrc_exec_t,s0)

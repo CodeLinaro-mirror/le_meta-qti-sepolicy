@@ -31,9 +31,11 @@ type qcmap_cm_t;
 type qcmap_cm_exec_t;
 type qcmap_etc_data_t;
 type datadpo_device_t;
+type datamtd_device_t;
 init_vendor_domain(qcmap_cm_t, qcmap_cm_exec_t)
 system_data_files_type(qcmap_etc_data_t);
 dev_node(datadpo_device_t)
+dev_node(datamtd_device_t);
 
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
@@ -72,6 +74,7 @@ corecmd_exec_shell(qcmap_cm_t)
 corecmd_exec_bin(qcmap_cm_t)
 
 rw_chr_files_pattern(qcmap_cm_t, device_t, datadpo_device_t)
+rw_chr_files_pattern(qcmap_cm_t, device_t, datamtd_device_t)
 
 allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
