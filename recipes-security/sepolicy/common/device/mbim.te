@@ -51,6 +51,7 @@ userdebug_or_eng(`
 ')
 
 gen_require(`
+   type systemd_logind_var_run_t;
    class service { start };
 ')
 
@@ -77,3 +78,5 @@ allow mbim_t self:process { signal };
 files_dontaudit_list_default(mbim_t);
 allow mbim_t self:netlink_kobject_uevent_socket { create read setopt bind };
 allow mbim_t mbimd_unit_t:service { start };
+allow mbim_t systemd_logind_var_run_t:sock_file { write };
+
