@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,51 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/qseecomd               --      gen_context(system_u:object_r:qseecomd_exec_t,s0)
-/data/vendor/tzstorage(/.*)?            gen_context(system_u:object_r:qseecomd_data_t,s0)
-/persist/data(/.*)?                     gen_context(system_u:object_r:qseecomd_persist_t,s0)
+policy_module(alm, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type alm_service_t;
+type alm_service_exec_t;
+type alm_service_device_t;
+
+init_daemon_domain(alm_service_t, alm_service_exec_t)
+
+gen_require(`
+        type leprop_sock_t;
+        type firmware_t;
+        type leprop_t;
+        type devlog_t;
+        type syslogd_t;
+        type ion_device_t;
+        type smcinvoke_device_t;
+        type qseecom_device_t;
+        type init_var_run_t;
+')
+
+# self
+allow alm_service_t self:unix_dgram_socket { create connect write };
+
+files_type(alm_service_device_t)
+dev_node(alm_service_device_t)
+device_manage_socket_file(alm_service_t, alm_service_device_t, "almservice")
+allow alm_service_t alm_service_device_t:dir { search write add_name };
+allow alm_service_t alm_service_device_t:sock_file { create write setattr };
+
+rw_chr_files_pattern(alm_service_t, device_t, ion_device_t);
+rw_chr_files_pattern(alm_service_t, device_t, smcinvoke_device_t);
+rw_chr_files_pattern(alm_service_t, device_t, qseecom_device_t);
+
+allow alm_service_t firmware_t:dir search;
+allow alm_service_t firmware_t:file { read getattr open };
+
+allow alm_service_t leprop_sock_t:sock_file write;
+allow alm_service_t leprop_t:unix_stream_socket connectto;
+
+allow alm_service_t devlog_t:sock_file write;
+allow alm_service_t syslogd_t:unix_dgram_socket sendto;
+
+allow alm_service_t init_var_run_t:dir search;

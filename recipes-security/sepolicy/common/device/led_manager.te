@@ -44,7 +44,17 @@ data_filetrans(led_manager_t, led_manager_data_t, { file dir })
 
 init_daemon_domain(led_manager_t, led_manager_exec_t)
 
+gen_require(`
+        type init_var_run_t;
+        type syslogd_var_run_t;
+')
+
 #============= led_manager_t ==============
+
+#self
+allow led_manager_t self:capability2 block_suspend;
+allow led_manager_t self:unix_dgram_socket { create connect write };
+
 kernel_read_system_state(led_manager_t)
 allow led_manager_t self:capability kill;
 
@@ -57,6 +67,10 @@ files_var_filetrans(led_manager_t, led_manager_tmp_t, { file dir })
 dev_read_urand(led_manager_t)
 
 dontaudit led_manager_t sysfs_t:file create;
+
+allow led_manager_t init_var_run_t:dir search; #/run/systemd
+allow led_manager_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
+logging_send_syslog_msg(led_manager_t)
 
 ## for DBus
 ifdef(`init_systemd', `

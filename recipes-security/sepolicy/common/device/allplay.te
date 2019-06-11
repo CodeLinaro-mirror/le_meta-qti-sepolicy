@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -236,3 +236,40 @@ allow allplay_t etc_t:lnk_file read_lnk_file_perms;
 sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
 
 alexa_manage_avs_fifo(allplay_t)
+
+
+gen_require(`
+    type audio_manager_data_t;
+    type system_dbusd_t;
+    type home_root_t;
+    type user_home_dir_t;
+    type syslogd_var_run_t;
+    type systemd_resolved_var_run_t;
+    type init_var_run_t;
+')
+
+# For almservice
+alm_write_sock_file(allplay_t)
+
+allow allplay_t audio_manager_data_t:file { read open write lock getattr};
+
+allow allplay_t system_dbusd_t:unix_stream_socket connectto;
+
+allow allplay_t home_root_t:dir getattr; #/home
+allow allplay_t user_home_dir_t:dir search_dir_perms; #/home/root
+logging_send_syslog_msg(allplay_t)
+allow allplay_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
+allow allplay_t systemd_resolved_var_run_t:dir search; #/run/systemd/resolve
+allow allplay_t systemd_resolved_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
+allow allplay_t init_var_run_t:dir search; #/run/systemd/resolve
+allow allplay_t init_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
+
+allow allplay_t self:netlink_kobject_uevent_socket { bind create setopt getattr };
+use_wakelock(allplay_t)
+
+# for dbus
+ifdef(`init_systemd', `
+    dbus_connect_system_bus(allplay_t)
+    dbus_send_system_bus(allplay_t)
+    adk_audio_manager_dbus_chat(allplay_t)
+')

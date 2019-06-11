@@ -97,3 +97,9 @@ dev_node(diag_device_t);
 
 type ion_device_t;
 dev_node(ion_device_t);
+
+type smcinvoke_device_t;
+dev_node(smcinvoke_device_t);
+
+type qseecom_device_t;
+dev_node(qseecom_device_t);
