@@ -64,3 +64,4 @@
 
 #Data path opt
 /usr/bin/data_path_opt          --    gen_context(system_u:object_r:data_path_opt_exec_t,s0)
+/usr/sbin/minidlnad             --    gen_context(system_u:object_r:minidlna_exec_t,s0)
