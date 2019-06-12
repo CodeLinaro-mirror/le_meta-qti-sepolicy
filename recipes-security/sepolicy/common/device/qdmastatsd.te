@@ -25,26 +25,45 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-## <summary>qdma</summary>
+policy_module(qdmastatsd, 1.0)
 
+type vendor_qdmastatsd_t;
+type vendor_qdmastatsd_exec_t;
 
-########################################
-## <summary>
-##      Communicate with qdma socket file
-## </summary>
-## <param name="domain">
-##      <summary>
-##      Domain allowed access.
-##      </summary>
-## </param>
-## <rolecap/>
-#
-interface(`rw_vendor_qdma_sock_file',`
-        gen_require(`
-                type vendor_qdma_t;
-                type vendor_qdma_sock_t;
-        ')
-    allow $1 vendor_qdma_t:unix_stream_socket connectto;
-    allow $1 vendor_qdma_sock_t:sock_file write;
-    allow $1 vendor_qdma_sock_t:dir search;
+init_vendor_domain(vendor_qdmastatsd_t, vendor_qdmastatsd_exec_t)
+
+gen_require(`
+       type device_t;
+       type default_t;
+       type vendor_qdma_data_t;
+       type vendor_qdma_sock_t;
 ')
+
+## Data files for qdmastatsd ##
+type vendor_qdmastatsd_data_t;
+data_filetrans(vendor_qdmastatsd_t, vendor_qdmastatsd_data_t, file)
+user_data_files_type(vendor_qdmastatsd_data_t)
+manage_user_data_files(vendor_qdmastatsd_t, vendor_qdmastatsd_data_t)
+manage_user_data_files(vendor_qdmastatsd_t, vendor_qdma_data_t)
+allow vendor_qdmastatsd_t vendor_qdmastatsd_data_t:dir create_dir_perms;
+
+type vendor_qdmastatsd_ramdump_device_t;
+dev_node(vendor_qdmastatsd_ramdump_device_t)
+read_chr_files_pattern(vendor_qdmastatsd_t, device_t, vendor_qdmastatsd_ramdump_device_t)
+
+userdebug_or_eng(`
+   rw_diag_dev(vendor_qdmastatsd_t);
+ ')
+
+## Read different files from sys and dev nodes ##
+dev_read_sysfs(vendor_qdmastatsd_t)
+logging_send_syslog_msg(vendor_qdmastatsd_t)
+kernel_read_system_state(vendor_qdmastatsd_t)
+allow vendor_qdmastatsd_t self:unix_dgram_socket { create write connect };
+allow vendor_qdmastatsd_t self:fifo_file { write read };
+allow vendor_qdmastatsd_t self:socket rw_socket_perms;
+device_search_sockets(vendor_qdmastatsd_t)
+
+##access qdma socket
+rw_vendor_qdma_sock_file(vendor_qdmastatsd_t);
+dontaudit vendor_qdmastatsd_t default_t:dir search;
