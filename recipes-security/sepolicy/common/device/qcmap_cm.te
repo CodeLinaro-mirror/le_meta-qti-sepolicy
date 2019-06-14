@@ -37,6 +37,11 @@ system_data_files_type(qcmap_etc_data_t);
 dev_node(datadpo_device_t)
 dev_node(datamtd_device_t);
 
+#data_path_opt declaration
+type data_path_opt_exec_t;
+type data_path_opt_t;
+init_vendor_domain(data_path_opt_t, data_path_opt_exec_t )
+
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
@@ -424,3 +429,17 @@ allow hostapd_cli_qcmap_t qcmap_cm_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
 manage_dirs_pattern(hostapd_qcmap_t, var_run_t, var_run_t)
 rw_sock_files_pattern(hostapd_qcmap_t, tmp_t, qcmap_tmp_t)
+
+#data_path_opt policies
+modutils_domtrans_insmod(data_path_opt_t)
+dev_read_sysfs(data_path_opt_t)
+corecmd_exec_shell(data_path_opt_t)
+dev_write_kmsg(data_path_opt_t)
+ifdef(`init_systemd',`
+    allow qcmap_cm_t data_path_opt_exec_t:service { start stop status reload };
+')
+kernel_read_system_state(data_path_opt_t)
+dontaudit data_path_opt_t debugfs_t:dir { search };
+allow data_path_opt_t data_path_opt_t:chr_file { write getattr };
+allow data_path_opt_t data_path_opt_t:fifo_file {  getattr read write };
+allow qcmap_cm_t data_path_opt_exec_t:file { getattr execute read open execute_no_trans };
