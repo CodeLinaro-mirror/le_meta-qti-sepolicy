@@ -42,7 +42,7 @@ user_data_files_type(rules_manager_data_t)
 manage_user_data_files(rules_manager_t, rules_manager_data_t)
 data_filetrans(rules_manager_t, rules_manager_data_t, { file dir })
 
-init_daemon_domain(rules_manager_t, rules_manager_exec_t)
+init_vendor_domain(rules_manager_t, rules_manager_exec_t)
 
 #============= rules_manager_t ==============
 kernel_read_system_state(rules_manager_t)

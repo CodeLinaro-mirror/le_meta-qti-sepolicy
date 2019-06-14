@@ -35,4 +35,4 @@ policy_module(mediaplayer_cli, 1.0)
 type mediaplayer_cli_t;
 type mediaplayer_cli_exec_t;
 
-init_daemon_domain(mediaplayer_cli_t, mediaplayer_cli_exec_t)
+init_vendor_domain(mediaplayer_cli_t, mediaplayer_cli_exec_t)

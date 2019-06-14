@@ -35,4 +35,4 @@ policy_module(mediaplayer_test, 1.0)
 type mediaplayer_test_t;
 type mediaplayer_test_exec_t;
 
-init_daemon_domain(mediaplayer_test_t, mediaplayer_test_exec_t)
+init_vendor_domain(mediaplayer_test_t, mediaplayer_test_exec_t)

@@ -37,7 +37,7 @@ type iotd_exec_t;
 type iotd_etc_t;
 type iotd_tmp_t;
 
-init_daemon_domain(iotd_t, iotd_exec_t)
+init_vendor_domain(iotd_t, iotd_exec_t)
 
 gen_require(`
 	type init_var_run_t;

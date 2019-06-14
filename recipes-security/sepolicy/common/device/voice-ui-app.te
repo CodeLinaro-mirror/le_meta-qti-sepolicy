@@ -41,7 +41,7 @@ user_data_files_type(voice-ui-app_data_t)
 manage_user_data_files(voice-ui-app_t, voice-ui-app_data_t)
 data_filetrans(voice-ui-app_t, voice-ui-app_data_t, { file dir })
 
-init_daemon_domain(voice-ui-app_t, voice-ui-app_exec_t)
+init_vendor_domain(voice-ui-app_t, voice-ui-app_exec_t)
 
 gen_require(`
 	type cert_t;
@@ -79,7 +79,7 @@ files_read_alexa_data_files(voice-ui-app_t)
 write_files_pattern(voice-ui-app_t, alexa_data_t, alexa_data_t)
 
 voiceui_manage_avs_fifo(voice-ui-app_t)
-allow voice-ui-app_t device_t:chr_file { read write ioctl open };
+#allow voice-ui-app_t device_t:chr_file { read write ioctl open };
 allow voice-ui-app_t random_device_t:chr_file { open read getattr };
 allow voice-ui-app_t urandom_device_t:chr_file { open read getattr };
 
@@ -139,9 +139,9 @@ allow voice-ui-app_t devlog_t:sock_file write;
 allow voice-ui-app_t syslogd_var_run_t:dir search;
 allow voice-ui-app_t syslogd_var_run_t:sock_file write; # /run/systemd/journal/dev-log
 allow voice-ui-app_t init_var_run_t:dir search;
-allow voice-ui-app_t init_var_run_t:file { read getattr open write };
+#allow voice-ui-app_t init_var_run_t:file { read getattr open write };
 allow voice-ui-app_t initrc_var_run_t:dir search;
-allow voice-ui-app_t initrc_var_run_t:sock_file write;
+#allow voice-ui-app_t initrc_var_run_t:sock_file write;
 allow voice-ui-app_t voice-ui-app_data_t:dir search;
 kernel_read_system_state(voice-ui-app_t)
 allow voice-ui-app_t self:udp_socket { read write create connect getattr };
