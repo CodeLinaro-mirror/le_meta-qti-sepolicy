@@ -55,3 +55,5 @@
 #/dev/log              -s     gen_context(system_u:object_r:logd_socket_t,s0)
 /dev/ubi.*             -c    gen_context(system_u:object_r:ubi_device_t,mls_systemhigh)
 /dev/ion		-c  gen_context(system_u:object_r:ion_device_t,s0)
+/dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
+/dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)

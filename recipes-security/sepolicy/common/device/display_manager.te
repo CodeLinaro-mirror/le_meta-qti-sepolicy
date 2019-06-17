@@ -61,6 +61,7 @@ gen_require(`
   type sysctl_t;
   type sysctl_vm_overcommit_t;
   type sysctl_vm_t;
+  type sysfs_t;
   type systemd_logind_var_run_t;
   type systemd_resolved_var_run_t;
   type tmp_t;
@@ -119,4 +120,17 @@ allow display_manager_t systemd_resolved_var_run_t:file getattr;
 
 # execmem is required by the Webkit Javascript JIT compiler
 allow display_manager_t self:process { execmem getsched signal setcap };
+
+# Wayland lock files /run/user/root/wayland-0*
+allow display_manager_t initrc_var_run_t:file { read write };
+
+# /var/volatile/tmp/ coredumps for display-bridge
+manage_files_pattern(display_manager_t, var_t, var_t);
+
+# X keyboard extension in /usr/share/X11/xkb
+xserver_read_xkb_libs(display_manager_t);
+
+# /sys/devices/system/cpu/ information
+read_files_pattern(display_manager_t,sysfs_t,sysfs_t);
+read_lnk_files_pattern(display_manager_t,sysfs_t,sysfs_t);
 

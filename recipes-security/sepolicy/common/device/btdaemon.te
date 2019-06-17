@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,63 +25,65 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#policy_module(pulseaudio, 1.0)
+policy_module(btdaemon, 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-files_mountpoint(pulseaudio_var_lib_t)
+type btdaemon_t;
+type btdaemon_exec_t;
+type btdaemon_data_t;
 
-files_type(pulseaudio_tmp_t);
+# Manage private files inside /data
+user_data_files_type(btdaemon_data_t)
+manage_user_data_files(btdaemon_t, btdaemon_data_t)
+data_filetrans(btdaemon_t, btdaemon_data_t, { file dir })
 
-init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
+init_daemon_domain(btdaemon_t, btdaemon_exec_t)
+
+#============= btdaemon_t ==============
 
 gen_require(`
-	type debugfs_t;
-	type systemd_logind_var_run_t;
+        type systemd_logind_var_run_t;
+	type system_dbusd_var_run_t;
+	type system_dbusd_t;
+	type leprop_sock_t;
+	type leprop_t;
+	type default_t;
+	type bt_data_t;
+	type proc_t;
 ')
 
-allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
-allow pulseaudio_t self:process { getcap getsched setcap setrlimit setsched signal signull };
 
-allow pulseaudio_t self:fifo_file rw_fifo_file_perms;
-allow pulseaudio_t self:unix_stream_socket { accept connectto listen };
-allow pulseaudio_t self:unix_dgram_socket sendto;
-allow pulseaudio_t self:tcp_socket { accept listen };
-allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
+#self
+allow btdaemon_t self:capability { net_admin sys_nice };
+allow btdaemon_t self:capability2 wake_alarm;
+allow btdaemon_t self:socket create;
+allow btdaemon_t self:unix_dgram_socket { connect write create };
+allow btdaemon_t self:process { signal setsched };
 
-audio_hal_access(pulseaudio_t)
+read_system_data_files(btdaemon_t, bt_data_t)
 
-non_audio_hal_access(pulseaudio_t)
+allow btdaemon_t systemd_logind_var_run_t:sock_file write; #/run/dbus/system_bus_socket
+allow btdaemon_t system_dbusd_var_run_t:dir search; #/run/dbus
 
-allow pulseaudio_t systemd_logind_var_run_t:sock_file write; # /run/dbus/system_bus_socket
+allow btdaemon_t default_t:dir search;
 
-# For almservice
-alm_write_sock_file(pulseaudio_t)
+allow btdaemon_t leprop_sock_t:sock_file write; #/dev/socket/leprop-service
+allow btdaemon_t leprop_t:unix_stream_socket connectto;
 
-###########################
-# Files / Dirs
+allow btdaemon_t proc_t:file { read open getattr }; #/proc/filesystems
+dev_read_urand(btdaemon_t)
 
-files_type(pulseaudio_var_lib_t)
-files_manage_etc_dirs(pulseaudio_t);
-files_manage_urandom_seed(pulseaudio_t);
-files_read_var_lib_symlinks(pulseaudio_t);
-files_search_var_lib(pulseaudio_t);
-files_getattr_var_lib_dirs(pulseaudio_t);
-
-allow pulseaudio_t debugfs_t:dir search;
-allow pulseaudio_t init_var_run_t:file { read open write getattr};
-allow pulseaudio_t init_var_run_t:sock_file { open read write getattr };
-
-leprop_rw_props(pulseaudio_t);
-
-corecmd_exec_shell(pulseaudio_t)
-
-allow pulseaudio_t self:process { signal getsched };
+allow btdaemon_t system_dbusd_t:unix_stream_socket connectto;
 
 ## for DBus
 ifdef(`init_systemd', `
-    init_dbus_chat(pulseaudio_t)
+    dbus_connect_system_bus(btdaemon_t)
+    dbus_send_system_bus(btdaemon_t)
+    adk_audio_manager_dbus_chat(btdaemon_t)
+    pulseaudio_dbus_chat(btdaemon_t)
+    adk_connectivity_manager_dbus_chat(btdaemon_t)
 ')

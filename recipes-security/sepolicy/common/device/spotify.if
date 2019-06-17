@@ -25,59 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(qseecomd, 1.0)
+######################################
+## <summary>
+##      spotify daemon interface
+## </summary>
 
-type qseecomd_t;
-type qseecomd_exec_t;
-type qseecomd_data_t;
-type qseecomd_persist_t;
-
-init_daemon_domain(qseecomd_t, qseecomd_exec_t)
-logging_send_syslog_msg(qseecomd_t)
-
-gen_require(`
-       type ion_device_t;
-       type qseecom_device_t;
-       type proc_t;
-
-       class process setcap;
-')
-
-allow qseecomd_t self:process setcap;
-
-#allow qseecomd_t ion_device_t:chr_file read;
-rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);
-
-#allow qseecomd_t to acces /dev/qseecom
-rw_chr_files_pattern(qseecomd_t, device_t, qseecom_device_t);
-
-# allow qseecomd to read commandline from /proc/cmdline
-allow qseecomd_t proc_t:file read_file_perms;
-
-files_getattr_all_files(qseecomd_t)
-files_read_default_files(qseecomd_t)
-
-dev_write_raw_memory(qseecomd_t)
-dev_read_raw_memory(qseecomd_t)
-
-# Allow SFS to write to data partition
-search_user_data_dir(qseecomd_t);
-user_data_files_type(qseecomd_data_t)
-manage_user_data_files(qseecomd_t, qseecomd_data_t)
-
-# allow qseecomd to read/write to ssd partition
-storage_raw_read_removable_device(qseecomd_t)
-storage_raw_write_removable_device(qseecomd_t)
-
-dev_read_sysfs(qseecomd_t)
-dev_rw_generic_chr_files(qseecomd_t)
-allow qseecomd_t self:capability { setuid setgid };
-
-files_search_default(qseecomd_t)
-
-# allow qseecomd to read/write leproperties
-leprop_rw_props(qseecomd_t)
-
-# allow qseecomd to read/write to persist partition
-user_data_files_type(qseecomd_persist_t)
-manage_user_data_files(qseecomd_t, qseecomd_persist_t)

@@ -1,0 +1,143 @@
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qmmf-server, 1.0)
+
+gen_require(`
+    type system_dir_t;
+')
+
+########################################
+#
+# Declarations
+#
+
+type qmmf_server_t;
+type qmmf_server_exec_t;
+
+init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
+servicemanager_binder_use(qmmf_server_t)
+
+type qmmf_data_file_t;
+user_data_files_type(qmmf_data_file_t)
+
+type qmmf_config_file_t;
+allow qmmf_server_t system_dir_t:dir search_dir_perms;
+read_files_pattern(qmmf_server_t, qmmf_config_file_t, qmmf_config_file_t)
+
+gen_require(`
+ type tmp_t;
+ type sysfs_t;
+ type firmware_t;
+ type device_t;
+ type dri_device_t;
+ type ion_device_t;
+ type gpu_device_t;
+ type diag_device_t;
+ type ashmem_devices_t;
+ type urandom_device_t;
+ type devlog_t;
+ type syslogd_t;
+ type sysctl_t;
+ type qmmf_webserver_t;
+ type vendor_camera_config_t;
+')
+
+# For video related files
+rw_video_dev(qmmf_server_t)
+
+# For leprop permissions
+leprop_rw_props(qmmf_server_t)
+
+# self
+allow qmmf_server_t self:unix_dgram_socket { create_socket_perms };
+allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
+
+#For tmp file permissions
+allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
+
+# other context
+
+allow qmmf_server_t sysfs_t:file { read getattr open };
+
+# Temp for other modules
+allow qmmf_server_t firmware_t:dir { search };
+allow qmmf_server_t firmware_t:file read_file_perms;
+
+files_read_etc_files(qmmf_server_t);
+
+#For audio access
+audio_hal_access(qmmf_server_t)
+non_audio_hal_access(qmmf_server_t)
+
+#For /dev node permissions
+rw_chr_files_pattern(qmmf_server_t, device_t, dri_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, ion_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, gpu_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, ashmem_devices_t);
+
+allow qmmf_server_t self:process signal;
+
+servicemanager_binder_call(qmmf_server_t, qmmf_webserver_t)
+
+allow qmmf_server_t devlog_t:sock_file write;
+allow qmmf_server_t self:socket {create getattr write read setopt};
+allow qmmf_server_t urandom_device_t:chr_file { open read};
+allow qmmf_server_t sysctl_t:dir search;
+
+type qmmf_server_tmp_t;
+files_type(qmmf_server_tmp_t);
+files_var_filetrans(qmmf_server_t, qmmf_server_tmp_t, { dir file })
+allow qmmf_server_t qmmf_server_tmp_t:dir { write add_name remove_name };
+allow qmmf_server_t syslogd_t:unix_dgram_socket sendto;
+
+#For camx config read perms
+allow qmmf_server_t vendor_camera_config_t:dir search;
+allow qmmf_server_t vendor_camera_config_t:file { open read getattr };
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        type default_t;
+        type debugfs_t;
+        type tracefs_t;
+        type trace_marker_t;
+    ')
+
+    rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
+
+    allow qmmf_server_t debugfs_t:dir { search };
+    allow qmmf_server_t default_t:dir { search };
+    allow qmmf_server_t default_t:file { read getattr open };
+    allow qmmf_server_t unconfined_t:binder call;
+    allow qmmf_server_t tracefs_t:dir search;
+    allow qmmf_server_t tracefs_t:filesystem mount;
+    allow qmmf_server_t trace_marker_t:file { write open };
+')
+
+manage_qmmf_data_files(qmmf_server_t)
+manage_camera_files_data(qmmf_server_t)

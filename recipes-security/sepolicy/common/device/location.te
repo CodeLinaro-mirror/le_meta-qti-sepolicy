@@ -40,6 +40,11 @@ gen_require(`
 # Declarations
 #
 
+# location conf files
+type loc_etc_t;
+files_type(loc_etc_t)
+
+#location daemon
 type loc_t;
 type loc_exec_t;
 
@@ -50,6 +55,8 @@ corecmd_exec_bin(loc_t)
 dev_read_sysfs(loc_t)
 dev_read_urand(loc_t)
 files_read_etc_files(loc_t)
+# read location conf files
+files_read_loc_etc_files(loc_t)
 logging_send_syslog_msg(loc_t)
 leprop_rw_props(loc_t)
 allow loc_t self:{ socket udp_socket } create_socket_perms;
@@ -63,13 +70,35 @@ kernel_read_network_state(loc_t)
 
 type loc_data_t;
 user_data_files_type(loc_data_t)
-data_filetrans(loc_t, loc_data_t, file)
+data_filetrans(loc_t, loc_data_t, { file dir })
 manage_user_data_files(loc_t, loc_data_t)
 gen_require(`
     type systemd_tmpfiles_t;
 ')
 allow systemd_tmpfiles_t loc_data_t:dir { relabelfrom relabelto };
 allow systemd_tmpfiles_t loc_data_t:file { relabelfrom relabelto };
+
+# location init script for sysvinit systems
+ifndef(`init_systemd', `
+    type loc_initrc_exec_t;
+    type loc_initrc_t;
+
+    init_script_domain(loc_initrc_t, loc_initrc_exec_t)
+    domtrans_pattern(loc_initrc_t, loc_exec_t, loc_t)
+    corecmd_exec_shell(loc_initrc_t)
+    corecmd_exec_bin(loc_initrc_t)
+    data_filetrans(loc_initrc_t, loc_data_t, { file dir })
+    files_read_etc_files(loc_initrc_t)
+    dev_write_kmsg(loc_initrc_t)
+    manage_user_data_files(loc_initrc_t, loc_data_t)
+    read_user_data_files(loc_initrc_t, loc_data_t);
+    allow loc_initrc_t data_t:dir { setattr };
+    allow loc_initrc_t loc_data_t:file { getattr setattr };
+    allow loc_initrc_t self:capability { chown fowner fsetid dac_override };
+    allow loc_initrc_t socket_device_t:dir { create setattr };
+
+    dontaudit loc_initrc_t console_device_t:chr_file read;
+')
 
 ## location hal
 
@@ -85,6 +114,8 @@ userdebug_or_eng(`
 ')
 dev_read_sysfs(loc_hald_t)
 files_read_etc_files(loc_hald_t)
+# read location conf files
+files_read_loc_etc_files(loc_hald_t)
 files_rw_qcmap_etc_data_files(loc_hald_t)
 leprop_rw_props(loc_hald_t)
 dev_read_realtime_clock(loc_hald_t)
@@ -125,10 +156,12 @@ domtrans_pattern(loc_t, xtwifi_agent_exec_t, xtwifi_agent_t)
 logging_send_syslog_msg(xtwifi_agent_t)
 
 files_read_etc_files(xtwifi_agent_t)
+# read location conf files
+files_read_loc_etc_files(xtwifi_agent_t)
 allow xtwifi_agent_t self:{ udp_socket unix_dgram_socket } create_socket_perms;
 allow xtwifi_agent_t proc_t:file read_file_perms;
 
-data_filetrans(xtwifi_agent_t, loc_data_t, file)
+data_filetrans(xtwifi_agent_t, loc_data_t, { file dir })
 manage_user_data_files(xtwifi_agent_t, loc_data_t)
 
 ### xtwifi_client
@@ -142,12 +175,14 @@ domtrans_pattern(loc_t, xtwifi_client_exec_t, xtwifi_client_t)
 logging_send_syslog_msg(xtwifi_client_t)
 
 files_read_etc_files(xtwifi_client_t)
+# read location conf files
+files_read_loc_etc_files(xtwifi_client_t)
 dev_read_sysfs(xtwifi_client_t)
 leprop_rw_props(xtwifi_client_t)
 
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
 
-data_filetrans(xtwifi_client_t, loc_data_t, file)
+data_filetrans(xtwifi_client_t, loc_data_t, { file dir })
 manage_user_data_files(xtwifi_client_t, loc_data_t)
 dev_read_urand(xtwifi_client_t)
 
@@ -175,7 +210,9 @@ allow engine_service_t unreserved_port_t:tcp_socket name_connect;
 
 dev_read_sysfs(engine_service_t)
 files_read_etc_files(engine_service_t)
-data_filetrans(engine_service_t, loc_data_t, file)
+# read location conf files
+files_read_loc_etc_files(engine_service_t)
+data_filetrans(engine_service_t, loc_data_t, { file dir })
 manage_user_data_files(engine_service_t, loc_data_t)
 ## Read virtual memory overcommit sysctl - /proc/sys/vm/overcommit_memory
 kernel_read_vm_overcommit_sysctl(engine_service_t)
@@ -213,6 +250,9 @@ miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
 
+##access qdma socket
+rw_vendor_qdma_sock_file(xtra_daemon_t);
+
 type loc_tmp_t;
 files_tmp_file(loc_tmp_t)
 files_tmp_filetrans(xtra_daemon_t, loc_tmp_t, file)
@@ -220,7 +260,9 @@ allow xtra_daemon_t loc_tmp_t:file { create_file_perms write_file_perms read_fil
 files_read_generic_tmp_symlinks(xtra_daemon_t)
 
 files_read_etc_files(xtra_daemon_t)
-data_filetrans(xtra_daemon_t, loc_data_t, file)
+# read location conf files
+files_read_loc_etc_files(xtra_daemon_t)
+data_filetrans(xtra_daemon_t, loc_data_t, { file dir })
 manage_user_data_files(xtra_daemon_t, loc_data_t)
 
 ### lowi-server
@@ -237,6 +279,8 @@ allow lowi_server_t self:{ netlink_route_socket udp_socket netlink_generic_socke
 allow lowi_server_t self:capability net_admin;
 
 files_read_etc_files(lowi_server_t)
+# read location conf files
+files_read_loc_etc_files(lowi_server_t)
 
 kernel_dontaudit_request_load_module(lowi_server_t)
 
@@ -250,8 +294,10 @@ domtrans_pattern(loc_t, slim_daemon_exec_t, slim_daemon_t)
 logging_send_syslog_msg(slim_daemon_t)
 
 files_read_etc_files(slim_daemon_t)
+# read location conf files
+files_read_loc_etc_files(slim_daemon_t)
 manage_user_data_files(slim_daemon_t, loc_data_t)
-data_filetrans(slim_daemon_t, loc_data_t, file)
+data_filetrans(slim_daemon_t, loc_data_t, { file dir })
 
 userdebug_or_eng(`
     rw_diag_dev(slim_daemon_t)
@@ -272,10 +318,13 @@ dev_read_generic_chr_files(slim_daemon_t)
 ### location socket
 type loc_socket_t;
 files_type(loc_socket_t)
+
 device_manage_socket_file({ loc_t loc_hald_t xtra_daemon_t engine_service_t }, loc_socket_t)
+ifndef(`init_systemd', `device_manage_socket_file(loc_initrc_t, loc_socket_t)')
+
 allow loc_socket_t device_t:filesystem associate;
 allow { loc_t loc_hald_t xtra_daemon_t engine_service_t } loc_socket_t:dir manage_dir_perms;
-allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t } self:fifo_file rw_fifo_file_perms;
+allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } self:fifo_file rw_fifo_file_perms;
 
 allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
 allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
