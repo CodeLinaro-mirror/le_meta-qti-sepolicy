@@ -28,3 +28,5 @@
 /usr/bin/qdma                 --      gen_context(system_u:object_r:vendor_qdma_exec_t,s0)
 /data/vendor/qdma(/.*)?               gen_context(system_u:object_r:vendor_qdma_data_t,s0)
 /dev/socket/qdma(/.*)?                gen_context(system_u:object_r:vendor_qdma_sock_t,s0)
+/cache/fota(/.*)?                     gen_context(system_u:object_r:vendor_qdma_cache_t,s0)
+/cache/unc(/.*)?                      gen_context(system_u:object_r:vendor_qdma_cache_t,s0)
