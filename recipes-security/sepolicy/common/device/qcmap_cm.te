@@ -494,3 +494,45 @@ allow tinyproxy_t self:capability { setuid net_bind_service setgid kill net_admi
 allow tinyproxy_t self:unix_dgram_socket { sendto create_socket_perms };
 allow tinyproxy_t syslogd_t:unix_dgram_socket { sendto };
 allow tinyproxy_t self:process { signal };
+
+#miniupnpd policies
+type miniupnp_t;
+type miniupnp_exec_t;
+type miniupnp_var_run_t;
+
+init_vendor_domain(miniupnp_t, miniupnp_exec_t)
+
+files_pid_file(miniupnp_var_run_t)
+
+gen_require(`
+  type ssdp_port_t;
+')
+
+ifdef(`init_systemd', `
+  allow qcmap_cm_t miniupnp_exec_t:service { start stop status reload };
+')
+
+files_rw_qcmap_etc_data_files(miniupnp_t)
+kernel_dontaudit_read_system_state(miniupnp_t)
+allow miniupnp_t proc_net_t: file { read };
+logging_send_syslog_msg(miniupnp_t)
+dev_read_sysfs(miniupnp_t)
+allow miniupnp_t miniupnp_t: capability { net_admin };
+corenet_tcp_bind_generic_node(miniupnp_t)
+corenet_udp_bind_generic_node(miniupnp_t)
+allow miniupnp_t self:udp_socket create_socket_perms;
+allow miniupnp_t miniupnp_t: socket  create_socket_perms;
+allow miniupnp_t self:fifo_file rw_fifo_file_perms;
+files_pid_filetrans(miniupnp_t, miniupnp_var_run_t, { dir file sock_file })
+allow miniupnp_t miniupnp_var_run_t  : dir {create};
+allow miniupnp_t self:tcp_socket connected_stream_socket_perms;
+allow miniupnp_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+allow miniupnp_t ssdp_port_t: udp_socket { name_bind };
+corenet_udp_bind_all_unreserved_ports(miniupnp_t)
+manage_files_pattern(miniupnp_t, miniupnp_var_run_t, miniupnp_var_run_t)
+fs_associate_tmpfs(miniupnp_var_run_t)
+userdebug_or_eng(`
+  rw_chr_files_pattern(miniupnp_t, device_t, diag_device_t)
+')
+dontaudit miniupnp_t default_t : dir search;
+dontaudit miniupnp_t self:capability sys_module;
