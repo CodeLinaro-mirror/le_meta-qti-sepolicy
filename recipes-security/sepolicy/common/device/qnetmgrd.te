@@ -76,7 +76,7 @@ type netmgrd_socket_device_t;
 files_type(netmgrd_socket_device_t);
 dev_node(netmgrd_socket_device_t);
 allow qnetmgrd_t netmgrd_socket_device_t:dir { search write create read add_name };
-allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr };
+allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr unlink};
 filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_file dir })
 
 gen_require(`
@@ -84,3 +84,5 @@ gen_require(`
 ')
 allow qnetmgrd_t self:process getcap;
 dontaudit qnetmgrd_t default_t:dir { search };
+
+iptables_domtrans(qnetmgrd_t)
