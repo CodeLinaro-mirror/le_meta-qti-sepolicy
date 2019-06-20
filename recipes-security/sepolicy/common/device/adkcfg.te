@@ -35,4 +35,4 @@ policy_module(adkcfg, 1.0)
 type adkcfg_t;
 type adkcfg_exec_t;
 
-init_daemon_domain(adkcfg_t, adkcfg_exec_t)
+init_vendor_domain(adkcfg_t, adkcfg_exec_t)

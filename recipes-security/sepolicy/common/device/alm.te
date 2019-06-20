@@ -36,7 +36,7 @@ type alm_service_t;
 type alm_service_exec_t;
 type alm_service_device_t;
 
-init_daemon_domain(alm_service_t, alm_service_exec_t)
+init_vendor_domain(alm_service_t, alm_service_exec_t)
 
 gen_require(`
         type leprop_sock_t;

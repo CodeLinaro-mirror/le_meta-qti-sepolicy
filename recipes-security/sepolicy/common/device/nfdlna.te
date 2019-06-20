@@ -38,7 +38,7 @@ type nfdlna_data_t;
 
 #files_type(nfdlna_data_t)
 
-init_daemon_domain(nfdlna_t, nfdlna_exec_t)
+init_vendor_domain(nfdlna_t, nfdlna_exec_t)
 
 gen_require(`
 	type lib_t;

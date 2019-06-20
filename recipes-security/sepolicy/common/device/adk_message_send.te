@@ -35,4 +35,4 @@ policy_module(adk_message_send, 1.0)
 type adk_message_send_t;
 type adk_message_send_exec_t;
 
-init_daemon_domain(adk_message_send_t, adk_message_send_exec_t)
+init_vendor_domain(adk_message_send_t, adk_message_send_exec_t)

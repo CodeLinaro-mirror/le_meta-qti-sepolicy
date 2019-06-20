@@ -41,7 +41,7 @@ user_data_files_type(button_manager_data_t)
 manage_user_data_files(button_manager_t, button_manager_data_t)
 data_filetrans(button_manager_t, button_manager_data_t, { file dir })
 
-init_daemon_domain(button_manager_t, button_manager_exec_t)
+init_vendor_domain(button_manager_t, button_manager_exec_t)
 
 gen_require(`
 	type event_device_t;
