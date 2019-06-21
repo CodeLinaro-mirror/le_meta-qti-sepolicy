@@ -31,7 +31,10 @@
 /dev/smdcntl1                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/mhi_pipe_12                 -c  gen_context(system_u:object_r:mbim_device_t,s0)
+/dev/mtd21                       -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /data/mbimd(/.*)?                    gen_context(system_u:object_r:mbim_data_t,s0)
+/cache/recovery(/.*)?                gen_context(system_u:object_r:cache_recovery_t,s0)
 /var/run/mbim(/.*)?                  gen_context(system_u:object_r:mbim_var_run_t,s0)
 /usr/lib/systemd/system/mbim_fw_update.*\.service --  gen_context(system_u:object_r:mbimd_unit_t,s0)
+/etc/initscripts/mbim_fw_script\.sh               --  gen_context(system_u:object_r:mbim_fw_exec_t,s0)
 
