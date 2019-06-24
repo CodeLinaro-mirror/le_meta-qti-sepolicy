@@ -59,6 +59,7 @@ userdebug_or_eng(`
 dev_read_sysfs(vendor_qdmastatsd_t)
 logging_send_syslog_msg(vendor_qdmastatsd_t)
 kernel_read_system_state(vendor_qdmastatsd_t)
+kernel_read_vm_overcommit_sysctl(vendor_qdmastatsd_t)
 allow vendor_qdmastatsd_t self:unix_dgram_socket { create write connect };
 allow vendor_qdmastatsd_t self:fifo_file { write read };
 allow vendor_qdmastatsd_t self:socket rw_socket_perms;
@@ -67,3 +68,5 @@ device_search_sockets(vendor_qdmastatsd_t)
 ##access qdma socket
 rw_vendor_qdma_sock_file(vendor_qdmastatsd_t);
 dontaudit vendor_qdmastatsd_t default_t:dir search;
+allow vendor_qdmastatsd_t vendor_qdma_sock_t:dir { write remove_name add_name };
+allow vendor_qdmastatsd_t vendor_qdma_sock_t:sock_file { create unlink setattr };
