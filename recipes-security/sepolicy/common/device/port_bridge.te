@@ -52,3 +52,8 @@ kernel_read_system_state(port_bridge_t)
 
 allow port_bridge_t self:capability { setuid setgid };
 dontaudit port_bridge_t debugfs_t:dir search;
+
+type port_bridge_data_t;
+user_data_files_type(port_bridge_data_t)
+data_filetrans(port_bridge_t, port_bridge_data_t, { file dir })
+manage_user_data_files(port_bridge_t, port_bridge_data_t)
