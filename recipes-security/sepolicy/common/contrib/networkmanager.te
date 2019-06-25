@@ -113,3 +113,5 @@ gen_require(`
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
 apache_dontaudit_rw_fifo_file(wpa_cli_t)
+manage_sock_files_pattern(wpa_cli_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
+files_pid_filetrans(wpa_cli_t, NetworkManager_var_run_t, { dir file sock_file })
