@@ -51,7 +51,8 @@ gen_require(`
  type qmmf_server_t;
  type init_var_run_t;
 # type sysctl_vm_t;
-# type fs_t;
+ type fs_t;
+ type ashmem_devices_t;
 ')
 
 # For leprop permissions
@@ -71,7 +72,7 @@ allow qmmf_webserver_t self:tcp_socket { connected_stream_socket_perms node_bind
 allow qmmf_webserver_t self:udp_socket create_socket_perms;
 allow qmmf_webserver_t self:process signal;
 allow qmmf_webserver_t self:capability net_raw;
-
+rw_chr_files_pattern(qmmf_webserver_t, device_t, ashmem_devices_t);
 #TODO: Need to re-validate below rule
 #allow qmmf_webserver_t sysctl_vm_t:dir search;
 kernel_read_net_sysctls(qmmf_webserver_t)
@@ -90,6 +91,5 @@ allow qmmf_webserver_t init_var_run_t:file  { getattr open read };
 
 sysnet_read_config(qmmf_webserver_t)
 kernel_read_vm_overcommit_sysctl(qmmf_webserver_t)
-#TODO: Need to re-validate
-#allow qmmf_webserver_t fs_t:filesystem getattr;
+allow qmmf_webserver_t fs_t:filesystem getattr;
 dev_read_urand(qmmf_webserver_t)
