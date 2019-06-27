@@ -42,6 +42,15 @@ type data_path_opt_exec_t;
 type data_path_opt_t;
 init_vendor_domain(data_path_opt_t, data_path_opt_exec_t )
 
+#tinyproxy declaration
+type tinyproxy_exec_t;
+type tinyproxy_t;
+type tinyproxy_tmp_t;
+type tinyproxy_log_t;
+type tinyproxy_etc_t;
+type tinyproxy_var_run_t;
+init_vendor_domain(tinyproxy_t, tinyproxy_exec_t )
+
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
@@ -453,3 +462,35 @@ userdebug_or_eng(`
 
 #Avahi Policies
 rw_sock_files_pattern(avahi_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
+
+#tinyproxy policies
+ifdef(`init_systemd',`
+    allow qcmap_cm_t tinyproxy_exec_t:service { start stop status reload };
+    files_var_filetrans(tinyproxy_t, tinyproxy_tmp_t, { file })
+')
+read_system_data_files(tinyproxy_t, qcmap_etc_data_t)
+allow tinyproxy_t devlog_t:sock_file write_sock_file_perms;
+logging_log_file(tinyproxy_log_t)
+logging_log_filetrans(tinyproxy_t, tinyproxy_log_t, { dir file lnk_file } )
+manage_dirs_pattern(tinyproxy_t, var_log_t, tinyproxy_log_t)
+manage_files_pattern(tinyproxy_t, var_log_t, tinyproxy_log_t)
+allow tinyproxy_t etc_t:file read_file_perms;
+files_tmp_file(tinyproxy_tmp_t)
+files_tmp_filetrans(tinyproxy_t, tinyproxy_tmp_t, { file dir })
+manage_files_pattern(tinyproxy_t, tmp_t, tinyproxy_tmp_t)
+manage_files_pattern(tinyproxy_t, var_run_t, tinyproxy_var_run_t)
+files_pid_file(tinyproxy_var_run_t)
+files_pid_filetrans(tinyproxy_t, tinyproxy_var_run_t, { file dir })
+allow tinyproxy_t var_log_t:lnk_file read_lnk_file_perms;
+search_dirs_pattern(tinyproxy_t, qcmap_etc_data_t, qcmap_etc_data_t)
+search_dirs_pattern(tinyproxy_t, var_log_t, tinyproxy_log_t)
+allow tinyproxy_t self:udp_socket { create ioctl setopt bind write read connect getattr };
+allow tinyproxy_t self:tcp_socket connected_stream_socket_perms;
+allow tinyproxy_t unreserved_port_t:tcp_socket { name_bind };
+allow tinyproxy_t node_t:tcp_socket { node_bind listen };
+allow tinyproxy_t self:netlink_route_socket create_socket_perms;
+allow tinyproxy_t self:netlink_route_socket { nlmsg_read };
+allow tinyproxy_t self:capability { setuid net_bind_service setgid kill net_admin net_raw };
+allow tinyproxy_t self:unix_dgram_socket { sendto create_socket_perms };
+allow tinyproxy_t syslogd_t:unix_dgram_socket { sendto };
+allow tinyproxy_t self:process { signal };
