@@ -38,9 +38,10 @@ type thermal-engine_exec_t;
 init_vendor_domain(thermal-engine_t, thermal-engine_exec_t)
 logging_send_syslog_msg(thermal-engine_t)
 
-# named socket type
+# Manage socket files inside /dev/socket
 type thermal_sock_t;
 files_type(thermal_sock_t)
+dev_node(thermal_sock_t)
 device_manage_socket_file(thermal-engine_t, thermal_sock_t)
 
 # configuration files
