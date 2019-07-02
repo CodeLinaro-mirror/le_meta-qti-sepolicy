@@ -41,6 +41,9 @@ type data_t;
 typeattribute data_t mountpoint;  # Can't use files_mountpoint here
 user_data_files_type(data_t)
 
+type sdcard_data_t;
+user_data_files_type(sdcard_data_t)
+
 # Disallow generic reads/writes to userdata from the regular files API
 neverallow ~{
     domain_can_read_userdata

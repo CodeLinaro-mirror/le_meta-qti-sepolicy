@@ -26,4 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
+/mnt/sdcard/data(/.*)?          gen_context(system_u:object_r:sdcard_data_t,s0)
 /systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)
