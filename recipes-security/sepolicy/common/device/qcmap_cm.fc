@@ -75,3 +75,6 @@
 /etc/tinyproxy(/.*)?                  gen_context(system_u:object_r:tinyproxy_etc_t,s0)
 /var/log/tinyproxy(/.*)?              gen_context(system_u:object_r:tinyproxy_log_t,s0)
 /var/run/tinyproxy(/.*)?              gen_context(system_u:object_r:tinyproxy_var_run_t,s0)
+
+#miniupnp
+/usr/sbin/miniupnpd             --    gen_context(system_u:object_r:miniupnp_exec_t,s0)
