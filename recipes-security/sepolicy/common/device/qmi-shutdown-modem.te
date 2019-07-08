@@ -32,6 +32,10 @@ type qmi_shutdown_modem_exec_t;
 
 init_vendor_domain(qmi_shutdown_modem_t, qmi_shutdown_modem_exec_t)
 
+gen_require(`
+    type default_t;
+')
+
 userdebug_or_eng(`
     rw_diag_dev(qmi_shutdown_modem_t)
 ')
@@ -42,3 +46,4 @@ dev_read_input(qmi_shutdown_modem_t)
 
 allow qmi_shutdown_modem_t self:fifo_file rw_fifo_file_perms;
 allow qmi_shutdown_modem_t self:{ socket unix_dgram_socket } create_socket_perms;
+dontaudit qmi_shutdown_modem_t default_t:dir search;
