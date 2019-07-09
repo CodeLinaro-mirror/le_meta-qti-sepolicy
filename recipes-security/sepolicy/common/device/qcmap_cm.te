@@ -485,7 +485,7 @@ allow tinyproxy_t var_log_t:lnk_file read_lnk_file_perms;
 search_dirs_pattern(tinyproxy_t, qcmap_etc_data_t, qcmap_etc_data_t)
 search_dirs_pattern(tinyproxy_t, var_log_t, tinyproxy_log_t)
 allow tinyproxy_t self:udp_socket { create ioctl setopt bind write read connect getattr };
-allow tinyproxy_t self:tcp_socket connected_stream_socket_perms;
+allow tinyproxy_t self:tcp_socket { connected_stream_socket_perms connect };
 allow tinyproxy_t unreserved_port_t:tcp_socket { name_bind };
 allow tinyproxy_t node_t:tcp_socket { node_bind listen };
 allow tinyproxy_t self:netlink_route_socket create_socket_perms;
@@ -494,6 +494,12 @@ allow tinyproxy_t self:capability { setuid net_bind_service setgid kill net_admi
 allow tinyproxy_t self:unix_dgram_socket { sendto create_socket_perms };
 allow tinyproxy_t syslogd_t:unix_dgram_socket { sendto };
 allow tinyproxy_t self:process { signal };
+allow tinyproxy_t etc_t:lnk_file read_lnk_file_perms;
+allow tinyproxy_t usr_t:file read_file_perms;
+allow tinyproxy_t net_conf_t:file read_file_perms;
+search_dirs_pattern(tinyproxy_t, init_var_run_t, init_var_run_t)
+corenet_tcp_connect_http_cache_port(tinyproxy_t)
+manage_files_pattern(tinyproxy_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
 
 #miniupnpd policies
 type miniupnp_t;
