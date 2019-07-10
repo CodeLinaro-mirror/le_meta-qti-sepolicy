@@ -372,6 +372,7 @@ systemd_status_power_units(qcmap_cm_t)
 ##### WLAN
 allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
 device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
+allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
 
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
@@ -536,7 +537,6 @@ allow miniupnp_t self:netlink_route_socket { create_socket_perms nlmsg_read };
 allow miniupnp_t ssdp_port_t: udp_socket { name_bind };
 corenet_udp_bind_all_unreserved_ports(miniupnp_t)
 manage_files_pattern(miniupnp_t, miniupnp_var_run_t, miniupnp_var_run_t)
-fs_associate_tmpfs(miniupnp_var_run_t)
 userdebug_or_eng(`
   rw_chr_files_pattern(miniupnp_t, device_t, diag_device_t)
 ')
