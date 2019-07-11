@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,18 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/etc/alexa(/.*)?                   gen_context(system_u:object_r:alexa_data_t,s0)
-/data/alexa.uim                    gen_context(system_u:object_r:alexa_data_t,s0)
-/data/med_system_alerts_melodic_01._TTH_.mp3       gen_context(system_u:object_r:alexa_data_t,s0)
-/data/med_system_alerts_melodic_02._TTH_.mp3       gen_context(system_u:object_r:alexa_data_t,s0)
-/data/med_system_alerts_melodic_01_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
-/data/med_system_alerts_melodic_02_short._TTH_.wav gen_context(system_u:object_r:alexa_data_t,s0)
-/data/AVSAudio.conf                gen_context(system_u:object_r:alexa_data_t,s0)
-/data/alerts.db                    gen_context(system_u:object_r:alexa_data_t,s0)
-/data/notifications.db             gen_context(system_u:object_r:alexa_data_t,s0)
-/data/certifiedsender.db           gen_context(system_u:object_r:alexa_data_t,s0)
-/data/settingsca.db                gen_context(system_u:object_r:alexa_data_t,s0)
-/data/SVA(/.*)?                    gen_context(system_u:object_r:alexa_data_t,s0)
-/systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_system_data_t,s0)
-/usr/bin/AlexaClientApp    --      gen_context(system_u:object_r:alexa_exec_t,s0)
-
+## <summary>time_daemon</summary>
