@@ -37,6 +37,7 @@ gen_require(`
        type default_t;
        type vendor_qdma_data_t;
        type vendor_qdma_sock_t;
+       type rfs_persist_t;
 ')
 
 ## Data files for qdmastatsd ##
@@ -65,8 +66,13 @@ allow vendor_qdmastatsd_t self:fifo_file { write read };
 allow vendor_qdmastatsd_t self:socket rw_socket_perms;
 device_search_sockets(vendor_qdmastatsd_t)
 
+## MPS Collector and Campaign Manager
+allow vendor_qdmastatsd_t self:socket create;
+allow vendor_qdmastatsd_t rfs_persist_t:file { read_file_perms unlink };
+
 ##access qdma socket
 rw_vendor_qdma_sock_file(vendor_qdmastatsd_t);
 dontaudit vendor_qdmastatsd_t default_t:dir search;
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:dir { write remove_name add_name };
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:sock_file { create unlink setattr };
+
