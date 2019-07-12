@@ -47,6 +47,12 @@ dev_node(mcm_ril_sock_t);
 
 init_daemon_domain(mcm_ril_service_t, mcm_ril_service_exec_t)
 
+#acccess to /data/service_config.txt
+type mcm_ril_data_t;
+user_data_files_type(mcm_ril_data_t)
+data_filetrans(mcm_ril_service_t, mcm_ril_data_t, { file dir })
+manage_user_data_files(mcm_ril_service_t, mcm_ril_data_t)
+
 allow mcm_ril_service_t default_t:dir search;
 device_manage_socket_file(mcm_ril_service_t, mcm_ril_sock_t)
 allow mcm_ril_service_t devlog_t:sock_file write;
@@ -72,13 +78,9 @@ rw_chr_files_pattern(mcm_ril_service_t, device_t, dataqti_ppp_device_t)
 allow mcm_ril_service_t self:unix_stream_socket { connectto };
 
 #MCM_DATA service
-type mcm_data_t;
-user_data_files_type(mcm_data_t);
-allow mcm_ril_service_t mcm_data_t:dir { search write create read add_name };
 allow mcm_ril_service_t self:netlink_socket { create bind read };
-allow mcm_ril_service_t mcm_data_t:sock_file { create write };
-filetrans_pattern( mcm_ril_service_t, data_t, mcm_data_t, { sock_file dir })
 allow mcm_ril_service_t qnetmgrd_t:unix_stream_socket { connectto };
-allow mcm_ril_service_t self:capability { net_admin };
+allow mcm_ril_service_t self:capability { net_admin net_raw };
+dontaudit mcm_ril_service_t self:capability { setgid setuid };
 allow mcm_ril_service_t qnetmgrd_data_t:sock_file { write };
 

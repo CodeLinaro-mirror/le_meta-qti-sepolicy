@@ -42,14 +42,14 @@ user_data_files_type(led_manager_data_t)
 manage_user_data_files(led_manager_t, led_manager_data_t)
 data_filetrans(led_manager_t, led_manager_data_t, { file dir })
 
-init_daemon_domain(led_manager_t, led_manager_exec_t)
+init_vendor_domain(led_manager_t, led_manager_exec_t)
 
 #============= led_manager_t ==============
 kernel_read_system_state(led_manager_t)
 allow led_manager_t self:capability kill;
 
 dev_rw_sysfs(led_manager_t)
-dev_manage_sysfs_dirs(led_manager_t)
+#dev_manage_sysfs_dirs(led_manager_t)
 
 files_tmp_filetrans(led_manager_t, led_manager_tmp_t, file)
 files_var_filetrans(led_manager_t, led_manager_tmp_t, { file dir })

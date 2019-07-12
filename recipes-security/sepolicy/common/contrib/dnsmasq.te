@@ -32,10 +32,13 @@ gen_require(`
   type systemd_resolved_var_run_t;
   type device_t;
   type user_tty_device_t;
+  type unconfined_t;
+  class service {start stop status};
 ')
 
 userdebug_or_eng(`
   rw_diag_dev(dnsmasq_t)
+  allow unconfined_t dnsmasq_exec_t:service { start stop status };
 ')
 
 manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);

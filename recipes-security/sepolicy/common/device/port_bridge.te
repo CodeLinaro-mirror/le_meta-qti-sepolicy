@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -32,6 +32,10 @@ type port_bridge_exec_t;
 
 init_vendor_domain(port_bridge_t, port_bridge_exec_t)
 
+gen_require(`
+    type debugfs_t;
+')
+
 type modem_glink_device_t;
 dev_node(modem_glink_device_t)
 modem_rw_modem_glink_dev(port_bridge_t)
@@ -45,3 +49,11 @@ allow port_bridge_t port_bridge_usb_device_t:chr_file rw_file_perms;
 allow port_bridge_t self:fifo_file rw_fifo_file_perms;
 corecmd_exec_shell(port_bridge_t)
 kernel_read_system_state(port_bridge_t)
+
+allow port_bridge_t self:capability { setuid setgid };
+dontaudit port_bridge_t debugfs_t:dir search;
+
+type port_bridge_data_t;
+user_data_files_type(port_bridge_data_t)
+data_filetrans(port_bridge_t, port_bridge_data_t, { file dir })
+manage_user_data_files(port_bridge_t, port_bridge_data_t)

@@ -41,7 +41,7 @@ user_data_files_type(btdaemon_data_t)
 manage_user_data_files(btdaemon_t, btdaemon_data_t)
 data_filetrans(btdaemon_t, btdaemon_data_t, { file dir })
 
-init_daemon_domain(btdaemon_t, btdaemon_exec_t)
+init_vendor_domain(btdaemon_t, btdaemon_exec_t)
 
 #============= btdaemon_t ==============
 

@@ -73,7 +73,6 @@ gen_require(`
    type mount_runtime_t;
    type sdcard_t;
 ')
-allow mount_t sdcard_t:filesystem { relabelfrom relabelto mount };
-allow mount_t sdcard_t:dir { getattr mounton };
-allow sdcard_t self:filesystem associate;
+allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
+allow mount_copybind_t self:fifo_file rw_fifo_file_perms;

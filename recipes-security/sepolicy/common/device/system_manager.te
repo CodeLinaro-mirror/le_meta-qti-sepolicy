@@ -36,7 +36,7 @@ type system_manager_t;
 type system_manager_exec_t;
 type system_manager_data_t;
 
-init_daemon_domain(system_manager_t, system_manager_exec_t)
+init_vendor_domain(system_manager_t, system_manager_exec_t)
 
 user_data_files_type(system_manager_data_t)
 manage_user_data_files(system_manager_t, system_manager_data_t)

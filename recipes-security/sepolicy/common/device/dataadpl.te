@@ -72,3 +72,9 @@ allow dataadpl_t dataadpl_var_run_t:sock_file { create write };
 qcmap_manage_var_run_data_files(dataadpl_t)
 files_pid_filetrans(dataadpl_t, dataadpl_var_run_t, { file sock_file dir })
 
+
+# Manage socket files inside /dev/socket
+type dataadpl_socket_device_t;
+files_type(dataadpl_socket_device_t)
+dev_node(dataadpl_socket_device_t)
+device_manage_socket_file(dataadpl_t, dataadpl_socket_device_t)

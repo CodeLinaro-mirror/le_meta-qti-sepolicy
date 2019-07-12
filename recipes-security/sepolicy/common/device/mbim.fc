@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -32,3 +32,6 @@
 /dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/mhi_pipe_12                 -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /data/mbimd(/.*)?                    gen_context(system_u:object_r:mbim_data_t,s0)
+/var/run/mbim(/.*)?                  gen_context(system_u:object_r:mbim_var_run_t,s0)
+/usr/lib/systemd/system/mbim_fw_update.*\.service --  gen_context(system_u:object_r:mbimd_unit_t,s0)
+

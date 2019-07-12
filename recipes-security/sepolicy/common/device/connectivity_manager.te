@@ -42,7 +42,7 @@ user_data_files_type(connectivity_manager_data_t)
 manage_user_data_files(connectivity_manager_t, connectivity_manager_data_t)
 data_filetrans(connectivity_manager_t, connectivity_manager_data_t, { file dir })
 
-init_daemon_domain(connectivity_manager_t, connectivity_manager_exec_t)
+init_vendor_domain(connectivity_manager_t, connectivity_manager_exec_t)
 
 system_manager_rw_data_files(connectivity_manager_t)
 

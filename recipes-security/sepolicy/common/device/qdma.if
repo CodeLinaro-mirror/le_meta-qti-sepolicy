@@ -46,4 +46,5 @@ interface(`rw_vendor_qdma_sock_file',`
         ')
     allow $1 vendor_qdma_t:unix_stream_socket connectto;
     allow $1 vendor_qdma_sock_t:sock_file write;
+    allow $1 vendor_qdma_sock_t:dir search;
 ')

@@ -97,7 +97,7 @@ allow qmmf_webserver_t reserved_port_t:udp_socket name_bind;
 files_read_etc_files(qmmf_webserver_t);
 
 allow qmmf_webserver_t init_var_run_t:dir search;
-allow qmmf_webserver_t init_var_run_t:file  { getattr open read };
+allow qmmf_webserver_t systemd_resolved_var_run_t:file  { getattr open read };
 
 allow qmmf_webserver_t net_conf_t:file { read open getattr };
 allow qmmf_webserver_t sysctl_vm_overcommit_t:file { open read };

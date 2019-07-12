@@ -37,7 +37,7 @@ type audio_manager_exec_t;
 type audio_manager_data_t;
 type audio_manager_tmp_t;
 
-init_daemon_domain(audio_manager_t, audio_manager_exec_t)
+init_vendor_domain(audio_manager_t, audio_manager_exec_t)
 
 gen_require(`
 	type tmpfs_t;
@@ -95,7 +95,7 @@ files_tmp_filetrans(audio_manager_t, audio_manager_tmp_t, { file dir })
 allow audio_manager_t init_var_run_t:dir { search read };
 allow audio_manager_t var_lib_t:dir { search read };
 files_var_filetrans(audio_manager_t, audio_manager_tmp_t, { file dir })
-allow audio_manager_t init_var_run_t:file { open read getattr};
+#allow audio_manager_t init_var_run_t:file { open read getattr};
 
 ###########################
 

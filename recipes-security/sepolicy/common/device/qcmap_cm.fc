@@ -35,6 +35,8 @@
 /data/entropy_file                --  gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/entropy_file1               --  gen_context(system_u:object_r:qcmap_data_t,s0)
 
+/usr/bin/dnsmasq                  --  gen_context(system_u:object_r:dnsmasq_exec_t,s0)
+
 /data/lighttpd\.conf              --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/mdm9625\.com\.crt           --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/mdm9625\.com\.key           --  gen_context(system_u:object_r:httpd_data_t,s0)
@@ -49,7 +51,17 @@
 /var/run/data(/.*)?                   gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /run/data(/.*)?                       gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /tmp/data(/.*)?                       gen_context(system_u:object_r:qcmap_tmp_t,s0)
+/dev/mtd24                       -c   gen_context(system_u:object_r:datamtd_device_t,s0)
+
+#WLAN scripts
+/etc/initscripts/start_qcmap_wlan_le              --    gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/initscripts/start_qcmap_hostapd_le           --    gen_context(system_u:object_r:hostapd_qcmap_exec_t,s0)
+/etc/initscripts/start_qcmap_wpa_supplicant_le    --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
 
 #TODO:moved to hostapd.fc file
 /usr/sbin/hostapd               --    gen_context(system_u:object_r:hostapd_qcmap_exec_t,s0)
 /usr/sbin/hostapd_cli           --    gen_context(system_u:object_r:hostapd_cli_qcmap_exec_t,s0)
+
+#Data path opt
+/usr/bin/data_path_opt          --    gen_context(system_u:object_r:data_path_opt_exec_t,s0)
+/usr/sbin/minidlnad             --    gen_context(system_u:object_r:minidlna_exec_t,s0)
