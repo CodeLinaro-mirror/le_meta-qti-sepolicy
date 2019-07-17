@@ -78,3 +78,6 @@
 
 #miniupnp
 /usr/sbin/miniupnpd             --    gen_context(system_u:object_r:miniupnp_exec_t,s0)
+
+#load kernel modules
+/usr/lib/systemd/system/qcmap_load_module@.service -- gen_context(system_u:object_r:qcmap_kernel_module_t,s0)
