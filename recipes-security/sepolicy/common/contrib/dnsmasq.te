@@ -39,6 +39,7 @@ gen_require(`
 userdebug_or_eng(`
   rw_diag_dev(dnsmasq_t)
   allow unconfined_t dnsmasq_exec_t:service { start stop status };
+  dev_write_kmsg(dnsmasq_t)
 ')
 
 manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
