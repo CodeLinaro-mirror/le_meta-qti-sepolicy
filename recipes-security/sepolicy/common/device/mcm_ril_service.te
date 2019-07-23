@@ -38,6 +38,8 @@ gen_require(`
     type data_t;
     type qnetmgrd_t;
     type qnetmgrd_data_t;
+    type netmgrd_socket_device_t;
+
 ')
 
 type mcm_ril_service_t;
@@ -83,4 +85,6 @@ allow mcm_ril_service_t qnetmgrd_t:unix_stream_socket { connectto };
 allow mcm_ril_service_t self:capability { net_admin net_raw };
 dontaudit mcm_ril_service_t self:capability { setgid setuid };
 allow mcm_ril_service_t qnetmgrd_data_t:sock_file { write };
+allow mcm_ril_service_t netmgrd_socket_device_t:sock_file write;
+allow mcm_ril_service_t self:netlink_socket { setopt write getattr read bind create };
 
