@@ -138,6 +138,8 @@ allow loc_hald_t socket_device_t:sock_file { write unlink };
 read_files_pattern(loc_hald_t, default_t, default_t);
 data_filetrans(loc_hald_t, loc_data_t, { file dir })
 manage_user_data_files(loc_hald_t, loc_data_t)
+qnetmgr_use_unix_stream_sockets(loc_hald_t)
+qnetmgr_write_data_sock_files(loc_hald_t)
 
 search_user_data_dir(loc_hald_t)
 userdebug_or_eng(`
@@ -271,6 +273,10 @@ files_read_etc_files(xtra_daemon_t)
 files_read_loc_etc_files(xtra_daemon_t)
 data_filetrans(xtra_daemon_t, loc_data_t, { file dir })
 manage_user_data_files(xtra_daemon_t, loc_data_t)
+
+userdebug_or_eng(`
+    allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;
+')
 
 ### lowi-server
 type lowi_server_t;
