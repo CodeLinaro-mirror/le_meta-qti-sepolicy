@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -33,6 +33,7 @@ gen_require(`
     type systemd_resolved_var_run_t;
     type default_t;
     type dhcpc_var_run_t;
+    type node_t;
 ')
 
 ########################################
@@ -108,6 +109,7 @@ type loc_hald_exec_t;
 init_vendor_domain(loc_hald_t, loc_hald_exec_t)
 inittab_domtrans(loc_hald_t, loc_hald_exec_t)
 logging_send_syslog_msg(loc_hald_t)
+sysnet_read_config(loc_hald_t)
 
 userdebug_or_eng(`
     rw_diag_dev(loc_hald_t)
@@ -122,7 +124,9 @@ dev_read_realtime_clock(loc_hald_t)
 
 allow loc_hald_t self:capability { net_admin setgid setuid net_bind_service};
 allow loc_hald_t self:process setcap;
-allow loc_hald_t self:{ socket unix_dgram_socket } create_socket_perms;
+allow loc_hald_t self:{ socket udp_socket unix_dgram_socket } create_socket_perms;
+allow loc_hald_t node_t:udp_socket node_bind;
+allow loc_hald_t unreserved_port_t:udp_socket name_bind;
 allow loc_hald_t self:netlink_socket create_socket_perms;
 allow loc_hald_t { loc_t engine_service_t }:unix_dgram_socket sendto;
 allow loc_t loc_hald_t:unix_dgram_socket sendto;
