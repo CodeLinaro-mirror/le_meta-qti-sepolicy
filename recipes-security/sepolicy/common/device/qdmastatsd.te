@@ -64,6 +64,7 @@ kernel_read_vm_overcommit_sysctl(vendor_qdmastatsd_t)
 allow vendor_qdmastatsd_t self:unix_dgram_socket { create write connect };
 allow vendor_qdmastatsd_t self:fifo_file { write read };
 allow vendor_qdmastatsd_t self:socket rw_socket_perms;
+allow vendor_qdmastatsd_t self:process {signal};
 device_search_sockets(vendor_qdmastatsd_t)
 
 ## MPS Collector and Campaign Manager
