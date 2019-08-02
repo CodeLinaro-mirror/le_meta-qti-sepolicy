@@ -25,6 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/etc/initscripts/lighttpd                     --  gen_context(system_u:object_r:httpd_exec_t,s0)
-/WEBSERVER/www/.*                             --  gen_context(system_u:object_r:webserver_t,s0)
-/WEBSERVER/www/cgi-bin/qcmap_auth             --  gen_context(system_u:object_r:qcmap_webserver_exec_t,s0)
+/etc/initscripts/lighttpd          --  gen_context(system_u:object_r:httpd_exec_t,s0)
+/WEBSERVER/www/.*                  --  gen_context(system_u:object_r:webserver_t,s0)
+/WEBSERVER/www/cgi-bin/.*          --  gen_context(system_u:object_r:qcmap_webserver_exec_t,s0)
+/WEBSERVER                         -d  gen_context(system_u:object_r:webserver_t,s0)
+/WEBSERVER/www                     -d  gen_context(system_u:object_r:webserver_t,s0)
