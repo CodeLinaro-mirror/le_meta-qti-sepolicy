@@ -62,6 +62,7 @@ logging_send_syslog_msg(ipacm_t)
 gen_require(`
        type socket_device_t;
        type qcmap_var_run_t;
+       type default_t;
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -98,6 +99,7 @@ userdebug_or_eng(`
     rw_diag_dev(ipacm_perf_t)
 ')
 
+dontaudit ipacm_perf_t default_t:dir { search };
 allow ipacm_perf_t self:netlink_route_socket r_netlink_socket_perms;
 allow ipacm_perf_t self:{ socket udp_socket } create_socket_perms;
 allow ipacm_perf_t self:fifo_file rw_fifo_file_perms;
