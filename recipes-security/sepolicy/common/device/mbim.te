@@ -99,4 +99,5 @@ allow mbim_t self:netlink_kobject_uevent_socket { create read setopt bind };
 allow mbim_t mbimd_unit_t:service { start };
 allow mbim_t systemd_logind_var_run_t:sock_file { write };
 allow mbim_t fs_t:filesystem { getattr };
+allow mbim_t proc_t:file read;
 
