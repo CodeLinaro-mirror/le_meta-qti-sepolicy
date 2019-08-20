@@ -73,6 +73,7 @@ gen_require(`
   type initrc_exec_t;
   type unreserved_port_t;
   type minidlna_initrc_exec_t;
+  type debugfs_t;
 ')
 
 userdebug_or_eng(`
