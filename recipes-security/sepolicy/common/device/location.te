@@ -214,6 +214,7 @@ userdebug_or_eng(`
     rw_diag_dev(engine_service_t)
 ')
 
+allow engine_service_t self:udp_socket create_socket_perms;
 allow engine_service_t loc_hald_t:unix_dgram_socket sendto;
 allow engine_service_t self:socket create_socket_perms;
 sysnet_read_config(engine_service_t);
@@ -263,6 +264,7 @@ dev_read_rand(xtra_daemon_t)
 miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
+kernel_read_vm_overcommit_sysctl(xtra_daemon_t)
 
 ##access qdma socket
 rw_vendor_qdma_sock_file(xtra_daemon_t);
