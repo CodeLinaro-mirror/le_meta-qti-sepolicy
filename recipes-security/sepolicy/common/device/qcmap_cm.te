@@ -380,69 +380,38 @@ allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
 
-#TODO:get the policies from upstream and running in permissive mode for now
 gen_require(`
-	type random_device_t;
-	type urandom_device_t;
 	type syslogd_t;
 	type var_run_t;
 	type devlog_t;
 	type etc_t;
+	type proc_t;
 	type proc_net_t;
 ')
-type hostapd_qcmap_t;
-type hostapd_qcmap_exec_t;
-init_daemon_domain(hostapd_qcmap_t, hostapd_qcmap_exec_t)
-permissive hostapd_qcmap_t;
-can_exec(qcmap_cm_t, hostapd_qcmap_exec_t)
-ifdef(`init_systemd',`
-    allow qcmap_cm_t hostapd_qcmap_exec_t:service { start stop status };
-')
-allow hostapd_qcmap_t random_device_t:chr_file manage_chr_file_perms;
-allow hostapd_qcmap_t urandom_device_t:chr_file manage_chr_file_perms;
-allow hostapd_qcmap_t self:netlink_route_socket create_netlink_socket_perms;
-allow hostapd_qcmap_t syslogd_t:unix_dgram_socket { sendto };
-allow hostapd_qcmap_t self:netlink_generic_socket { read setopt write create bind getattr };
-manage_sock_files_pattern(hostapd_qcmap_t, var_run_t, var_run_t);
-networkmanager_read_wifi_sysdata_files(hostapd_qcmap_t)
-allow hostapd_qcmap_t devlog_t:sock_file manage_sock_file_perms;
-allow hostapd_qcmap_t self:udp_socket connected_socket_perms;
-allow hostapd_qcmap_t etc_t:file rw_file_perms;
-allow hostapd_qcmap_t self:capability { net_raw net_admin };
-allow hostapd_qcmap_t proc_net_t:file { read };
-allow hostapd_qcmap_t self:packet_socket connected_socket_perms;
+
+hostapd_manage_services(qcmap_cm_t)
 
 type hostapd_cli_qcmap_exec_t;
 type hostapd_cli_qcmap_t;
-init_daemon_domain(hostapd_cli_qcmap_t, hostapd_cli_qcmap_exec_t)
-permissive hostapd_cli_qcmap_t;
-can_exec(qcmap_cm_t, hostapd_cli_qcmap_exec_t)
-ifdef(`init_systemd',`
-    allow qcmap_cm_t hostapd_cli_qcmap_exec_t:service { start stop status };
-')
-manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
-allow hostapd_cli_qcmap_t hostapd_qcmap_t:unix_dgram_socket { sendto };
-allow hostapd_qcmap_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
+init_vendor_domain(hostapd_cli_qcmap_t, hostapd_cli_qcmap_exec_t)
+# TODO: Create hostapd_var_run_t sockets instead only if necessary
+#manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
+hostapd_use_sockets(hostapd_cli_qcmap_t)
 
 allow qcmap_cm_t qcmap_var_run_t:sock_file { create write };
 allow qcmap_cm_t qcmap_var_run_t:socket { setopt };
 
 manage_lnk_files_pattern(qcmap_cm_t, wlan_service_t, wlan_service_t)
 manage_files_pattern(qcmap_cm_t, wlan_service_t, wlan_service_t)
-manage_lnk_files_pattern(qcmap_cm_t, hostapd_qcmap_t, hostapd_qcmap_t)
-manage_files_pattern(qcmap_cm_t, hostapd_qcmap_t, hostapd_qcmap_t)
+hostapd_read_status(qcmap_cm_t)
 
-manage_lnk_files_pattern(qcmap_cm_t, hostapd_cli_qcmap_t, hostapd_cli_qcmap_t)
-manage_files_pattern(qcmap_cm_t, hostapd_cli_qcmap_t, hostapd_cli_qcmap_t)
-qcmap_manage_var_run_data_files(hostapd_qcmap_t)
-#can add the custom label when upstream changes merged
-manage_sock_files_pattern(qcmap_cm_t, var_run_t, var_run_t)
-allow qcmap_cm_t hostapd_qcmap_t:unix_dgram_socket { sendto };
-allow hostapd_qcmap_t qcmap_cm_t:unix_dgram_socket { sendto };
+# Read /proc/<pid> status for hostapd_cli
+read_lnk_files_pattern(qcmap_cm_t, proc_t, hostapd_cli_qcmap_t)
+read_files_pattern(qcmap_cm_t, proc_t, hostapd_cli_qcmap_t)
+
+hostapd_use_sockets(qcmap_cm_t)
 allow hostapd_cli_qcmap_t qcmap_cm_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
-manage_dirs_pattern(hostapd_qcmap_t, var_run_t, var_run_t)
-rw_sock_files_pattern(hostapd_qcmap_t, tmp_t, qcmap_tmp_t)
 
 #data_path_opt policies
 modutils_domtrans_insmod(data_path_opt_t)
