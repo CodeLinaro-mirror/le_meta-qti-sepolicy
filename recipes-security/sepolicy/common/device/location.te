@@ -338,6 +338,10 @@ dev_read_input(slim_daemon_t)
 allow slim_daemon_t proc_t:file read_file_perms;
 ## read char device files /dev/iio:deviceXX
 device_read_iio_device(slim_daemon_t)
+## net_raw capability access required for QMI communication.
+allow slim_daemon_t self:capability net_raw;
+## Read virtual memory overcommit sysctl - /proc/sys/vm/overcommit_memory
+kernel_read_vm_overcommit_sysctl(slim_daemon_t)
 
 ### location socket
 type loc_socket_t;
