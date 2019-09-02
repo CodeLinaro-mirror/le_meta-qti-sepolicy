@@ -32,10 +32,13 @@
 
 ### misc properties ###
 
-/data/persist/rfs/mdm/mpss(/.*)?  gen_context(system_u:object_r:mpss_persist_t,s0)
-/data/persist/rfs/msm/mpss(/.*)?  gen_context(system_u:object_r:mpss_persist_t,s0)
-/data/persist/rfs/mdm/adsp(/.*)?  gen_context(system_u:object_r:adsp_persist_t,s0)
-/data/persist/rfs/msm/adsp(/.*)?  gen_context(system_u:object_r:adsp_persist_t,s0)
+/data/data/vendor/tombstones(/.*)? gen_context(system_u:object_r:tombstone_rfs_data_t,s0)
+/data/persist/rfs(/.*)?            gen_context(system_u:object_r:rfs_persist_t,s0)
+/data/persist/hlos_rfs(/.*)?       gen_context(system_u:object_r:rfs_persist_t,s0)
+/data/persist/rfs/mdm/mpss(/.*)?   gen_context(system_u:object_r:mpss_persist_t,s0)
+/data/persist/rfs/msm/mpss(/.*)?   gen_context(system_u:object_r:mpss_persist_t,s0)
+/data/persist/rfs/mdm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
+/data/persist/rfs/msm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 
 ### dev nodes ###
 

@@ -31,7 +31,11 @@ type mbim_t;
 type mbim_exec_t;
 type mbim_device_t;
 type mbimd_unit_t;
+type mbim_fw_t;
+type mbim_fw_exec_t;
+type cache_recovery_t;
 init_vendor_domain(mbim_t, mbim_exec_t)
+init_script_domain(mbim_fw_t, mbim_fw_exec_t)
 inittab_domtrans(mbim_t, mbim_exec_t)
 
 # Manage private files inside /data/mbimd
@@ -51,6 +55,10 @@ userdebug_or_eng(`
 ')
 
 gen_require(`
+   type cache_t;
+   type proc_t;
+   type sysctl_t;
+   type systemd_logind_var_run_t;
    class service { start };
 ')
 
@@ -67,6 +75,18 @@ mbim_rw_device(mbim_t)
 dev_read_urand(mbim_t)
 fs_manage_configfs_files(mbim_t)
 init_script_file(mbimd_unit_t)
+filetrans_pattern(mbim_fw_t, cache_t, cache_recovery_t, { file dir })
+
+dev_write_kmsg(mbim_fw_t)
+dev_rw_sysfs(mbim_fw_t)
+files_type(cache_recovery_t)
+allow mbim_fw_t self:capability sys_boot;
+allow mbim_fw_t proc_t:file read_file_perms;
+dontaudit mbim_t sysctl_t:dir search;
+allow mbim_fw_t cache_recovery_t:dir manage_dir_perms;
+allow mbim_fw_t cache_recovery_t:file { create write open };
+allow mbim_fw_t mbim_device_t:chr_file { read write open };
+allow mbim_t cache_recovery_t:{ dir file } { read write create getattr };
 
 firmware_read_files(mbim_t)
 allow mbim_t self:socket { read write create ioctl getattr setopt };
@@ -77,3 +97,7 @@ allow mbim_t self:process { signal };
 files_dontaudit_list_default(mbim_t);
 allow mbim_t self:netlink_kobject_uevent_socket { create read setopt bind };
 allow mbim_t mbimd_unit_t:service { start };
+allow mbim_t systemd_logind_var_run_t:sock_file { write };
+allow mbim_t fs_t:filesystem { getattr };
+allow mbim_t proc_t:file read;
+

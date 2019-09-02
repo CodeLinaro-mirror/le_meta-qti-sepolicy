@@ -46,3 +46,6 @@ gen_require(`
 ')
 
 manage_files_pattern(dhcpc_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+
+#dont audit setuid and setgid
+dontaudit ifconfig_t self: capability {setuid setgid};

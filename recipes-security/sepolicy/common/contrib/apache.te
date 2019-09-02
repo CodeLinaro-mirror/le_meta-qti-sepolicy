@@ -1,0 +1,65 @@
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+type webserver_t;
+type qcmap_webserver_exec_t;
+type qcmap_webserver_t;
+type webserver_socket_device_t;
+init_vendor_domain(qcmap_webserver_t, qcmap_webserver_exec_t)
+domtrans_pattern(httpd_t, qcmap_webserver_exec_t, qcmap_webserver_t)
+
+gen_require(`
+  type data_t;
+  type qcmap_data_t;
+  type httpd_data_t;
+  type urandom_device_t;
+')
+qcmap_manage_var_run_qcmap_dir(httpd_t)
+
+qcmap_httpd_data_filetrans(httpd_t, file )
+allow httpd_t httpd_t: capability {sys_chroot};
+search_dirs_pattern(qcmap_webserver_t, qcmap_data_t, qcmap_data_t)
+allow httpd_t qcmap_webserver_t: process {signal};
+search_user_data_dir(qcmap_webserver_t)
+allow httpd_t webserver_t: file read_file_perms;
+
+userdebug_or_eng(`
+files_list_default(httpd_t)
+')
+
+search_dirs_pattern(httpd_t, webserver_t, webserver_t)
+manage_user_data_files(qcmap_webserver_t, httpd_data_t, httpd_data_t)
+kernel_read_system_state(qcmap_webserver_t)
+rw_fifo_files_pattern(qcmap_webserver_t, qcmap_webserver_t, qcmap_webserver_t)
+dev_read_urand(qcmap_webserver_t)
+exec_files_pattern(httpd_t,webserver_t,webserver_t)
+list_dirs_pattern(qcmap_webserver_t,webserver_socket_device_t,webserver_socket_device_t)
+allow qcmap_webserver_t webserver_socket_device_t:dir rw_dir_perms;
+files_type(webserver_socket_device_t);
+dev_node(webserver_socket_device_t);
+device_manage_socket_file( qcmap_webserver_t, webserver_socket_device_t)
+corecmd_exec_shell(qcmap_webserver_t)

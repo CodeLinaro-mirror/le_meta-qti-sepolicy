@@ -43,6 +43,7 @@ gen_require(`
     type default_t;
     type qti_ppp_socket_device_t;
     type dataqti_ppp_t;
+    type ipa_fw_device_t;
 ')
 dontaudit qtether_t default_t:dir { search };
 
@@ -96,4 +97,10 @@ allow qtether_t qtether_var_run_t:sock_file { create write };
 qcmap_manage_var_run_data_files(qtether_t)
 files_pid_filetrans(qtether_t, qtether_var_run_t, { file sock_file dir })
 allow qtether_t dataqti_ppp_t:unix_dgram_socket { sendto };
+
+#dont audit setuid and setgid
+dontaudit qtether_t self: capability {setuid setgid};
+
+#for IPA IOCTL
+rw_chr_files_pattern(qtether_t, device_t, ipa_fw_device_t)
 

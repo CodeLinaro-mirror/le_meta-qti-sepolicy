@@ -46,9 +46,18 @@ type port_bridge_usb_device_t;
 dev_node(port_bridge_usb_device_t)
 allow port_bridge_t port_bridge_usb_device_t:chr_file rw_file_perms;
 
+type port_bridge_mhi_device_t;
+dev_node(port_bridge_mhi_device_t)
+allow port_bridge_t port_bridge_mhi_device_t:chr_file rw_file_perms;
+
 allow port_bridge_t self:fifo_file rw_fifo_file_perms;
 corecmd_exec_shell(port_bridge_t)
 kernel_read_system_state(port_bridge_t)
 
 allow port_bridge_t self:capability { setuid setgid };
 dontaudit port_bridge_t debugfs_t:dir search;
+
+type port_bridge_data_t;
+user_data_files_type(port_bridge_data_t)
+data_filetrans(port_bridge_t, port_bridge_data_t, { file dir })
+manage_user_data_files(port_bridge_t, port_bridge_data_t)

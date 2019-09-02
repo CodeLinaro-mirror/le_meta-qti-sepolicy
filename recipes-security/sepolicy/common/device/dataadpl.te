@@ -78,3 +78,6 @@ type dataadpl_socket_device_t;
 files_type(dataadpl_socket_device_t)
 dev_node(dataadpl_socket_device_t)
 device_manage_socket_file(dataadpl_t, dataadpl_socket_device_t)
+
+#dont audit setuid and setgid
+dontaudit dataadpl_t self: capability {setuid setgid};

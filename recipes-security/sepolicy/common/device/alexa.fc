@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -37,7 +37,6 @@
 /data/certifiedsender.db           gen_context(system_u:object_r:alexa_data_t,s0)
 /data/settingsca.db                gen_context(system_u:object_r:alexa_data_t,s0)
 /data/SVA(/.*)?                    gen_context(system_u:object_r:alexa_data_t,s0)
-/data/time(/.*)?                   gen_context(system_u:object_r:alexa_data_t,s0)
 /systemrw/alexa(/.*)?              gen_context(system_u:object_r:alexa_system_data_t,s0)
 /usr/bin/AlexaClientApp    --      gen_context(system_u:object_r:alexa_exec_t,s0)
 

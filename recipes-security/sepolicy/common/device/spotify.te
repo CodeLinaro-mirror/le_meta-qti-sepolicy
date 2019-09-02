@@ -41,7 +41,7 @@ user_data_files_type(spotify_data_t)
 manage_user_data_files(spotify_t, spotify_data_t)
 data_filetrans(spotify_t, spotify_data_t, { file dir })
 
-init_daemon_domain(spotify_t, spotify_exec_t)
+init_vendor_domain(spotify_t, spotify_exec_t)
 
 #============= spotify_t ==============
 
@@ -86,7 +86,7 @@ allow spotify_t home_root_t:dir {search getattr }; #/home
 allow spotify_t proc_t:file { open read getattr }; #/proc/filesystems
 allow spotify_t udev_var_run_t:dir search; #/run/udev
 allow spotify_t init_var_run_t:dir search; #/run/systemd
-allow spotify_t init_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
+#allow spotify_t init_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
 allow spotify_t systemd_resolved_var_run_t:dir search; #/run/systemd/resolve
 allow spotify_t systemd_resolved_var_run_t:file { read getattr open }; #/run/systemd/resolve/resolv.conf
 

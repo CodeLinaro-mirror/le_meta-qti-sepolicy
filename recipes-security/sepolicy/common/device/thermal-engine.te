@@ -38,9 +38,14 @@ type thermal-engine_exec_t;
 init_vendor_domain(thermal-engine_t, thermal-engine_exec_t)
 logging_send_syslog_msg(thermal-engine_t)
 
-# named socket type
+gen_require(`
+    type default_t;
+')
+
+# Manage socket files inside /dev/socket
 type thermal_sock_t;
 files_type(thermal_sock_t)
+dev_node(thermal_sock_t)
 device_manage_socket_file(thermal-engine_t, thermal_sock_t)
 
 # configuration files
@@ -67,3 +72,4 @@ read_thermal_config(thermal-engine_t)
 dev_rw_null(thermal-engine_t)
 dev_rw_sysfs(thermal-engine_t)
 kernel_read_system_state(thermal-engine_t)
+dontaudit thermal-engine_t default_t:dir search;

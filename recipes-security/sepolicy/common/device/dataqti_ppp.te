@@ -31,7 +31,7 @@ type dataqti_ppp_t;
 type dataqti_ppp_exec_t;
 type dataqti_ppp_device_t;
 
-init_daemon_domain(dataqti_ppp_t, dataqti_ppp_exec_t)
+init_vendor_domain(dataqti_ppp_t, dataqti_ppp_exec_t)
 logging_send_syslog_msg(dataqti_ppp_t)
 dev_node(dataqti_ppp_device_t)
 
@@ -69,3 +69,6 @@ type qti_ppp_socket_device_t;
 files_type(qti_ppp_socket_device_t)
 dev_node(qti_ppp_socket_device_t)
 device_manage_socket_file(dataqti_ppp_t, qti_ppp_socket_device_t)
+
+#dont audit setuid and setgid
+dontaudit dataqti_ppp_t self: capability {setuid setgid};

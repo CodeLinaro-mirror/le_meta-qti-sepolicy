@@ -15,8 +15,6 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
 PROVIDES += "sepolicy"
 RPROVIDES_${PN} += "sepolicy"
 
-POLICY_MONOLITHIC = "${@oe.utils.conditional('BASEMACHINE', 'sdxpoorwills', 'y', 'n', d)}"
-
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 
@@ -77,9 +75,3 @@ python do_update_modules_conf () {
         modules_file.write(new_file)
 }
 addtask update_modules_conf after do_patch before do_compile
-
-do_install_sdxpoorwills() {
-    oe_runmake 'DESTDIR=${D}' 'prefix=${D}${prefix}' install
-    install_misc_files
-    install_config
-}

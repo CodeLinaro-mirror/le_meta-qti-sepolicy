@@ -93,3 +93,13 @@ term_create_pty(adbd_t, adbd_pty_t)
 allow domain adbd_pty_t:chr_file rw_term_perms;
 allow domain adbd_t:fd use;
 qcmap_read_qcmap_etc_data_files(adbd_initrc_t)
+
+gen_require(`
+    type udev_t;
+')
+type adb_data_conf_t;
+user_data_files_type(adb_data_conf_t)
+userdebug_or_eng('
+    data_filetrans(udev_t, adb_data_conf_t, file, "adb.conf")
+    manage_user_data_files(udev_t, adb_data_conf_t)
+')

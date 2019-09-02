@@ -75,3 +75,4 @@ gen_require(`
 ')
 allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
+allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
