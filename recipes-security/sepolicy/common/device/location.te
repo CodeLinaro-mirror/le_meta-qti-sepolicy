@@ -33,6 +33,7 @@ gen_require(`
     type systemd_resolved_var_run_t;
     type default_t;
     type dhcpc_var_run_t;
+    type qcmap_var_run_t;
     type node_t;
 ')
 
@@ -280,6 +281,9 @@ files_read_etc_files(xtra_daemon_t)
 files_read_loc_etc_files(xtra_daemon_t)
 data_filetrans(xtra_daemon_t, loc_data_t, { file dir })
 manage_user_data_files(xtra_daemon_t, loc_data_t)
+allow xtra_daemon_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+## read resolv.conf
+read_files_pattern(xtra_daemon_t, qcmap_var_run_t, qcmap_var_run_t);
 
 userdebug_or_eng(`
     allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;
@@ -356,7 +360,7 @@ allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_serv
 
 allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
 allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
-allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
+allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
 
 ## common rules
