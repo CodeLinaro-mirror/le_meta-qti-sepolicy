@@ -67,5 +67,7 @@ allow domain alogd_t:unix_dgram_socket sendto;
 # Allow initscripts to modify alogd socket permissions
 gen_require(`
     type initrc_t;
+    type init_t;
 ')
 allow initrc_t alogd_sock_t:sock_file setattr;
+dontaudit init_t alogd_sock_t:sock_file read;
