@@ -26,6 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/QCMAP_ConnectionManager  --  gen_context(system_u:object_r:qcmap_cm_exec_t,s0)
+/usr/bin/QCMAP_Bootup             --  gen_context(system_u:object_r:qcmap_cm_exec_t,s0)
 /etc/data(/.*)?                       gen_context(system_u:object_r:qcmap_etc_data_t,s0)
 /systemrw/data(/.*)?                  gen_context(system_u:object_r:qcmap_etc_data_t,s0)
 /systemrw/rt_tables(/.*)?             gen_context(system_u:object_r:qcmap_etc_data_t,s0)
