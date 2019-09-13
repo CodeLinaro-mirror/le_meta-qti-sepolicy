@@ -94,12 +94,21 @@ allow domain adbd_pty_t:chr_file rw_term_perms;
 allow domain adbd_t:fd use;
 qcmap_read_qcmap_etc_data_files(adbd_initrc_t)
 
-gen_require(`
-    type udev_t;
-')
+# Add policies for pcie configs
 type adb_data_conf_t;
+type pcie_initrc_t;
+type pcie_initrc_exec_t;
 user_data_files_type(adb_data_conf_t)
-userdebug_or_eng('
-    data_filetrans(udev_t, adb_data_conf_t, file, "adb.conf")
-    manage_user_data_files(udev_t, adb_data_conf_t)
+init_script_domain(pcie_initrc_t, pcie_initrc_exec_t)
+userdebug_or_eng(`
+    # Check existance of /dev/mhi_ctrl
+    gen_require(`
+        type dataqti_device_t;
+    ')
+    allow pcie_initrc_t dataqti_device_t:chr_file getattr;
+    allow pcie_initrc_t self:fifo_file rw_fifo_file_perms;
+    dev_write_kmsg(pcie_initrc_t)
+    data_filetrans(pcie_initrc_t, adb_data_conf_t, file, "adb.conf")
+    read_user_data_files(adbd_initrc_t, adb_data_conf_t)
+    manage_user_data_files(pcie_initrc_t, adb_data_conf_t)
 ')

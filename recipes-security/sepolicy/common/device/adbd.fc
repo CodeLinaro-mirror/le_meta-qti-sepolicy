@@ -38,3 +38,5 @@
 /systemrw/adb_devid       --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
 /systemrw/boot_hsusb_comp --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
 /systemrw/boot_hsic_comp  --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
+
+/etc/start_pcie         --      gen_context(system_u:object_r:pcie_initrc_exec_t,mls_systemhigh)
