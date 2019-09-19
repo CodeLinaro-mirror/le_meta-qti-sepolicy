@@ -37,6 +37,10 @@ gen_require(`
     type audio_hal_etc_t;
     type audio_hal_etc_acdb_t;
     type debugfs_t;
+    type audio_device_t;
+    type ion_device_t;
+    type proc_t;
+    type hal_play_test_t;
 ')
 init_vendor_domain(csd_server_t, csd_server_exec_t)
 
@@ -55,3 +59,7 @@ dontaudit csd_server_t socket_device_t:dir search;
 allow csd_server_t audio_hal_etc_t:file read_file_perms;
 allow csd_server_t audio_hal_etc_acdb_t:dir list_dir_perms;
 allow csd_server_t audio_hal_etc_acdb_t:file { read getattr open };
+allow csd_server_t audio_device_t:chr_file rw_chr_file_perms;
+allow csd_server_t ion_device_t:chr_file read_chr_file_perms;
+kernel_read_system_state(csd_server_t)
+dontaudit hal_play_test_t socket_device_t:dir search;
