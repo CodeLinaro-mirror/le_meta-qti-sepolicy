@@ -81,7 +81,7 @@ rw_files_pattern(vendor_qdma_t, systemd_resolved_var_run_t, systemd_resolved_var
 ## manage qdma socket
 allow vendor_qdma_t socket_device_t:dir create;
 allow vendor_qdma_t vendor_qdma_sock_t:dir manage_dir_perms;
-allow vendor_qdma_t self:capability { net_admin net_raw};
+allow vendor_qdma_t self:capability { net_admin };
 dontaudit vendor_qdma_t self:capability {setuid setgid};
 allow vendor_qdma_t self:{ socket unix_dgram_socket unix_stream_socket udp_socket } create_socket_perms;
 allow vendor_qdma_t { self http_port_t }:tcp_socket { read write create connect getattr setopt name_connect getopt };
