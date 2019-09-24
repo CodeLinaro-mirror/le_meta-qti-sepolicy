@@ -1,0 +1,28 @@
+From 38bf157045d1a23f2651548e75250d247cf762d8 Mon Sep 17 00:00:00 2001
+From: Dennis Cagle <dcagle@codeaurora.org>
+Date: Fri, 13 Sep 2019 16:58:55 -0700
+Subject: [PATCH] Remove systemd-nologin
+
+Non-root users do not have permissions to login. Remove this to
+avoid unnecessary warnings when logging in as the only root user.
+
+Change-Id: I89585eae34d28ea61a3f4e05d1362747e1e7833c
+---
+ tmpfiles.d/meson.build | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/tmpfiles.d/meson.build b/tmpfiles.d/meson.build
+index 35eea2b..a5f140b 100644
+--- a/tmpfiles.d/meson.build
++++ b/tmpfiles.d/meson.build
+@@ -4,7 +4,6 @@ enable_tmpfiles = conf.get('ENABLE_TMPFILES') == 1
+ 
+ tmpfiles = [['home.conf',            ''],
+             ['journal-nocow.conf',   ''],
+-            ['systemd-nologin.conf', ''],
+             ['systemd-nspawn.conf',  'ENABLE_MACHINED'],
+             ['portables.conf',       'ENABLE_PORTABLED'],
+             ['tmp.conf',             ''],
+-- 
+1.9.1
+
