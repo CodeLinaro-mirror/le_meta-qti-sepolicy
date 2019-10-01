@@ -26,6 +26,27 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ## <summary>diag daemon</summary>
 
+########################################
+## <summary>
+##      Launch diag daemons in diag context
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`diag_domtrans',`
+    gen_require(`
+        type diag_t;
+        type diag_exec_t;
+    ')
+
+    userdebug_or_eng(`
+        domtrans_pattern($1, diag_exec_t, diag_t)
+    ')
+')
+
 
 
 
