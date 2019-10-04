@@ -39,4 +39,6 @@
 /systemrw/boot_hsusb_comp --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
 /systemrw/boot_hsic_comp  --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
 
-/etc/start_pcie         --      gen_context(system_u:object_r:pcie_initrc_exec_t,mls_systemhigh)
+/etc/start_pcie           --    gen_context(system_u:object_r:pcie_initrc_exec_t,mls_systemhigh)
+/data/adb.conf            --    gen_context(system_u:object_r:adb_data_conf_t,mls_systemhigh)
+/data/debug_transport.conf--    gen_context(system_u:object_r:adb_data_conf_t,mls_systemhigh)
