@@ -387,13 +387,20 @@ gen_require(`
 	type etc_t;
 	type proc_t;
 	type proc_net_t;
+	type hostapd_cli_exec_t;
+	type hostapd_exec_t;
+	type hostapd_var_run_t;
+	type hostapd_cli_qcmap_t;
 ')
 
 hostapd_manage_services(qcmap_cm_t)
 
-type hostapd_cli_qcmap_exec_t;
-type hostapd_cli_qcmap_t;
-init_vendor_domain(hostapd_cli_qcmap_t, hostapd_cli_qcmap_exec_t)
+allow qcmap_cm_t hostapd_exec_t:service { start stop };
+allow qcmap_cm_t hostapd_cli_exec_t:service { start stop };
+allow qcmap_cm_t hostapd_cli_exec_t:file exec_file_perms;
+allow qcmap_cm_t hostapd_var_run_t:dir search;
+allow qcmap_cm_t hostapd_t:dir search;
+
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
 hostapd_use_sockets(hostapd_cli_qcmap_t)
