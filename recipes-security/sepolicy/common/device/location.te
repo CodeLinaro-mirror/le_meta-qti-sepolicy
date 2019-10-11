@@ -33,6 +33,7 @@ gen_require(`
     type systemd_resolved_var_run_t;
     type default_t;
     type dhcpc_var_run_t;
+    type qcmap_var_run_t;
     type node_t;
 ')
 
@@ -214,6 +215,7 @@ userdebug_or_eng(`
     rw_diag_dev(engine_service_t)
 ')
 
+allow engine_service_t self:udp_socket create_socket_perms;
 allow engine_service_t loc_hald_t:unix_dgram_socket sendto;
 allow engine_service_t self:socket create_socket_perms;
 sysnet_read_config(engine_service_t);
@@ -263,6 +265,7 @@ dev_read_rand(xtra_daemon_t)
 miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
+kernel_read_vm_overcommit_sysctl(xtra_daemon_t)
 
 ##access qdma socket
 rw_vendor_qdma_sock_file(xtra_daemon_t);
@@ -278,6 +281,9 @@ files_read_etc_files(xtra_daemon_t)
 files_read_loc_etc_files(xtra_daemon_t)
 data_filetrans(xtra_daemon_t, loc_data_t, { file dir })
 manage_user_data_files(xtra_daemon_t, loc_data_t)
+allow xtra_daemon_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+## read resolv.conf
+read_files_pattern(xtra_daemon_t, qcmap_var_run_t, qcmap_var_run_t);
 
 userdebug_or_eng(`
     allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;
@@ -336,6 +342,10 @@ dev_read_input(slim_daemon_t)
 allow slim_daemon_t proc_t:file read_file_perms;
 ## read char device files /dev/iio:deviceXX
 device_read_iio_device(slim_daemon_t)
+## net_raw capability access required for QMI communication.
+allow slim_daemon_t self:capability net_raw;
+## Read virtual memory overcommit sysctl - /proc/sys/vm/overcommit_memory
+kernel_read_vm_overcommit_sysctl(slim_daemon_t)
 
 ### location socket
 type loc_socket_t;
@@ -350,7 +360,7 @@ allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_serv
 
 allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
 allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
-allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
+allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
 
 ## common rules

@@ -29,8 +29,31 @@ policy_module(atfwd, 1.0)
 
 type atfwd_t;
 type atfwd_exec_t;
+gen_require(`
+       type default_t;
+       type init_var_run_t;
+       type systemd_logind_var_run_t;
+       type system_dbusd_t;
+       type system_dbusd_var_run_t;
+
+')
 
 init_vendor_domain(atfwd_t, atfwd_exec_t)
 
 corecmd_exec_bin(atfwd_t)
 shutdown_domtrans(atfwd_t)
+allow atfwd_t self:socket create_socket_perms;
+allow atfwd_t self:fifo_file rw_fifo_file_perms;
+dontaudit atfwd_t default_t:dir { search };
+corecmd_exec_shell(atfwd_t)
+kernel_read_system_state(atfwd_t)
+allow atfwd_t init_var_run_t:dir { search };
+init_read_state(atfwd_t)
+allow atfwd_t systemd_logind_var_run_t:sock_file write;
+allow atfwd_t system_dbusd_t:unix_stream_socket connectto;
+allow atfwd_t system_dbusd_var_run_t:dir search;
+ifdef(`init_systemd', `
+    init_dbus_chat(atfwd_t)
+    systemd_dbus_chat_logind(atfwd_t)
+    dbus_system_bus_client(atfwd_t)
+')
