@@ -252,6 +252,7 @@ gen_require(`
     type wlan_initrc_exec_t;
     type wpa_cli_t;
     type minidlna_exec_t;
+    type webserver_socket_device_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -546,3 +547,6 @@ userdebug_or_eng(`
 ')
 dontaudit miniupnp_t default_t : dir search;
 dontaudit miniupnp_t self:capability sys_module;
+
+allow qcmap_cm_t self:capability setpcap;
+search_dirs_pattern(httpd_t, socket_device_t, webserver_socket_device_t)

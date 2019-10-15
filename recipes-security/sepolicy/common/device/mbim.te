@@ -47,6 +47,7 @@ data_filetrans(mbim_t, mbim_data_t, { file dir })
 # Manage private files inside /var/run/mbim
 type mbim_var_run_t;
 files_pid_file(mbim_var_run_t)
+allow mbim_t mbim_var_run_t:dir manage_dir_perms;
 allow mbim_t mbim_var_run_t:file manage_file_perms;
 files_pid_filetrans(mbim_t, mbim_var_run_t, { file dir })
 
@@ -101,4 +102,3 @@ allow mbim_t mbimd_unit_t:service { start };
 allow mbim_t systemd_logind_var_run_t:sock_file { write };
 allow mbim_t fs_t:filesystem { getattr };
 allow mbim_t proc_t:file read_file_perms;
-
