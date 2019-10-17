@@ -62,6 +62,8 @@ logging_send_syslog_msg(ipacm_t)
 gen_require(`
        type socket_device_t;
        type qcmap_var_run_t;
+       type default_t;
+       type qcmap_tmp_t;
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -74,6 +76,9 @@ allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
 allow ipacm_t self:udp_socket { create ioctl };
 allow ipacm_t self:fifo_file rw_fifo_file_perms;
 allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
+manage_files_pattern(ipacm_t, { tmp_t qcmap_tmp_t }, qcmap_tmp_t);
+files_tmp_filetrans(ipacm_t, qcmap_tmp_t, { dir }, "data");
+allow ipacm_t qcmap_tmp_t:dir { search };
 kernel_read_system_state(ipacm_t);
 
 dev_node(ipa_nat_table_device_t)
@@ -98,6 +103,7 @@ userdebug_or_eng(`
     rw_diag_dev(ipacm_perf_t)
 ')
 
+dontaudit ipacm_perf_t default_t:dir { search };
 allow ipacm_perf_t self:netlink_route_socket r_netlink_socket_perms;
 allow ipacm_perf_t self:{ socket udp_socket } create_socket_perms;
 allow ipacm_perf_t self:fifo_file rw_fifo_file_perms;

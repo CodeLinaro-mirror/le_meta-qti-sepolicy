@@ -32,6 +32,11 @@ type qmi_shutdown_modem_exec_t;
 
 init_vendor_domain(qmi_shutdown_modem_t, qmi_shutdown_modem_exec_t)
 
+gen_require(`
+    type init_var_run_t;
+    type default_t;
+')
+
 userdebug_or_eng(`
     rw_diag_dev(qmi_shutdown_modem_t)
 ')
@@ -42,3 +47,22 @@ dev_read_input(qmi_shutdown_modem_t)
 
 allow qmi_shutdown_modem_t self:fifo_file rw_fifo_file_perms;
 allow qmi_shutdown_modem_t self:{ socket unix_dgram_socket } create_socket_perms;
+dontaudit qmi_shutdown_modem_t default_t:dir search;
+corecmd_exec_shell(qmi_shutdown_modem_t)
+allow qmi_shutdown_modem_t self:capability net_admin;
+allow qmi_shutdown_modem_t init_var_run_t:lnk_file read_file_perms;
+systemd_start_power_units(qmi_shutdown_modem_t)
+
+ifdef(`init_systemd', `
+	gen_require(`
+		type systemd_logind_var_run_t;
+		type system_dbusd_var_run_t;
+	')
+	init_dbus_chat(qmi_shutdown_modem_t)
+	systemd_dbus_chat_logind(qmi_shutdown_modem_t)
+	dbus_system_bus_client(qmi_shutdown_modem_t)
+	allow qmi_shutdown_modem_t system_dbusd_var_run_t:dir search;
+	allow qmi_shutdown_modem_t systemd_logind_var_run_t:sock_file write;
+	init_read_state(qmi_shutdown_modem_t)
+	kernel_read_system_state(qmi_shutdown_modem_t)
+')

@@ -25,30 +25,41 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type dnsmasq_tmp_t;
-files_tmp_file(dnsmasq_tmp_t)
+type webserver_t;
+type qcmap_webserver_exec_t;
+type qcmap_webserver_t;
+type webserver_socket_device_t;
+init_vendor_domain(qcmap_webserver_t, qcmap_webserver_exec_t)
+domtrans_pattern(httpd_t, qcmap_webserver_exec_t, qcmap_webserver_t)
 
 gen_require(`
-  type systemd_resolved_var_run_t;
-  type device_t;
-  type user_tty_device_t;
-  type unconfined_t;
-  class service {start stop status};
+  type data_t;
+  type qcmap_data_t;
+  type httpd_data_t;
+  type urandom_device_t;
 ')
+qcmap_manage_var_run_qcmap_dir(httpd_t)
+
+qcmap_httpd_data_filetrans(httpd_t, file )
+allow httpd_t httpd_t: capability {sys_chroot};
+search_dirs_pattern(qcmap_webserver_t, qcmap_data_t, qcmap_data_t)
+allow httpd_t qcmap_webserver_t: process {signal};
+search_user_data_dir(qcmap_webserver_t)
+allow httpd_t webserver_t: file read_file_perms;
 
 userdebug_or_eng(`
-  rw_diag_dev(dnsmasq_t)
-  allow unconfined_t dnsmasq_exec_t:service { start stop status };
-  dev_write_kmsg(dnsmasq_t)
+files_list_default(httpd_t)
 ')
 
-manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
-allow dnsmasq_t dnsmasq_tmp_t:file manage_file_perms;
-allow dnsmasq_t dnsmasq_tmp_t:lnk_file manage_lnk_file_perms;
-files_tmp_filetrans(dnsmasq_t, dnsmasq_tmp_t, { lnk_file file })
-read_write_qcmap_cm_socket_files(dnsmasq_t)
-qcmap_manage_tmp_data_files(dnsmasq_t)
-qcmap_manage_var_run_data_files(dnsmasq_t)
-qcmap_manage_user_data_files(dnsmasq_t)
-manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
-list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
+search_dirs_pattern(httpd_t, webserver_t, webserver_t)
+manage_user_data_files(qcmap_webserver_t, httpd_data_t, httpd_data_t)
+kernel_read_system_state(qcmap_webserver_t)
+rw_fifo_files_pattern(qcmap_webserver_t, qcmap_webserver_t, qcmap_webserver_t)
+dev_read_urand(qcmap_webserver_t)
+exec_files_pattern(httpd_t,webserver_t,webserver_t)
+list_dirs_pattern(qcmap_webserver_t,webserver_socket_device_t,webserver_socket_device_t)
+allow qcmap_webserver_t webserver_socket_device_t:dir rw_dir_perms;
+files_type(webserver_socket_device_t);
+dev_node(webserver_socket_device_t);
+device_manage_socket_file( qcmap_webserver_t, webserver_socket_device_t)
+corecmd_exec_shell(qcmap_webserver_t)

@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += "file://selinux-labeldev.conf"
+SRC_URI += " \
+    file://Remove-systemd-nologin.patch \
+    file://selinux-labeldev.conf \
+"
 
 do_install_append_mdm() {
     install -d ${D}/etc/tmpfiles.d/

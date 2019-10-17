@@ -95,6 +95,19 @@ userdebug_or_eng(`
     manage_user_data_files(tftp_server_t, tombstone_data_t)
 ')
 
+type rfs_persist_t;
+user_data_files_type(rfs_persist_t)
+
+type tombstone_rfs_data_t;
+user_data_files_type(tombstone_rfs_data_t)
+allow tftp_server_t tombstone_rfs_data_t:dir setattr;
+
+allow tftp_server_t rfs_persist_t:dir { create setattr };
+allow tftp_server_t self:capability { setuid chown setgid setpcap };
+allow tftp_server_t self:process setcap;
+allow tftp_server_t rfs_persist_t:dir create_dir_perms;
+allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
+
 ### misc properties ###
 
 type mpss_persist_t;

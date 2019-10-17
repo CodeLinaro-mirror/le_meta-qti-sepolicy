@@ -27,9 +27,14 @@
 
 relabel_all_data_files(setfiles_t)
 
+# Added to label /dev/rebooterdev
+relabelto_fifo_files_pattern(setfiles_t, device_t, device_node)
+
 gen_require(`
     type cache_t;
     type persist_t;
+    type device_t;
+    attribute device_node;
 ')
 
 allow setfiles_t self:capability sys_admin;

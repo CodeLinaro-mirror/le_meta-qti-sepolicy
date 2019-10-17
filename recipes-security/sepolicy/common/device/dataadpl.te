@@ -44,6 +44,7 @@ gen_require(`
     type default_t;
     type event_device_t;
     type socket_device_t;
+    type dataqti_device_t;
 ')
 
 logging_send_syslog_msg(dataadpl_t);
@@ -78,3 +79,8 @@ type dataadpl_socket_device_t;
 files_type(dataadpl_socket_device_t)
 dev_node(dataadpl_socket_device_t)
 device_manage_socket_file(dataadpl_t, dataadpl_socket_device_t)
+
+#dont audit setuid and setgid
+dontaudit dataadpl_t self: capability {setuid setgid};
+
+rw_chr_files_pattern(dataadpl_t, device_t, dataqti_device_t)

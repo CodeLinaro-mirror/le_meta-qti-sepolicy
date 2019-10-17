@@ -25,30 +25,40 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type dnsmasq_tmp_t;
-files_tmp_file(dnsmasq_tmp_t)
+
+policy_module(ss-ramdump, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type ss-ramdump_t;
+type ss-ramdump_exec_t;
+
+init_vendor_domain(ss-ramdump_t, ss-ramdump_exec_t)
 
 gen_require(`
-  type systemd_resolved_var_run_t;
-  type device_t;
-  type user_tty_device_t;
-  type unconfined_t;
-  class service {start stop status};
+	type device_t;
+	type event_device_t;
+	type vendor_qdmastatsd_ramdump_device_t;
 ')
 
-userdebug_or_eng(`
-  rw_diag_dev(dnsmasq_t)
-  allow unconfined_t dnsmasq_exec_t:service { start stop status };
-  dev_write_kmsg(dnsmasq_t)
-')
-
-manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
-allow dnsmasq_t dnsmasq_tmp_t:file manage_file_perms;
-allow dnsmasq_t dnsmasq_tmp_t:lnk_file manage_lnk_file_perms;
-files_tmp_filetrans(dnsmasq_t, dnsmasq_tmp_t, { lnk_file file })
-read_write_qcmap_cm_socket_files(dnsmasq_t)
-qcmap_manage_tmp_data_files(dnsmasq_t)
-qcmap_manage_var_run_data_files(dnsmasq_t)
-qcmap_manage_user_data_files(dnsmasq_t)
-manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
-list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
+type ss-ramdump_data_t;
+manage_user_data_files(ss-ramdump_t, ss-ramdump_data_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, vendor_qdmastatsd_ramdump_device_t)
+type ramdump_md_ipa_fws_device_t;
+type ramdump_ipa_fws_device_t;
+type ramdump_md_modem_device_t;
+type ramdump_modem_device_t;
+dev_node(ramdump_md_ipa_fws_device_t)
+dev_node(ramdump_ipa_fws_device_t)
+dev_node(ramdump_md_modem_device_t)
+dev_node(ramdump_modem_device_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_ipa_fws_device_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_ipa_fws_device_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_modem_device_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_modem_device_t)
+read_chr_files_pattern(ss-ramdump_t, device_t, event_device_t)
+dev_read_sysfs(ss-ramdump_t)
+logging_send_syslog_msg(ss-ramdump_t)

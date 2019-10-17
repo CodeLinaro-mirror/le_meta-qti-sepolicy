@@ -25,30 +25,30 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type dnsmasq_tmp_t;
-files_tmp_file(dnsmasq_tmp_t)
+policy_module(time_daemon, 1.0)
+
+type time_daemon_t;
+type time_daemon_exec_t;
+type time_data_t;
+
+init_vendor_domain(time_daemon_t, time_daemon_exec_t)
 
 gen_require(`
-  type systemd_resolved_var_run_t;
-  type device_t;
-  type user_tty_device_t;
-  type unconfined_t;
-  class service {start stop status};
+    type default_t;
 ')
 
+logging_send_syslog_msg(time_daemon_t)
+dev_read_realtime_clock(time_daemon_t)
+allow time_daemon_t time_data_t:dir { search write };
+manage_user_data_files(time_daemon_t, time_data_t)
 userdebug_or_eng(`
-  rw_diag_dev(dnsmasq_t)
-  allow unconfined_t dnsmasq_exec_t:service { start stop status };
-  dev_write_kmsg(dnsmasq_t)
+  rw_diag_dev(time_daemon_t);
 ')
-
-manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
-allow dnsmasq_t dnsmasq_tmp_t:file manage_file_perms;
-allow dnsmasq_t dnsmasq_tmp_t:lnk_file manage_lnk_file_perms;
-files_tmp_filetrans(dnsmasq_t, dnsmasq_tmp_t, { lnk_file file })
-read_write_qcmap_cm_socket_files(dnsmasq_t)
-qcmap_manage_tmp_data_files(dnsmasq_t)
-qcmap_manage_var_run_data_files(dnsmasq_t)
-qcmap_manage_user_data_files(dnsmasq_t)
-manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
-list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
+allow time_daemon_t self:capability sys_time;
+dontaudit time_daemon_t default_t:dir search;
+allow time_daemon_t self:socket create_socket_perms;
+user_data_files_type(time_data_t)
+device_search_sockets(time_data_t)
+data_filetrans(time_daemon_t, time_data_t, file)
+allow time_daemon_t self:fifo_file rw_fifo_file_perms;
+allow time_daemon_t socket_device_t:dir search;
