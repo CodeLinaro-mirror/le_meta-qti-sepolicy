@@ -39,26 +39,32 @@ type ss-ramdump_exec_t;
 init_vendor_domain(ss-ramdump_t, ss-ramdump_exec_t)
 
 gen_require(`
-	type device_t;
-	type event_device_t;
-	type vendor_qdmastatsd_ramdump_device_t;
+    type device_t;
+    type event_device_t;
+    type vendor_qdmastatsd_ramdump_device_t;
 ')
 
 type ss-ramdump_data_t;
-manage_user_data_files(ss-ramdump_t, ss-ramdump_data_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, vendor_qdmastatsd_ramdump_device_t)
-type ramdump_md_ipa_fws_device_t;
-type ramdump_ipa_fws_device_t;
-type ramdump_md_modem_device_t;
-type ramdump_modem_device_t;
-dev_node(ramdump_md_ipa_fws_device_t)
-dev_node(ramdump_ipa_fws_device_t)
-dev_node(ramdump_md_modem_device_t)
-dev_node(ramdump_modem_device_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_ipa_fws_device_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_ipa_fws_device_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_modem_device_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_modem_device_t)
-read_chr_files_pattern(ss-ramdump_t, device_t, event_device_t)
-dev_read_sysfs(ss-ramdump_t)
-logging_send_syslog_msg(ss-ramdump_t)
+
+userdebug_or_eng(`
+    manage_user_data_files(ss-ramdump_t, ss-ramdump_data_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, vendor_qdmastatsd_ramdump_device_t)
+    type ramdump_md_ipa_fws_device_t;
+    type ramdump_ipa_fws_device_t;
+    type ramdump_md_modem_device_t;
+    type ramdump_modem_device_t;
+    type ramdump_wlan_device_t;
+    dev_node(ramdump_md_ipa_fws_device_t)
+    dev_node(ramdump_ipa_fws_device_t)
+    dev_node(ramdump_md_modem_device_t)
+    dev_node(ramdump_modem_device_t)
+    dev_node(ramdump_wlan_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_ipa_fws_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_ipa_fws_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_modem_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_modem_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_wlan_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, event_device_t)
+    dev_read_sysfs(ss-ramdump_t)
+    logging_send_syslog_msg(ss-ramdump_t)
+')
