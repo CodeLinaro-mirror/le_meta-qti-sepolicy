@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -66,6 +66,7 @@ files_read_alexa_data_files(mount_copybind_t)
 # Files made writable using mount-copybind must have a unique label
 gen_require(`
     type etc_t;
+    type init_var_run_t;
 ')
 neverallow mount_copybind_t etc_t:file { create relabelto };
 fs_blk_getattr_tmpfs(mount_t)
@@ -82,3 +83,4 @@ gen_require(`
 allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
 allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
+allow mount_t init_var_run_t:file getattr;
