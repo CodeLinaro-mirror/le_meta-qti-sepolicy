@@ -537,7 +537,7 @@ allow miniupnp_t miniupnp_t: socket  create_socket_perms;
 allow miniupnp_t self:fifo_file rw_fifo_file_perms;
 files_pid_filetrans(miniupnp_t, miniupnp_var_run_t, { dir file sock_file })
 allow miniupnp_t miniupnp_var_run_t  : dir {create};
-allow miniupnp_t self:tcp_socket connected_stream_socket_perms;
+allow miniupnp_t self:tcp_socket create_stream_socket_perms;
 allow miniupnp_t self:netlink_route_socket { create_socket_perms nlmsg_read };
 allow miniupnp_t ssdp_port_t: udp_socket { name_bind };
 corenet_udp_bind_all_unreserved_ports(miniupnp_t)
@@ -550,3 +550,5 @@ dontaudit miniupnp_t self:capability sys_module;
 
 allow qcmap_cm_t self:capability setpcap;
 search_dirs_pattern(httpd_t, socket_device_t, webserver_socket_device_t)
+corenet_tcp_connect_virt_migration_port(miniupnp_t)
+allow miniupnp_t { unreserved_port_t }:tcp_socket { name_connect };
