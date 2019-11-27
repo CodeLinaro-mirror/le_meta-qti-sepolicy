@@ -84,6 +84,7 @@ allow tftp_server_t self:socket create_socket_perms;
 allow tftp_server_t self:process signal;
 allow tftp_server_t self:capability net_bind_service;
 dontaudit tftp_server_t self:capability net_raw;
+kernel_read_vm_overcommit_sysctl(tftp_server_t)
 
 firmware_manage_shared_props(tftp_server_t)
 manage_user_data_files(tftp_server_t, mpss_persist_t)
