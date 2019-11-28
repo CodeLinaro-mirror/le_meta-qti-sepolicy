@@ -51,6 +51,9 @@ allow mbim_t mbim_var_run_t:dir manage_dir_perms;
 allow mbim_t mbim_var_run_t:file manage_file_perms;
 files_pid_filetrans(mbim_t, mbim_var_run_t, { file dir })
 
+# Adding permission to read files under /etc/data
+files_rw_qcmap_etc_data_files(mbim_t)
+
 userdebug_or_eng(`
    rw_diag_dev(mbim_t)
 ')
