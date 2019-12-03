@@ -35,6 +35,8 @@ gen_require(`
     type dhcpc_var_run_t;
     type qcmap_var_run_t;
     type node_t;
+    type tmpfs_t;
+    type sysctl_t;
 ')
 
 ########################################
@@ -124,6 +126,9 @@ files_rw_qcmap_etc_data_files(loc_hald_t)
 leprop_rw_props(loc_hald_t)
 dev_read_realtime_clock(loc_hald_t)
 
+allow loc_hald_t tmpfs_t:filesystem getattr;
+allow loc_hald_t tmpfs_t:dir search;
+allow loc_hald_t sysctl_t:dir search;
 allow loc_hald_t self:capability { net_admin setgid setuid net_bind_service};
 allow loc_hald_t self:process setcap;
 allow loc_hald_t self:{ socket udp_socket unix_dgram_socket } create_socket_perms;

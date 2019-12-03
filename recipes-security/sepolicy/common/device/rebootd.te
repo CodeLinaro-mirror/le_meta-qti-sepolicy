@@ -42,7 +42,6 @@ gen_require(`
 ')
 type_transition rebootd_t device_t:fifo_file rebootd_pipe_t "rebooterdev";
 manage_fifo_files_pattern(rebootd_t, device_t, rebootd_pipe_t)
-
 userdebug_or_eng(`
     gen_require(`
          type var_run_t;
@@ -86,16 +85,3 @@ gen_require(`
 ')
 create_lnk_files_pattern(reset_reboot_initrc_t, var_log_t, var_log_t)
 data_filetrans(reset_reboot_initrc_t, reboot_cookie_data_t, file)
-
-ifdef(`init_systemd', `
-    gen_require(`
-        type systemd_logind_var_run_t;
-        type system_dbusd_var_run_t;
-    ')
-    init_dbus_chat(rebootd_t)
-    systemd_dbus_chat_logind(rebootd_t)
-    dbus_system_bus_client(rebootd_t)
-    allow rebootd_t system_dbusd_var_run_t:dir search;
-    allow rebootd_t systemd_logind_var_run_t:sock_file write;
-')
-dontaudit rebootd_t init_t:dir search;
