@@ -1,0 +1,103 @@
+From 4496d5196ccc2c9fcb29efb727ad9409aa69c804 Mon Sep 17 00:00:00 2001
+From: Alexander Miroshnichenko <alex@millerson.name>
+Date: Tue, 29 Jan 2019 22:01:52 +0300
+Subject: [PATCH] Add hostapd service module
+
+Add a SELinux Reference Policy module for the hostapd
+IEEE 802.11 wireless LAN Host AP daemon.
+
+(cherry picked from commit 275c304dc164acb9c15741169a6674a93598400a)
+---
+ policy/modules/services/hostapd.fc |  7 +++++
+ policy/modules/services/hostapd.if |  1 +
+ policy/modules/services/hostapd.te | 56 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 policy/modules/services/hostapd.fc
+ create mode 100644 policy/modules/services/hostapd.if
+ create mode 100644 policy/modules/services/hostapd.te
+
+diff --git a/policy/modules/services/hostapd.fc b/policy/modules/services/hostapd.fc
+new file mode 100644
+index 0000000..83583a7
+--- /dev/null
++++ b/policy/modules/services/hostapd.fc
+@@ -0,0 +1,7 @@
++/usr/sbin/hostapd               --      gen_context(system_u:object_r:hostapd_exec_t,s0)
++
++/var/run/hostapd(/.*)?          gen_context(system_u:object_r:hostapd_var_run_t,s0)
++
++/etc/hostapd(/.*)?          gen_context(system_u:object_r:hostapd_conf_t,s0)
++
++/run/hostapd.pid                --      gen_context(system_u:object_r:hostapd_var_run_t,s0)
+diff --git a/policy/modules/services/hostapd.if b/policy/modules/services/hostapd.if
+new file mode 100644
+index 0000000..fce874d
+--- /dev/null
++++ b/policy/modules/services/hostapd.if
+@@ -0,0 +1 @@
++## <summary>IEEE 802.11 wireless LAN Host AP daemon.</summary>
+diff --git a/policy/modules/services/hostapd.te b/policy/modules/services/hostapd.te
+new file mode 100644
+index 0000000..2db1e7d
+--- /dev/null
++++ b/policy/modules/services/hostapd.te
+@@ -0,0 +1,56 @@
++policy_module(hostapd, 1.0.0)
++
++########################################
++#
++# Declarations
++#
++
++type hostapd_t;
++type hostapd_exec_t;
++init_daemon_domain(hostapd_t, hostapd_exec_t)
++
++type hostapd_var_run_t;
++files_pid_file(hostapd_var_run_t)
++
++type hostapd_conf_t;
++files_type(hostapd_conf_t)
++
++########################################
++#
++# hostapd local policy
++#
++
++allow hostapd_t self:capability { fsetid chown net_admin net_raw dac_read_search dac_override };
++allow hostapd_t self:fifo_file rw_fifo_file_perms;
++allow hostapd_t self:unix_stream_socket create_stream_socket_perms;
++allow hostapd_t self:netlink_socket create_socket_perms;
++allow hostapd_t self:netlink_generic_socket create_socket_perms;
++allow hostapd_t self:netlink_route_socket create_netlink_socket_perms;
++allow hostapd_t self:packet_socket create_socket_perms;
++
++manage_dirs_pattern(hostapd_t, hostapd_var_run_t, hostapd_var_run_t)
++manage_files_pattern(hostapd_t, hostapd_var_run_t, hostapd_var_run_t)
++manage_lnk_files_pattern(hostapd_t, hostapd_var_run_t, hostapd_var_run_t)
++manage_sock_files_pattern(hostapd_t, hostapd_var_run_t, hostapd_var_run_t)
++files_pid_filetrans(hostapd_t, hostapd_var_run_t, { dir file lnk_file sock_file })
++
++read_files_pattern(hostapd_t, hostapd_conf_t, hostapd_conf_t)
++
++kernel_read_system_state(hostapd_t)
++kernel_read_network_state(hostapd_t)
++kernel_request_load_module(hostapd_t)
++kernel_rw_net_sysctls(hostapd_t)
++dev_rw_sysfs(hostapd_t)
++
++dev_read_rand(hostapd_t)
++dev_read_urand(hostapd_t)
++dev_read_sysfs(hostapd_t)
++dev_rw_wireless(hostapd_t)
++
++domain_use_interactive_fds(hostapd_t)
++
++auth_use_nsswitch(hostapd_t)
++
++logging_send_syslog_msg(hostapd_t)
++
++miscfiles_read_localization(hostapd_t)
+-- 
+1.9.1
+
