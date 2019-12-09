@@ -24,6 +24,6 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+/usr/sbin/hostapd_cli           --    gen_context(system_u:object_r:hostapd_cli_exec_t,s0)
 /lib/systemd/system/qcmap_hostapd@.service      gen_context(system_u:object_r:hostapd_unit_t,s0)
 /lib/systemd/system/qcmap_hostapd_cli@.service  gen_context(system_u:object_r:hostapd_cli_qcmap_unit_t,s0)

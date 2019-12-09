@@ -62,7 +62,6 @@
 #WLAN SDx24 AUTO
 /usr/lib/systemd/system/init_qti_wlan_auto\.service --  gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
-/usr/sbin/hostapd_cli           --    gen_context(system_u:object_r:hostapd_cli_qcmap_exec_t,s0)
 
 #Data path opt
 /usr/bin/data_path_opt          --    gen_context(system_u:object_r:data_path_opt_exec_t,s0)
