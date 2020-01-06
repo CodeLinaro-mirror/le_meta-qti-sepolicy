@@ -42,7 +42,7 @@ gen_require(`
 ')
 
 allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
-allow qnetmgrd_t self:process { setcap getcap };
+allow qnetmgrd_t self:process { setcap getcap signal };
 dontaudit qnetmgrd_t default_t:dir { search };
 allow qnetmgrd_t self:{
     socket
@@ -82,7 +82,6 @@ filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_
 gen_require(`
     type default_t;
 ')
-allow qnetmgrd_t self:process getcap;
 dontaudit qnetmgrd_t default_t:dir { search };
 
 iptables_domtrans(qnetmgrd_t)
