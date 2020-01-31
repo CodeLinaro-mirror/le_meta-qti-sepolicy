@@ -106,6 +106,11 @@ kernel_search_debugfs(wlan_initrc_t)
 getty_use_fds(wlan_initrc_t)
 term_use_unallocated_ttys(wlan_initrc_t)
 
+gen_require(`
+    type qcmap_var_run_t;
+')
+allow wpa_cli_t qcmap_var_run_t:file { write getattr };
+
 # unused pipes
 gen_require(`
     type httpd_t;
