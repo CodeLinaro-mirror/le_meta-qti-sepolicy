@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -35,7 +35,10 @@ gen_require(`
        type systemd_logind_var_run_t;
        type system_dbusd_t;
        type system_dbusd_var_run_t;
-
+       type socket_device_t;
+       type devlog_t;
+       type syslogd_t;
+       type sysfs_t;
 ')
 
 init_vendor_domain(atfwd_t, atfwd_exec_t)
@@ -56,4 +59,19 @@ ifdef(`init_systemd', `
     init_dbus_chat(atfwd_t)
     systemd_dbus_chat_logind(atfwd_t)
     dbus_system_bus_client(atfwd_t)
+')
+allow atfwd_t self:dir { search write create };
+allow atfwd_t self:sock_file { write create };
+allow atfwd_t self:netlink_generic_socket { create bind write };
+allow atfwd_t socket_device_t:dir { search write add_name remove_name };
+allow atfwd_t devlog_t:sock_file write;
+allow atfwd_t syslogd_t:unix_dgram_socket sendto;
+allow atfwd_t socket_device_t:sock_file { create write unlink setattr};
+allow atfwd_t sysfs_t:file { open read };#/sys/module/diagchar/parameters/timestamp_switch
+allow atfwd_t self:capability net_admin;
+userdebug_or_eng(`
+    gen_require(`
+          type diag_device_t;
+    ')
+    allow atfwd_t diag_device_t:chr_file { open read write ioctl };
 ')
