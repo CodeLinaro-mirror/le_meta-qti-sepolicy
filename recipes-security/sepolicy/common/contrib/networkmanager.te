@@ -24,7 +24,6 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 type wifi_data_t;
 user_data_files_type(wifi_data_t)
 manage_user_data_files(NetworkManager_t, wifi_data_t)
@@ -105,6 +104,11 @@ files_search_home(wlan_initrc_t)
 kernel_search_debugfs(wlan_initrc_t)
 getty_use_fds(wlan_initrc_t)
 term_use_unallocated_ttys(wlan_initrc_t)
+
+gen_require(`
+    type qcmap_var_run_t;
+')
+allow wpa_cli_t qcmap_var_run_t:file { write getattr };
 
 # unused pipes
 gen_require(`
