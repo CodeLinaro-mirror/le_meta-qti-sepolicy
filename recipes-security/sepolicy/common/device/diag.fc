@@ -38,4 +38,5 @@
 /usr/bin/diag_dci_client      gen_context(system_u:object_r:diag_exec_t,s0)
 /usr/bin/diag_buffering_test  gen_context(system_u:object_r:diag_exec_t,s0)
 /mnt/sdcard -d gen_context(system_u:object_r:sdcard_t,s0)
+/etc/initscripts/pcie-diag    gen_context(system_u:object_r:diag_exec_t,s0)
 
