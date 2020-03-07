@@ -382,6 +382,11 @@ allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
 
+##### SSDK
+type ssdk_device_t;
+dev_node(ssdk_device_t)
+rw_chr_files_pattern(qcmap_cm_t, device_t, ssdk_device_t)
+
 #TODO:get the policies from upstream and running in permissive mode for now
 gen_require(`
 	type random_device_t;
