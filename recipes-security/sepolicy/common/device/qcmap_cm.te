@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -557,3 +557,5 @@ allow qcmap_cm_t self:capability setpcap;
 search_dirs_pattern(httpd_t, socket_device_t, webserver_socket_device_t)
 corenet_tcp_connect_virt_migration_port(miniupnp_t)
 allow miniupnp_t { unreserved_port_t }:tcp_socket { name_connect };
+#This is to access symlink created for emac mtd partition
+read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
