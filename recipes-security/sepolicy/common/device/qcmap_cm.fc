@@ -82,3 +82,6 @@
 
 #load kernel modules
 /usr/lib/systemd/system/qcmap_load_module@.service -- gen_context(system_u:object_r:qcmap_kernel_module_t,s0)
+
+#SSDK
+/dev/switch_ssdk                  -c   gen_context(system_u:object_r:ssdk_device_t,s0)

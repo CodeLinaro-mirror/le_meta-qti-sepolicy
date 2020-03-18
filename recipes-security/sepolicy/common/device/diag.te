@@ -53,4 +53,12 @@ userdebug_or_eng(`
    dev_rw_sysfs(diag_t)
    corenet_tcp_connect_all_unreserved_ports(diag_t)
    manage_files_pattern(diag_t, sdcard_t, sdcard_t)
+   gen_require(`
+      attribute adb_data_conf_t;
+   ')
+   allow diag_t self:fifo_file rw_fifo_file_perms;
+   can_exec(diag_t, diag_exec_t)
+   read_user_data_files(diag_t, adb_data_conf_t)
+   dev_write_kmsg(diag_t)
+   kernel_read_system_state(diag_t)
 ')
