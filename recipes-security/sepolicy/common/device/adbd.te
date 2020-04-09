@@ -115,4 +115,5 @@ userdebug_or_eng(`
     data_filetrans(pcie_initrc_t, adb_data_conf_t, file)
     read_user_data_files(adbd_initrc_t, adb_data_conf_t)
     manage_user_data_files(pcie_initrc_t, adb_data_conf_t)
+    read_files_pattern(pcie_initrc_t,sysfs_t,sysfs_t)
 ')
