@@ -55,3 +55,12 @@ interface(`ipa_nat_table_rw_dev',`
        rw_chr_files_pattern($1, device_t, ipa_nat_table_device_t)
 ')
 
+interface(`ipa_ipv6ct_table_rw_dev',`
+        gen_require(`
+               type device_t;
+               type ipa_ipv6ct_table_device_t;
+       ')
+
+       rw_chr_files_pattern($1, device_t, ipa_ipv6ct_table_device_t)
+')
+
