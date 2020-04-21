@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -47,3 +47,10 @@ rw_subsys_ssr_dev(mss_t)
 #Read firmware
 firmware_read_files(mss_t)
 dev_rw_null(mss_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+    ')
+    dontaudit mss_t debugfs_t:dir search;
+')
