@@ -31,7 +31,6 @@
 /dev/smdcntl1                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /dev/mhi_pipe_12                 -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/dev/mtd21                       -c  gen_context(system_u:object_r:mbim_device_t,s0)
 /data/mbimd(/.*)?                    gen_context(system_u:object_r:mbim_data_t,s0)
 /cache/recovery(/.*)?                gen_context(system_u:object_r:cache_recovery_t,s0)
 /var/run/mbim(/.*)?                  gen_context(system_u:object_r:mbim_var_run_t,s0)
