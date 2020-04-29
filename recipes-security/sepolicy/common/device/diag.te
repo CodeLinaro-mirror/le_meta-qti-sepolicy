@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -55,8 +55,10 @@ userdebug_or_eng(`
    manage_files_pattern(diag_t, sdcard_t, sdcard_t)
    gen_require(`
       attribute adb_data_conf_t;
+      type socket_device_t;
    ')
    allow diag_t self:fifo_file rw_fifo_file_perms;
+   allow diag_t socket_device_t:dir search;
    can_exec(diag_t, diag_exec_t)
    read_user_data_files(diag_t, adb_data_conf_t)
    dev_write_kmsg(diag_t)
