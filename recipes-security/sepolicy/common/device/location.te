@@ -167,9 +167,10 @@ userdebug_or_eng(`
     gen_require(`
         type debugfs_t;
     ')
-    allow loc_hald_t debugfs_t:dir search;
-    allow loc_hald_t debugfs_t:file { write open };
+    allow { loc_hald_t xtra_daemon_t } debugfs_t:dir search;
+    allow { loc_hald_t xtra_daemon_t } debugfs_t:file { write open };
     corecmd_exec_shell(loc_hald_t);
+    corecmd_exec_shell(xtra_daemon_t);
 ')
 
 # temporary fix till /target changes are made cr#2387138
