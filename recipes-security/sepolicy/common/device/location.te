@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016,2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -84,26 +84,42 @@ gen_require(`
 allow systemd_tmpfiles_t loc_data_t:dir { relabelfrom relabelto };
 allow systemd_tmpfiles_t loc_data_t:file { relabelfrom relabelto };
 
+# location tmp files
+type loc_tmp_t;
+files_tmp_file(loc_tmp_t)
+
+# location init scripts for systemd/sysvinit systems
+type loc_initrc_exec_t;
+type loc_initrc_t;
+
+init_script_domain(loc_initrc_t, loc_initrc_exec_t)
+domtrans_pattern(loc_initrc_t, loc_exec_t, loc_t)
+corecmd_exec_shell(loc_initrc_t)
+corecmd_exec_bin(loc_initrc_t)
+data_filetrans(loc_initrc_t, loc_data_t, { file dir })
+userdebug_or_eng(`
+    dev_write_kmsg(loc_initrc_t)
+')
+manage_user_data_files(loc_initrc_t, loc_data_t)
+files_read_generic_tmp_symlinks(loc_initrc_t)
+manage_dirs_pattern(loc_initrc_t, loc_tmp_t, loc_tmp_t)
+manage_files_pattern(loc_initrc_t, loc_tmp_t, loc_tmp_t)
+dontaudit loc_initrc_t console_device_t:chr_file read;
+
+# location init script for systemd systems
+ifdef(`init_systemd', `
+    allow loc_initrc_t self:fifo_file { read write getattr ioctl };
+    kernel_dontaudit_read_system_state(loc_initrc_t);
+')
+
 # location init script for sysvinit systems
 ifndef(`init_systemd', `
-    type loc_initrc_exec_t;
-    type loc_initrc_t;
-
-    init_script_domain(loc_initrc_t, loc_initrc_exec_t)
-    domtrans_pattern(loc_initrc_t, loc_exec_t, loc_t)
-    corecmd_exec_shell(loc_initrc_t)
-    corecmd_exec_bin(loc_initrc_t)
-    data_filetrans(loc_initrc_t, loc_data_t, { file dir })
     files_read_etc_files(loc_initrc_t)
-    dev_write_kmsg(loc_initrc_t)
-    manage_user_data_files(loc_initrc_t, loc_data_t)
-    read_user_data_files(loc_initrc_t, loc_data_t);
+
     allow loc_initrc_t data_t:dir { setattr };
     allow loc_initrc_t loc_data_t:file { getattr setattr };
     allow loc_initrc_t self:capability { chown fowner fsetid dac_override };
     allow loc_initrc_t socket_device_t:dir { create setattr };
-
-    dontaudit loc_initrc_t console_device_t:chr_file read;
 ')
 
 ### location hal
@@ -145,6 +161,16 @@ allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
 dev_read_urand(loc_hald_t);
+
+# boot kpi
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+    ')
+    allow loc_hald_t debugfs_t:dir search;
+    allow loc_hald_t debugfs_t:file { write open };
+    corecmd_exec_shell(loc_hald_t);
+')
 
 # temporary fix till /target changes are made cr#2387138
 read_files_pattern(loc_hald_t, default_t, default_t);
@@ -277,8 +303,6 @@ kernel_read_vm_overcommit_sysctl(xtra_daemon_t)
 ##access qdma socket
 rw_vendor_qdma_sock_file(xtra_daemon_t);
 
-type loc_tmp_t;
-files_tmp_file(loc_tmp_t)
 files_tmp_filetrans(xtra_daemon_t, loc_tmp_t, file)
 allow xtra_daemon_t loc_tmp_t:file { create_file_perms write_file_perms read_file_perms };
 files_read_generic_tmp_symlinks(xtra_daemon_t)

@@ -55,6 +55,7 @@ read_user_data_files(ipa_fw_initrc_t, ipacm_data_t);
 type ipacm_t;
 type ipacm_exec_t;
 type ipa_nat_table_device_t;
+type ipa_ipv6ct_table_device_t;
 
 init_vendor_domain(ipacm_t, ipacm_exec_t)
 logging_send_syslog_msg(ipacm_t)
@@ -83,6 +84,9 @@ kernel_read_system_state(ipacm_t);
 
 dev_node(ipa_nat_table_device_t)
 ipa_nat_table_rw_dev(ipacm_t)
+
+dev_node(ipa_ipv6ct_table_device_t)
+ipa_ipv6ct_table_rw_dev(ipacm_t)
 
 userdebug_or_eng(`
     rw_diag_dev(ipacm_t)
