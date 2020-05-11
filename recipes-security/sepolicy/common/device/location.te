@@ -161,6 +161,7 @@ allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
 dev_read_urand(loc_hald_t);
+kernel_dontaudit_read_system_state(loc_hald_t);
 
 # boot kpi
 userdebug_or_eng(`
