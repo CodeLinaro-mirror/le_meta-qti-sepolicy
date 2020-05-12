@@ -379,6 +379,10 @@ allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
 device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
 allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
 
+##### WLAN CDI
+allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
+allow hostapd_cli_qcmap_t self: process { getcap setcap };
+
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
 
