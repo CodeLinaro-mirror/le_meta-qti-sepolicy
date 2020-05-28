@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,15 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/mbimd                   --  gen_context(system_u:object_r:mbim_exec_t,s0)
-/dev/gps                         -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/dev/smdcntl0                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/dev/smdcntl1                    -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/dev/android_mbim                -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/dev/mhi_pipe_12                 -c  gen_context(system_u:object_r:mbim_device_t,s0)
-/data/mbimd(/.*)?                    gen_context(system_u:object_r:mbim_data_t,s0)
-/cache/recovery(/.*)?                gen_context(system_u:object_r:cache_recovery_t,s0)
-/var/run/mbim(/.*)?                  gen_context(system_u:object_r:mbim_var_run_t,s0)
-/usr/lib/systemd/system/mbim_fw_update.*\.service --  gen_context(system_u:object_r:mbimd_unit_t,s0)
-/etc/initscripts/mbim_fw_script\.sh               --  gen_context(system_u:object_r:mbim_fw_exec_t,s0)
-
+## <summary>ssreq-server daemon</summary>
