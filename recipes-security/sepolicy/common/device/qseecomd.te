@@ -39,7 +39,7 @@ gen_require(`
        type ion_device_t;
        type qseecom_device_t;
        type proc_t;
-
+       type firmware_t;
        class process setcap;
 ')
 
@@ -72,6 +72,7 @@ storage_raw_write_removable_device(qseecomd_t)
 dev_read_sysfs(qseecomd_t)
 #dev_rw_generic_chr_files(qseecomd_t)
 allow qseecomd_t self:capability { setuid setgid };
+allow qseecomd_t firmware_t:file read_file_perms;
 
 files_search_default(qseecomd_t)
 

@@ -75,6 +75,7 @@ allow pulseaudio_t debugfs_t:dir search;
 allow pulseaudio_t init_var_run_t:file { read open write getattr};
 allow pulseaudio_t init_var_run_t:sock_file { open read write getattr };
 
+device_search_sockets(pulseaudio_t);
 leprop_rw_props(pulseaudio_t);
 
 corecmd_exec_shell(pulseaudio_t)

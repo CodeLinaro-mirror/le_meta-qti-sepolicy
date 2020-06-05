@@ -34,6 +34,11 @@
 /usr/bin/engine-service    -- gen_context(system_u:object_r:engine_service_exec_t,s0)
 /usr/bin/slim_daemon       -- gen_context(system_u:object_r:slim_daemon_exec_t,s0)
 
+## location startup script for systemd systems
+ifdef(`init_systemd', `
+    /usr/bin/location_hald_preinit_handler.sh -- gen_context(system_u:object_r:loc_initrc_exec_t,s0)
+')
+
 ## location startup script for sysvinit systems
 ifndef(`init_systemd', `
     /etc/rc\.d/init\.d/start_loc_launcher           --  gen_context(system_u:object_r:loc_initrc_exec_t,s0)
@@ -47,6 +52,9 @@ ifndef(`init_systemd', `
 ## socket files
 /dev/socket/location(/.*)?          gen_context(system_u:object_r:loc_socket_t,s0)
 /dev/socket/loc_client/hal_daemon   gen_context(system_u:object_r:loc_socket_t,s0)
+
+#location tmp files
+/var/tmp/location(/.*)?             gen_context(system_u:object_r:loc_tmp_t,s0)
 
 ## location conf files
 /etc/gps.conf       -- gen_context(system_u:object_r:loc_etc_t,s0)
