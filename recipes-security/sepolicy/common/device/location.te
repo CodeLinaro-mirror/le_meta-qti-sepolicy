@@ -161,15 +161,17 @@ allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
 dev_read_urand(loc_hald_t);
+kernel_dontaudit_read_system_state(loc_hald_t);
 
 # boot kpi
 userdebug_or_eng(`
     gen_require(`
         type debugfs_t;
     ')
-    allow loc_hald_t debugfs_t:dir search;
-    allow loc_hald_t debugfs_t:file { write open };
+    allow { loc_hald_t xtra_daemon_t } debugfs_t:dir search;
+    allow { loc_hald_t xtra_daemon_t } debugfs_t:file { write open };
     corecmd_exec_shell(loc_hald_t);
+    corecmd_exec_shell(xtra_daemon_t);
 ')
 
 # temporary fix till /target changes are made cr#2387138
@@ -299,6 +301,7 @@ miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
 kernel_read_vm_overcommit_sysctl(xtra_daemon_t)
+kernel_dontaudit_read_system_state(xtra_daemon_t);
 
 ##access qdma socket
 rw_vendor_qdma_sock_file(xtra_daemon_t);

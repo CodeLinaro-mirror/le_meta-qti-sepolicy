@@ -29,6 +29,7 @@ policy_module(qnetmgrd, 1.0)
 
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
+type lptd_connect_socket_t;
 
 init_vendor_domain(qnetmgrd_t, qnetmgrd_exec_t)
 logging_send_syslog_msg(qnetmgrd_t)
@@ -81,7 +82,13 @@ filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_
 
 gen_require(`
     type default_t;
+    type initrc_var_run_t;
+
 ')
 dontaudit qnetmgrd_t default_t:dir { search };
 
 iptables_domtrans(qnetmgrd_t)
+allow qnetmgrd_t lptd_connect_socket_t:sock_file  write;
+filetrans_pattern( qnetmgrd_t, initrc_var_run_t, lptd_connect_socket_t, sock_file )
+allow qnetmgrd_t lptd_connect_socket_t:unix_stream_socket connectto;
+filetrans_pattern( qnetmgrd_t, initrc_t, lptd_connect_socket_t, unix_stream_socket)

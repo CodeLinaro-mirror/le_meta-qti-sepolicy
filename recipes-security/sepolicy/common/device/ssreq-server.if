@@ -1,4 +1,4 @@
-# Copyright (c) 2019, 2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,48 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(hwfde-service, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type hwfde_service_t;
-type hwfde_service_exec_t;
-
-require {
-        type qseecom_device_t;
-    type proc_t;
-}
-
-init_daemon_domain(hwfde_service_t, hwfde_service_exec_t)
-logging_send_syslog_msg(hwfde_service_t)
-
-# allow hwfde_service to read metadata from media-encryption.conf file
-type hwfde_conf_file_t;
-allow hwfde_service_t hwfde_conf_file_t:file { open read };
-
-# allow hwfde_service to get metadata from footer partition
-type footer_blk_t;
-dev_node(footer_blk_t);
-allow hwfde_service_t footer_blk_t:blk_file { open read write };
-
-# allow hwfde_service to read/write leproperties
-device_search_sockets(hwfde_service_t)
-leprop_rw_props(hwfde_service_t)
-
-# allow hwfde_service to read commandline from /proc/cmdline
-allow hwfde_service_t proc_t:file { open read };
-
-# allow hwfde_service to do basic operation with qseecom driver
-rw_chr_files_pattern(hwfde_service_t, device_t, qseecom_device_t);
-
-# allow hwfde_service to encrypt userdata partition
-storage_raw_write_removable_device(hwfde_service_t)
-storage_raw_read_removable_device(hwfde_service_t)
-
-# allow hwfde_service to mount userata partition on /overlay
-fs_mount_xattr_fs(hwfde_service_t)
-files_polyinstantiate_all(hwfde_service_t)
-overlay_mount_user_dir(hwfde_service_t)
+## <summary>ssreq-server daemon</summary>
