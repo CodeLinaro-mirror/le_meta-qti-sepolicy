@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/netmgrd        --      gen_context(system_u:object_r:qnetmgrd_exec_t,s0)
+/var/run/lptd_connect_socket -- gen_context(system_u:object_r:lptd_connect_socket_t,s0)

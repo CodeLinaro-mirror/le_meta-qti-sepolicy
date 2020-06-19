@@ -34,11 +34,16 @@ policy_module(weston, 1.0)
 
 type weston_t;
 type weston_exec_t;
+type weston_socket_device_t;
 
 init_vendor_domain(weston_t, weston_exec_t)
 
 gen_require(`
  type qmmf_data_file_t;
+ type systemd_tmpfiles_t;
 ')
+
+files_type(weston_socket_device_t);
+dev_node(weston_socket_device_t);
 
 manage_qmmf_data_files(weston_t)
