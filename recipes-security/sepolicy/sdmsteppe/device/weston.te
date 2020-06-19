@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -35,15 +35,74 @@ policy_module(weston, 1.0)
 type weston_t;
 type weston_exec_t;
 type weston_socket_device_t;
+type weston_usr_t;
 
 init_vendor_domain(weston_t, weston_exec_t)
 
-gen_require(`
- type qmmf_data_file_t;
- type systemd_tmpfiles_t;
+#domain Transition from unconfined_t to weston_t when executing from adb shell
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    domtrans_pattern(unconfined_t, weston_exec_t, weston_t)
 ')
 
+gen_require(`
+ type qmmf_data_file_t;
+ type socket_device_t;
+ type udev_var_run_t;
+ type xkb_var_lib_t;
+ type dri_device_t;
+ type gpu_device_t;
+ type ion_device_t;
+ type sysfs_t;
+')
+
+dontaudit weston_t self:capability { setuid sys_admin } ;
+allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
+allow weston_t sysfs_t:dir read; #/sys/devices/platform/soc/
+allow weston_t sysfs_t:file { read getattr open }; #/sys/devices/platform/soc/
+allow weston_t sysfs_t:lnk_file { read getattr }; #/sys/class/drm/card0-DSI-1
+allow weston_t xkb_var_lib_t:dir { read getattr search }; #/usr/share/X11/xkb
+
+rw_chr_files_pattern(weston_t, device_t, dri_device_t)
+rw_chr_files_pattern(weston_t, device_t, gpu_device_t)
+rw_chr_files_pattern(weston_t, device_t, ion_device_t)
+
+allow weston_t udev_var_run_t:dir search_dir_perms;
+allow weston_t udev_var_run_t:file read_file_perms;
+
+leprop_rw_props(weston_t)
+rw_video_dev(weston_t)
+
+allow weston_t self:netlink_kobject_uevent_socket create_socket_perms;
+
+#manage socket in /dev/socket/weston
 files_type(weston_socket_device_t);
 dev_node(weston_socket_device_t);
+device_search_sockets(weston_t)
+allow weston_t weston_socket_device_t:dir manage_dir_perms;
+allow weston_t weston_socket_device_t:file manage_file_perms;
+allow weston_t weston_socket_device_t:sock_file manage_sock_file_perms;
+
+allow weston_t self:process setsched;
+
+#Manage Files under /usr/share/weston
+files_type(weston_usr_t);
+allow weston_t weston_usr_t:dir search_dir_perms;
+allow weston_t weston_usr_t:file read_file_perms;
+
+userdebug_or_eng(`
+     gen_require(`
+        type trace_marker_t;
+        type tracefs_t;
+        type debugfs_t;
+    ')
+
+    allow weston_t debugfs_t:dir search;
+    allow weston_t trace_marker_t:file { write open };
+    allow weston_t tracefs_t:dir search;
+    allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
+')
 
 manage_qmmf_data_files(weston_t)
