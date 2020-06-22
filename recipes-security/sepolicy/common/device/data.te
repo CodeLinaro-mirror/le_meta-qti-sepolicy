@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,6 +29,7 @@ policy_module(data, 1.0)
 
 gen_require(`
     type mount_t;
+    type initrc_t;
     attribute mountpoint;
     attribute domain;
 ')
@@ -41,19 +42,29 @@ type data_t;
 typeattribute data_t mountpoint;  # Can't use files_mountpoint here
 user_data_files_type(data_t)
 
+#To support coredump in userdebug variant
+type coredump_data_t;
+user_data_files_type(coredump_data_t)
+userdebug_or_eng(`
+    allow domain data_t:dir search_dir_perms;
+    allow { domain -initrc_t } coredump_data_t:dir manage_dir_perms;
+    allow { domain -initrc_t } coredump_data_t:file manage_file_perms;
+')
+
 type sdcard_data_t;
 user_data_files_type(sdcard_data_t)
 
 # Disallow generic reads/writes to userdata from the regular files API
+#Except coredump in userdebug variant
 neverallow ~{
     domain_can_read_userdata
     domain_can_write_userdata
     mount_t
-} user_data:file read_file_perms;
+} { user_data -coredump_data_t }:file read_file_perms;
 neverallow ~{
     domain_can_write_userdata
     mount_t
-} user_data:file { create setattr write append rename link unlink };
+} { user_data -coredump_data_t }:file { create setattr write append rename link unlink };
 
 attribute system_data;
 attribute domain_can_read_systemdata;
