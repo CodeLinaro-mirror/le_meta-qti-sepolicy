@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/weston       --      gen_context(system_u:object_r:weston_exec_t,s0)
+/dev/socket/weston(/.*)?      gen_context(system_u:object_r:weston_socket_device_t,s0)
+/usr/share/weston(/.*)?       gen_context(system_u:object_r:weston_usr_t,s0)
