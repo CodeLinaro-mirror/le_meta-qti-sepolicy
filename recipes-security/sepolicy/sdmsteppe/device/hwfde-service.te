@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -66,7 +66,7 @@ rw_chr_files_pattern(hwfde_service_t, device_t, qseecom_device_t);
 storage_raw_write_removable_device(hwfde_service_t)
 storage_raw_read_removable_device(hwfde_service_t)
 
-# allow hwfde_service to mount userata partition on /data
+# allow hwfde_service to mount userata partition on /overlay
 fs_mount_xattr_fs(hwfde_service_t)
 files_polyinstantiate_all(hwfde_service_t)
-data_mount_user_dir(hwfde_service_t)
+overlay_mount_user_dir(hwfde_service_t)
