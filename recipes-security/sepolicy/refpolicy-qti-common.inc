@@ -9,6 +9,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
+            file://virtualization-distro/ \
 "
 
 PROVIDES += "sepolicy"
@@ -50,6 +51,8 @@ do_patch_append() {
     install_device_policy(d, "common")
     if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
         install_device_policy(d, d.getVar("BASEMACHINE"))
+    if bb.utils.contains('DISTRO_FEATURES', 'virtualization', True, False, d):
+        install_device_policy(d, "virtualization-distro")
 }
 
 python do_update_modules_conf () {
