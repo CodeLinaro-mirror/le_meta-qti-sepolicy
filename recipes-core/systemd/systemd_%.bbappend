@@ -1,7 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
-    file://Remove-systemd-nologin.patch \
     file://selinux-labeldev.conf \
 "
 
