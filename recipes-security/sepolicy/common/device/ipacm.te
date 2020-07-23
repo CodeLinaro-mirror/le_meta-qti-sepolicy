@@ -174,3 +174,11 @@ corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)
 dev_read_sysfs(ipacm_perf_t)
 files_tmp_file(ipacm_tmp_t)
+
+###ADPL devs
+type ipa_adpl_device_t;
+type ipa_odl_ctl_device_t;
+
+dev_node(ipa_adpl_device_t)
+dev_node(ipa_odl_ctl_device_t)
+
