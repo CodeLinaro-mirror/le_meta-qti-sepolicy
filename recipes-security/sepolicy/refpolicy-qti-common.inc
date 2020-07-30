@@ -16,8 +16,7 @@ RPROVIDES_${PN} += "sepolicy"
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 
-# Contrib modules not declared here are turned off
-CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient hostapd"
+PURGE_POLICY_MODULES += "cgmanager automount"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
@@ -50,26 +49,3 @@ do_patch_append() {
     if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
         install_device_policy(d, d.getVar("BASEMACHINE"))
 }
-
-python do_update_modules_conf () {
-    contrib_modules = d.getVar("CONTRIB_MODULES").split()
-    module_conf_name = os.path.join(d.getVar("S"), "policy", "modules.conf")
-    new_file = ""
-
-    with open(module_conf_name, 'r') as modules_file:
-        layer = None
-        for line in modules_file.readlines():
-            if line.startswith('# Layer'):
-                layer = line.split(':')[-1].strip()
-            elif '=' in line:
-                module_name = line.split('=')[0].strip()
-                if layer == "contrib" and module_name not in contrib_modules:
-                    new_file += module_name + ' = off\n'
-                    continue
-            new_file += line
-
-    # Save the updated modules.conf
-    with open(module_conf_name, 'w') as modules_file:
-        modules_file.write(new_file)
-}
-addtask update_modules_conf after do_patch before do_compile
