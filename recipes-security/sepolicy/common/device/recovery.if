@@ -48,6 +48,7 @@ interface(`recovery_upgrade_rw_files',`
 
     manage_user_data_files($1, data_otapackage_t)
     filetrans_pattern($1, cache_t, cache_recoveryupgrade_t, { file dir })
+    filetrans_pattern($1, data_t, data_otapackage_t, { file dir })
     files_tmp_filetrans($1, recovery_initrc_tmp_t, { file dir })
     kernel_read_system_state($1)
     dev_read_sysfs($1)
