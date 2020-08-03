@@ -66,6 +66,15 @@ allow dataadpl_t self:sock_file rw_sock_file_perms;
 allow dataadpl_t event_device_t:chr_file { read write };
 allow dataadpl_t socket_device_t:dir { search };
 
+ipa_adpl_rw_dev(dataadpl_t)
+ipa_odl_ctl_rw_dev(dataadpl_t)
+
+# Manage files inside /tmp
+type dataadpl_tmp_t;
+files_tmp_file(dataadpl_tmp_t);
+files_tmp_filetrans(dataadpl_t, dataadpl_tmp_t, file)
+allow dataadpl_t dataadpl_tmp_t:file manage_file_perms;
+
 # Manage private files inside /var/run
 type dataadpl_var_run_t;
 files_pid_file(dataadpl_var_run_t)
