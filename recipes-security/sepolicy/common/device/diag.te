@@ -50,6 +50,7 @@ userdebug_or_eng(`
    allow diag_t self:capability2 block_suspend;
    allow diag_t self:process signal;
    allow diag_t self:tcp_socket { create setopt connect };
+   ipa_adpl_rw_dev(diag_t)
    dev_rw_sysfs(diag_t)
    corenet_tcp_connect_all_unreserved_ports(diag_t)
    manage_files_pattern(diag_t, sdcard_t, sdcard_t)
