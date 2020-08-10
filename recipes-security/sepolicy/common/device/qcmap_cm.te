@@ -255,6 +255,7 @@ gen_require(`
     type wpa_cli_t;
     type minidlna_exec_t;
     type webserver_socket_device_t;
+    type ddclient_var_run_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -362,6 +363,9 @@ dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
 search_dirs_pattern(qcmap_cm_t, var_lib_t, var_lib_t)
 
+##### DDNS
+read_files_pattern(qcmap_cm_t, ddclient_var_run_t, ddclient_var_run_t)
+
 ##### MINIUPNPD
 corenet_tcp_connect_virt_migration_port(qcmap_cm_t)
 allow qcmap_cm_t { unreserved_port_t }:tcp_socket { name_connect };
@@ -381,6 +385,20 @@ systemd_status_power_units(qcmap_cm_t)
 allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
 device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
 allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
+
+##### WLAN CDI
+allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
+allow hostapd_cli_qcmap_t self: process { getcap setcap };
+
+#### WLAN STA Backhaul
+allow wpa_cli_t self: capability { setpcap setgid setuid };
+allow wpa_cli_t self: process { getcap setcap };
+
+##### QXDM logs for QCMAP STA interface
+userdebug_or_eng(`
+     rw_diag_dev(hostapd_cli_qcmap_t);
+     rw_diag_dev(wpa_cli_t);
+')
 
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
@@ -514,6 +532,7 @@ allow tinyproxy_t net_conf_t:file read_file_perms;
 search_dirs_pattern(tinyproxy_t, init_var_run_t, init_var_run_t)
 corenet_tcp_connect_http_cache_port(tinyproxy_t)
 manage_files_pattern(tinyproxy_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+corenet_tcp_connect_http_port(tinyproxy_t)
 
 #miniupnpd policies
 type miniupnp_t;
