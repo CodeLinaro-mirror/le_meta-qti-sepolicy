@@ -38,7 +38,7 @@ ifdef(`init_systemd',`
     #  Use a type transition rule to ensure this directory is
     #  created with the right context.
     allow syslogd_t var_run_t:dir create_dir_perms;
-    type_transition syslogd_t var_run_t:dir var_log_t "log";
+    #type_transition syslogd_t var_run_t:dir var_log_t "log";
 
     # Create logging subdirectories in /var and transition to var_log_t
     files_manage_var_dirs(syslogd_t)

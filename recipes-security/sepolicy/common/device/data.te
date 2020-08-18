@@ -29,6 +29,7 @@ policy_module(data, 1.0)
 
 gen_require(`
     type mount_t;
+    type init_t;
     type initrc_t;
     attribute mountpoint;
     attribute domain;
@@ -60,10 +61,12 @@ neverallow ~{
     domain_can_read_userdata
     domain_can_write_userdata
     mount_t
+    init_t
 } { user_data -coredump_data_t }:file read_file_perms;
 neverallow ~{
     domain_can_write_userdata
     mount_t
+    init_t
 } { user_data -coredump_data_t }:file { create setattr write append rename link unlink };
 
 attribute system_data;
@@ -79,10 +82,12 @@ neverallow ~{
     domain_can_read_systemdata
     domain_can_write_systemdata
     mount_t
+    init_t
 } system_data:file read_file_perms;
 neverallow ~{
     domain_can_write_systemdata
     mount_t
+    init_t
 } system_data:file { create setattr write append rename link unlink };
 
 # Disallow execution from any writable partition (except from unconfined context)
