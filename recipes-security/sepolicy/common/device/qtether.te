@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -44,6 +44,7 @@ gen_require(`
     type qti_ppp_socket_device_t;
     type dataqti_ppp_t;
     type ipa_fw_device_t;
+    type configfs_t;
 ')
 dontaudit qtether_t default_t:dir { search };
 
@@ -104,3 +105,5 @@ dontaudit qtether_t self: capability {setuid setgid};
 #for IPA IOCTL
 rw_chr_files_pattern(qtether_t, device_t, ipa_fw_device_t)
 
+#for usb composition pid
+read_files_pattern(qtether_t, configfs_t, configfs_t)
