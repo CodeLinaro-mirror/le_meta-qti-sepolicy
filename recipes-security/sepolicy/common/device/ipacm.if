@@ -55,3 +55,22 @@ interface(`ipa_nat_table_rw_dev',`
        rw_chr_files_pattern($1, device_t, ipa_nat_table_device_t)
 ')
 
+interface(`ipa_adpl_rw_dev',`
+        gen_require(`
+               type device_t;
+               type ipa_adpl_device_t;
+       ')
+
+       rw_chr_files_pattern($1, device_t, ipa_adpl_device_t)
+')
+
+interface(`ipa_odl_ctl_rw_dev',`
+        gen_require(`
+               type device_t;
+               type ipa_odl_ctl_device_t;
+       ')
+
+       rw_chr_files_pattern($1, device_t, ipa_odl_ctl_device_t)
+')
+
+

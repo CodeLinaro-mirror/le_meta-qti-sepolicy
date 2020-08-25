@@ -38,4 +38,6 @@
 /dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
 /dev/wwan_ioctl                  -c   gen_context(system_u:object_r:ipa_wwan_device_t,s0)
 /dev/ipaNatTable                 -c   gen_context(system_u:object_r:ipa_nat_table_device_t,s0)
+/dev/ipa_adpl                    -c   gen_context(system_u:object_r:ipa_adpl_device_t,s0)
+/dev/ipa_odl_ctl                 -c   gen_context(system_u:object_r:ipa_odl_ctl_device_t,s0)
 /dev/socket/data/ipa(/.*)?            gen_context(system_u:object_r:ipacm_socket_device_t,s0)
