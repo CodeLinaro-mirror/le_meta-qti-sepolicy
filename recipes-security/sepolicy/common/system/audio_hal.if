@@ -54,6 +54,7 @@ interface(`audio_hal_files_access',`
     allow $1 audio_hal_etc_t:file { read open getattr };
     allow $1 audio_hal_etc_acdb_t:file { read getattr open };
     allow $1 audio_hal_etc_acdb_t:dir { read search getattr open };
+    allow $1 self:fifo_file rw_fifo_file_perms;
 ')
 
 interface(`audio_hal_access',`
