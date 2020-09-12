@@ -142,6 +142,7 @@ allow loc_hald_t xtra_daemon_t:unix_dgram_socket sendto;
 allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
+qcmap_cm_sendto_unix_dgram_socket(loc_hald_t);
 dev_read_urand(loc_hald_t);
 
 # temporary fix till /target changes are made cr#2387138
