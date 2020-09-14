@@ -1,0 +1,22 @@
+From 050b2d065f15c412626788e27ba04e4df520d6a0 Mon Sep 17 00:00:00 2001
+From: saikiran jayanthi <jayanthi@codeaurora.org>
+Date: Fri, 8 May 2020 11:55:36 +0530
+Subject: [PATCH] augenrules-change-shell-to-sh
+
+---
+ init.d/augenrules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/init.d/augenrules b/init.d/augenrules
+index e6143a3..d482d2e 100644
+--- a/init.d/augenrules
++++ b/init.d/augenrules
+@@ -1,4 +1,4 @@
+-#!/bin/bash
++#!/bin/sh
+
+ # Script to concatenate rules files found in a base audit rules directory
+ # to form a single /etc/audit/audit.rules file suitable for loading into
+--
+2.7.4
+
