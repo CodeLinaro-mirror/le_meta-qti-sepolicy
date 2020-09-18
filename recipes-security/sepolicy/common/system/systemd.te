@@ -58,6 +58,7 @@ ifdef(`init_systemd',`
         type init_var_run_t;
         type udev_var_run_t;
         type etc_t;
+        type fs_scrub_tmp_t;
     ')
     # init_write_pid_socket
     rw_sock_files_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
@@ -68,6 +69,7 @@ ifdef(`init_systemd',`
 
     allow systemd_tmpfiles_t etc_t:lnk_file create;
     allow systemd_logind_t systemd_logind_var_run_t:dir manage_dir_perms;
+    dontaudit systemd_tmpfiles_t fs_scrub_tmp_t:lnk_file getattr;
 ')
 
 userdebug_or_eng(`
