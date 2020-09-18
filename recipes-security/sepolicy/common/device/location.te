@@ -422,6 +422,7 @@ allow { loc_t loc_hald_t xtra_daemon_t engine_service_t } loc_socket_t:dir manag
 allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } self:fifo_file rw_fifo_file_perms;
 
 allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
+allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_socket_t:lnk_file { create write};
 allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
 allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
