@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,4 +26,3 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/netmgrd        --      gen_context(system_u:object_r:qnetmgrd_exec_t,s0)
-/var/run/lptd_connect_socket -- gen_context(system_u:object_r:lptd_connect_socket_t,s0)
