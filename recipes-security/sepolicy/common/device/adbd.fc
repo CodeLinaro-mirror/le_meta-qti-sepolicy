@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -28,9 +28,11 @@
 /sbin/adbd              --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
 /sbin/usb_composition   --      gen_context(system_u:object_r:adbd_exec_t,mls_systemhigh)
 /etc/launch_adbd        --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
+/sbin/launch_adbd       --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 
 /etc/rc\.d/init\.d/usb  --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 /etc/initscripts/usb    --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
+/sbin/start_usb         --      gen_context(system_u:object_r:adbd_initrc_exec_t,mls_systemhigh)
 
 /etc/adb_devid            --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
 /etc/usb/boot_hsusb_comp  --    gen_context(system_u:object_r:adbd_system_data_t,mls_systemhigh)
