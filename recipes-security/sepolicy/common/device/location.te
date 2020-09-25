@@ -302,6 +302,7 @@ miscfiles_read_generic_certs(xtra_daemon_t)
 dev_read_sysfs(xtra_daemon_t)
 leprop_rw_props(xtra_daemon_t)
 kernel_read_vm_overcommit_sysctl(xtra_daemon_t)
+kernel_dontaudit_read_system_state(xtra_daemon_t);
 
 ##access qdma socket
 rw_vendor_qdma_sock_file(xtra_daemon_t);
