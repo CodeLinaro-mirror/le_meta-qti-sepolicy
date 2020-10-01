@@ -279,10 +279,14 @@ interface(`device_read_ubi_device',`
 interface(`device_manage_socket_file',`
     gen_require(`
         type socket_device_t;
+        type systemd_tmpfiles_t;
     ')
 
-    type_transition $1 socket_device_t:sock_file $2 $3;
+    type_transition $1 socket_device_t:{ sock_file dir } $2 $3;
     manage_sock_files_pattern($1, socket_device_t, $2)
+    # tmpfiles commonly updates DAC permissions in this directory
+    manage_dirs_pattern(systemd_tmpfiles_t, $2, $2)
+    systemd_tmpfilesd_managed($2, dir)
 ')
 
 ########################################
