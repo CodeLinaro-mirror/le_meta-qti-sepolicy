@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -40,10 +40,6 @@ type iotd_tmp_t;
 init_vendor_domain(iotd_t, iotd_exec_t)
 
 gen_require(`
-	type init_var_run_t;
-	type syslogd_var_run_t;
-	type syslogd_t;
-	type devlog_t;
 	type sysfs_t;
 ')
 
@@ -57,11 +53,7 @@ rw_chr_files_pattern(iotd_t, device_t, iotd_device_t);
 allow iotd_t self:unix_dgram_socket { create connect write };
 
 allow iotd_t iotd_etc_t:file read_file_perms; #/etc/iotd_config.ini
-allow iotd_t init_var_run_t:dir search; #./run/systemd
 allow iotd_t sysfs_t:file { read write open }; #/sys/firmware/devicetree/base/model, /sys/class/gpio/export
 allow iotd_t sysfs_t:lnk_file read; #/sys/class/gpio/gpio58
 
-allow iotd_t syslogd_t:unix_dgram_socket sendto; #/run/systemd/journal/dev-log
-allow iotd_t syslogd_var_run_t:dir search_dir_perms; #/run/systemd/journal
-allow iotd_t syslogd_var_run_t:sock_file write; #/run/systemd/journal/dev-log
-allow iotd_t devlog_t:sock_file write_sock_file_perms; #/run/systemd/journal/dev-log
+logging_send_syslog_msg(iotd_t)

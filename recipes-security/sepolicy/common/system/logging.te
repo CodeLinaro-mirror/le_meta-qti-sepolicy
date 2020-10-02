@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,30 +26,35 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ifdef(`init_systemd',`
-    # Allow systemd-journal access to /run/machine-id
-    read_files_pattern(syslogd_t, init_var_run_t, init_var_run_t)
+    # dev-log is supposed to obtain its context from either
+    #  files_pid_filetrans (for var_run_t directories) or
+    #  init_pid_filetrans (for init_var_run_t directories). SELinux
+    #  denials are also pointing to syslogd_var_run_t as a parent directory
+    type_transition syslogd_t syslogd_var_run_t:sock_file devlog_t "dev-log";
 
-    # Allowed in later versions upstream
-    allow syslogd_t syslogd_var_run_t:dir create_dir_perms;
-    allow syslogd_t syslogd_var_run_t:sock_file  { create setattr };
+    # This is an attempt from systemd-journald (syslogd_t:s15) to communicate
+    #  with busybox syslogd (syslogd_t:s0-s15). Instead of allowing access
+    #  to any service with s0-s15 permissions to systemd-journal, just add
+    #  a dontaudit rule.
+    dontaudit syslogd_t self:unix_stream_socket { setopt shutdown write };
 
-    # In permissive mode, /run/log is relabeled as var_log_t. In
-    #  enforcing mode, /run/log inherits var_run_t from the parent.
-    #  Use a type transition rule to ensure this directory is
-    #  created with the right context.
-    allow syslogd_t var_run_t:dir create_dir_perms;
-    #type_transition syslogd_t var_run_t:dir var_log_t "log";
+    # Test for presence of other daemons without actually sending a signal
+    domain_signull_all_domains(syslogd_t)
+    # For /run/systemd/journal/io.systemd.journal
+    allow syslogd_t syslogd_var_run_t:sock_file create_sock_file_perms;
 
-    # Create logging subdirectories in /var and transition to var_log_t
-    files_manage_var_dirs(syslogd_t)
-    files_manage_var_files(syslogd_t)
-    files_var_filetrans(syslogd_t, var_log_t, { file dir })
+    # There may be a race condition where some other service is creating
+    #  log directories before systemd-tmpfiles has a chance to create them.
+    gen_require(`
+        type systemd_tmpfiles_t;
+    ')
+    # syslogd_tmp_t has a higher mls clearance than systemd-tmpfiles, so dontaudit this
+    dontaudit systemd_tmpfiles_t syslogd_tmp_t:dir { setattr relabelfrom relabelto create };
+    # Allow creating additional files/directories in generic var_log_t directories
+    systemd_tmpfilesd_managed(var_log_t, dir)
 
     # If auditd is not running, don't report attempts from
     #  systemd-journal to turn it back on.
     dontaudit syslogd_t self:capability audit_control;
     dontaudit syslogd_t self:netlink_audit_socket nlmsg_write;
-
-    allow syslogd_t var_t:dir { write read add_name remove_name };
-    allow syslogd_t var_t:file { create append rename unlink };
 ')
