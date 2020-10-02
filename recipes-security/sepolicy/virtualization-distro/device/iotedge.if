@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,12 +25,24 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/qti    --      gen_context(system_u:object_r:qtether_exec_t,s0)
+## <summary>iotedge daemon</summary>
 
-/dev/smdcntl8           -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/rmnet_ctrl         -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/rmnet_v2x_ctrl     -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/mhi_pipe_14        -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/mhi_ctrl           -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/emac               -c      gen_context(system_u:object_r:dataqti_device_t,s0)
+########################################
+## <summary>
+##      Connect to iotedge over an unix stream socket.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`iotedge_stream_connect',`
+        gen_require(`
+                type iotedge_t, iotedge_run_t;
+        ')
 
+        files_search_pids($1)
+        allow $1 iotedge_run_t:sock_file mounton;
+        stream_connect_pattern($1, iotedge_run_t, iotedge_run_t, iotedge_t)
+')
