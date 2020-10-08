@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,17 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#keep /etc/initscripts/sfs_config path for targets that do not have sfs path change in securemsm
-/etc/initscripts/sfs_config    --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
-/sbin/sfs_config               --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
+/usr/bin/iotedge       --      gen_context(system_u:object_r:iotedge_exec_t,s0)
+/usr/bin/iotedged      --      gen_context(system_u:object_r:iotedge_exec_t,s0)
+
+/etc/iotedge(/.*)?             gen_context(system_u:object_r:iotedge_config_t,s0)
+
+/usr/lib/systemd/system/iotedge\.service      --    gen_context(system_u:object_r:iotedge_unit_t,s0)
+/usr/lib/systemd/system/iotedge\.socket       --    gen_context(system_u:object_r:iotedge_unit_t,s0)
+/usr/lib/systemd/system/iotedge\.mgmt\.socket --    gen_context(system_u:object_r:iotedge_unit_t,s0)
+
+/run/iotedge/mgmt.sock     -s  gen_context(system_u:object_r:iotedge_run_t,s0)
+/run/iotedge/workload.sock -s  gen_context(system_u:object_r:iotedge_run_t,s0)
+/run/iotedge(/.*)?             gen_context(system_u:object_r:iotedge_run_t,s0)
+
+/var/lib/iotedge(/.*)?         gen_context(system_u:object_r:iotedge_data_t,s0)
