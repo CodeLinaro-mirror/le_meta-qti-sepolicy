@@ -31,6 +31,11 @@ ifdef(`init_systemd',`
         # systemd-journal is s15
         # For: allow syslogd_t init_t:unix_dgram_socket sendto;
         mls_trusted_socket(init_t)
+        mls_file_upgrade(init_t)
+        # Similar to mls_file_downgrade(kernel_t), but init binary has correct
+        #  label from filesystem compilation instead of only after selinux-init
+        #  runtime relabeling.
+        mls_file_downgrade(init_t)
     ')
 
     # Should be included in later upstream versions

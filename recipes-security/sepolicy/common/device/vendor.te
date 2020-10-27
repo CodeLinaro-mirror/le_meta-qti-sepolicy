@@ -115,6 +115,11 @@ user_data_files_type(mpss_persist_t)
 type adsp_persist_t;
 user_data_files_type(adsp_persist_t)
 
+### misc files ###
+
+type target_etc_t;
+files_type(target_etc_t)
+
 ### dev nodes ###
 
 type subsys_modem_device_t;
