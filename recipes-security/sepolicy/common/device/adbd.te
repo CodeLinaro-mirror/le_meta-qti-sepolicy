@@ -183,6 +183,10 @@ manage_lnk_files_pattern(usb_t, { device_t usb_dev_t }, usb_dev_t)
 
 vendor_read_target(usb_t)
 
+# TODO: usb scripts need to call insmod instead
+allow usb_t kernel_t:system module_request;
+auditallow usb_t kernel_t:system module_request;
+
 gen_require(`
     type mount_t;
 ')
