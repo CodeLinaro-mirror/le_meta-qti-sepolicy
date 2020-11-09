@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,11 +26,6 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ifdef(`init_systemd',`
-    init_use_script_ptys(systemd_passwd_agent_t)
-
-    allow systemd_passwd_agent_t init_var_run_t:dir { create open read add_name write getattr search };
-    allow systemd_passwd_agent_t proc_t:file { read open };
-
     # This should respect systemd_tmpfiles_manage_all tunable, but
     #  typeattribute does not work in that context.
     gen_require(`
@@ -38,45 +33,7 @@ ifdef(`init_systemd',`
     ')
     manage_user_data_files(systemd_tmpfiles_t, user_data)
     relabel_all_data_files(systemd_tmpfiles_t)
-    files_manage_var_dirs(systemd_tmpfiles_t)
-    files_read_generic_tmp_symlinks(systemd_tmpfiles_t)
-    fs_getattr_all_xattr_fs(systemd_tmpfiles_t)
-    fs_getattr_noxattr_fs(systemd_tmpfiles_t)
-    selinux_getattr_fs(systemd_tmpfiles_t)
-    kernel_getattr_proc(systemd_tmpfiles_t)
 
-    allow daemon init_t:unix_dgram_socket sendto;
-    fs_getattr_cgroup(systemd_logind_t)
-    fs_read_cgroup_files(systemd_logind_t)
-    init_dgram_send(systemd_cgroups_t)
-    init_stream_connect(systemd_cgroups_t)
-    seutil_read_file_contexts(systemd_logind_t)
-    allow systemd_logind_t init_t:system { start status stop };
-    allow systemd_logind_t self:process { getcap setfscreate };
-
-    gen_require(`
-        type init_var_run_t;
-        type udev_var_run_t;
-        type etc_t;
-    ')
-    # init_write_pid_socket
-    rw_sock_files_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
-    # init_create_pid_dirs
-    create_dirs_pattern(systemd_logind_t, init_var_run_t, init_var_run_t)
-    # udev_list_pids
-    allow systemd_logind_t udev_var_run_t:dir { read };
-
-    allow systemd_tmpfiles_t etc_t:lnk_file create;
-    allow systemd_logind_t systemd_logind_var_run_t:dir manage_dir_perms;
+    # systemd-journal catalog functionality
+    files_map_etc_files(systemd_tmpfiles_t)
 ')
-
-userdebug_or_eng(`
-        gen_require(`
-             type init_var_run_t;
-             type initrc_t;
-             type systemd_logind_var_run_t;
-        ')
-        allow systemd_logind_t init_var_run_t:sock_file write;
-        allow systemd_logind_t initrc_t:unix_stream_socket connectto;
-        allow systemd_logind_t systemd_logind_var_run_t:sock_file write;
- ')

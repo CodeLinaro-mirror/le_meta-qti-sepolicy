@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -85,13 +85,12 @@ userdebug_or_eng(`
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd1.log")
     networkmanager_wifi_data_filetrans(NetworkManager_t, file, "hostapd2.log")
 ')
-# dhcpc_t access syslogd_var_run_t, systemd_resolved_var_run_t, init_var_run_t
+# dhcpc_t access systemd_resolved_var_run_t, init_var_run_t
 gen_require(`
-    type syslogd_var_run_t;
     type systemd_resolved_var_run_t;
     type init_var_run_t;
 ')
-allow dhcpc_t syslogd_var_run_t:sock_file { write };
+logging_send_syslog_msg(dhcpc_t)
 allow dhcpc_t systemd_resolved_var_run_t:file { open write };
 allow dhcpc_t init_var_run_t:file { getattr setattr open write };
 #TODO properly con_mode node

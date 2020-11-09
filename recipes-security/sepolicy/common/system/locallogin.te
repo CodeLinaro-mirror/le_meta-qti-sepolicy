@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -31,3 +31,6 @@ gen_require(`
 
 logging_log_filetrans(local_login_t, lastlog_t, file)
 allow local_login_t lastlog_t:file create;
+
+# Required when libpam isn't being used
+auth_read_shadow(local_login_t)
