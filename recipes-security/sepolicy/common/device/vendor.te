@@ -247,6 +247,12 @@ dev_node(qseecom_device_t);
 type mtd_device_t;
 dev_node(mtd_device_t);
 
+type qdsp_device_t;
+dev_node(qdsp_device_t);
+
+type xdsp_device_t;
+dev_node(xdsp_device_t);
+
 ###DMA HEAP TYPES ###
 type vendor_dmabuf_tui_heap_device_t;
 dev_node(vendor_dmabuf_tui_heap_device_t);
