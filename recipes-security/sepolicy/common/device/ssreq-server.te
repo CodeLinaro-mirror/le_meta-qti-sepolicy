@@ -41,7 +41,9 @@ gen_require(`
 ')
 
 allow ssreq_server_t self:socket create_socket_perms;
+allow ssreq_server_t self:capability net_bind_service;
 dontaudit ssreq_server_t default_t:dir search;
+kernel_dontaudit_read_system_state(ssreq_server_t);
 
 #Manage Dbus sockets
 ifdef(`init_systemd',`
