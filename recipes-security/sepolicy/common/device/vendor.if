@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -86,6 +86,24 @@ interface(`vendor_kernel_load_exempt',`
     ')
 
     typeattribute $1 vendor_kernel_load_exception;
+')
+
+########################################
+## <summary>
+##      Read target file
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain to allow access to target
+##      </summary>
+## </param>
+#
+interface(`vendor_read_target',`
+    gen_require(`
+        type target_etc_t;
+    ')
+
+    allow $1 target_etc_t:file read_file_perms;
 ')
 
 ########################################
@@ -279,10 +297,14 @@ interface(`device_read_ubi_device',`
 interface(`device_manage_socket_file',`
     gen_require(`
         type socket_device_t;
+        type systemd_tmpfiles_t;
     ')
 
-    type_transition $1 socket_device_t:sock_file $2 $3;
+    type_transition $1 socket_device_t:{ sock_file dir } $2 $3;
     manage_sock_files_pattern($1, socket_device_t, $2)
+    # tmpfiles commonly updates DAC permissions in this directory
+    manage_dirs_pattern(systemd_tmpfiles_t, $2, $2)
+    systemd_tmpfilesd_managed($2, dir)
 ')
 
 ########################################

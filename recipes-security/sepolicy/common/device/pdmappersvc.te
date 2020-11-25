@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -35,7 +35,6 @@ init_vendor_domain(pdmappersvc_t, pdmappersvc_exec_t)
 gen_require(`
     type default_t;
     type firmware_t;
-    type syslogd_var_run_t;
 ')
 
 dontaudit pdmappersvc_t default_t:dir search;
@@ -45,4 +44,4 @@ firmware_read_files(pdmappersvc_t)
 allow pdmappersvc_t self:socket connected_socket_perms;
 allow pdmappersvc_t self:capability net_bind_service;
 dev_read_urand(pdmappersvc_t)
-allow pdmappersvc_t syslogd_var_run_t:sock_file write;
+logging_send_syslog_msg(pdmappersvc_t)

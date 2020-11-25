@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,6 +29,13 @@ policy_module(adbd, 1.0)
 
 type adbd_t;
 type adbd_exec_t;
+
+type usb_dev_t;
+dev_node(usb_dev_t)
+
+gen_require(`
+    type device_t;
+')
 
 # not using init_vendor_domain here due to unconfined_domain
 init_daemon_domain(adbd_t, adbd_exec_t)
@@ -64,6 +71,8 @@ fs_rw_functionfs_files(adbd_t)
 
 type adbd_system_data_t;
 system_data_files_type(adbd_system_data_t)
+
+read_files_pattern(adbd_t, { device_t usb_dev_t }, usb_dev_t)
 
 # usb initscript
 type adbd_initrc_exec_t;
@@ -116,3 +125,65 @@ userdebug_or_eng(`
     read_user_data_files(adbd_initrc_t, adb_data_conf_t)
     manage_user_data_files(pcie_initrc_t, adb_data_conf_t)
 ')
+
+type usb_t;
+type usb_exec_t;
+files_type(usb_exec_t)
+init_daemon_domain(usb_t, usb_exec_t)
+
+dev_rw_sysfs(usb_t)
+allow usb_t self:unix_stream_socket create_socket_perms;
+dev_write_kmsg(usb_t)
+allow usb_t self:fifo_file rw_fifo_file_perms;
+
+# TODO: Move to /var
+type usb_var_lock_t;
+user_data_files_type(usb_var_lock_t)
+data_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
+manage_user_data_files(usb_t, usb_var_lock_t)
+auditallow usb_t usb_var_lock_t:file manage_file_perms;
+files_pid_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
+manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
+
+adb_manage_data_files(usb_t)
+gen_require(`
+    type configfs_t;
+')
+fs_manage_configfs_dirs(usb_t)
+fs_manage_configfs_files(usb_t)
+manage_lnk_files_pattern(usb_t, configfs_t, configfs_t)
+
+# TODO: why is remounting necessary?
+gen_require(`
+    type devpts_t;
+')
+allow usb_t devpts_t:dir getattr;
+auditallow usb_t devpts_t:dir getattr;
+allow usb_t devpts_t:filesystem { getattr remount };
+auditallow usb_t devpts_t:filesystem { getattr remount };
+
+mount_domtrans(usb_t)
+kernel_read_system_state(usb_t)
+corecmd_exec_shell(usb_t)
+
+# TODO: why are these not created by kernel?
+gen_require(`
+    type sysfs_t;
+')
+allow usb_t sysfs_t:dir rw_dir_perms;
+allow usb_t sysfs_t:file create;
+
+allow usb_t usb_exec_t:file execute_no_trans;
+files_search_pids(usb_t)  # TODO: what to look for?
+
+type_transition usb_t device_t:dir usb_dev_t;
+manage_files_pattern(usb_t, { device_t usb_dev_t }, usb_dev_t)
+manage_dirs_pattern(usb_t, { device_t usb_dev_t }, usb_dev_t)
+manage_lnk_files_pattern(usb_t, { device_t usb_dev_t }, usb_dev_t)
+
+vendor_read_target(usb_t)
+
+gen_require(`
+    type mount_t;
+')
+allow mount_t usb_dev_t:dir { search getattr mounton };
