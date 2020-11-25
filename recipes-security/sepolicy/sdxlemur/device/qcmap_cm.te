@@ -47,3 +47,8 @@ allow atfwd_t initrc_t:unix_dgram_socket { sendto };
 allow atfwd_t initrc_t:unix_stream_socket { getattr connectto sendto write };
 auditallow atfwd_t initrc_t:unix_dgram_socket { sendto };
 auditallow atfwd_t initrc_t:unix_stream_socket { getattr connectto sendto write };
+
+gen_require(`
+    type systemd_tmpfiles_t;
+')
+permissive systemd_tmpfiles_t;
