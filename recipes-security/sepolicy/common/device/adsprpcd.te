@@ -59,6 +59,7 @@ gen_require(`
     type sysfs_t;
     type persist_t;
     type system_dir_t;
+    type xdsp_device_t;
 ')
 
 allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -78,6 +79,8 @@ device_search_sockets(adsprpcd_t)
 
 #allow adsprpcd_t to acces /dev/ion
 rw_chr_files_pattern(adsprpcd_t, device_t, ion_device_t);
+#allow adsprpcd_t to acces /dev/adsprpcd-smd-secure
+rw_chr_files_pattern(adsprpcd_t, device_t, xdsp_device_t);
 
 manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
 
