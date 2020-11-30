@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -54,3 +54,4 @@ allow qmuxbridge_t qmuxbridge_data_t:{ file dir } { create open read write getat
 allow qmuxbridge_t self:process { signal };
 allow qmuxbridge_t self:netlink_kobject_uevent_socket { create read setopt bind };
 files_dontaudit_list_default(qmuxbridge_t);
+allow qmuxbridge_t self:qipcrtr_socket { create };
