@@ -31,3 +31,19 @@ allow qcmap_cm_t tmpfs_t:dir { search };
 auditallow qcmap_cm_t initrc_t:unix_stream_socket connectto;
 auditallow qcmap_cm_t initrc_t:unix_dgram_socket sendto;
 auditallow qcmap_cm_t tmpfs_t:dir { search };
+
+gen_require(`
+    type ipacm_diag_t;
+')
+allow ipacm_diag_t initrc_t:unix_dgram_socket { sendto };
+allow ipacm_diag_t initrc_t:unix_stream_socket { getattr connectto sendto write };
+auditallow ipacm_diag_t initrc_t:unix_dgram_socket { sendto };
+auditallow ipacm_diag_t initrc_t:unix_stream_socket { getattr connectto sendto write };
+
+gen_require(`
+    type atfwd_t;
+')
+allow atfwd_t initrc_t:unix_dgram_socket { sendto };
+allow atfwd_t initrc_t:unix_stream_socket { getattr connectto sendto write };
+auditallow atfwd_t initrc_t:unix_dgram_socket { sendto };
+auditallow atfwd_t initrc_t:unix_stream_socket { getattr connectto sendto write };
