@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,8 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/sbin/reboot-daemon     -- gen_context(system_u:object_r:rebootd_exec_t,s0)
-/etc/rc\.d/init\.d/reset_reboot_cookie   -- gen_context(system_u:object_r:reset_reboot_initrc_exec_t,s0)
-/etc/initscripts/reset_reboot_cookie   -- gen_context(system_u:object_r:reset_reboot_initrc_exec_t,s0)
-/data/reboot-cookie         gen_context(system_u:object_r:reboot_cookie_data_t,s0)
-/dev/rebooterdev            gen_context(system_u:object_r:rebootd_pipe_t,s0)
+allow diagrebootapp_t initrc_t:unix_stream_socket connectto;
+allow diagrebootapp_t initrc_t:unix_dgram_socket sendto;
+auditallow diagrebootapp_t initrc_t:unix_stream_socket connectto;
+auditallow diagrebootapp_t initrc_t:unix_dgram_socket sendto;
