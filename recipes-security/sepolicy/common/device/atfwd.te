@@ -64,6 +64,10 @@ allow atfwd_t self:dir { search write create };
 allow atfwd_t self:sock_file { write create };
 allow atfwd_t self:netlink_generic_socket { create bind write };
 allow atfwd_t socket_device_t:dir { search write add_name remove_name };
+ifdef(`init_systemd', `
+    systemd_start_power_units(atfwd_t)
+')
+kernel_read_kernel_sysctls(atfwd_t)
 allow atfwd_t devlog_t:sock_file write;
 allow atfwd_t syslogd_t:unix_dgram_socket sendto;
 allow atfwd_t socket_device_t:sock_file { create write unlink setattr};
