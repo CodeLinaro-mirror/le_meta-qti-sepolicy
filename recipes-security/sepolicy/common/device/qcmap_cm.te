@@ -285,6 +285,7 @@ dontaudit qcmap_cm_t sysfs_t:file { create };
 
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
+allow iptables_t qcmap_cm_t:unix_stream_socket { read write };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
 
@@ -418,8 +419,8 @@ gen_require(`
 
 hostapd_manage_services(qcmap_cm_t)
 
-allow qcmap_cm_t hostapd_exec_t:service { start stop };
-allow qcmap_cm_t hostapd_cli_exec_t:service { start stop };
+allow qcmap_cm_t hostapd_exec_t:service { start stop status };
+allow qcmap_cm_t hostapd_cli_exec_t:service { start stop status };
 allow qcmap_cm_t hostapd_cli_exec_t:file exec_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
