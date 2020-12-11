@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -53,10 +53,15 @@ files_rw_qcmap_etc_data_files(qtether_t)
 vendor_kernel_load_exempt(qtether_t)  # TODO: Request init to load the module
 kernel_load_module(qtether_t)
 
-allow qtether_t self:{ socket udp_socket } create_socket_perms;
+allow qtether_t self:{ socket udp_socket qipcrtr_socket } create_socket_perms;
 allow qtether_t self:netlink_route_socket { create_socket_perms nlmsg_read nlmsg_write };
 allow qtether_t self:fifo_file rw_fifo_file_perms;
 allow qtether_t self:capability { net_raw net_admin };
+
+userdebug_or_eng('
+        allow qtether_t kmsg_device_t:chr_file { write };
+        mls_file_write_all_levels(qtether_t);
+')
 
 # Don't implicitly load kernel modules
 kernel_dontaudit_request_load_module(qtether_t)

@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -55,7 +55,10 @@ files_pid_filetrans(mbim_t, mbim_var_run_t, { file dir })
 files_rw_qcmap_etc_data_files(mbim_t)
 
 userdebug_or_eng(`
-   rw_diag_dev(mbim_t)
+   rw_diag_dev(mbim_t);
+   mls_file_write_all_levels(mbim_t);
+   dev_write_kmsg(mbim_t);
+   dev_write_kmsg(mbim_fw_t);
 ')
 
 gen_require(`
@@ -73,7 +76,6 @@ ifdef(`init_systemd',`
 
 logging_send_syslog_msg(mbim_t)
 dev_rw_sysfs(mbim_t)
-dev_write_kmsg(mbim_t)
 dev_node(mbim_device_t)
 mbim_rw_device(mbim_t)
 dev_read_urand(mbim_t)
@@ -82,7 +84,6 @@ init_script_file(mbimd_unit_t)
 filetrans_pattern(mbim_fw_t, cache_t, cache_recovery_t, { file dir })
 
 device_search_sockets(mbim_t)
-dev_write_kmsg(mbim_fw_t)
 dev_rw_sysfs(mbim_fw_t)
 files_type(cache_recovery_t)
 allow mbim_fw_t self:capability sys_boot;
@@ -105,3 +106,4 @@ allow mbim_t mbimd_unit_t:service { start };
 allow mbim_t systemd_logind_var_run_t:sock_file { write };
 allow mbim_t fs_t:filesystem { getattr };
 allow mbim_t proc_t:file read_file_perms;
+allow mbim_t self:qipcrtr_socket { create read write getattr setopt };

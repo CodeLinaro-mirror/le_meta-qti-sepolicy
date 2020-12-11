@@ -74,6 +74,8 @@ gen_require(`
   type unreserved_port_t;
   type minidlna_initrc_exec_t;
   type debugfs_t;
+  type usb_t;
+  type brctl_exec_t;
 ')
 
 userdebug_or_eng(`
@@ -93,11 +95,20 @@ corecmd_exec_bin(qcmap_cm_t)
 rw_chr_files_pattern(qcmap_cm_t, device_t, datadpo_device_t)
 rw_chr_files_pattern(qcmap_cm_t, device_t, datamtd_device_t)
 
+allow usb_t qcmap_etc_data_t:file { getattr read open };
+allow ifconfig_t qcmap_cm_t:unix_stream_socket { read write };
+allow kmod_t qcmap_cm_t:unix_stream_socket { read write };
+allow qcmap_cm_t brctl_exec_t:file { read open execute execute_no_trans getattr };
+
+userdebug_or_eng(`
+        allow qcmap_cm_t kmsg_device_t:chr_file { write };
+        mls_file_write_all_levels(qcmap_cm_t);
+')
 allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket connected_stream_socket_perms;
 allow qcmap_cm_t self:socket connected_stream_socket_perms;
-allow qcmap_cm_t self:socket create_socket_perms;
+allow qcmap_cm_t self:{ socket qipcrtr_socket } { create_socket_perms };
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
@@ -274,6 +285,7 @@ dontaudit qcmap_cm_t sysfs_t:file { create };
 
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
+allow iptables_t qcmap_cm_t:unix_stream_socket { read write };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
 
@@ -371,6 +383,7 @@ kernel_search_fs_sysctls(qcmap_cm_t)
 kernel_rw_fs_sysctls(qcmap_cm_t)
 ##### Reboot the device
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
+
 systemd_start_power_units(qcmap_cm_t)
 systemd_status_power_units(qcmap_cm_t)
 
@@ -406,8 +419,8 @@ gen_require(`
 
 hostapd_manage_services(qcmap_cm_t)
 
-allow qcmap_cm_t hostapd_exec_t:service { start stop };
-allow qcmap_cm_t hostapd_cli_exec_t:service { start stop };
+allow qcmap_cm_t hostapd_exec_t:service { start stop status };
+allow qcmap_cm_t hostapd_cli_exec_t:service { start stop status };
 allow qcmap_cm_t hostapd_cli_exec_t:file exec_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
