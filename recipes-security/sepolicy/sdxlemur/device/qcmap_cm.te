@@ -52,3 +52,11 @@ gen_require(`
     type systemd_tmpfiles_t;
 ')
 permissive systemd_tmpfiles_t;
+
+gen_require(`
+ type mbim_t;
+')
+allow mbim_t initrc_t:unix_dgram_socket { sendto };
+allow mbim_t initrc_t:unix_stream_socket { getattr connectto sendto write };
+auditallow mbim_t initrc_t:unix_dgram_socket { sendto };
+auditallow mbim_t initrc_t:unix_stream_socket { getattr connectto sendto write };
