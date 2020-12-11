@@ -116,6 +116,15 @@ user_data_files_type(mpss_persist_t)
 type adsp_persist_t;
 user_data_files_type(adsp_persist_t)
 
+### init.post_boot.sh
+
+type post_boot_script_t;
+type post_boot_script_exec_t;
+files_type(post_boot_script_exec_t)
+init_script_domain(post_boot_script_t, post_boot_script_exec_t)
+
+dev_rw_sysfs(post_boot_script_t)
+
 ### dev nodes ###
 
 type subsys_modem_device_t;
