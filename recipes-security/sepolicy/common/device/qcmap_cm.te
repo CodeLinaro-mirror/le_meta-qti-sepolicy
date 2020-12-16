@@ -53,6 +53,12 @@ type tinyproxy_etc_t;
 type tinyproxy_var_run_t;
 init_vendor_domain(tinyproxy_t, tinyproxy_exec_t )
 
+gen_require(`
+    type systemd_tmpfiles_t;
+')
+systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
+allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
+
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
@@ -186,6 +192,7 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
+systemd_tmpfilesd_managed(qcmap_tmp_t, dir)
 allow qcmap_cm_t qcmap_tmp_t:file { relabelfrom relabelto };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
