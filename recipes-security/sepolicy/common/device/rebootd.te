@@ -39,6 +39,7 @@ dev_node(rebootd_pipe_t)
 
 gen_require(`
     type device_t;
+    type system_dbusd_var_run_t;
 ')
 type_transition rebootd_t device_t:fifo_file rebootd_pipe_t "rebooterdev";
 manage_fifo_files_pattern(rebootd_t, device_t, rebootd_pipe_t)
@@ -65,7 +66,13 @@ userdebug_or_eng(`
     allow rebootd_t self:capability setuid;
     allow rebootd_t self:unix_dgram_socket create_socket_perms;
     allow rebootd_t var_run_t:dir create_dir_perms;
+    allow rebootd_t system_dbusd_var_run_t:dir search;
 ')
+
+kernel_read_kernel_sysctls(rebootd_t)
+systemd_start_power_units(rebootd_t)
+init_stream_connect(rebootd_t)
+
 ## reset reboot cookie script ##
 type reset_reboot_initrc_exec_t;
 type reset_reboot_initrc_t;

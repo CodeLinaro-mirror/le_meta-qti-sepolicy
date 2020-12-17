@@ -36,5 +36,3 @@ files_mountpoint(trace_marker_t)
 genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0
 
 fs_use_xattr ubifs gen_context(system_u:object_r:fs_t,s0);
-
-genfscon sysfs /power gen_context(system_u:object_r:trace_marker_t,s0)

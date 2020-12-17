@@ -59,4 +59,11 @@ ifdef(`init_systemd',`
     dontaudit syslogd_t self:netlink_audit_socket nlmsg_write;
 
     mls_fd_use_all_levels(syslogd_t)
+
+    gen_require(`
+        type init_var_run_t;
+    ')
+    allow syslogd_t init_var_run_t:file read_file_perms;
+    allow syslogd_t self:netlink_audit_socket nlmsg_write;
+    allow syslogd_t self:unix_stream_socket { write setopt shutdown };
 ')

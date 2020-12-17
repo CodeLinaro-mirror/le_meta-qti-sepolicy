@@ -69,6 +69,7 @@ allow loc_t self:process { setcap signal };
 allow loc_t self:netlink_route_socket read;
 allow loc_t xtra_daemon_t:process signal;
 allow loc_t slim_daemon_t:process sigkill;
+allow loc_t self:unix_stream_socket { accept connectto listen };
 
 # Drop from root
 allow loc_t self:capability { setuid setgid };
@@ -153,7 +154,7 @@ allow loc_hald_t self:process setcap;
 allow loc_hald_t self:{ socket udp_socket unix_dgram_socket } create_socket_perms;
 allow loc_hald_t node_t:udp_socket node_bind;
 allow loc_hald_t unreserved_port_t:udp_socket name_bind;
-allow loc_hald_t self:netlink_socket create_socket_perms;
+allow loc_hald_t self:{ netlink_socket qipcrtr_socket } create_socket_perms;
 allow loc_hald_t { loc_t engine_service_t }:unix_dgram_socket sendto;
 allow loc_t loc_hald_t:unix_dgram_socket sendto;
 allow loc_hald_t self:unix_dgram_socket sendto;
@@ -175,8 +176,8 @@ userdebug_or_eng(`
     corecmd_exec_shell(xtra_daemon_t);
 ')
 
-# temporary fix till /target changes are made cr#2387138
-read_files_pattern(loc_hald_t, default_t, default_t);
+# Read /target node
+vendor_read_target(loc_hald_t)
 data_filetrans(loc_hald_t, loc_data_t, { file dir })
 manage_user_data_files(loc_hald_t, loc_data_t)
 qnetmgr_use_unix_stream_sockets(loc_hald_t)
@@ -291,8 +292,8 @@ allow xtra_daemon_t socket_device_t:sock_file write;
 read_files_pattern(xtra_daemon_t, init_var_run_t, init_var_run_t);
 read_files_pattern(xtra_daemon_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
 
-# temporary fix till /target changes are made cr#2387138
-read_files_pattern(xtra_daemon_t, default_t, default_t);
+# Read /target node
+vendor_read_target(xtra_daemon_t)
 
 corenet_tcp_connect_http_port(xtra_daemon_t)
 sysnet_read_config(xtra_daemon_t)
@@ -319,6 +320,8 @@ manage_user_data_files(xtra_daemon_t, loc_data_t)
 allow xtra_daemon_t self:netlink_route_socket { create_socket_perms nlmsg_read };
 ## read resolv.conf
 read_files_pattern(xtra_daemon_t, qcmap_var_run_t, qcmap_var_run_t);
+# IPC router
+allow xtra_daemon_t self:qipcrtr_socket create_socket_perms;
 
 userdebug_or_eng(`
     allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;

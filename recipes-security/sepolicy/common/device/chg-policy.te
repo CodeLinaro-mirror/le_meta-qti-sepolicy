@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -50,10 +50,14 @@ allow chg-policy_t self:capability2 block_suspend;
 allow chg-policy_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
 allow chg-policy_t self:fifo_file rw_fifo_file_perms;
 
+userdebug_or_eng(`
+   mls_file_write_all_levels(chg-policy_t)
+   dev_write_kmsg(chg-policy_t)
+')
+
 dev_rw_sysfs(chg-policy_t)
 leprop_rw_props(chg-policy_t)
 device_search_sockets(chg-policy_t)
-dev_write_kmsg(chg-policy_t)
 data_filetrans(chg-policy_t, chg-policy-persist_data_t, file)
 manage_user_data_files(chg-policy_t, chg-policy-persist_data_t)
 
