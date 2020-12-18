@@ -50,3 +50,14 @@ do_patch_append() {
     if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
         install_device_policy(d, d.getVar("BASEMACHINE"))
 }
+
+create_data_ubi_mounted_contexts() {
+    # mkfs.ubifs does not support root path substitution like ext4 fs generation tools
+    # Create a seperate file_contexts file that just contains paths for a specific
+    #  mountpoint and adjust to make that the new 'root'
+    sed -n '/^\/data/p' \
+        ${D}/etc/selinux/mls/contexts/files/file_contexts | \
+        sed 's/^\/data//g' > \
+        ${D}/etc/selinux/mls/contexts/files/data_file_contexts
+}
+do_install[postfuncs] += "${@bb.utils.contains('IMAGE_FSTYPES', 'ubi', 'create_data_ubi_mounted_contexts', '', d)}"
