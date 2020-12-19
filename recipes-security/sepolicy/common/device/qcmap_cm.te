@@ -398,6 +398,10 @@ allow hostapd_cli_qcmap_t self: process { getcap setcap };
 
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
+gen_require(`
+  type usb_exec_t;
+')
+allow qcmap_cm_t usb_exec_t:file { execute read open execute_no_trans };
 
 ##### SSDK
 type ssdk_device_t;
