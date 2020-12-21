@@ -104,3 +104,5 @@ dontaudit qtether_t self: capability {setuid setgid};
 #for IPA IOCTL
 rw_chr_files_pattern(qtether_t, device_t, ipa_fw_device_t)
 
+#for EMAC dev node access
+emac_rw_dev(qtether_t)
