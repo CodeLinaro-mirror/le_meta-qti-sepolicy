@@ -30,6 +30,7 @@ policy_module(dataadpl, 1.0)
 type dataadpl_t;
 type dataadpl_exec_t;
 type dataadpl_device_t;
+type dataadpl_odl_device_t;
 
 init_vendor_domain(dataadpl_t, dataadpl_exec_t)
 dev_node(dataadpl_device_t)
@@ -65,6 +66,10 @@ allow dataadpl_t self:sock_file rw_sock_file_perms;
 
 allow dataadpl_t event_device_t:chr_file { read write };
 allow dataadpl_t socket_device_t:dir { search };
+
+allow dataadpl_t dataadpl_odl_device_t:chr_file { read write open };
+allow dataadpl_t self:qipcrtr_socket { setopt create getattr write read };
+dev_node(dataadpl_odl_device_t)
 
 # Manage private files inside /var/run
 type dataadpl_var_run_t;
