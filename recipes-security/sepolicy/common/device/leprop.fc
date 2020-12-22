@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,10 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/sbin/leprop-service      --    gen_context(system_u:object_r:leprop_exec_t,mls_systemhigh)
+/usr/sbin/leprop-service      --    gen_context(system_u:object_r:leprop_exec_t,s0)
 /usr/bin/setprop          --    gen_context(system_u:object_r:setprop_exec_t,s0)
 
-/build\.prop              --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
-/etc/build\.prop          --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
-/systemrw/build\.prop     --    gen_context(system_u:object_r:leprop_system_data_t,mls_systemhigh)
+/build\.prop              --    gen_context(system_u:object_r:leprop_system_data_t,s0)
+/etc/build\.prop          --    gen_context(system_u:object_r:leprop_system_data_t,s0)
+/systemrw/build\.prop     --    gen_context(system_u:object_r:leprop_system_data_t,s0)
 
