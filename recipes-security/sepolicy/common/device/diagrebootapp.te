@@ -41,9 +41,9 @@ gen_require(`
   type sysfs_t;
 ')
 
-#allow diagrebootapp_t device_t:chr_file { read write ioctl open };
+allow diagrebootapp_t rebootd_pipe_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid chown };
-#allow diagrebootapp_t device_t:fifo_file { open write };
+allow diagrebootapp_t rebootd_pipe_t:fifo_file { open write };
 userdebug_or_eng(`
     rw_diag_dev(diagrebootapp_t)
     reboot_write_fifo_files_reboot_device(diagrebootapp_t)

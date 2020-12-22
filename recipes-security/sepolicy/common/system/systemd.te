@@ -36,4 +36,24 @@ ifdef(`init_systemd',`
 
     # systemd-journal catalog functionality
     files_map_etc_files(systemd_tmpfiles_t)
+
+    # Update sysfs file access permissions
+    gen_require(`
+        type sysfs_t;
+    ')
+    allow systemd_tmpfiles_t sysfs_t:{ lnk_file dir file } setattr;
+
+    # Relabel /tmp partition
+    gen_require(`
+        type tmp_t;
+    ')
+    allow systemd_tmpfiles_t tmp_t:dir create;
+    fs_relabelfrom_tmpfs_dirs(systemd_tmpfiles_t)
+
+    # tmpfiles does initial setup on behalf of other daemons, so exempt
+    #  this from mls range constraints.
+    mls_file_relabel(systemd_tmpfiles_t)
+    mls_file_write_all_levels(systemd_tmpfiles_t)
+    mls_file_upgrade(systemd_tmpfiles_t)
+    mls_file_downgrade(systemd_tmpfiles_t)
 ')

@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -53,6 +53,9 @@ allow qnetmgrd_t self:{
 } create_socket_perms;
 allow qnetmgrd_t self:fifo_file rw_fifo_file_perms;
 allow qnetmgrd_t self:netlink_route_socket { setopt write getattr read bind create nlmsg_read nlmsg_write };
+allow qnetmgrd_t self:qipcrtr_socket { create getattr write read setopt };
+allow qnetmgrd_t self:unix_stream_socket { connectto sendto listen accept };
+allow iptables_t qnetmgrd_t:unix_stream_socket { read write };
 
 dev_read_sysfs(qnetmgrd_t)
 files_rw_qcmap_etc_data_files(qnetmgrd_t)
