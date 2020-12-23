@@ -183,6 +183,10 @@ manage_user_data_files(loc_hald_t, loc_data_t)
 qnetmgr_use_unix_stream_sockets(loc_hald_t)
 qnetmgr_write_data_sock_files(loc_hald_t)
 
+# triggered by getgrnam library call - maps /etc/group in read-only pages
+allow loc_hald_t etc_t:file map;
+allow loc_t etc_t:file map;
+
 search_user_data_dir(loc_hald_t)
 userdebug_or_eng(`
     gen_require(`
