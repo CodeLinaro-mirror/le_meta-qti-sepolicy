@@ -80,3 +80,20 @@ interface(`qnetmgr_use_unix_stream_sockets',`
 
     allow $1 qnetmgrd_t:unix_stream_socket { connectto read write };
 ')
+########################################
+## <summary>
+##      Permissions for reading config file
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qnetmgr_read_config_file',`
+    gen_require(`
+        type qnetmgrd_config_t;
+    ')
+
+    allow $1 qnetmgrd_config_t:file { read open getattr };
+')
