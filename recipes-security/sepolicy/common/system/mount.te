@@ -49,6 +49,7 @@ allow mount_copybind_t self:process setfscreate;
 files_search_pids(mount_copybind_t)
 seutil_read_config(mount_copybind_t)
 selinux_get_fs_mount(mount_copybind_t)
+seutil_domtrans_setfiles(mount_copybind_t)
 
 # Do not allow access to mount-copybind from a vendor domain
 gen_require(`
