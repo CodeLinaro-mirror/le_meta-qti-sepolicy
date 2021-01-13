@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,6 +29,7 @@ policy_module(qnetmgrd, 1.0)
 
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
+type qnetmgrd_config_t;
 
 init_vendor_domain(qnetmgrd_t, qnetmgrd_exec_t)
 logging_send_syslog_msg(qnetmgrd_t)
@@ -85,3 +86,12 @@ gen_require(`
 dontaudit qnetmgrd_t default_t:dir { search };
 
 iptables_domtrans(qnetmgrd_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+   ')
+    qnetmgr_read_config_file(qnetmgrd_t)
+    qnetmgr_read_config_file(unconfined_t)
+    qnetmgr_write_config_file(qnetmgrd_t)
+')
