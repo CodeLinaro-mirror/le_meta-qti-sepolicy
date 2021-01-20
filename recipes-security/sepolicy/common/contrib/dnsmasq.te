@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -52,3 +52,6 @@ qcmap_manage_var_run_data_files(dnsmasq_t)
 qcmap_manage_user_data_files(dnsmasq_t)
 manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
 list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
+
+# Following rule suppresses an avc denial that shows up on the first boot:
+dontaudit dnsmasq_t init_var_run_t:file { getattr };
