@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -77,3 +77,4 @@ dontaudit vendor_qdmastatsd_t default_t:dir search;
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:dir { write remove_name add_name };
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:sock_file { create unlink setattr };
 
+allow vendor_qdmastatsd_t self:process { signull };
