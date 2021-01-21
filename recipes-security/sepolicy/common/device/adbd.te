@@ -191,3 +191,10 @@ gen_require(`
     type mount_t;
 ')
 allow mount_t usb_dev_t:dir { search getattr mounton };
+
+# allow creating debugfs dir/files from start_usb context
+gen_require(`
+    type debugfs_t;
+')
+allow usb_t debugfs_t:dir rw_dir_perms;
+allow usb_t debugfs_t:file create;
