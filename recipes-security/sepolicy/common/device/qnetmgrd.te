@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -82,8 +82,12 @@ filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_
 gen_require(`
     type default_t;
     type initrc_var_run_t;
+    type ifconfig_t;
 
 ')
 dontaudit qnetmgrd_t default_t:dir { search };
 
 iptables_domtrans(qnetmgrd_t)
+
+dontaudit  ifconfig_t qnetmgrd_t:tcp_socket { read write };
+dontaudit  ifconfig_t qnetmgrd_t:udp_socket { read write };
