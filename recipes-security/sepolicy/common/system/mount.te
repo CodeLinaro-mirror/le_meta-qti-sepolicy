@@ -63,6 +63,13 @@ data_manage_generic_system_files(mount_copybind_t)
 relabel_all_data_files(mount_copybind_t)
 allow mount_copybind_t self:capability { chown fowner dac_read_search fsetid dac_override };
 
+# Mount-copybind /systemrw/bluetooth /etc/bluetooth
+gen_require(`
+    type bluetooth_conf_t;
+')
+allow mount_copybind_t bluetooth_conf_t:dir search_dir_perms;
+bluetooth_read_config(mount_copybind_t)
+
 # Perform a bind mount with the real mount context
 mount_domtrans(mount_copybind_t)
 files_read_alexa_data_files(mount_copybind_t)
