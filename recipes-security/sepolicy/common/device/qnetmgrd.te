@@ -83,6 +83,7 @@ gen_require(`
     type default_t;
     type initrc_var_run_t;
     type ifconfig_t;
+    type node_t;
 
 ')
 dontaudit qnetmgrd_t default_t:dir { search };
@@ -91,3 +92,6 @@ iptables_domtrans(qnetmgrd_t)
 
 dontaudit  ifconfig_t qnetmgrd_t:tcp_socket { read write };
 dontaudit  ifconfig_t qnetmgrd_t:udp_socket { read write };
+dontaudit qnetmgrd_t self:tcp_socket { setopt bind listen getattr };
+dontaudit qnetmgrd_t node_t : tcp_socket { node_bind };
+dontaudit qnetmgrd_t node_t : udp_socket { node_bind };
