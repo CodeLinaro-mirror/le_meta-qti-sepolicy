@@ -53,7 +53,23 @@ ifdef(`init_systemd',`
     # tmpfiles does initial setup on behalf of other daemons, so exempt
     #  this from mls range constraints.
     mls_file_relabel(systemd_tmpfiles_t)
+    mls_file_read_all_levels(systemd_tmpfiles_t)
     mls_file_write_all_levels(systemd_tmpfiles_t)
     mls_file_upgrade(systemd_tmpfiles_t)
     mls_file_downgrade(systemd_tmpfiles_t)
+
+    # Open and read /etc/machine-id. This is mounted as a ro tmpfs
+    gen_require(`
+        type init_var_run_t;
+    ')
+    allow systemd_tmpfiles_t init_var_run_t:file read_file_perms;
+
+    # /var/lib/dbus/machine-id
+    gen_require(`
+        type system_dbusd_var_lib_t;
+    ')
+    allow systemd_tmpfiles_t system_dbusd_var_lib_t:dir read;
+
+    systemd_tmpfilesd_managed(systemd_resolved_var_run_t, file)
+    allow systemd_tmpfiles_t systemd_resolved_var_run_t:file { write getattr open };
 ')
