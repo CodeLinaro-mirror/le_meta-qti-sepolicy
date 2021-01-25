@@ -44,12 +44,14 @@ manage_user_data_files(tuiapp_t, tuiapp_data_t)
 gen_require(`
 type socket_device_t;
 type sysfs_t;
+type tuicoreservice_dev_t;
 ')
 
 connect_to_tui_coresvc(tuiapp_t)
 connect_to_letzd(tuiapp_t)
 allow tuiapp_t socket_device_t:dir search;
 allow tuiapp_t self:capability2 block_suspend;
+allow tuiapp_t tuicoreservice_dev_t:chr_file {read open ioctl getattr};
 
 #permissions to turn on/off autosleep
 dev_rw_sysfs(tuiapp_t)

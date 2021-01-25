@@ -26,5 +26,6 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/tuiapp      --      gen_context(system_u:object_r:tuiapp_exec_t,s0)
+/usr/bin/eidtuiapp      --      gen_context(system_u:object_r:tuiapp_exec_t,s0)
 
 /usr/data/tui(/.*)?  --      gen_context(system_u:object_r:tuiapp_data_t,s0)
