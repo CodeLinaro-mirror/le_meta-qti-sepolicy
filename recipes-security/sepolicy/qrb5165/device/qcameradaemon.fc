@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/irsc_util           gen_context(system_u:object_r:irsc_util_exec_t,s0)
+/data/misc/camera(/.*)?            gen_context(system_u:object_r:camera_data_t,s0)
+/data/vendor/camera(/.*)?          gen_context(system_u:object_r:camera_data_t,s0)
 
-/etc/sec_config              gen_context(system_u:object_r:qmi_sec_config_t,s0)
+#vendor camera config
+/vendor/etc/camera(/.*)?           gen_context(system_u:object_r:vendor_camera_config_t,s0)

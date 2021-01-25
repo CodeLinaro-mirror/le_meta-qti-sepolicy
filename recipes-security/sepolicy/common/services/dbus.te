@@ -26,3 +26,9 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 systemd_read_logind_pids(system_dbusd_t)
+
+gen_require(`
+	type etc_t;
+')
+
+allow system_dbusd_t etc_t:file map;

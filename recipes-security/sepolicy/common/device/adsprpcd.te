@@ -70,6 +70,9 @@ allow adsprpcd_t persist_t:dir search_dir_perms;
 allow adsprpcd_t system_dir_t:dir { search open read getattr};
 allow adsprpcd_t system_dir_t:file read_file_perms;
 
+#allow adsprpcd_audiopd.service to access /proc/sys/vm/overcommit_memory
+kernel_read_vm_overcommit_sysctl(adsprpcd_t)
+
 rw_chr_files_pattern(adsprpcd_t, device_t, sound_device_t);
 
 files_search_mnt(adsprpcd_t)

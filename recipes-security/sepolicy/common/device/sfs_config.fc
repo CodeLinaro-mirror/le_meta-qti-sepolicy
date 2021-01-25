@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /etc/initscripts/sfs_config    --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
+/usr/sbin/sfs_config    --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)

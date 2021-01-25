@@ -1,4 +1,4 @@
-# Copyright (c) 2016,2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,24 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/irsc_util           gen_context(system_u:object_r:irsc_util_exec_t,s0)
+gen_require(`
+    attribute file_type;
+    attribute user_data;
+    attribute system_data;
+    type mount_copybind_t;
+    type unconfined_mount_t;
+    type mount_t;
+    type alsa_etc_t;
+    type data_t;
+    type system_dbusd_var_lib_t;
+    type var_lib_t;
+    type var_t;
+')
 
-/etc/sec_config              gen_context(system_u:object_r:qmi_sec_config_t,s0)
+#for overlayfs
+permissive mount_t;
+permissive mount_copybind_t;
+permissive unconfined_mount_t;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
