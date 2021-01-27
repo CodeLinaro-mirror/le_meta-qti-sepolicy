@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,6 +27,8 @@
 
 /usr/bin/chg-policy                    --      gen_context(system_u:object_r:chg-policy_exec_t,s0)
 /data/persist/chg_policy(/.*)?                 gen_context(system_u:object_r:chg-policy-persist_data_t,s0)
+/dev/qg                                        gen_context(system_u:object_r:qg_device_t,s0)
+/dev/qg_battery                                gen_context(system_u:object_r:qg_device_t,s0)
 ifndef(`init_systemd',
     /etc/rc\.d/init\.d/chg-policy-pre-init --      gen_context(system_u:object_r:chg-policy-initrc_exec_t,s0)
 ')
