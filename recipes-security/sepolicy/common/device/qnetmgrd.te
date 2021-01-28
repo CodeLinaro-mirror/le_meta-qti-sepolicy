@@ -40,6 +40,7 @@ userdebug_or_eng(`
 gen_require(`
       type default_t;
       type socket_device_t;
+      type initrc_t;
 ')
 
 allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
@@ -53,6 +54,7 @@ allow qnetmgrd_t self:{
 } create_socket_perms;
 allow qnetmgrd_t self:fifo_file rw_fifo_file_perms;
 allow qnetmgrd_t self:netlink_route_socket { setopt write getattr read bind create nlmsg_read nlmsg_write };
+dontaudit qnetmgrd_t initrc_t:unix_stream_socket { connectto };
 
 dev_read_sysfs(qnetmgrd_t)
 files_rw_qcmap_etc_data_files(qnetmgrd_t)
