@@ -82,7 +82,6 @@ filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_
 gen_require(`
     type default_t;
     type initrc_var_run_t;
-    type ifconfig_t;
     type iptables_t;
 
 ')
@@ -91,6 +90,3 @@ dontaudit qnetmgrd_t iptables_t : process { sigkill };
 dontaudit qnetmgrd_t self:capability { kill };
 
 iptables_domtrans(qnetmgrd_t)
-
-dontaudit  ifconfig_t qnetmgrd_t:tcp_socket { read write };
-dontaudit  ifconfig_t qnetmgrd_t:udp_socket { read write };
