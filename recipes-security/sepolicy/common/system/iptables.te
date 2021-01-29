@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -28,3 +28,9 @@
 userdebug_or_eng(`
     rw_diag_dev(iptables_t)
 ')
+
+gen_require(`
+    type systemd_tmpfiles_t;
+')
+systemd_tmpfilesd_managed(iptables_runtime_t, file)
+allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };

@@ -30,6 +30,8 @@ userdebug_or_eng(`
         attribute user_data;
         attribute system_data;
         type alogd_t;
+        type node_t;
+        type data_t;
     ')
     manage_user_data_files(unconfined_t, user_data)
     manage_system_data_files(unconfined_t, system_data)
@@ -64,4 +66,10 @@ userdebug_or_eng(`
         }:{ system service } { start stop status enable disable reload };
         allow unconfined_domain_type init_t:system { reboot halt };
     ')
+
+    # Ping from shell
+    allow unconfined_t node_t:icmp_socket node_bind;
+
+    # Run iperf from shell
+    allow unconfined_t data_t:file map;
 ')
