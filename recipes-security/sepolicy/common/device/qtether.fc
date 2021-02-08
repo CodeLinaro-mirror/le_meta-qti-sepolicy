@@ -32,5 +32,4 @@
 /dev/rmnet_v2x_ctrl     -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/mhi_pipe_14        -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/mhi_ctrl           -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-/dev/emac               -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 
