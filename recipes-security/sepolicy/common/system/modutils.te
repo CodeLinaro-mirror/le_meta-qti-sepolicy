@@ -42,3 +42,8 @@ qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
 networkmanager_read_wifi_sysdata_files(kmod_t)
 
 firmware_read_files(kmod_t)
+
+gen_require(`
+    type kmsg_device_t;
+')
+dontaudit kmod_t kmsg_device_t:chr_file write;
