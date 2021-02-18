@@ -29,5 +29,4 @@
 /var/run/scm(/.*)?     gen_context(system_u:object_r:scm_var_run_t,s0)
 /run/scm(/.*)?     gen_context(system_u:object_r:scm_var_run_t,s0)
 
-/etc/initscripts/start_wlan_services -- gen_context(system_u:object_r:etc_wlan_service_exec_t,s0)
 /usr/lib/systemd/system/scm_load_module@.service -- gen_context(system_u:object_r:scm_kernel_module_t,s0)
