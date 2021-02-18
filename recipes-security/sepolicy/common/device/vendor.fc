@@ -40,6 +40,8 @@
 /data/persist/rfs/mdm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 /data/persist/rfs/msm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 
+/etc/init.post_boot.sh  --      gen_context(system_u:object_r:post_boot_script_exec_t,s0)
+
 ### dev nodes ###
 
 /dev/subsys_modem    gen_context(system_u:object_r:subsys_modem_device_t,s0)

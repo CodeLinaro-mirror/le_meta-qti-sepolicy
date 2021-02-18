@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -96,4 +96,21 @@ interface(`qnetmgr_read_config_file',`
     ')
 
     allow $1 qnetmgrd_config_t:file { read open getattr };
+')
+########################################
+## <summary>
+##      Permissions for writing config file
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qnetmgr_write_config_file',`
+    gen_require(`
+        type qnetmgrd_config_t;
+    ')
+
+    allow $1 qnetmgrd_config_t:file { write };
 ')
