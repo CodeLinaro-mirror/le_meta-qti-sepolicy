@@ -36,6 +36,7 @@ type weston_t;
 type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
+type weston_runtime_t;
 
 init_vendor_domain(weston_t, weston_exec_t)
 
@@ -84,6 +85,7 @@ gen_require(`
  type target_etc_t;
  type webserver_t;
  type leprop_system_data_t;
+ type proc_t;
  attribute domain_can_read_systemdata;
 ')
 
@@ -188,3 +190,10 @@ allow weston_t shell_exec_t:file { execute execute_no_trans open read };
 allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
+
+allow weston_t weston_runtime_t:file { create append open getattr read_file_perms write_file_perms unlink map };
+manage_sock_files_pattern(weston_t, weston_runtime_t, weston_runtime_t)
+filetrans_pattern(weston_t, user_runtime_root_t, weston_runtime_t, { dir file sock_file })
+filetrans_pattern(weston_t, initrc_var_run_t, weston_runtime_t, { dir file sock_file })
+allow weston_t proc_t:file { read open getattr }; #/proc/cpuinfo
+fs_associate_tmpfs(weston_runtime_t)
