@@ -54,9 +54,14 @@ ifdef(`init_systemd',`
     gen_require(`
         type system_data_t;
         type kernel_t;
+        type kmod_t;
     ')
     allow init_t system_data_t:dir manage_dir_perms;
     allow init_t kernel_t:key manage_key_perms;
+
+#allow modprobe to load kernel modules
+    allow init_t kmod_t:process2 nnp_transition;
+
     mls_key_write_all_levels(init_t)
 ')
 

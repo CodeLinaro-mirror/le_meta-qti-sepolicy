@@ -28,8 +28,11 @@
 /data/misc/wifi(/.*)?           gen_context(system_u:object_r:wifi_data_t,s0)
 /data/dnsmasq.leases            gen_context(system_u:object_r:wifi_data_t,s0)
 /data/dhcpcd-wlan(.*)?          gen_context(system_u:object_r:wifi_data_t,s0)
+/etc/libnl(/.*)?                gen_context(system_u:object_r:wifi_data_t,s0)
 
 /etc/rc\.d/init\.d/wlan         gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/initscripts/wlan           gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/init\.d/wlan               gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
 /etc/misc/wifi(/.*)?            gen_context(system_u:object_r:wifi_system_data_t,s0)
 /data/wpa_supplicant\.log   --  gen_context(system_u:object_r:wifi_data_t,s0)

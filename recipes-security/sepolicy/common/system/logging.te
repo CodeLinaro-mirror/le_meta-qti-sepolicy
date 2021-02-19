@@ -47,6 +47,7 @@ ifdef(`init_systemd',`
     # Allow creating additional files/directories in generic var_log_t directories
     systemd_tmpfilesd_managed(var_log_t, dir)
 
+    allow systemd_tmpfiles_t syslogd_var_run_t:dir search_dir_perms;
     # If auditd is not running, don't report attempts from
     #  systemd-journal to turn it back on.
     dontaudit syslogd_t self:capability audit_control;
@@ -57,8 +58,16 @@ ifdef(`init_systemd',`
 
     gen_require(`
         type init_var_run_t;
+        type iptables_runtime_t;
+        type qcmap_tmp_t;
+        type syslogd_tmp_t;
+        type system_dbusd_var_lib_t;
+        type tinyproxy_log_t;
     ')
+
     allow syslogd_t init_var_run_t:file read_file_perms;
     allow syslogd_t self:netlink_audit_socket nlmsg_write;
     allow syslogd_t self:unix_stream_socket { write setopt shutdown };
+    allow syslogd_t device_t:lnk_file unlink;
+    allow syslogd_t iptables_runtime_t:file create;
 ')

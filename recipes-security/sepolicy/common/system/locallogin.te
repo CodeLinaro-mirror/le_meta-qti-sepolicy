@@ -27,10 +27,14 @@
 
 gen_require(`
     type lastlog_t;
+    type etc_t;
+    type shadow_t;
 ')
 
 logging_log_filetrans(local_login_t, lastlog_t, file)
 allow local_login_t lastlog_t:file create;
+allow local_login_t etc_t:file map;
+allow local_login_t shadow_t:file map;
 
 # Required when libpam isn't being used
 auth_read_shadow(local_login_t)

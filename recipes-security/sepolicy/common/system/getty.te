@@ -27,3 +27,4 @@
 
 #In QC build, getty requires kill capability. Hence added this rule.
 allow getty_t self:capability kill;
+allow getty_t etc_t:file map;
