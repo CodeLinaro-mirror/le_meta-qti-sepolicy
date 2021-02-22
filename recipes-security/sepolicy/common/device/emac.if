@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,35 +24,25 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+########################################
 
-policy_module(time_daemon, 1.0)
+## <summary>EMAC</summary>
 
-type time_daemon_t;
-type time_daemon_exec_t;
-type time_data_t;
+########################################
+## <summary>
+##       Allow /dev/emac node to read data from udev script into Ethernet driver..
+## </summary>
+## <param name="domain">
+##       <summary>
+##       Domain allowed access.
+##       </summary>
+## </param>
+## <rolecap/>
+#
+interface(`emac_rw_dev',`
+	gen_require(`
+		type emac_dev_t;
+	')
 
-init_vendor_domain(time_daemon_t, time_daemon_exec_t)
-
-gen_require(`
-    type default_t;
+	allow $1 emac_dev_t:chr_file {open read write};
 ')
-
-logging_send_syslog_msg(time_daemon_t)
-dev_read_realtime_clock(time_daemon_t)
-allow time_daemon_t time_data_t:dir { search write };
-manage_user_data_files(time_daemon_t, time_data_t)
-userdebug_or_eng(`
-  rw_diag_dev(time_daemon_t);
-')
-allow time_daemon_t self:capability sys_time;
-dontaudit time_daemon_t default_t:dir search;
-allow time_daemon_t self:socket create_socket_perms;
-user_data_files_type(time_data_t)
-device_search_sockets(time_data_t)
-data_filetrans(time_daemon_t, time_data_t, file)
-allow time_daemon_t self:fifo_file rw_fifo_file_perms;
-allow time_daemon_t socket_device_t:dir search;
-allow time_daemon_t self:process signal;
-allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
-allow time_daemon_t self:unix_stream_socket { accept listen };
-allow time_daemon_t syslogd_var_run_t:dir search;
