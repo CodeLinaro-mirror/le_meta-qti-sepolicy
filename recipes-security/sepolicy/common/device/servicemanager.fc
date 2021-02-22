@@ -25,6 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/servicemanager  --    gen_context(system_u:object_r:servicemanager_exec_t,mls_systemhigh)
+/usr/bin/servicemanager  --    gen_context(system_u:object_r:servicemanager_exec_t,s0)
 
-/dev/binder              -c    gen_context(system_u:object_r:binder_device_t,mls_systemhigh)
+/dev/binder              -c    gen_context(system_u:object_r:binder_device_t,s0)

@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /overlay(/.*)?                  gen_context(system_u:object_r:overlay_t,s0)
+/usr/sbin/create-overlay-workdirs          --      gen_context(system_u:object_r:overlay_initrc_exec_t,s0)

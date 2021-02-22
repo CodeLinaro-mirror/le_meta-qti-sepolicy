@@ -33,4 +33,4 @@ type qrtr_ns_exec_t;
 init_vendor_domain(qrtr_ns_t, qrtr_ns_exec_t)
 allow qrtr_ns_t self:socket create_socket_perms;
 allow qrtr_ns_t self:capability net_admin;
-allow qrtr_ns_t self:qipcrtr_socket { create getattr write bind };
+allow qrtr_ns_t self:qipcrtr_socket { setopt create getattr write bind read };
