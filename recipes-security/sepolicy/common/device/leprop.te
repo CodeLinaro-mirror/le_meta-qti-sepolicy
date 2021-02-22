@@ -34,6 +34,7 @@ init_vendor_domain(leprop_t, leprop_exec_t)
 inittab_domtrans(leprop_t, leprop_exec_t)
 
 allow leprop_t self:unix_dgram_socket create_socket_perms;
+allow leprop_t self:unix_stream_socket { listen accept };
 
 type leprop_system_data_t;
 system_data_files_type(leprop_system_data_t)
@@ -62,7 +63,9 @@ leprop_rw_props(setprop_t)
 device_search_sockets(setprop_t)
 
 allow setprop_t self:unix_dgram_socket create_socket_perms;
+allow setprop_t self:unix_stream_socket { create write connect };
 #allow setprop_t self:capability dac_override;  # TODO: why is this needed?
 
 init_dontaudit_use_fds(setprop_t)
 term_dontaudit_use_unallocated_ttys(setprop_t)
+

@@ -37,8 +37,12 @@ allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow alogd_t self:netlink_audit_socket create_netlink_socket_perms;
 allow alogd_t self:process { signal setsched setcap };
 allow alogd_t self:capability audit_control;
+allow alogd_t self:fifo_file { read write };
+allow alogd_t alogd_exec_t:file { execute read };
 
-# read and write kernel logs
+# read and write kernel logs, /proc/kmsg level is S15
+mls_file_read_all_levels(alogd_t)
+mls_file_write_all_levels(alogd_t)
 kernel_read_messages(alogd_t)
 kernel_read_ring_buffer(alogd_t)
 kernel_clear_ring_buffer(alogd_t)

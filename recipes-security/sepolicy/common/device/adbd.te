@@ -124,6 +124,7 @@ userdebug_or_eng(`
     data_filetrans(pcie_initrc_t, adb_data_conf_t, file)
     read_user_data_files(adbd_initrc_t, adb_data_conf_t)
     manage_user_data_files(pcie_initrc_t, adb_data_conf_t)
+    mls_file_write_all_levels(pcie_initrc_t)
     allow adbd_initrc_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(adbd_initrc_t);
 ')

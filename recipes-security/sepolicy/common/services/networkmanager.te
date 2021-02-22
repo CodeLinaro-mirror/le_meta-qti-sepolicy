@@ -78,6 +78,7 @@ qcmap_manage_var_run_qcmap_dir(NetworkManager_t)
 qcmap_delete_qcmap_pid(NetworkManager_t)
 
 allow wlan_initrc_t self:fifo_file rw_file_perms;
+allow wlan_initrc_t NetworkManager_exec_t:file { execute read_file_perms execute_no_trans map };
 files_search_default(NetworkManager_t);
 files_rw_qcmap_etc_data_files(NetworkManager_t)
 read_write_qcmap_cm_socket_files(wlan_initrc_t)
@@ -93,10 +94,14 @@ userdebug_or_eng(`
 gen_require(`
     type systemd_resolved_var_run_t;
     type init_var_run_t;
+    type var_run_t;
 ')
 logging_send_syslog_msg(dhcpc_t)
 allow dhcpc_t systemd_resolved_var_run_t:file { open write };
 allow dhcpc_t init_var_run_t:file { getattr setattr open write };
+allow dhcpc_t self:unix_stream_socket listen;
+allow dhcpc_t var_run_t:sock_file { create setattr unlink };
+allow dhcpc_t self:capability kill;
 #TODO properly con_mode node
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`
@@ -117,9 +122,42 @@ allow wpa_cli_t qcmap_var_run_t:file { write getattr };
 # unused pipes
 gen_require(`
     type httpd_t;
+    type random_device_t;
+    type cert_t;
+    type proc_net_t;
+    type sysctl_net_t;
+    type wireless_device_t;
+    type sysctl_t;
+    type urandom_device_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
 apache_dontaudit_rw_fifo_file(wpa_cli_t)
 manage_sock_files_pattern(wpa_cli_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
 files_pid_filetrans(wpa_cli_t, NetworkManager_var_run_t, { dir file sock_file })
+
+allow wlan_initrc_t NetworkManager_var_run_t:dir { add_name create remove_name search write };
+allow wlan_initrc_t NetworkManager_var_run_t:file { create getattr open read unlink write };
+manage_sock_files_pattern(wlan_initrc_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
+files_pid_filetrans(wlan_initrc_t, NetworkManager_var_run_t, { dir file sock_file })
+
+userdom_write_user_tmp_sockets(wlan_initrc_t)
+
+allow wlan_initrc_t init_t:unix_stream_socket { read write getattr };
+allow wlan_initrc_t kmod_t:file read;
+allow wlan_initrc_t random_device_t:chr_file read_chr_file_perms;
+allow wlan_initrc_t wifi_data_t:dir search;
+allow wlan_initrc_t cert_t:dir search;
+allow wlan_initrc_t cert_t:file { getattr open read };
+allow wlan_initrc_t proc_net_t:file read;
+allow wlan_initrc_t sysctl_net_t:dir search;
+allow wlan_initrc_t sysctl_net_t:file { open read write };
+allow wlan_initrc_t self:capability { net_admin net_raw};
+allow wlan_initrc_t self:netlink_generic_socket { bind create getattr read setopt write };
+allow wlan_initrc_t self:netlink_route_socket { bind create read nlmsg_write write };
+allow wlan_initrc_t self:packet_socket { bind create ioctl setopt read write };
+allow wlan_initrc_t self:udp_socket { create ioctl };
+allow wlan_initrc_t urandom_device_t:chr_file { getattr ioctl open read };
+allow wlan_initrc_t sysctl_t:dir search;
+allow wlan_initrc_t wireless_device_t:chr_file { open read };
+manage_user_data_files(wlan_initrc_t, wifi_data_t)

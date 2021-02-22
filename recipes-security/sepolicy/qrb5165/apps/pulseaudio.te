@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,14 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/servicemanager  --    gen_context(system_u:object_r:servicemanager_exec_t,s0)
-
-/dev/binder              -c    gen_context(system_u:object_r:binder_device_t,s0)
+gen_require(`
+ type audio_data_file_t;
+ type etc_t;
+ type system_dbusd_var_lib_t;
+ type default_t;
+')
+allow pulseaudio_t audio_data_file_t:dir search;
+audio_data_files_access(pulseaudio_t)
+allow pulseaudio_t etc_t:file map;
+allow pulseaudio_t system_dbusd_var_lib_t:lnk_file read;
+allow pulseaudio_t default_t:dir search;
