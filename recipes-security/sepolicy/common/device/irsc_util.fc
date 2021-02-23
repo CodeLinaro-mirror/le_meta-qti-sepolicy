@@ -27,4 +27,4 @@
 
 /usr/bin/irsc_util           gen_context(system_u:object_r:irsc_util_exec_t,s0)
 
-/etc/sec_config              gen_context(system_u:object_r:qmi_sec_config_t,mls_systemhigh)
+/etc/sec_config              gen_context(system_u:object_r:qmi_sec_config_t,s0)

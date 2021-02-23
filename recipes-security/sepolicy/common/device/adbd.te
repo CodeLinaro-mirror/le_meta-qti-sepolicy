@@ -124,6 +124,9 @@ userdebug_or_eng(`
     data_filetrans(pcie_initrc_t, adb_data_conf_t, file)
     read_user_data_files(adbd_initrc_t, adb_data_conf_t)
     manage_user_data_files(pcie_initrc_t, adb_data_conf_t)
+    mls_file_write_all_levels(pcie_initrc_t)
+    allow adbd_initrc_t kmsg_device_t:chr_file { write };
+    mls_file_write_all_levels(adbd_initrc_t);
 ')
 
 type usb_t;
@@ -144,6 +147,11 @@ manage_user_data_files(usb_t, usb_var_lock_t)
 auditallow usb_t usb_var_lock_t:file manage_file_perms;
 files_pid_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
 manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
+
+userdebug_or_eng(`
+    allow usb_t kmsg_device_t:chr_file { write };
+    mls_file_write_all_levels(usb_t);
+')
 
 adb_manage_data_files(usb_t)
 gen_require(`
@@ -191,3 +199,10 @@ gen_require(`
     type mount_t;
 ')
 allow mount_t usb_dev_t:dir { search getattr mounton };
+
+# allow creating debugfs dir/files from start_usb context
+gen_require(`
+    type debugfs_t;
+')
+allow usb_t debugfs_t:dir rw_dir_perms;
+allow usb_t debugfs_t:file create;

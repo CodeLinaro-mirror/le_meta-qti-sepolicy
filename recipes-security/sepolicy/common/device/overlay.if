@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -45,3 +45,24 @@ interface(`overlay_mount_user_dir',`
     allow $1 overlay_t:dir { mounton getattr };
 ')
 
+########################################
+## <summary>
+##      Manage overlay data files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <param name="type">
+##      <summary>
+##      File type allowed access.
+##      </summary>
+## </param>
+#
+interface(`manage_overlay_data_files', `
+    gen_require(`
+        type overlay_t;
+        ')
+    manage_user_data_files($1, overlay_t)
+')

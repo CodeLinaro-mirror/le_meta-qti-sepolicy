@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -53,7 +53,7 @@ files_tmp_file(wlan_service_tmp_t)
 allow wlan_service_t self:capability net_admin;
 allow wlan_service_t self:fifo_file rw_fifo_file_perms;
 allow wlan_service_t self:netlink_socket create_socket_perms;
-allow wlan_service_t self:socket create_socket_perms;
+allow wlan_service_t self:{socket qipcrtr_socket} create_socket_perms;
 search_dirs_pattern(wlan_service_t, socket_device_t, socket_device_t)
 search_dirs_pattern(wlan_service_t, default_t, default_t)
 userdom_manage_user_tmp_files(wlan_service_t)

@@ -53,3 +53,6 @@ data_filetrans(time_daemon_t, time_data_t, file)
 allow time_daemon_t self:fifo_file rw_fifo_file_perms;
 allow time_daemon_t socket_device_t:dir search;
 allow time_daemon_t self:process signal;
+allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
+allow time_daemon_t self:unix_stream_socket { accept listen };
+allow time_daemon_t syslogd_var_run_t:dir search;
