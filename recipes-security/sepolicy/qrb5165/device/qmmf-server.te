@@ -67,7 +67,7 @@ gen_require(`
  type weston_t;
  type tmpfs_t;
  type binder_device_t;
- type init_var_run_t;
+ type initrc_var_run_t;
  type syslogd_var_run_t;
  type user_runtime_root_t;
 ')
@@ -156,6 +156,10 @@ allow qmmf_server_t self:qipcrtr_socket { create getattr read setopt write };
 allow qmmf_server_t sysfs_t:lnk_file read;
 allow qmmf_server_t tmp_t:dir search;
 allow qmmf_server_t tmpfs_t:dir search;
-allow qmmf_server_t init_var_run_t:dir search;
+allow qmmf_server_t initrc_var_run_t:dir search;
 allow qmmf_server_t syslogd_var_run_t:dir search;
 allow qmmf_server_t user_runtime_root_t:dir search;
+gen_require(`
+    type weston_runtime_t;
+')
+manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)

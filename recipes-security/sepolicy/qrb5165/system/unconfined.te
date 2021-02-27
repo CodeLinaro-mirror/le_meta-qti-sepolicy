@@ -44,6 +44,7 @@ gen_require(`
     type proc_kmsg_t;
     type rebootd_pipe_t;
     type webserver_t;
+    type weston_runtime_t;
 ')
 
 mls_file_read_all_levels(unconfined_t)
@@ -62,3 +63,5 @@ allow unconfined_t rebootd_pipe_t:fifo_file getattr;
 allow unconfined_t usb_dev_t:dir { getattr read search open };
 allow unconfined_t webserver_t:dir { read search open };
 allow unconfined_t webserver_t:file getattr;
+allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
+allow unconfined_t weston_runtime_t:file { getattr setattr };
