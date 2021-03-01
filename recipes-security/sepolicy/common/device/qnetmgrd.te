@@ -30,7 +30,7 @@ policy_module(qnetmgrd, 1.0)
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
 type qnetmgrd_config_t;
-
+type netmgr_connect_socket_t;
 init_vendor_domain(qnetmgrd_t, qnetmgrd_exec_t)
 logging_send_syslog_msg(qnetmgrd_t)
 
@@ -94,4 +94,8 @@ userdebug_or_eng(`
     qnetmgr_read_config_file(qnetmgrd_t)
     qnetmgr_read_config_file(unconfined_t)
     qnetmgr_write_config_file(qnetmgrd_t)
+    qnetmgr_write_config_file(unconfined_t)
+    allow unconfined_t netmgr_connect_socket_t:sock_file write;
+
 ')
+
