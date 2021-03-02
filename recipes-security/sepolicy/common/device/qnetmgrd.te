@@ -98,4 +98,5 @@ userdebug_or_eng(`
     qnetmgr_read_config_file(qnetmgrd_t)
     qnetmgr_read_config_file(unconfined_t)
     qnetmgr_write_config_file(qnetmgrd_t)
+    qnetmgr_write_config_file(unconfined_t)
 ')
