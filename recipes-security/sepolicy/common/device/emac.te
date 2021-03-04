@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,34 +25,47 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(time_daemon, 1.0)
+policy_module(emac, 1.0)
 
-type time_daemon_t;
-type time_daemon_exec_t;
-type time_data_t;
+type emac_t;
+type emac_exec_t;
+init_vendor_domain(emac_t, emac_exec_t)
 
-init_vendor_domain(time_daemon_t, time_daemon_exec_t)
+type emac_start_t;
+type emac_start_exec_t;
+init_script_domain(emac_start_t, emac_start_exec_t)
 
-gen_require(`
-    type default_t;
-')
+type emac_dev_t;
+dev_node(emac_dev_t)
 
-logging_send_syslog_msg(time_daemon_t)
-dev_read_realtime_clock(time_daemon_t)
-allow time_daemon_t time_data_t:dir { search write };
-manage_user_data_files(time_daemon_t, time_data_t)
+type emac_etc_t;
+files_type(emac_etc_t);
+
+
+# *** Type enforcements for emac.sh ***
+dev_write_kmsg(emac_t)    #emac.sh allow to write to kmsg
+iptables_domtrans(emac_t) #emac.sh allowed into iptables domain
+sysnet_domtrans_ifconfig(emac_t) #emac.sh allowed into ifconfig domain
+files_read_etc_files(emac_t)     #emac.sh can read files under /etc/
+kernel_read_system_state(emac_t) #emac.sh can read files under /proc/
+dev_read_sysfs(emac_t)           #emac.sh can read files under /sys/
+
+allow emac_t emac_etc_t:file { read open getattr };
+allow emac_t self:capability net_admin;
+allow emac_t self:tcp_socket { bind create ioctl getattr listen write read};
+allow emac_t self:fifo_file { write read getattr };
+allow emac_t emac_dev_t:chr_file {open read write};
+
+
+# *** Type enforcement for start_eth-adapt ***
 userdebug_or_eng(`
-  rw_diag_dev(time_daemon_t);
-')
-allow time_daemon_t self:capability sys_time;
-dontaudit time_daemon_t default_t:dir search;
-allow time_daemon_t self:socket create_socket_perms;
-user_data_files_type(time_data_t)
-device_search_sockets(time_data_t)
-data_filetrans(time_daemon_t, time_data_t, file)
-allow time_daemon_t self:fifo_file rw_fifo_file_perms;
-allow time_daemon_t socket_device_t:dir search;
-allow time_daemon_t self:process signal;
-allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
-allow time_daemon_t self:unix_stream_socket { accept listen };
-allow time_daemon_t syslogd_var_run_t:dir search;
+     dev_write_kmsg(emac_start_t)
+     mls_file_write_all_levels(emac_start_t)
+ ')
+
+kernel_read_system_state(emac_start_t)
+dev_read_sysfs(emac_start_t)
+modutils_domtrans_insmod(emac_start_t) #Allow emac_start_t to insert kmods.
+
+allow emac_start_t emac_etc_t:file read_file_perms;
+allow emac_start_t self:fifo_file {read write getattr};

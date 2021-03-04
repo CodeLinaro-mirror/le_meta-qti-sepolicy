@@ -1,4 +1,4 @@
-# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,34 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(time_daemon, 1.0)
+/usr/bin/scm -- gen_context(system_u:object_r:wlan_scm_exec_t,s0)
+/var/run/scm(/.*)?     gen_context(system_u:object_r:scm_var_run_t,s0)
+/run/scm(/.*)?     gen_context(system_u:object_r:scm_var_run_t,s0)
 
-type time_daemon_t;
-type time_daemon_exec_t;
-type time_data_t;
-
-init_vendor_domain(time_daemon_t, time_daemon_exec_t)
-
-gen_require(`
-    type default_t;
-')
-
-logging_send_syslog_msg(time_daemon_t)
-dev_read_realtime_clock(time_daemon_t)
-allow time_daemon_t time_data_t:dir { search write };
-manage_user_data_files(time_daemon_t, time_data_t)
-userdebug_or_eng(`
-  rw_diag_dev(time_daemon_t);
-')
-allow time_daemon_t self:capability sys_time;
-dontaudit time_daemon_t default_t:dir search;
-allow time_daemon_t self:socket create_socket_perms;
-user_data_files_type(time_data_t)
-device_search_sockets(time_data_t)
-data_filetrans(time_daemon_t, time_data_t, file)
-allow time_daemon_t self:fifo_file rw_fifo_file_perms;
-allow time_daemon_t socket_device_t:dir search;
-allow time_daemon_t self:process signal;
-allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
-allow time_daemon_t self:unix_stream_socket { accept listen };
-allow time_daemon_t syslogd_var_run_t:dir search;
+/etc/initscripts/start_wlan_services -- gen_context(system_u:object_r:etc_wlan_service_exec_t,s0)
+/usr/lib/systemd/system/scm_load_module@.service -- gen_context(system_u:object_r:scm_kernel_module_t,s0)
