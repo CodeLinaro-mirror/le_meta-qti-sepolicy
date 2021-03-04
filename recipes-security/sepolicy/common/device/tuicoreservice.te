@@ -78,6 +78,7 @@ allow tuicoreservice_t self:capability sys_nice;
 allow tuicoreservice_t self:process setsched;
 allow tuicoreservice_t self:socket rw_socket_perms;
 allow tuicoreservice_t self:socket create;
+allow tuicoreservice_t self:capability2 block_suspend;
 allow tuicoreservice_sock_t device_t:filesystem associate;
 dontaudit tuicoreservice_t default_t:dir search;
 dontaudit tuicoreservice_t mnt_t:dir search;
