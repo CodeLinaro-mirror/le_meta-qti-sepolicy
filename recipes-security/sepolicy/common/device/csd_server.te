@@ -29,7 +29,7 @@ policy_module(csd_server, 1.0)
 
 type csd_server_t;
 type csd_server_exec_t;
-
+type csd_device_t;
 gen_require(`
     type default_t;
     type sound_device_t;
@@ -41,12 +41,14 @@ gen_require(`
     type ion_device_t;
     type proc_t;
     type hal_play_test_t;
+    type debugfs_t;
 ')
 init_vendor_domain(csd_server_t, csd_server_exec_t)
-
+dev_node(csd_device_t)
 userdebug_or_eng(`
     rw_diag_dev(csd_server_t)
     allow csd_server_t debugfs_t:dir search;
+    allow csd_server_t debugfs_t:dir read_file_perms;
 ')
 allow csd_server_t self:socket create_socket_perms;
 logging_send_syslog_msg(csd_server_t)
@@ -61,5 +63,8 @@ allow csd_server_t audio_hal_etc_acdb_t:dir list_dir_perms;
 allow csd_server_t audio_hal_etc_acdb_t:file { read getattr open };
 allow csd_server_t audio_device_t:chr_file rw_chr_file_perms;
 allow csd_server_t ion_device_t:chr_file read_chr_file_perms;
+allow csd_server_t self:{ socket qipcrtr_socket } create_socket_perms;
+allow csd_server_t self:process signal;
+allow csd_server_t csd_device_t:chr_file rw_chr_file_perms;
 kernel_read_system_state(csd_server_t)
 dontaudit hal_play_test_t socket_device_t:dir search;
