@@ -1,4 +1,4 @@
-# Copyright (c) 2018, 2020-2021 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,39 +25,33 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(cdsprpcd , 1.0)
+policy_module(tuiapp, 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type cdsprpcd_t;
-type cdsprpcd_exec_t;
-files_type(cdsprpcd_exec_t);
+type tuiapp_t;
+type tuiapp_exec_t;
 
-init_daemon_domain(cdsprpcd_t, cdsprpcd_exec_t)
+init_vendor_domain(tuiapp_t, tuiapp_exec_t)
+
+type tuiapp_data_t;
+user_data_files_type(tuiapp_data_t)
+manage_user_data_files(tuiapp_t, tuiapp_data_t)
+
 gen_require(`
-    type debugfs_t;
-    type ion_device_t;
-    type qdsp_device_t;
-    type xdsp_device_t;
-    type adsprpcd_t;
+type socket_device_t;
+type sysfs_t;
+type tuicoreservice_dev_t;
 ')
 
-allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
-userdebug_or_eng(`
-	allow cdsprpcd_t debugfs_t:dir search_dir_perms;
-')
+connect_to_tui_coresvc(tuiapp_t)
+connect_to_letzd(tuiapp_t)
+allow tuiapp_t socket_device_t:dir search;
+allow tuiapp_t self:capability2 block_suspend;
+allow tuiapp_t tuicoreservice_dev_t:chr_file {read open ioctl getattr};
 
-files_search_mnt(cdsprpcd_t)
-files_search_default(cdsprpcd_t)
-device_search_sockets(cdsprpcd_t)
-
-dontaudit cdsprpcd_t adsprpcd_t:dir getattr;
-#allow cdsprpcd_t to acces /dev/ion
-rw_chr_files_pattern(cdsprpcd_t, device_t, ion_device_t);
-#allow cdsprpcd_t to acces /dev/adsprpcd-smd-secure
-rw_chr_files_pattern(cdsprpcd_t, device_t, qdsp_device_t);
-#allow cdsprpcd_t to acces /dev/adsprpcd-smd
-rw_chr_files_pattern(cdsprpcd_t, device_t, xdsp_device_t);
+#permissions to turn on/off autosleep
+dev_rw_sysfs(tuiapp_t)
