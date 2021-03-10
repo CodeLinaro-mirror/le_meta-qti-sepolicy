@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -69,7 +69,8 @@ gen_require(`
 
 dontaudit ipacm_t self:capability { setuid setgid };
 allow ipacm_t self:capability { net_admin };
-allow ipacm_t qcmap_var_run_t:dir { search };
+allow ipacm_t qcmap_var_run_t:dir { search write add_name };
+allow ipacm_t qcmap_var_run_t:file { create rw_file_perms getattr };
 allow ipacm_t self:{ udp_socket netlink_route_socket } create_socket_perms;
 allow ipacm_t ipacm_diag_t:unix_dgram_socket sendto;
 allow ipacm_t self:unix_dgram_socket write;
