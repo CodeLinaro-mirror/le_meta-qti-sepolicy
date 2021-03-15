@@ -29,7 +29,6 @@ policy_module(wlan_scm, 1.0)
 
 type wlan_scm_t;
 type wlan_scm_exec_t;
-type etc_wlan_service_exec_t;
 type scm_kernel_module_t;
 
 init_vendor_domain(wlan_scm_t, wlan_scm_exec_t)
@@ -112,12 +111,8 @@ manage_sock_files_pattern(wlan_scm_t, NetworkManager_var_run_t, NetworkManager_v
 allow wlan_scm_t NetworkManager_t:unix_dgram_socket { sendto create_socket_perms };
 allow NetworkManager_t wlan_scm_t:unix_dgram_socket { sendto create_socket_perms };
 
-# allow start start_wlan_services
-allow init_t etc_wlan_service_exec_t:file { getattr execute };
-
 ifdef(`init_systemd',`
   allow qcmap_cm_t wlan_scm_exec_t:service { start stop status };
-  allow wlan_scm_t etc_wlan_service_exec_t:service { status stop };
   allow wlan_scm_t scm_kernel_module_t:service { start stop status };
   allow wlan_scm_t hostapd_cli_qcmap_exec_t:service { status start stop };
   allow wlan_scm_t hostapd_qcmap_exec_t:service { status start stop };
