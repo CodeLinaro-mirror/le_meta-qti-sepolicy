@@ -29,6 +29,7 @@ policy_module(qnetmgrd, 1.0)
 
 type qnetmgrd_t;
 type qnetmgrd_exec_t;
+type qnetmgrd_config_t;
 
 init_vendor_domain(qnetmgrd_t, qnetmgrd_exec_t)
 logging_send_syslog_msg(qnetmgrd_t)
@@ -83,10 +84,19 @@ gen_require(`
     type default_t;
     type initrc_var_run_t;
     type iptables_t;
-
 ')
 dontaudit qnetmgrd_t default_t:dir { search };
 dontaudit qnetmgrd_t iptables_t : process { sigkill };
 dontaudit qnetmgrd_t self:capability { kill };
 
 iptables_domtrans(qnetmgrd_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+   ')
+    qnetmgr_read_config_file(qnetmgrd_t)
+    qnetmgr_read_config_file(unconfined_t)
+    qnetmgr_write_config_file(qnetmgrd_t)
+    qnetmgr_write_config_file(unconfined_t)
+')
