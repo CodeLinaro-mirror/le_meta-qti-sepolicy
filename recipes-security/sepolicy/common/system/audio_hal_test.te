@@ -30,6 +30,8 @@ policy_module(audio_hal_test, 1.0)
 gen_require(`
         type tracefs_t;
         type trace_marker_t;
+        type sound_device_t;
+        type csd_device_t;
 ')
 
 type hal_rec_test_t;
@@ -43,6 +45,9 @@ allow hal_rec_test_t self:unix_dgram_socket create_socket_perms ;
 
 # For /dev nodes and files related to audio hal
 audio_hal_access(hal_rec_test_t)
+
+device_search_sockets(hal_rec_test_t)
+corecmd_exec_shell(hal_rec_test_t)
 
 non_audio_hal_access(hal_rec_test_t)
 
@@ -59,7 +64,21 @@ allow hal_rec_test_t tracefs_t:filesystem mount;
 allow hal_rec_test_t tracefs_t:dir search;
 allow hal_rec_test_t trace_marker_t:file { write open };
 
+allow hal_rec_test_t csd_device_t:chr_file { read write };
+allow hal_rec_test_t self:capability kill;
+allow hal_rec_test_t self:process signal;
+allow hal_rec_test_t csd_device_t:chr_file open;
+
+userdebug_or_eng(`
+    kernel_read_debugfs(hal_rec_test_t)
+')
+
+kernel_read_system_state(hal_rec_test_t)
+allow hal_rec_test_t sound_device_t:chr_file map;
+
 allow hal_rec_test_t sysfs_t:file write; #/sys/power/wake_lock
+
+dontaudit hal_rec_test_t self:capability dac_override;
 
 type hal_play_test_t;
 type hal_play_test_exec_t;
@@ -88,5 +107,17 @@ audio_data_files_access(hal_play_test_t)
 allow hal_play_test_t tracefs_t:filesystem mount;
 allow hal_play_test_t tracefs_t:dir search;
 allow hal_play_test_t trace_marker_t:file { write open };
+
+allow hal_play_test_t csd_device_t:chr_file { read write };
+allow hal_play_test_t self:capability kill;
+allow hal_play_test_t self:process signal;
+allow hal_play_test_t csd_device_t:chr_file open;
+
+userdebug_or_eng(`
+    kernel_read_debugfs(hal_play_test_t)
+')
+
+kernel_read_system_state(hal_play_test_t)
+allow hal_play_test_t sound_device_t:chr_file map;
 
 allow hal_play_test_t sysfs_t:file write; #/sys/power/wake_lock
