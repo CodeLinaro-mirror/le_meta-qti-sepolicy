@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -47,6 +47,7 @@ gen_require(`
 ')
 read_files_pattern(qmi_ip_multiclient_t, sysfs_t, sysfs_t)
 dontaudit qmi_ip_multiclient_t default_t:dir { search };
+dontaudit qmi_ip_multiclient_t qmi_ip_multiclient_t:capability dac_override;
 
 corenet_tcp_bind_generic_node(qmi_ip_multiclient_t)
 corenet_udp_bind_generic_node(qmi_ip_multiclient_t)
@@ -70,3 +71,9 @@ allow qmi_ip_multiclient_t qmi_ip_var_run_t:sock_file manage_sock_file_perms;
 manage_dirs_pattern(qmi_ip_multiclient_t, qmi_ip_var_run_t, qmi_ip_var_run_t)
 files_pid_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })
 allow qmi_ip_multiclient_t self:unix_dgram_socket sendto;
+
+# Manage socket files inside /dev/socket
+type qmi_ip_multicli_socket_device_t;
+files_type(qmi_ip_multicli_socket_device_t)
+dev_node(qmi_ip_multicli_socket_device_t)
+device_manage_socket_file(qmi_ip_multiclient_t, qmi_ip_multicli_socket_device_t)
