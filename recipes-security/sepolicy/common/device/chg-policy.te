@@ -53,6 +53,7 @@ allow chg-policy_t self:capability2 block_suspend;
 allow chg-policy_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
 allow chg-policy_t self:fifo_file rw_fifo_file_perms;
 allow chg-policy_t qg_device_t:chr_file rw_chr_file_perms;
+dontaudit chg-policy_t self:process setcap;
 
 userdebug_or_eng(`
    mls_file_write_all_levels(chg-policy_t)
