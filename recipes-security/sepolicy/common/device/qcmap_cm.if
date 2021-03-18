@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -346,4 +346,21 @@ interface(`qcmap_manage_user_data_files',`
            type qcmap_data_t;
         ')
         manage_user_data_files($1, qcmap_data_t)
+')
+
+#######################################
+## <summary>
+##      read write qcmap var run file  .
+## </summary>
+## <param name="domain">
+##      <summary>
+##      read write qcmap var run file.
+##      </summary>
+## </param>
+#
+interface(`qcmap_var_run_read_write_file',`
+        gen_require(`
+           type qcmap_var_run_t;
+        ')
+        rw_files_pattern($1, var_run_t, qcmap_var_run_t)
 ')
