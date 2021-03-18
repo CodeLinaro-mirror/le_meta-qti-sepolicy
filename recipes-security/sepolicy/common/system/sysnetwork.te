@@ -40,6 +40,7 @@ networkmanager_read_wifi_sysdata_files(ifconfig_t)
 kernel_search_debugfs(ifconfig_t)
 qnetmgr_use_unix_stream_sockets(ifconfig_t)
 qnetmgr_rw_netlink_sockets(ifconfig_t)
+qcmap_var_run_read_write_file(ifconfig_t)
 qcmap_read_tmp_data_files(ifconfig_t)
 
 gen_require(`

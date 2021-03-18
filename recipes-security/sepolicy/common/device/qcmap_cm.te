@@ -67,7 +67,6 @@ gen_require(`
   type wpa_cli_exec_t;
   type sysfs_t;
   type NetworkManager_t;
-  type ifconfig_t;
   type dhcpc_t;
   type initrc_exec_t;
   type unreserved_port_t;
@@ -147,7 +146,6 @@ qcmap_cm_rw_sock_files(qcmap_cm_t)
 
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
-read_write_qcmap_cm_socket_files(ifconfig_t)
 networkmanager_read_pid_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
 qcmap_cm_sendto_unix_dgram_socket(qcmap_cm_t)
@@ -209,7 +207,6 @@ type httpd_data_t;
 user_data_files_type(httpd_data_t)
 qcmap_manage_httpd_data_files(httpd_t)
 
-read_write_qcmap_cm_socket_files(ifconfig_t)
 # /run/resolve.conf
 sysnet_manage_config(qcmap_cm_t)
 
