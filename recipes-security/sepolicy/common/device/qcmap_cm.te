@@ -540,6 +540,7 @@ files_pid_file(miniupnp_var_run_t)
 
 gen_require(`
   type ssdp_port_t;
+  type brctl_t;
 ')
 
 ifdef(`init_systemd', `
@@ -576,3 +577,5 @@ corenet_tcp_connect_virt_migration_port(miniupnp_t)
 allow miniupnp_t { unreserved_port_t }:tcp_socket { name_connect };
 #This is to access symlink created for emac mtd partition
 read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
+
+kernel_read_system_state(brctl_t)
