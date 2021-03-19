@@ -1,4 +1,4 @@
-# Copyright (c) 2019,2021 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,6 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/qcc-trd                 --      gen_context(system_u:object_r:vendor_qdmastatsd_exec_t,s0)
+/usr/bin/qdmastatsd                 --      gen_context(system_u:object_r:vendor_qdmastatsd_exec_t,s0)
 /data/vendor/qdmastats(/.*)?                gen_context(system_u:object_r:vendor_qdmastatsd_data_t,s0)
 /dev/ramdump_microdump_modem        -c      gen_context(system_u:object_r:vendor_qdmastatsd_ramdump_device_t,s0)
