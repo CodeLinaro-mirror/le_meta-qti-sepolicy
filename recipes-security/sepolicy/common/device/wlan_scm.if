@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,5 +25,23 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/etc/initscripts/sfs_config    --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
-/sbin/sfs_config               --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
+## <summary>WLAN SCM Interface</summary>
+#######################################
+## <summary>
+##      manage SCM files and directories in /var/run.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`scm_manage_var_run_data_files',`
+        gen_require(`
+           type scm_var_run_t;
+           type var_run_t;
+        ')
+        manage_dirs_pattern($1, var_run_t, scm_var_run_t)
+        manage_files_pattern($1, var_run_t, scm_var_run_t)
+        manage_sock_files_pattern($1, var_run_t, scm_var_run_t)
+')
