@@ -351,6 +351,7 @@ allow qcmap_cm_t self:process { setrlimit };
 allow qcmap_cm_t system_dbusd_var_run_t:sock_file { write };
 read_write_qcmap_cm_socket_files(avahi_t)
 read_files_pattern(avahi_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+dontaudit avahi_t etc_t:file {map};
 
 ##### DNSMASQ
 manage_files_pattern(qcmap_cm_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
