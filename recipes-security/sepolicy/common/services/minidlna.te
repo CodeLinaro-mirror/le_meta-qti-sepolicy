@@ -33,6 +33,7 @@ logging_log_file(minidlna_var_log_t)
 gen_require(`
     type minidlna_t;
     type qcmap_data_t;
+    type etc_t;
 ')
 
 files_rw_qcmap_etc_data_files(minidlna_t)
@@ -47,3 +48,5 @@ create_dirs_pattern(minidlna_t, var_run_t, var_run_t)
 manage_user_data_files(minidlna_t, qcmap_data_t)
 dev_read_urand(minidlna_t)
 corenet_tcp_connect_all_unreserved_ports(minidlna_t)
+allow minidlna_t self:capability { kill };
+dontaudit minidlna_t etc_t:file {map};
