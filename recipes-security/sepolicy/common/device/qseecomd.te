@@ -41,6 +41,7 @@ gen_require(`
        type proc_t;
        type firmware_t;
        class process setcap;
+       type persist_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -82,3 +83,4 @@ leprop_rw_props(qseecomd_t)
 # allow qseecomd to read/write to persist partition
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
+dontaudit qseecomd_t persist_t:dir read;
