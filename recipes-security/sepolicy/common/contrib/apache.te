@@ -47,6 +47,8 @@ allow httpd_t qcmap_webserver_t: process {signal};
 search_user_data_dir(qcmap_webserver_t)
 allow httpd_t webserver_t: file read_file_perms;
 
+files_type(webserver_t)
+
 userdebug_or_eng(`
 files_list_default(httpd_t)
 ')
