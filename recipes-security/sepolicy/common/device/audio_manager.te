@@ -78,7 +78,6 @@ allow audio_manager_t urandom_device_t:chr_file { open read write };
 allow audio_manager_t home_root_t:dir { search getattr };
 
 allow audio_manager_t self:capability net_admin;
-init_stream_connect_script(audio_manager_t)
 allow audio_manager_t initrc_var_run_t:sock_file { open read write getattr };
 
 allow audio_manager_t self:fifo_file { write read open getattr };
