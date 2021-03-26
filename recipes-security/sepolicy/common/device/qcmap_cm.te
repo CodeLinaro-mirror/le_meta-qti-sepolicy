@@ -272,6 +272,8 @@ gen_require(`
     type minidlna_exec_t;
     type webserver_socket_device_t;
     type nsfs_t;
+    type loc_socket_t;
+    type loc_hald_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -419,6 +421,13 @@ type ssdk_device_t;
 dev_node(ssdk_device_t)
 rw_chr_files_pattern(qcmap_cm_t, device_t, ssdk_device_t)
 
+#### Location Client
+rw_dirs_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
+rw_files_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
+manage_sock_files_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
+files_read_loc_etc_files(qcmap_cm_t);
+allow qcmap_cm_t loc_hald_t:unix_dgram_socket{ sendto };
+
 gen_require(`
   type syslogd_t;
   type var_run_t;
@@ -531,6 +540,7 @@ files_pid_file(miniupnp_var_run_t)
 
 gen_require(`
   type ssdp_port_t;
+  type brctl_t;
 ')
 
 ifdef(`init_systemd', `
@@ -567,3 +577,5 @@ corenet_tcp_connect_virt_migration_port(miniupnp_t)
 allow miniupnp_t { unreserved_port_t }:tcp_socket { name_connect };
 #This is to access symlink created for emac mtd partition
 read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
+
+kernel_read_system_state(brctl_t)
