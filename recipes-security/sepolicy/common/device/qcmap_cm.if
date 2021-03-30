@@ -313,6 +313,24 @@ interface(`qcmap_manage_tmp_data_files',`
 
 #######################################
 ## <summary>
+##      read files in /tmp/data.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`qcmap_read_tmp_data_files',`
+        gen_require(`
+           type qcmap_tmp_t;
+           type tmp_t;
+        ')
+        read_files_pattern($1, tmp_t, qcmap_tmp_t)
+')
+
+#######################################
+## <summary>
 ##      manage QCMAP files and directories in /var/run.
 ## </summary>
 ## <param name="domain">

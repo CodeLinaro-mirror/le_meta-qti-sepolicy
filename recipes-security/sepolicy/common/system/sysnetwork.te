@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2018,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -41,6 +41,7 @@ kernel_search_debugfs(ifconfig_t)
 qnetmgr_use_unix_stream_sockets(ifconfig_t)
 qnetmgr_rw_netlink_sockets(ifconfig_t)
 qcmap_var_run_read_write_file(ifconfig_t)
+qcmap_read_tmp_data_files(ifconfig_t)
 
 gen_require(`
   type systemd_resolved_var_run_t;
