@@ -66,7 +66,6 @@ gen_require(`
   type init_var_run_t;
   type wpa_cli_exec_t;
   type sysfs_t;
-  type kmod_t;
   type NetworkManager_t;
   type dhcpc_t;
   type initrc_exec_t;
@@ -145,7 +144,6 @@ corenet_udp_bind_dns_port(qcmap_cm_t)
 dev_read_rand(qcmap_cm_t)
 qcmap_cm_rw_sock_files(qcmap_cm_t)
 
-read_write_qcmap_cm_socket_files(kmod_t)
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
 networkmanager_read_pid_files(qcmap_cm_t);
