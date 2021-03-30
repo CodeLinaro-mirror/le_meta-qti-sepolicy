@@ -63,6 +63,7 @@ allow hostapd_t self:udp_socket connected_socket_perms;
 gen_require(`
     type tmp_t;
     type qcmap_tmp_t;
+    type kmsg_device_t;
 ')
 rw_sock_files_pattern(hostapd_t, tmp_t, qcmap_tmp_t)
 
@@ -73,4 +74,13 @@ init_unit_file(hostapd_unit_t)
 
 type hostapd_cli_qcmap_unit_t;
 init_unit_file(hostapd_cli_qcmap_unit_t)
+corecmd_exec_shell(hostapd_cli_qcmap_unit_t)
 
+# /dev/kmsg
+userdebug_or_eng(`
+    dev_write_kmsg(hostapd_t);
+    mls_file_write_all_levels(hostapd_t);
+')
+
+dontaudit hostapd_t kmsg_device_t:chr_file { getattr };
+dontaudit hostapd_t etc_t:file { map };
