@@ -46,6 +46,8 @@ gen_require(`
 ')
 
 manage_files_pattern(dhcpc_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+manage_files_pattern(ifconfig_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+allow ifconfig_t net_conf_t:file read_file_perms;
 
 #dont audit setuid and setgid
 dontaudit ifconfig_t self: capability {setuid setgid};
