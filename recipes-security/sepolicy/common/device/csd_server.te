@@ -30,6 +30,7 @@ policy_module(csd_server, 1.0)
 type csd_server_t;
 type csd_server_exec_t;
 type csd_device_t;
+type csd_sysfs_t;
 gen_require(`
     type default_t;
     type sound_device_t;
@@ -65,6 +66,9 @@ allow csd_server_t audio_device_t:chr_file rw_chr_file_perms;
 allow csd_server_t ion_device_t:chr_file read_chr_file_perms;
 allow csd_server_t self:{ socket qipcrtr_socket } create_socket_perms;
 allow csd_server_t self:process signal;
+allow csd_server_t self:qipcrtr_socket create_socket_perms;
+allow csd_server_t sound_device_t:chr_file map;
+allow csd_server_t csd_sysfs_t:file write;
 allow csd_server_t csd_device_t:chr_file rw_chr_file_perms;
 kernel_read_system_state(csd_server_t)
 dontaudit hal_play_test_t socket_device_t:dir search;
