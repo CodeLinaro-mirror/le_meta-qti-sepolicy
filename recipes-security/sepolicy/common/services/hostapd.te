@@ -45,6 +45,7 @@ allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
 allow hostapd_cli_qcmap_t var_run_t:dir { write add_name remove_name };
 allow hostapd_cli_qcmap_t hostapd_var_run_t:dir search;
 allow hostapd_cli_qcmap_t socket_device_t:dir search;
+dev_read_sysfs(hostapd_cli_qcmap_t)
 
 user_data_files_type(qcmap_data_t)
 data_filetrans(hostapd_t, qcmap_data_t, file)
