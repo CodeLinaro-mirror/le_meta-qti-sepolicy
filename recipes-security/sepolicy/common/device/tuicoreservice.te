@@ -40,6 +40,10 @@ type tuicoreservice_sock_t;
 type tuicoreservice_dev_t;
 allow tuicoreservice_t tuicoreservice_dev_t:chr_file rw_chr_file_perms;
 
+type tuicoreservice_vendor_t;
+files_type(tuicoreservice_vendor_t)
+allow tuicoreservice_t tuicoreservice_vendor_t:file read_file_perms;
+
 type tuicoreservice_data_t;
 user_data_files_type(tuicoreservice_data_t)
 manage_user_data_files(tuicoreservice_t, tuicoreservice_data_t)
@@ -58,6 +62,8 @@ type udev_t;
 type brightness_t;
 ')
 
+#Search on /vendor/etc
+allow tuicoreservice_t default_t:dir search;
 allow tuicoreservice_t brightness_t:file { read write open };
 
 #permissions to enable/disable autosleep
@@ -80,6 +86,5 @@ allow tuicoreservice_t self:socket rw_socket_perms;
 allow tuicoreservice_t self:socket create;
 allow tuicoreservice_t self:capability2 block_suspend;
 allow tuicoreservice_sock_t device_t:filesystem associate;
-dontaudit tuicoreservice_t default_t:dir search;
 dontaudit tuicoreservice_t mnt_t:dir search;
 dontaudit tuicoreservice_t self:capability sys_admin;
