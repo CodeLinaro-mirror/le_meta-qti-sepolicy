@@ -76,6 +76,7 @@ allow atfwd_t syslogd_t:unix_dgram_socket sendto;
 allow atfwd_t socket_device_t:sock_file { create write unlink setattr};
 allow atfwd_t sysfs_t:file { open read };#/sys/module/diagchar/parameters/timestamp_switch
 allow atfwd_t self:capability net_admin;
+allow atfwd_t self:process { signal };
 userdebug_or_eng(`
     gen_require(`
           type diag_device_t;
