@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,25 +25,35 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# TODO: Why are these needed?
+policy_module(diag-router, 1.0)
 
+########################################
+#
+# Declarations
+#
+
+type diag-router_t;
+type diag-router_exec_t;
+
+init_vendor_domain(diag-router_t, diag-router_exec_t)
+
+#===============diag-router_t =====================
 userdebug_or_eng(`
-    gen_require(`
-        type tracefs_t;
-    ')
-    rw_diag_dev(kmod_t)
-    allow kmod_t tracefs_t:dir search;
-')
-# Netlink sockets
-read_write_qcmap_cm_socket_files(kmod_t)
-qcmap_cm_rw_unix_netlink_socket(kmod_t)
-qcmap_cm_rw_netlink_socket_files(kmod_t)
-qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
-networkmanager_read_wifi_sysdata_files(kmod_t)
+  gen_require(`
+    type socket_device_t;
+  ')
 
-firmware_read_files(kmod_t)
+  allow diag-router_t self:qipcrtr_socket create_socket_perms;
+  allow domain diag-router_t:unix_stream_socket connectto;
+  fs_manage_configfs_files(diag-router_t)
+  fs_search_functionfs_dirs(diag-router_t)
+  fs_rw_functionfs_files(diag-router_t)
+  allow diag-router_t functionfs_t:dir read;
+  allow diag-router_t self:netlink_kobject_uevent_socket { read bind create };
+  allow diag-router_t self:unix_stream_socket { accept listen };
+  dev_read_sysfs(diag-router_t)
 
-gen_require(`
-    type kmsg_device_t;
+  allow diag-router_t self:socket create_socket_perms;
+  allow diag-router_t socket_device_t:dir search;
 ')
-dontaudit kmod_t kmsg_device_t:chr_file write;
+

@@ -44,6 +44,8 @@ gen_require(`
     type proc_kmsg_t;
     type rebootd_pipe_t;
     type webserver_t;
+    type weston_runtime_t;
+    type camera_data_t;
 ')
 
 mls_file_read_all_levels(unconfined_t)
@@ -56,9 +58,13 @@ allow unconfined_t self:binder { call transfer };
 allow unconfined_t auditd_etc_t:dir { getattr read search };
 allow unconfined_t auditd_etc_t:file getattr;
 allow unconfined_t data_t:chr_file getattr;
+# allow map the files in /data/misc/camera
+allow unconfined_t camera_data_t:file map;
 allow unconfined_t policy_config_t:dir { getattr read search };
 allow unconfined_t policy_config_t:file getattr;
 allow unconfined_t rebootd_pipe_t:fifo_file getattr;
 allow unconfined_t usb_dev_t:dir { getattr read search open };
 allow unconfined_t webserver_t:dir { read search open };
 allow unconfined_t webserver_t:file getattr;
+allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
+allow unconfined_t weston_runtime_t:file { getattr setattr };

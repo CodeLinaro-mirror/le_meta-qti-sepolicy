@@ -161,3 +161,13 @@ allow wlan_initrc_t urandom_device_t:chr_file { getattr ioctl open read };
 allow wlan_initrc_t sysctl_t:dir search;
 allow wlan_initrc_t wireless_device_t:chr_file { open read };
 manage_user_data_files(wlan_initrc_t, wifi_data_t)
+
+# /dev/kmsg
+userdebug_or_eng(`
+    dev_write_kmsg(NetworkManager_t);
+    mls_file_write_all_levels(NetworkManager_t);
+')
+
+dontaudit wpa_cli_t self:capability { setgid setpcap };
+allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
+corecmd_exec_shell(wpa_cli_t)

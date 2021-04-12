@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/bin/csd_server        --   gen_context(system_u:object_r:csd_server_exec_t,s0)
+/dev/aud_pasthru_modem     -c   gen_context(system_u:object_r:csd_device_t,s0)
+/sys/ssr                        gen_context(system_u:object_r:csd_sysfs_t,s0)
