@@ -195,6 +195,13 @@ gen_require(`
     type systemd_logind_var_run_t;
 ')
 
+#DHCPCD Rules
+files_pid_file(dhcpc_var_run_t)
+manage_sock_files_pattern(dhcpc_t, dhcpc_var_run_t, dhcpc_var_run_t)
+files_pid_filetrans(dhcpc_t, dhcpc_var_run_t, sock_file)
+allow dhcpc_t self:capability { kill };
+write_sock_files_pattern(dhcpc_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
+
 #Manage Dbus sockets
 ifdef(`init_systemd',`
     dbus_system_bus_client(qcmap_cm_t)
