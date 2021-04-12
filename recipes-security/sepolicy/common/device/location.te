@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(location, 1.0)
 
@@ -427,6 +431,8 @@ allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_servic
 allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
 allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
+
+allow xtra_daemon_t unreserved_port_t:tcp_socket name_connect;
 
 ## common rules
 dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
