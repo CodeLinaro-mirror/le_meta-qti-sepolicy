@@ -38,6 +38,20 @@ type st_hal_test_exec_t;
 init_vendor_domain(st_hal_test_t, st_hal_test_exec_t)
 unconfined_domtrans_to(st_hal_test_t, st_hal_test_exec_t)
 
+gen_require(`
+        type socket_device_t;
+        type sound_device_t;
+')
+# Access /dev/snd/ sound_device
+allow st_hal_test_t self:process { signal setsched };
+device_search_sockets(st_hal_test_t)
+corecmd_exec_shell(st_hal_test_t)
+allow st_hal_test_t sound_device_t:chr_file map;
+
+allow st_hal_test_t sysfs_t:file write; #/sys/power/wake_lock
+allow st_hal_test_t self:capability2 block_suspend;
+dontaudit st_hal_test_t self:capability { dac_override dac_read_search };
+
 # Manage private files inside /data
 type st_hal_test_data_t;
 user_data_files_type(st_hal_test_data_t)
