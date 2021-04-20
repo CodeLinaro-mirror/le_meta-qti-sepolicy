@@ -74,3 +74,14 @@ python do_update_modules_conf () {
         modules_file.write(new_file)
 }
 addtask update_modules_conf after do_patch before do_compile
+
+rebuild_policy_append() {
+	policy_version=30
+
+	if ${@oe.utils.conditional('RECOVERY_IMAGE', '1', 'true', 'false', d)}; then
+		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
+		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+	fi
+
+	manage_policy -d ota
+}

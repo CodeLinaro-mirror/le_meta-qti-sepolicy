@@ -1,4 +1,4 @@
-# Copyright (c) 2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,33 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(recovery , 1.0)
-
-########################################
-#
-# Declarations
-#
-type cache_recoveryupgrade_t;
-type data_otapackage_t;
-type recovery_initrc_tmp_t;
-# recovery initscript
-type recovery_initrc_exec_t;
-type recovery_initrc_t;
-init_script_domain(recovery_initrc_t, recovery_initrc_exec_t)
-files_type(cache_recoveryupgrade_t)
-user_data_files_type(data_otapackage_t)
-files_tmp_file(recovery_initrc_tmp_t)
-recovery_upgrade_rw_files(recovery_initrc_t)
-
-allow recovery_initrc_t cache_recoveryupgrade_t:dir { open read write create getattr search add_name };
-allow recovery_initrc_t cache_recoveryupgrade_t:file { open read write create getattr };
-allow recovery_initrc_t recovery_initrc_tmp_t:file { open read write create getattr append };
-# To update recovery and recoveryfs partitions using /dev/mtd
-allow recovery_initrc_t mtd_device_t:chr_file { open read write getattr ioctl};
-# To use mtd tools to write recovery and recoveryfs partition
-allow recovery_initrc_t mtd_tools_exec_t:file { read open getattr execute execute_no_trans};
-allow recovery_initrc_t self:fifo_file { read write getattr ioctl};
-allow setfiles_t cache_recoveryupgrade_t:{ dir file } relabelto;
-
-type recovery_t;
-type recovery_exec_t;
+## <summary>OTA</summary>
