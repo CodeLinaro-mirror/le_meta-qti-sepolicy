@@ -62,6 +62,9 @@ neverallow {
 dontaudit vendor_domain { sysfs_t proc_t }:dir write;
 kernel_dontaudit_request_load_module(vendor_domain)
 
+# Do not allow communication with unlabeled sockets
+neverallow vendor_domain initrc_t:unix_stream_socket connectto;
+
 ### tftp server ###
 
 type tftp_server_t;
