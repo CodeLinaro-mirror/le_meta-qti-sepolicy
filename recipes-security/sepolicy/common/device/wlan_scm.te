@@ -101,6 +101,7 @@ kernel_rw_net_sysctls(wlan_scm_t)
 kernel_search_fs_sysctls(wlan_scm_t)
 kernel_rw_fs_sysctls(wlan_scm_t)
 kernel_read_network_state(wlan_scm_t)
+device_search_sockets(wlan_scm_t)
 
 modutils_domtrans_insmod(wlan_scm_t)
 allow kmod_t wlan_scm_t:{ netlink_socket unix_dgram_socket } { read write };
