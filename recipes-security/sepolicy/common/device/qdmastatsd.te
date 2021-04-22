@@ -77,3 +77,7 @@ dontaudit vendor_qdmastatsd_t default_t:dir search;
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:dir { write remove_name add_name };
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:sock_file { create unlink setattr };
 
+allow vendor_qdmastatsd_t self:process { signull };
+
+# For leprop permissions
+leprop_rw_props(vendor_qdmastatsd_t);
