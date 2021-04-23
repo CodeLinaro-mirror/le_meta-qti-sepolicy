@@ -32,6 +32,7 @@
 /etc/initscripts/ipa_fws_le       --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
 
 /var/run/data/ipa(/.*)?               gen_context(system_u:object_r:ipacm_var_run_t,s0)
+/var/run/data/monitor(/.*)?           gen_context(system_u:object_r:ipacm_var_run_t,s0)
 /run/data/ipa(/.*)?                   gen_context(system_u:object_r:ipacm_var_run_t,s0)
 /data/misc/ipa(/.*)?                  gen_context(system_u:object_r:ipacm_data_t,s0)
 

@@ -29,6 +29,7 @@
 /dev/socket/TUICoreSVC       -c      gen_context(system_u:object_r:tuicoreservice_sock_t,s0)
 /dev/membuf                  -c      gen_context(system_u:object_r:tuicoreservice_dev_t,s0)
 
-/usr/data/display(/.*)?      --      gen_context(system_u:object_r:tuicoreservice_data_t,s0)
-/vendor/etc/snapdragon_color_libs_config.xml                                               -- gen_context(system_u:object_r:tuicoreservice_data_t,s0)
+/usr/data/display(/.*)?        --      gen_context(system_u:object_r:tuicoreservice_data_t,s0)
+/vendor/etc/display(/.*)?      --    gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
+/vendor/etc/snapdragon_color_libs_config.xml -- gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
 

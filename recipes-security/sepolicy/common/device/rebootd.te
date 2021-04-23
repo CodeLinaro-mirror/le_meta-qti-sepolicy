@@ -1,4 +1,4 @@
-# Copyright (c) 2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -47,6 +47,7 @@ userdebug_or_eng(`
          type var_run_t;
          type init_t;
          type init_var_run_t;
+         type unconfined_t;
     ')
     corecmd_exec_shell(rebootd_t)
     #files_read_generic_pids(rebootd_t)
@@ -65,6 +66,7 @@ userdebug_or_eng(`
     allow rebootd_t self:capability setuid;
     allow rebootd_t self:unix_dgram_socket create_socket_perms;
     allow rebootd_t var_run_t:dir create_dir_perms;
+    allow unconfined_t rebootd_pipe_t:fifo_file getattr;
 ')
 ## reset reboot cookie script ##
 type reset_reboot_initrc_exec_t;
