@@ -36,6 +36,9 @@ userdebug_or_eng(`
     manage_user_data_files(unconfined_t, user_data)
     manage_system_data_files(unconfined_t, system_data)
 
+    dev_write_kmsg(unconfined_t)
+    mls_file_write_all_levels(unconfined_t)
+
     wlan_start_stop(unconfined_t)
 
     # Audio test app
@@ -73,3 +76,8 @@ userdebug_or_eng(`
     # Run iperf from shell
     allow unconfined_t data_t:file map;
 ')
+
+gen_require(`
+    type usb_dev_t;
+')
+dontaudit unconfined_t usb_dev_t:dir search;

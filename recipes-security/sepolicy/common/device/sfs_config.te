@@ -45,3 +45,8 @@ allow sfs_config_initrc_t qseecomd_persist_t:dir manage_dir_perms;
 allow sfs_config_initrc_t self:fifo_file rw_fifo_file_perms;
 dev_read_sysfs(sfs_config_initrc_t)
 kernel_read_system_state(sfs_config_initrc_t)
+
+userdebug_or_eng(`
+mls_file_write_all_levels(sfs_config_initrc_t)
+dev_write_kmsg(sfs_config_initrc_t)
+')

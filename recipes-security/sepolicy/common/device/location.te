@@ -162,6 +162,7 @@ allow loc_hald_t xtra_daemon_t:unix_dgram_socket sendto;
 allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
+qcmap_cm_sendto_unix_dgram_socket(loc_hald_t);
 dev_read_urand(loc_hald_t);
 kernel_dontaudit_read_system_state(loc_hald_t);
 
@@ -171,7 +172,7 @@ userdebug_or_eng(`
         type debugfs_t;
     ')
     allow { loc_hald_t xtra_daemon_t } debugfs_t:dir search;
-    allow { loc_hald_t xtra_daemon_t } debugfs_t:file { write open };
+    allow { loc_hald_t xtra_daemon_t } debugfs_t:file { write open getattr };
     corecmd_exec_shell(loc_hald_t);
     corecmd_exec_shell(xtra_daemon_t);
 ')

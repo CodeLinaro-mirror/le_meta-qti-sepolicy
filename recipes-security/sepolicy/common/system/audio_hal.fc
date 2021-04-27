@@ -32,3 +32,6 @@
 /etc/acdbdata/MTP(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)
 /etc/acdbdata/IDP(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)
 /etc/acdbdata/IOT(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)
+/etc/acdbdata/QRD(/.*)?                     gen_context(system_u:object_r:audio_hal_etc_acdb_t,s0)
+/etc/card-defs.xml                          gen_context(system_u:object_r:audio_hal_etc_t,s0)
+/etc/resourcemanager.xml                    gen_context(system_u:object_r:audio_hal_etc_t,s0)

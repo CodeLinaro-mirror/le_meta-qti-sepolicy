@@ -120,7 +120,6 @@ allow voice-ui-app_t self:netlink_kobject_uevent_socket { create setopt bind get
 allow voice-ui-app_t sysfs_t:dir read;
 allow voice-ui-app_t udev_var_run_t:dir search;
 dev_rw_sysfs(voice-ui-app_t)
-init_stream_connect_script(voice-ui-app_t)
 allow voice-ui-app_t home_root_t:dir { search getattr };
 allow voice-ui-app_t user_home_t:dir { search getattr };
 allow voice-ui-app_t user_home_t:file { read getattr open };

@@ -72,6 +72,25 @@ gen_require(`
  type user_runtime_root_t;
 ')
 
+#For hvx
+optional_policy(`
+    adsprpcd_files_access(qmmf_server_t)
+')
+
+#For camera performance
+fs_manage_cgroup_dirs(qmmf_server_t)
+fs_manage_cgroup_files(qmmf_server_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        class service {start stop status};
+    ')
+    #systemctl start/stop/status qmmf-server
+    allow unconfined_t qmmf_server_exec_t:service { status start stop };
+')
+
+
 # For video related files
 rw_video_dev(qmmf_server_t)
 
