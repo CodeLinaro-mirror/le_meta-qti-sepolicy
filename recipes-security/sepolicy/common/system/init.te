@@ -48,6 +48,7 @@ ifdef(`init_systemd',`
     fs_search_cgroup_dirs(daemon)
     allow init_t daemon:unix_stream_socket create_stream_socket_perms;
     dontaudit init_t adbd_system_data_t:file write;
+    dontaudit init_t qcmap_etc_data_t:file write;
     allow initrc_t init_t:system { start status reboot halt reload };
 
     data_mount_user_dir(init_t)
@@ -69,6 +70,7 @@ gen_require(`
     attribute user_data;
     attribute system_data;
     attribute adbd_system_data_t;
+    type qcmap_etc_data_t;
 ')
 
 # Use systemd-tmpfiles or mount-copybind for this instead
