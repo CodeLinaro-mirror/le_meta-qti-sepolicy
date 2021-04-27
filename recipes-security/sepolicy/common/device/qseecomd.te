@@ -82,3 +82,5 @@ leprop_rw_props(qseecomd_t)
 # allow qseecomd to read/write to persist partition
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
+
+files_read_etc_files(qseecomd_t)
