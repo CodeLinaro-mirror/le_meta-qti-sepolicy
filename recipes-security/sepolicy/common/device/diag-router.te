@@ -34,7 +34,8 @@ policy_module(diag-router, 1.0)
 
 type diag-router_t;
 type diag-router_exec_t;
-
+type mhi_pipe_4_t;
+dev_node(mhi_pipe_4_t);
 init_vendor_domain(diag-router_t, diag-router_exec_t)
 
 #===============diag-router_t =====================
@@ -50,6 +51,7 @@ userdebug_or_eng(`
   fs_rw_functionfs_files(diag-router_t)
   allow diag-router_t functionfs_t:dir read;
   allow diag-router_t self:netlink_kobject_uevent_socket { read bind create };
+  allow diag-router_t self:netlink_kobject_uevent_socket setopt;
   allow diag-router_t self:unix_stream_socket { accept listen };
   dev_read_sysfs(diag-router_t)
 
@@ -57,5 +59,6 @@ userdebug_or_eng(`
   allow diag-router_t socket_device_t:dir search;
   allow diag-router_t self:process signal;
   allow diag-router_t self:capability kill;
+  allow diag-router_t mhi_pipe_4_t:chr_file rw_chr_file_perms;
 ')
 
