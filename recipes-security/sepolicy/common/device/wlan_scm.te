@@ -57,6 +57,7 @@ type wpa_cli_exec_t;
 type hostapd_qcmap_t;
 type hostapd_qcmap_exec_t;
 type qcmap_cm_t;
+type etc_t;
 ')
 
 userdebug_or_eng(`
@@ -104,7 +105,7 @@ kernel_read_network_state(wlan_scm_t)
 device_search_sockets(wlan_scm_t)
 
 modutils_domtrans_insmod(wlan_scm_t)
-allow kmod_t wlan_scm_t:{ netlink_socket unix_dgram_socket } { read write };
+allow kmod_t wlan_scm_t:{ netlink_socket unix_dgram_socket unix_stream_socket } { read write };
 allow kmod_t scm_var_run_t:file { append };
 
 # wpa ctrl socket
@@ -119,6 +120,7 @@ ifdef(`init_systemd',`
   allow wlan_scm_t hostapd_qcmap_exec_t:service { status start stop };
   allow wlan_scm_t wpa_cli_exec_t:service { status start stop };
   allow wlan_scm_t NetworkManager_exec_t:service { status start stop };
+  allow wlan_scm_t etc_t:service { status stop };
 ')
 
 # nl socket...
