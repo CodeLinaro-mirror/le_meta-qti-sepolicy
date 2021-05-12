@@ -55,5 +55,7 @@ userdebug_or_eng(`
 
   allow diag-router_t self:socket create_socket_perms;
   allow diag-router_t socket_device_t:dir search;
+  allow diag-router_t self:process signal;
+  allow diag-router_t self:capability kill;
 ')
 

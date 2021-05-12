@@ -91,7 +91,7 @@ gen_require(`
 ')
 
 #For weston-terminal
-allow weston_t shell_exec_t:file map;
+allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
 allow weston_t user_home_dir_t:dir search;
 allow weston_t weston_exec_t:file execute_no_trans;
