@@ -367,6 +367,9 @@ type slim_daemon_t;
 type slim_daemon_exec_t;
 init_vendor_domain(slim_daemon_t, slim_daemon_exec_t)
 
+sensor_dev_socket(slim_daemon_t)
+sensor_configuration_access(slim_daemon_t)
+
 # Launched by loc_launcher instead of init
 domtrans_pattern(loc_t, slim_daemon_exec_t, slim_daemon_t)
 logging_send_syslog_msg(slim_daemon_t)
