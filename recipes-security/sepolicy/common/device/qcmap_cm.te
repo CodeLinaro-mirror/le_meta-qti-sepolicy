@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -30,19 +30,12 @@ policy_module(qcmap_cm, 1.0)
 type qcmap_cm_t;
 type qcmap_cm_exec_t;
 type qcmap_etc_data_t;
-type datadpo_device_t;
 type datamtd_device_t;
 type qcmap_kernel_module_t;
 init_vendor_domain(qcmap_cm_t, qcmap_cm_exec_t)
 system_data_files_type(qcmap_etc_data_t);
-dev_node(datadpo_device_t)
 dev_node(datamtd_device_t);
 init_script_file(qcmap_kernel_module_t)
-
-#data_path_opt declaration
-type data_path_opt_exec_t;
-type data_path_opt_t;
-init_vendor_domain(data_path_opt_t, data_path_opt_exec_t )
 
 #tinyproxy declaration
 type tinyproxy_exec_t;
@@ -82,6 +75,8 @@ gen_require(`
   type debugfs_t;
   type usb_t;
   type brctl_exec_t;
+  type datadpo_device_t;
+  type data_path_opt_exec_t;
 ')
 
 userdebug_or_eng(`
@@ -470,18 +465,10 @@ allow hostapd_cli_qcmap_t qcmap_cm_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
 
 #data_path_opt policies
-modutils_domtrans_insmod(data_path_opt_t)
-dev_read_sysfs(data_path_opt_t)
-corecmd_exec_shell(data_path_opt_t)
-dev_write_kmsg(data_path_opt_t)
 ifdef(`init_systemd',`
     allow qcmap_cm_t data_path_opt_exec_t:service { start stop status reload };
 ')
-kernel_read_system_state(data_path_opt_t)
-dontaudit data_path_opt_t debugfs_t:dir { search };
-allow data_path_opt_t data_path_opt_t:chr_file { write getattr };
-allow data_path_opt_t data_path_opt_t:fifo_file {  getattr read write };
-allow qcmap_cm_t data_path_opt_exec_t:file { getattr execute read open execute_no_trans };
+exec_files_pattern(qcmap_cm_t, bin_t, data_path_opt_exec_t);
 
 #allow exectution of mtd tools
 mtd_tools_exec(qcmap_cm_t)
