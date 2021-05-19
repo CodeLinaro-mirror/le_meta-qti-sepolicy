@@ -37,6 +37,7 @@ dev_node(dataqti_device_t)
 
 userdebug_or_eng(`
     rw_diag_dev(qtether_t)
+    kernel_search_debugfs(qtether_t)
 ')
 
 gen_require(`
@@ -69,9 +70,6 @@ manage_user_data_files(qtether_t, qtether_log_t)
 
 dev_write_kmsg(qtether_t)
 rw_chr_files_pattern(qtether_t, device_t, dataqti_device_t)
-userdebug_or_eng(`
-  rw_diag_dev(qtether_t);
-')
 corecmd_check_exec_shell(qtether_t);
 
 sysnet_exec_ifconfig(qtether_t)

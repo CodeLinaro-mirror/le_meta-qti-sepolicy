@@ -66,9 +66,7 @@ gen_require(`
   type init_var_run_t;
   type wpa_cli_exec_t;
   type sysfs_t;
-  type kmod_t;
   type NetworkManager_t;
-  type ifconfig_t;
   type dhcpc_t;
   type initrc_exec_t;
   type unreserved_port_t;
@@ -146,10 +144,8 @@ corenet_udp_bind_dns_port(qcmap_cm_t)
 dev_read_rand(qcmap_cm_t)
 qcmap_cm_rw_sock_files(qcmap_cm_t)
 
-read_write_qcmap_cm_socket_files(kmod_t)
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
-read_write_qcmap_cm_socket_files(ifconfig_t)
 networkmanager_read_pid_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
 qcmap_cm_sendto_unix_dgram_socket(qcmap_cm_t)
@@ -199,6 +195,13 @@ gen_require(`
     type systemd_logind_var_run_t;
 ')
 
+#DHCPCD Rules
+files_pid_file(dhcpc_var_run_t)
+manage_sock_files_pattern(dhcpc_t, dhcpc_var_run_t, dhcpc_var_run_t)
+files_pid_filetrans(dhcpc_t, dhcpc_var_run_t, sock_file)
+allow dhcpc_t self:capability { kill };
+write_sock_files_pattern(dhcpc_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
+
 #Manage Dbus sockets
 ifdef(`init_systemd',`
     dbus_system_bus_client(qcmap_cm_t)
@@ -211,7 +214,6 @@ type httpd_data_t;
 user_data_files_type(httpd_data_t)
 qcmap_manage_httpd_data_files(httpd_t)
 
-read_write_qcmap_cm_socket_files(ifconfig_t)
 # /run/resolve.conf
 sysnet_manage_config(qcmap_cm_t)
 
