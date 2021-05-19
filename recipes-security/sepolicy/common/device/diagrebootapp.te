@@ -52,3 +52,5 @@ userdebug_or_eng(`
 
 allow diagrebootapp_t sysfs_t:file setattr;
 allow diagrebootapp_t sysfs_t:lnk_file read;
+
+device_search_sockets(diagrebootapp_t)
