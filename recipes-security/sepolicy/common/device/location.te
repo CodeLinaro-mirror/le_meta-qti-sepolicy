@@ -72,6 +72,7 @@ allow loc_t self:netlink_route_socket read;
 allow loc_t xtra_daemon_t:process signal;
 allow loc_t edgnss_daemon_t:process signal;
 allow loc_t slim_daemon_t:process sigkill;
+kernel_read_vm_overcommit_sysctl(loc_t)
 
 # Drop from root
 allow loc_t self:capability { setuid setgid };
@@ -247,6 +248,10 @@ gen_require(`
 ')
 
 allow xtwifi_client_t rfs_persist_t:file { write getattr open };
+
+# temporary fix till /target changes are made cr#2387138
+read_files_pattern(xtwifi_client_t, default_t, default_t)
+
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
 allow xtwifi_client_t loc_socket_t:dir { remove_name add_name };
 allow xtwifi_client_t loc_socket_t:sock_file { create unlink };
