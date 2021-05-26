@@ -31,4 +31,3 @@
 # embms file contexts
 /data/embms(/.*)?                    gen_context(system_u:object_r:msdc_data_t,s0)
 /data/msc_internal(/.*)?             gen_context(system_u:object_r:msdc_data_t,s0)
-/mnt/sdcard/msc_external(/.*)?       gen_context(system_u:object_r:msdc_data_t,s0)
