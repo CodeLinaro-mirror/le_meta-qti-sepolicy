@@ -129,6 +129,7 @@ corecmd_exec_bin(qcmap_cm_t)
 rw_chr_files_pattern(qcmap_cm_t, device_t, datadpo_device_t)
 rw_chr_files_pattern(qcmap_cm_t, device_t, datamtd_device_t)
 
+allow qcmap_cm_t self:unix_stream_socket { rw_stream_socket_perms connectto };
 allow qcmap_cm_t self:{ netlink_route_socket netlink_generic_socket netlink_socket } create_socket_perms;
 allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket connected_stream_socket_perms;
