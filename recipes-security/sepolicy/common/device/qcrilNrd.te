@@ -49,7 +49,8 @@ type vendor_mbn_data_file_t;
 
 logging_send_syslog_msg(qcrilNrd_t)
 
-allow qcrilNrd_t self:socket create_socket_perms;
+allow qcrilNrd_t self:{ socket udp_socket } create_socket_perms;
+allow qcrilNrd_t self:netlink_route_socket { create_socket_perms nlmsg_read };
 allow qcrilNrd_t self:fifo_file rw_fifo_file_perms;
 allow qcrilNrd_t self:{ netlink_socket qipcrtr_socket } { create getattr write read setopt bind};
 allow qcrilNrd_t self:unix_stream_socket { listen accept };
