@@ -60,5 +60,7 @@ userdebug_or_eng(`
   allow diag-router_t self:process signal;
   allow diag-router_t self:capability kill;
   allow diag-router_t mhi_pipe_4_t:chr_file rw_chr_file_perms;
+
+  allow diag-router_t self:unix_stream_socket create_stream_socket_perms;
 ')
 
