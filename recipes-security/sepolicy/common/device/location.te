@@ -474,6 +474,8 @@ allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server
 allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
 
+allow xtra_daemon_t unreserved_port_t:tcp_socket name_connect;
+
 ## common rules
 dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
 dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t} default_t:dir search;
