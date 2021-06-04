@@ -245,6 +245,7 @@ gen_require(`
     class service { start status stop reload };
     type ddclient_exec_t;
     type dhcpc_exec_t;
+    type dhcpc_var_run_t;
     type mnt_t;
     type sdcard_t;
     type wpa_cli_exec_t;
@@ -595,3 +596,6 @@ corenet_tcp_connect_virt_migration_port(miniupnp_t)
 allow miniupnp_t { unreserved_port_t }:tcp_socket { name_connect };
 #This is to access symlink created for emac mtd partition
 read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
+
+search_dirs_pattern(qcmap_cm_t, dhcpc_var_run_t, dhcpc_var_run_t)
+allow ifconfig_t dhcpc_t:unix_stream_socket rw_socket_perms;
