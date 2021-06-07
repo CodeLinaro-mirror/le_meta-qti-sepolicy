@@ -42,6 +42,7 @@ init_vendor_domain(diag-router_t, diag-router_exec_t)
 userdebug_or_eng(`
   gen_require(`
     type socket_device_t;
+    type unconfined_t;
   ')
 
   allow diag-router_t self:qipcrtr_socket create_socket_perms;
@@ -62,5 +63,7 @@ userdebug_or_eng(`
   allow diag-router_t mhi_pipe_4_t:chr_file rw_chr_file_perms;
 
   allow diag-router_t self:unix_stream_socket create_stream_socket_perms;
+  allow diag-router_t unconfined_t:process signal;
+
 ')
 
