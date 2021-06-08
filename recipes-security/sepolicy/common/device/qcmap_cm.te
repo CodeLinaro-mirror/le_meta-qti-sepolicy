@@ -469,6 +469,7 @@ ifdef(`init_systemd',`
     allow qcmap_cm_t data_path_opt_exec_t:service { start stop status reload };
 ')
 exec_files_pattern(qcmap_cm_t, bin_t, data_path_opt_exec_t);
+dontaudit qcmap_cm_t data_path_opt_exec_t:file { map };
 
 #allow exectution of mtd tools
 mtd_tools_exec(qcmap_cm_t)
