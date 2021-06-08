@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,8 +25,45 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/mcm_ril_service       --      gen_context(system_u:object_r:mcm_ril_service_exec_t,s0)
-/dev/socket/mcm/mcm_ssr       --      gen_context(system_u:object_r:mcm_ril_sock_t,s0)
-/dev/socket/mcm/mcm_data_dsi_uds_file  -- gen_context(system_u:object_r:mcm_ril_sock_t,s0)
-/data/service_config.txt  --  gen_context(system_u:object_r:mcm_ril_data_t,s0)
-/data/mcm-core(/.*)?       gen_context(system_u:object_r:mcm_ril_data_t,s0)
+## <summary>msdc daemon</summary>
+
+########################################
+## <summary>
+##      Permit access to files in /data
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`msdc_data_perms',`
+    gen_require(`
+        type msdc_data_t;
+	')
+    user_data_files_type(msdc_data_t)
+    manage_user_data_files($1, msdc_data_t)
+    data_filetrans($1, msdc_data_t, { file dir })
+')
+
+
+########################################
+## <summary>
+##      Manage socket permissions for net access
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`msdc_self_socket_perms',`
+    allow $1 self:socket { create_socket_perms connected_stream_socket_perms };
+    allow $1 self:tcp_socket { create_socket_perms connected_stream_socket_perms name_bind node_bind };
+    allow $1 self:udp_socket { create_socket_perms connected_stream_socket_perms name_bind };
+    allow $1 self:netlink_socket { create_socket_perms connected_stream_socket_perms };
+    allow $1 self:netlink_route_socket { create_socket_perms nlmsg_read };
+')
+

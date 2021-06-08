@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,8 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/mcm_ril_service       --      gen_context(system_u:object_r:mcm_ril_service_exec_t,s0)
-/dev/socket/mcm/mcm_ssr       --      gen_context(system_u:object_r:mcm_ril_sock_t,s0)
-/dev/socket/mcm/mcm_data_dsi_uds_file  -- gen_context(system_u:object_r:mcm_ril_sock_t,s0)
-/data/service_config.txt  --  gen_context(system_u:object_r:mcm_ril_data_t,s0)
-/data/mcm-core(/.*)?       gen_context(system_u:object_r:mcm_ril_data_t,s0)
+# msdc app binary
+/usr/bin/msdc_app                    -- gen_context(system_u:object_r:msdc_exec_t,s0)
+
+# embms file contexts
+/data/embms(/.*)?                    gen_context(system_u:object_r:msdc_data_t,s0)
+/data/msc_internal(/.*)?             gen_context(system_u:object_r:msdc_data_t,s0)
+/mnt/sdcard/msc_external(/.*)?       gen_context(system_u:object_r:msdc_data_t,s0)

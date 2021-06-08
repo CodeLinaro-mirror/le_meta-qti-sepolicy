@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -40,10 +40,11 @@ gen_require(`
       type default_t;
       type socket_device_t;
       type initrc_t;
+      type ifconfig_t;
 ')
 
 allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
-allow qnetmgrd_t self:process { setcap getcap };
+allow qnetmgrd_t self:process { setcap getcap signal };
 dontaudit qnetmgrd_t default_t:dir { search };
 allow qnetmgrd_t self:{
     socket
@@ -88,3 +89,4 @@ allow qnetmgrd_t self:process getcap;
 dontaudit qnetmgrd_t default_t:dir { search };
 
 iptables_domtrans(qnetmgrd_t)
+dontaudit qnetmgrd_t ifconfig_t:process sigkill;
