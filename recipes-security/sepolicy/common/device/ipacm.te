@@ -145,6 +145,7 @@ manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipac
 
 gen_require(`
     type device_t;
+    type ifconfig_t;
 ')
 
 ### Manage socket files inside /dev/socket
@@ -162,6 +163,7 @@ userdebug_or_eng(`
 rw_chr_files_pattern(ipacm_perf_t, device_t, ipa_wwan_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_fw_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_wwan_device_t);
+rw_chr_files_pattern(ifconfig_t, device_t, ipa_wwan_device_t);
 
 type ipacm_tmp_t;
 allow ipacm_t ipacm_tmp_t:dir manage_dir_perms;
