@@ -61,6 +61,7 @@ allow thermal-engine_t self:process setsched;
 allow thermal-engine_t self:capability2 block_suspend;
 allow thermal-engine_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
 allow thermal-engine_t self:fifo_file rw_fifo_file_perms;
+allow thermal-engine_t self:unix_stream_socket create_stream_socket_perms;
 
 userdebug_or_eng(`
     rw_diag_dev(thermal-engine_t)
