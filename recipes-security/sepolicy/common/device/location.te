@@ -38,6 +38,7 @@ gen_require(`
     type tmpfs_t;
     type sysctl_t;
     type commplex_main_port_t;
+    type xen_port_t;
     type netmgrd_socket_device_t;
 ')
 
@@ -301,6 +302,8 @@ allow xtra_daemon_t dhcpc_var_run_t:file { read open getattr };
 allow xtra_daemon_t loc_hald_t:unix_dgram_socket sendto;
 allow xtra_daemon_t self:{ socket udp_socket } create_socket_perms;
 allow xtra_daemon_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow xtra_daemon_t commplex_main_port_t:tcp_socket name_connect;
+allow xtra_daemon_t xen_port_t:tcp_socket name_connect;
 # read build.prop
 leprop_read_props(xtra_daemon_t)
 ## this is for access to /run/resolv.conf
