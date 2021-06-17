@@ -60,6 +60,9 @@ type mnt_t;
 type persist_t;
 type udev_t;
 type brightness_t;
+type vendor_dmabuf_system_heap_device_t;
+type vendor_dmabuf_tui_heap_device_t;
+type vendor_vm_trusted_device_t;
 ')
 
 #Search on /vendor/etc
@@ -71,6 +74,8 @@ dev_rw_sysfs(tuicoreservice_t)
 
 #give udev permission to relabel dev nodes
 allow udev_t tuicoreservice_dev_t:chr_file { relabelto write getattr };
+allow init_t tuicoreservice_dev_t:chr_file relabelto_chr_file_perms;
+allow init_t tuicoreservice_dev_t:chr_file write_chr_file_perms;
 allow tuicoreservice_dev_t device_t:filesystem associate;
 
 dev_rw_input_dev(tuicoreservice_t)
@@ -79,12 +84,21 @@ kernel_read_system_state(tuicoreservice_t)
 kernel_read_vm_overcommit_sysctl(tuicoreservice_t)
 read_files_pattern(tuicoreservice_t, persist_t, persist_t)
 rw_chr_files_pattern(tuicoreservice_t, device_t, ion_device_t);
+rw_chr_files_pattern(tuicoreservice_t, device_t, dri_device_t);
 
 allow tuicoreservice_t self:capability sys_nice;
 allow tuicoreservice_t self:process setsched;
+allow tuicoreservice_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t vendor_dmabuf_tui_heap_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
 allow tuicoreservice_t self:socket rw_socket_perms;
 allow tuicoreservice_t self:socket create;
+allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
+allow tuicoreservice_t self:qipcrtr_socket create_socket_perms;
 allow tuicoreservice_t self:capability2 block_suspend;
 allow tuicoreservice_sock_t device_t:filesystem associate;
 dontaudit tuicoreservice_t mnt_t:dir search;
 dontaudit tuicoreservice_t self:capability sys_admin;
+
+#needed for /dev/dri dir's s15 context which is accessed by libdrm
+mls_file_read_all_levels(tuicoreservice_t)
