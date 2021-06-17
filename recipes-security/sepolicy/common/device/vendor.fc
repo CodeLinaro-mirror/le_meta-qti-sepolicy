@@ -68,3 +68,11 @@
 /dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
 /dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)
 /dev/mtd[0-9]+          -c   gen_context(system_u:object_r:mtd_device_t,s0)
+
+### DMA HEAPS ###
+/dev/dma_heap/qcom,tui    -c   gen_context(system_u:object_r:vendor_dmabuf_tui_heap_device_t,s0)
+/dev/dma_heap/qcom,system -c   gen_context(system_u:object_r:vendor_dmabuf_system_heap_device_t,s0)
+
+### MEM_BUF_VM devices ###
+/dev/mem_buf_vm/qcom,trusted_vm -c gen_context(system_u:object_r:vendor_vm_trusted_device_t,s0)
+/dev/mem_buf_vm/qcom,hlos       -c gen_context(system_u:object_r:vendor_vm_hlos_device_t,s0)

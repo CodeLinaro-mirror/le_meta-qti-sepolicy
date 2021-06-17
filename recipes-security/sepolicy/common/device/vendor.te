@@ -175,6 +175,18 @@ dev_node(qseecom_device_t);
 type mtd_device_t;
 dev_node(mtd_device_t);
 
+type vendor_dmabuf_tui_heap_device_t;
+dev_node(vendor_dmabuf_tui_heap_device_t);
+
+type vendor_dmabuf_system_heap_device_t;
+dev_node(vendor_dmabuf_system_heap_device_t);
+
+type vendor_vm_trusted_device_t;
+dev_node(vendor_vm_trusted_device_t);
+
+type vendor_vm_hlos_device_t;
+dev_node(vendor_vm_hlos_device_t);
+
 # Allow relabeling and changing DAC permissions of /dev/socket/* from systemd-tmpfiles
 gen_require(`
     type systemd_tmpfiles_t;
