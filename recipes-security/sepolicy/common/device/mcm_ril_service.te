@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -80,6 +80,8 @@ rw_chr_files_pattern(mcm_ril_service_t, device_t, dataqti_ppp_device_t)
 allow mcm_ril_service_t self:unix_stream_socket { connectto };
 
 #MCM_DATA service
+allow mcm_ril_service_t self:netlink_route_socket { create bind write read nlmsg_read };
+allow mcm_ril_service_t self:udp_socket { create_socket_perms };
 allow mcm_ril_service_t self:netlink_socket { create bind read setopt write getattr };
 allow mcm_ril_service_t qnetmgrd_t:unix_stream_socket { connectto };
 allow mcm_ril_service_t self:capability { net_admin net_raw };
