@@ -33,6 +33,7 @@ gen_require(`
   type device_t;
   type user_tty_device_t;
   type unconfined_t;
+  type unreserved_port_t;
   class service {start stop status};
 ')
 
@@ -55,3 +56,6 @@ list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
 
 # Following rule suppresses an avc denial that shows up on the first boot:
 dontaudit dnsmasq_t init_var_run_t:file { getattr };
+
+# Suppress a warning thrown due to an upstream bug in dnsmasq
+dontaudit dnsmasq_t unreserved_port_t:tcp_socket { name_bind };
