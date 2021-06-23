@@ -35,20 +35,27 @@ type msdc_data_t;
 gen_require(`
 	type default_t;
 	type http_port_t;
+	type init_var_run_t;
+	type mnt_t;
 	type netmgrd_socket_device_t;
 	type node_t;
 	type qnetmgrd_t;
-	type unreserved_port_t;
+	type sdcard_t;
 	type systemd_resolved_var_run_t;
-	type init_var_run_t;
+	type unreserved_port_t;
 ')
 
 # transition from init_rc to vendor domain, upon execution of binary
 init_vendor_domain(msdc_t, msdc_exec_t)
 
-# read and write files in /etc, /data and /mnt/sdcard
+# read and write files in /etc and /data
 msdc_data_perms(msdc_t)
 files_read_etc_files(msdc_t)
+
+# read and write files in /mnt/sdcard
+allow msdc_t mnt_t:dir { search getattr };
+allow msdc_t sdcard_t:dir manage_dir_perms;
+allow msdc_t sdcard_t:file manage_file_perms;
 
 # allow permissions for /data/mcm-core/log_config.txt
 optional_policy(`
@@ -106,6 +113,7 @@ device_search_sockets(msdc_t)
 
 # send signal to own process
 allow msdc_t self:process signal;
+
 
 # silence denials without allowing permissions
 dontaudit msdc_t default_t:dir search;
