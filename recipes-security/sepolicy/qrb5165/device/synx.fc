@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2021 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,29 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# TODO: Why are these needed?
-
-userdebug_or_eng(`
-    gen_require(`
-        type tracefs_t;
-    ')
-    rw_diag_dev(kmod_t)
-    allow kmod_t tracefs_t:dir search;
-')
-# Netlink sockets
-read_write_qcmap_cm_socket_files(kmod_t)
-qcmap_cm_rw_unix_netlink_socket(kmod_t)
-qcmap_cm_rw_netlink_socket_files(kmod_t)
-qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
-networkmanager_read_wifi_sysdata_files(kmod_t)
-
-firmware_read_files(kmod_t)
-
-gen_require(`
-    type kmsg_device_t;
-')
-dontaudit kmod_t kmsg_device_t:chr_file write;
-dontaudit kmod_t self:capability kill;
-
-# /dev/ttyMSM0
-term_dontaudit_use_unallocated_ttys(kmod_t)
+/dev/synx_device           gen_context(system_u:object_r:synx_device_t,s0)
