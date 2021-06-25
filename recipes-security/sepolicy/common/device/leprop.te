@@ -34,7 +34,7 @@ init_vendor_domain(leprop_t, leprop_exec_t)
 inittab_domtrans(leprop_t, leprop_exec_t)
 
 allow leprop_t self:unix_dgram_socket create_socket_perms;
-allow leprop_t self:unix_stream_socket { listen accept };
+allow leprop_t self:unix_stream_socket create_stream_socket_perms;
 
 type leprop_system_data_t;
 system_data_files_type(leprop_system_data_t)
