@@ -1,0 +1,108 @@
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(msdc, 1.0)
+
+# msdc contexts
+type msdc_t;
+type msdc_exec_t;
+type msdc_data_t;
+
+gen_require(`
+	type default_t;
+	type http_port_t;
+	type netmgrd_socket_device_t;
+	type node_t;
+	type qnetmgrd_t;
+	type unreserved_port_t;
+')
+
+# transition from init_rc to vendor domain, upon execution of binary
+init_vendor_domain(msdc_t, msdc_exec_t)
+
+# read and write files in /etc, /data and /mnt/sdcard
+msdc_data_perms(msdc_t)
+files_read_etc_files(msdc_t)
+
+# allow permissions for /data/mcm-core/log_config.txt
+optional_policy(`
+	gen_require(`
+		type mcm_ril_data_t;
+	')
+	allow msdc_t mcm_ril_data_t:dir search_dir_perms;
+	allow msdc_t mcm_ril_data_t:file rw_file_perms;
+')
+
+# allow dsi to read /etc/data/dsi_config.xml
+# read happens in msdc_t context
+qcmap_read_qcmap_etc_data_files(msdc_t)
+
+# socket and sock_file rules
+msdc_self_socket_perms(msdc_t)
+allow msdc_t self:capability { net_admin net_raw };
+allow msdc_t node_t:{ udp_socket tcp_socket } node_bind;
+allow msdc_t unreserved_port_t:{ udp_socket tcp_socket } name_bind;
+allow msdc_t http_port_t:tcp_socket name_connect;
+allow msdc_t qnetmgrd_t:unix_stream_socket connectto;
+allow msdc_t netmgrd_socket_device_t:sock_file write;
+logging_send_syslog_msg(msdc_t)
+
+allow msdc_t self:fifo_file { write read };
+
+# read and write diag character device node
+userdebug_or_eng(`
+    rw_diag_dev(msdc_t)
+')
+
+# for /etc/hosts
+sysnet_read_config(msdc_t)
+
+# for /proc/*/net/unix
+# lists unix domain sockets currently in use
+kernel_read_network_state(msdc_t)
+
+# for /proc/sys/vm/overcommit_memory and /proc/sys
+# Linux kernel virtual memory management
+kernel_read_vm_overcommit_sysctl(msdc_t)
+
+# for /sys/module/diagchar/parameters/timestamp_switch and /sys/devices/soc0/soc_id
+dev_read_sysfs(msdc_t)
+
+# for /run/systemd/resolve/resolv.conf
+systemd_read_resolved_runtime(msdc_t)
+
+# read and write embms character device node
+qmi_rw_embms_dev(msdc_t)
+
+# search for device sockets
+device_search_sockets(msdc_t)
+
+# send signal to own process
+allow msdc_t self:process signal;
+
+# silence denials without allowing permissions
+dontaudit msdc_t default_t:dir search;

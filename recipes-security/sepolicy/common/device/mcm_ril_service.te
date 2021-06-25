@@ -55,6 +55,9 @@ user_data_files_type(mcm_ril_data_t)
 data_filetrans(mcm_ril_service_t, mcm_ril_data_t, { file dir })
 manage_user_data_files(mcm_ril_service_t, mcm_ril_data_t)
 
+allow mcm_ril_service_t self:{ qipcrtr_socket } { create getattr write read setopt bind};
+allow mcm_ril_service_t self:unix_stream_socket { listen accept };
+
 allow mcm_ril_service_t default_t:dir search;
 device_manage_socket_file(mcm_ril_service_t, mcm_ril_sock_t)
 allow mcm_ril_service_t devlog_t:sock_file write;

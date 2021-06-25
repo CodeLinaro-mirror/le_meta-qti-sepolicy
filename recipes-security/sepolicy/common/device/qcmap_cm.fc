@@ -46,7 +46,6 @@
 #/WEBSERVER(/.*)?                      gen_context(system_u:object_r:httpd_user_content_t,s0)
 /run/resolv\.conf                 --  gen_context(system_u:object_r:net_conf_t,s0)
 /run/lock(/.*)                        gen_context(system_u:object_r:pppd_run_lock_t,s0)
-/dev/gsb                         -c   gen_context(system_u:object_r:datadpo_device_t,s0)
 /var/run/data(/.*)?                   gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /run/data(/.*)?                       gen_context(system_u:object_r:qcmap_var_run_t,s0)
 /tmp/data(/.*)?                       gen_context(system_u:object_r:qcmap_tmp_t,s0)
@@ -62,12 +61,11 @@
 #WLAN Copybind service
 /usr/lib/systemd/system/qcmap_wlan_bootup\.service  --  gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
-#Data path opt
-/usr/bin/data_path_opt          --    gen_context(system_u:object_r:data_path_opt_exec_t,s0)
 /usr/sbin/minidlnad             --    gen_context(system_u:object_r:minidlna_exec_t,s0)
 
 #TinyProxy
 /usr/sbin/tinyproxy             --    gen_context(system_u:object_r:tinyproxy_exec_t,s0)
+/usr/bin/tinyproxy              --    gen_context(system_u:object_r:tinyproxy_exec_t,s0)
 /etc/tinyproxy(/.*)?                  gen_context(system_u:object_r:tinyproxy_etc_t,s0)
 /var/log/tinyproxy(/.*)?              gen_context(system_u:object_r:tinyproxy_log_t,s0)
 /var/run/tinyproxy(/.*)?              gen_context(system_u:object_r:tinyproxy_var_run_t,s0)
