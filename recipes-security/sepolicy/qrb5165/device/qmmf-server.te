@@ -94,6 +94,12 @@ userdebug_or_eng(`
 # For video related files
 rw_video_dev(qmmf_server_t)
 
+#For v4l related files
+gen_require(`
+  type v4l_device_t;
+')
+rw_chr_files_pattern(qmmf_server_t, device_t, v4l_device_t)
+
 # For leprop permissions
 leprop_rw_props(qmmf_server_t)
 
