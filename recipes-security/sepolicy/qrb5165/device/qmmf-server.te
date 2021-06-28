@@ -70,6 +70,8 @@ gen_require(`
  type initrc_var_run_t;
  type syslogd_var_run_t;
  type user_runtime_root_t;
+ type cvp_device_t;
+ type synx_device_t;
 ')
 
 #For hvx
@@ -93,6 +95,12 @@ userdebug_or_eng(`
 
 # For video related files
 rw_video_dev(qmmf_server_t)
+
+#For v4l related files
+gen_require(`
+  type v4l_device_t;
+')
+rw_chr_files_pattern(qmmf_server_t, device_t, v4l_device_t)
 
 # For leprop permissions
 leprop_rw_props(qmmf_server_t)
@@ -128,6 +136,8 @@ rw_chr_files_pattern(qmmf_server_t, device_t, dri_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, ion_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, gpu_device_t);
 rw_chr_files_pattern(qmmf_server_t, device_t, ashmem_devices_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, cvp_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, synx_device_t);
 
 allow qmmf_server_t self:process signal;
 

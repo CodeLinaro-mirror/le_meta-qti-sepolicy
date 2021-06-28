@@ -122,6 +122,8 @@ type mpss_persist_t;
 user_data_files_type(mpss_persist_t)
 type adsp_persist_t;
 user_data_files_type(adsp_persist_t)
+type kernel_tests_t;
+files_type(kernel_tests_t)
 
 ### misc files ###
 
@@ -176,6 +178,14 @@ dev_node(mtd_device_t);
 # Allow relabeling and changing DAC permissions of /dev/socket/* from systemd-tmpfiles
 gen_require(`
     type systemd_tmpfiles_t;
+')
+
+userdebug_or_eng(`
+    allow kmod_t kernel_tests_t:dir search;
+')
+
+gen_require(`
+    type kmod_t;
 ')
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
 systemd_tmpfilesd_managed(socket_device_t, dir)
