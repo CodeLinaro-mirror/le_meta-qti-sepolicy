@@ -69,6 +69,7 @@ allow loc_t self:process { setcap signal };
 allow loc_t self:netlink_route_socket read;
 allow loc_t xtra_daemon_t:process signal;
 allow loc_t slim_daemon_t:process sigkill;
+kernel_read_vm_overcommit_sysctl(loc_t)
 
 # Drop from root
 allow loc_t self:capability { setuid setgid };
@@ -127,6 +128,7 @@ files_rw_qcmap_etc_data_files(loc_hald_t)
 leprop_rw_props(loc_hald_t)
 dev_read_realtime_clock(loc_hald_t)
 device_rw_socket_files(loc_hald_t, netmgrd_socket_device_t)
+kernel_read_vm_overcommit_sysctl(loc_hald_t)
 
 allow loc_hald_t tmpfs_t:filesystem getattr;
 allow loc_hald_t tmpfs_t:dir search;
@@ -196,6 +198,13 @@ allow xtwifi_agent_t proc_t:file read_file_perms;
 
 data_filetrans(xtwifi_agent_t, loc_data_t, { file dir })
 manage_user_data_files(xtwifi_agent_t, loc_data_t)
+corenet_tcp_connect_http_port(xtwifi_agent_t)
+allow xtwifi_agent_t net_conf_t:file { read getattr open };
+allow xtwifi_agent_t self:netlink_route_socket { write getattr read bind create nlmsg_read };
+allow xtwifi_agent_t self:tcp_socket { write getattr setopt read getopt create connect };
+kernel_read_vm_overcommit_sysctl(xtwifi_agent_t)
+allow xtwifi_agent_t sysctl_vm_t:dir search;
+read_files_pattern(xtwifi_agent_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
 
 ### xtwifi_client
 
@@ -213,7 +222,22 @@ files_read_loc_etc_files(xtwifi_client_t)
 dev_read_sysfs(xtwifi_client_t)
 leprop_rw_props(xtwifi_client_t)
 
+gen_require(`
+    type unreserved_port_t;
+    type rfs_persist_t;
+')
+
+allow xtwifi_client_t rfs_persist_t:file { write getattr open };
+
+# temporary fix till /target changes are made cr#2387138
+read_files_pattern(xtwifi_client_t, default_t, default_t)
+
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
+allow xtwifi_client_t loc_socket_t:dir { remove_name add_name };
+allow xtwifi_client_t loc_socket_t:sock_file { create unlink };
+kernel_read_vm_overcommit_sysctl(xtwifi_client_t)
+allow xtwifi_client_t sysctl_vm_t:dir search;
+
 
 data_filetrans(xtwifi_client_t, loc_data_t, { file dir })
 manage_user_data_files(xtwifi_client_t, loc_data_t)
@@ -222,9 +246,6 @@ dev_read_urand(xtwifi_client_t)
 ### engine-service
 type engine_service_t;
 type engine_service_exec_t;
-gen_require(`
-    type unreserved_port_t;
-')
 
 init_vendor_domain(engine_service_t, engine_service_exec_t)
 # Launched by loc_launcher instead of init
