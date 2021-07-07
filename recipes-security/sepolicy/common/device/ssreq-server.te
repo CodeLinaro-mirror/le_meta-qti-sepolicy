@@ -36,11 +36,13 @@ init_script_file(audio_unit_t)
 gen_require(`
     type mss_exec_t;
     type init_var_run_t;
+    type proc_t;
     type default_t;
     class service { start status stop reload };
 ')
 
 allow ssreq_server_t self:socket create_socket_perms;
+allow ssreq_server_t proc_t:file read_file_perms;
 dontaudit ssreq_server_t default_t:dir search;
 
 #Manage Dbus sockets
