@@ -43,6 +43,7 @@ gen_require(`
 type socket_device_t;
 type default_t;
 type devlog_t;
+type syslogd_t;
 ')
 
 userdebug_or_eng(`
@@ -56,6 +57,7 @@ allow wlan_service_t self:fifo_file rw_fifo_file_perms;
 allow wlan_service_t self:netlink_socket create_socket_perms;
 allow wlan_service_t self:socket create_socket_perms;
 allow wlan_service_t devlog_t:sock_file write_sock_file_perms;
+allow wlan_service_t syslogd_t:unix_dgram_socket sendto;
 search_dirs_pattern(wlan_service_t, socket_device_t, socket_device_t)
 search_dirs_pattern(wlan_service_t, default_t, default_t)
 userdom_manage_user_tmp_files(wlan_service_t)

@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -69,3 +69,4 @@ allow fs_scrub_daemon_t tmp_t:dir search;
 allow fs_scrub_daemon_t fs_scrub_tmp_t:lnk_file read;
 allow fs_scrub_daemon_t ubi_device_t:chr_file { read ioctl open };
 dontaudit fs_scrub_daemon_t default_t:dir search;
+allow fs_scrub_daemon_t self:socket { getattr setopt };
