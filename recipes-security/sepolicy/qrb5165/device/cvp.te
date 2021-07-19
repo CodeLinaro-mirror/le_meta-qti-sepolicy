@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,52 +25,12 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(thermal-engine, 1.0)
+policy_module(cvp, 1.0)
 
-########################################
+#####################################
 #
 # Declarations
 #
 
-type thermal-engine_t;
-type thermal-engine_exec_t;
-
-init_vendor_domain(thermal-engine_t, thermal-engine_exec_t)
-logging_send_syslog_msg(thermal-engine_t)
-
-gen_require(`
-    type default_t;
-')
-
-# Manage socket files inside /dev/socket
-type thermal_sock_t;
-files_type(thermal_sock_t)
-dev_node(thermal_sock_t)
-device_manage_socket_file(thermal-engine_t, thermal_sock_t)
-
-# configuration files
-type thermal_etc_t;
-files_type(thermal_etc_t)
-
-# configuration files
-type thermal_device_t;
-dev_node(thermal_device_t)
-
-allow thermal-engine_t self:capability sys_nice;
-allow thermal-engine_t self:process setsched;
-allow thermal-engine_t self:capability2 block_suspend;
-allow thermal-engine_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
-allow thermal-engine_t self:fifo_file rw_fifo_file_perms;
-allow thermal-engine_t self:unix_stream_socket create_stream_socket_perms;
-
-userdebug_or_eng(`
-    rw_diag_dev(thermal-engine_t)
-')
-
-rw_shared_memory_dev(thermal-engine_t)
-rw_thermal_dev(thermal-engine_t)
-read_thermal_config(thermal-engine_t)
-dev_rw_null(thermal-engine_t)
-dev_rw_sysfs(thermal-engine_t)
-kernel_read_system_state(thermal-engine_t)
-dontaudit thermal-engine_t default_t:dir search;
+type cvp_device_t;
+dev_node(cvp_device_t)
