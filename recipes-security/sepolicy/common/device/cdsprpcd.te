@@ -1,4 +1,4 @@
-# Copyright (c) 2018, 2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, 2020-2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -42,6 +42,7 @@ gen_require(`
     type ion_device_t;
     type qdsp_device_t;
     type xdsp_device_t;
+    type adsprpcd_t;
 ')
 
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -53,6 +54,7 @@ files_search_mnt(cdsprpcd_t)
 files_search_default(cdsprpcd_t)
 device_search_sockets(cdsprpcd_t)
 
+dontaudit cdsprpcd_t adsprpcd_t:dir getattr;
 #allow cdsprpcd_t to acces /dev/ion
 rw_chr_files_pattern(cdsprpcd_t, device_t, ion_device_t);
 #allow cdsprpcd_t to acces /dev/adsprpcd-smd-secure
