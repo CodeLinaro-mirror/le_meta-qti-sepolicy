@@ -70,3 +70,4 @@ allow fs_scrub_daemon_t fs_scrub_tmp_t:lnk_file read;
 allow fs_scrub_daemon_t ubi_device_t:chr_file { read ioctl open };
 dontaudit fs_scrub_daemon_t default_t:dir search;
 allow fs_scrub_daemon_t self:socket { getattr setopt };
+allow fs_scrub_daemon_t self:qipcrtr_socket create_socket_perms;
