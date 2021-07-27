@@ -25,6 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/sbin/fs-scrub-daemon           --     gen_context(system_u:object_r:fs_scrub_daemon_exec_t,s0)
+/usr/sbin/fs-scrub-daemon       --     gen_context(system_u:object_r:fs_scrub_daemon_exec_t,s0)
 /data/fs_scrub(/.*)?                   gen_context(system_u:object_r:fs_scrub_data_t,s0)
 /tmp/recoveryfs-mtd                    gen_context(system_u:object_r:fs_scrub_tmp_t,s0)

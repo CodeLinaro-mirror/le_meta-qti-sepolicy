@@ -53,7 +53,7 @@ allow qcrilNrd_t self:{ socket udp_socket } create_socket_perms;
 allow qcrilNrd_t self:netlink_route_socket { create_socket_perms nlmsg_read };
 allow qcrilNrd_t self:fifo_file rw_fifo_file_perms;
 allow qcrilNrd_t self:{ netlink_socket qipcrtr_socket } { create getattr write read setopt bind};
-allow qcrilNrd_t self:unix_stream_socket { listen accept };
+allow qcrilNrd_t self:unix_stream_socket { connectto sendto listen accept };
 allow qcrilNrd_t self:process { setcap signal };
 allow qcrilNrd_t self:capability { net_admin net_raw };
 
@@ -92,6 +92,12 @@ allow qcrilNrd_t qcrilNrd_tmp_t:file { map };
 
 #proc access
 dontaudit qcrilNrd_t sysctl_t:dir search;
+
+dev_read_urand(qcrilNrd_t)
+dev_write_urand(qcrilNrd_t)
+
+#rules for /proc/sys/vm
+kernel_read_vm_overcommit_sysctl(qcrilNrd_t)
 
 #Data module policies
 data_rw_system_data_files(qcrilNrd_t, qcmap_etc_data_t)

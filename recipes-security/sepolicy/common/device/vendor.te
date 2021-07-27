@@ -96,6 +96,7 @@ manage_user_data_files(tftp_server_t, adsp_persist_t)
 mls_file_read_all_levels(tftp_server_t)
 
 allow tftp_server_t self:qipcrtr_socket create_socket_perms;
+dontaudit tftp_server_t self:capability dac_override;
 
 type tombstone_data_t;
 user_data_files_type(tombstone_data_t)
@@ -174,6 +175,18 @@ dev_node(qseecom_device_t);
 
 type mtd_device_t;
 dev_node(mtd_device_t);
+
+type vendor_dmabuf_tui_heap_device_t;
+dev_node(vendor_dmabuf_tui_heap_device_t);
+
+type vendor_dmabuf_system_heap_device_t;
+dev_node(vendor_dmabuf_system_heap_device_t);
+
+type vendor_vm_trusted_device_t;
+dev_node(vendor_vm_trusted_device_t);
+
+type vendor_vm_hlos_device_t;
+dev_node(vendor_vm_hlos_device_t);
 
 # Allow relabeling and changing DAC permissions of /dev/socket/* from systemd-tmpfiles
 gen_require(`

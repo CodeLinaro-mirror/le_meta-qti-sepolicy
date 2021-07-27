@@ -87,3 +87,7 @@ python update_modules_conf () {
         modules_file.write(new_file)
 }
 do_compile[postfuncs] += "update_modules_conf"
+
+do_install_append() {
+    rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
+}
