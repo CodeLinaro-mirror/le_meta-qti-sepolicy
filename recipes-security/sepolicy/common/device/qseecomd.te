@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -40,6 +40,7 @@ gen_require(`
        type qseecom_device_t;
        type proc_t;
        type firmware_t;
+       type sysfs_t;
        class process setcap;
 ')
 
@@ -82,3 +83,4 @@ leprop_rw_props(qseecomd_t)
 # allow qseecomd to read/write to persist partition
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
+dontaudit qseecomd_t sysfs_t:file { append };
