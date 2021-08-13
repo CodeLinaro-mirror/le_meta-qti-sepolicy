@@ -74,8 +74,6 @@ dev_rw_sysfs(tuicoreservice_t)
 
 #give udev permission to relabel dev nodes
 allow udev_t tuicoreservice_dev_t:chr_file { relabelto write getattr };
-allow init_t tuicoreservice_dev_t:chr_file relabelto_chr_file_perms;
-allow init_t tuicoreservice_dev_t:chr_file write_chr_file_perms;
 allow tuicoreservice_dev_t device_t:filesystem associate;
 
 dev_rw_input_dev(tuicoreservice_t)
@@ -99,6 +97,7 @@ allow tuicoreservice_t self:capability2 block_suspend;
 allow tuicoreservice_sock_t device_t:filesystem associate;
 dontaudit tuicoreservice_t mnt_t:dir search;
 dontaudit tuicoreservice_t self:capability sys_admin;
+dontaudit init_t tuicoreservice_dev_t:chr_file relabelto;
 
 #needed for /dev/dri dir's s15 context which is accessed by libdrm
 mls_file_read_all_levels(tuicoreservice_t)
