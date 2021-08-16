@@ -45,8 +45,13 @@ ifdef(`init_systemd',`
 
     #fs_search_cgroup_dirs(daemon)
     #allow init_t daemon:unix_stream_socket create_stream_socket_perms;
-    #dontaudit init_t adbd_system_data_t:file write;
-
+    gen_require(`
+        type adbd_system_data_t;
+        type usb_dev_t;
+    ')
+    allow init_t adbd_system_data_t:file write;
+#allow busybox init to search usb_dev directory
+    allow init_t usb_dev_t:dir search;
     data_mount_user_dir(init_t)
     data_mount_volatile_bind(init_t)
     persist_mount_dir(init_t)
@@ -64,7 +69,6 @@ ifdef(`init_systemd',`
 
     mls_key_write_all_levels(init_t)
 ')
-
 # find_partitions
 mount_domtrans(initrc_t)
 seutil_domtrans_setfiles(initrc_t)

@@ -63,6 +63,7 @@ type brightness_t;
 type vendor_dmabuf_system_heap_device_t;
 type vendor_dmabuf_tui_heap_device_t;
 type vendor_vm_trusted_device_t;
+type vendor_vm_hlos_device_t;
 ')
 
 #Search on /vendor/etc
@@ -95,6 +96,7 @@ allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
 allow tuicoreservice_t self:qipcrtr_socket create_socket_perms;
 allow tuicoreservice_t self:capability2 block_suspend;
 allow tuicoreservice_sock_t device_t:filesystem associate;
+allow tuicoreservice_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
 dontaudit tuicoreservice_t mnt_t:dir search;
 dontaudit tuicoreservice_t self:capability sys_admin;
 dontaudit init_t tuicoreservice_dev_t:chr_file relabelto;

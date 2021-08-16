@@ -31,7 +31,6 @@ policy_module(diagrebootapp, 1.0)
 #
 # Declarations
 #
-
 type diagrebootapp_t;
 type diagrebootapp_exec_t;
 
@@ -44,6 +43,7 @@ gen_require(`
 allow diagrebootapp_t rebootd_pipe_t:chr_file { read write ioctl open };
 allow diagrebootapp_t self:capability { setuid setgid chown };
 allow diagrebootapp_t rebootd_pipe_t:fifo_file { open write };
+allow diagrebootapp_t self:unix_stream_socket create;
 userdebug_or_eng(`
     rw_diag_dev(diagrebootapp_t)
     reboot_write_fifo_files_reboot_device(diagrebootapp_t)
