@@ -28,3 +28,5 @@
 /etc/recovery-updater.sh      gen_context(system_u:object_r:recovery_initrc_exec_t,s0)
 /cache/recoveryupgrade(/.*)?  gen_context(system_u:object_r:cache_recoveryupgrade_t,s0)
 /data/ota_package(/.*)?       gen_context(system_u:object_r:data_otapackage_t,s0)
+
+/usr/bin/recovery gen_context(system_u:object_r:recovery_exec_t,s0)

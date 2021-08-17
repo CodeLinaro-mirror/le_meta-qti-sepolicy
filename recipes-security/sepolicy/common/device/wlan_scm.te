@@ -126,7 +126,7 @@ ifdef(`init_systemd',`
 # nl socket...
 allow wlan_scm_t self: { netlink_generic_socket netlink_socket } create_socket_perms;
 
-allow wlan_scm_t self: netlink_route_socket nlmsg_write;
+allow wlan_scm_t self: netlink_route_socket { create_socket_perms nlmsg_read nlmsg_write };
 # ifconfig
 allow ifconfig_t scm_var_run_t:file write_file_perms;
 allow wlan_scm_t self:udp_socket { create ioctl setopt bind write read };

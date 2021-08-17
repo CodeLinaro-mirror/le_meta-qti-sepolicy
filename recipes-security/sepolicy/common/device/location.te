@@ -128,6 +128,7 @@ files_rw_qcmap_etc_data_files(loc_hald_t)
 leprop_rw_props(loc_hald_t)
 dev_read_realtime_clock(loc_hald_t)
 device_rw_socket_files(loc_hald_t, netmgrd_socket_device_t)
+kernel_read_vm_overcommit_sysctl(loc_hald_t)
 
 allow loc_hald_t tmpfs_t:filesystem getattr;
 allow loc_hald_t tmpfs_t:dir search;

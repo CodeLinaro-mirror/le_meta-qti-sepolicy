@@ -381,6 +381,8 @@ kernel_search_fs_sysctls(qcmap_cm_t)
 kernel_rw_fs_sysctls(qcmap_cm_t)
 ##### Reboot the device
 allow qcmap_cm_t init_t:unix_stream_socket { connectto };
+dontaudit qcmap_cm_t init_t:system { start };
+
 systemd_start_power_units(qcmap_cm_t)
 systemd_status_power_units(qcmap_cm_t)
 

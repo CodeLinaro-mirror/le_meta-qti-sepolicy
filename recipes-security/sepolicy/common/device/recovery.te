@@ -45,10 +45,13 @@ recovery_upgrade_rw_files(recovery_initrc_t)
 
 allow recovery_initrc_t cache_recoveryupgrade_t:dir { open read write create getattr search add_name };
 allow recovery_initrc_t cache_recoveryupgrade_t:file { open read write create getattr };
-allow recovery_initrc_t recovery_initrc_tmp_t:file { open read write create getattr };
+allow recovery_initrc_t recovery_initrc_tmp_t:file { open read write create getattr append };
 # To update recovery and recoveryfs partitions using /dev/mtd
 allow recovery_initrc_t mtd_device_t:chr_file { open read write getattr ioctl};
 # To use mtd tools to write recovery and recoveryfs partition
 allow recovery_initrc_t mtd_tools_exec_t:file { read open getattr execute execute_no_trans};
 allow recovery_initrc_t self:fifo_file { read write getattr ioctl};
 allow setfiles_t cache_recoveryupgrade_t:{ dir file } relabelto;
+
+type recovery_t;
+type recovery_exec_t;
