@@ -57,6 +57,7 @@ files_rw_qcmap_etc_data_files(mbim_t)
 userdebug_or_eng(`
    rw_diag_dev(mbim_t);
    mls_file_write_all_levels(mbim_t);
+   mls_file_write_all_levels(mbim_fw_t);
    dev_write_kmsg(mbim_t);
    dev_write_kmsg(mbim_fw_t);
 ')
@@ -66,6 +67,7 @@ gen_require(`
    type proc_t;
    type sysctl_t;
    type systemd_logind_var_run_t;
+   type mtd_device_t;
    class service { start };
 ')
 
@@ -85,6 +87,7 @@ filetrans_pattern(mbim_fw_t, cache_t, cache_recovery_t, { file dir })
 
 device_search_sockets(mbim_t)
 dev_rw_sysfs(mbim_fw_t)
+dev_write_sysfs_dirs(mbim_fw_t)
 files_type(cache_recovery_t)
 allow mbim_fw_t self:capability sys_boot;
 allow mbim_fw_t proc_t:file read_file_perms;
@@ -92,6 +95,7 @@ dontaudit mbim_t sysctl_t:dir search;
 allow mbim_fw_t cache_recovery_t:dir manage_dir_perms;
 allow mbim_fw_t cache_recovery_t:file { create write open };
 allow mbim_fw_t mbim_device_t:chr_file { read write open };
+allow mbim_fw_t mtd_device_t:chr_file { read write };
 allow mbim_t cache_recovery_t:{ dir file } { read write create getattr };
 
 firmware_read_files(mbim_t)
