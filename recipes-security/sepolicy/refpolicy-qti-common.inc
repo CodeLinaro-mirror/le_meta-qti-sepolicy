@@ -91,3 +91,14 @@ do_compile[postfuncs] += "update_modules_conf"
 do_install_append() {
     rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
 }
+
+rebuild_policy_append() {
+	policy_version=31
+
+	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
+		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
+		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+	fi
+
+	manage_policy -d ota
+}

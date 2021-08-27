@@ -45,9 +45,9 @@ firmware_read_files(kmod_t)
 
 gen_require(`
     type kmsg_device_t;
+    type tty_device_t;
 ')
 dontaudit kmod_t kmsg_device_t:chr_file write;
 dontaudit kmod_t self:capability kill;
-
-# /dev/ttyMSM0
-term_dontaudit_use_unallocated_ttys(kmod_t)
+dontaudit kmod_t tty_device_t:chr_file { getattr ioctl };
+allow kmod_t tty_device_t:chr_file { read write };

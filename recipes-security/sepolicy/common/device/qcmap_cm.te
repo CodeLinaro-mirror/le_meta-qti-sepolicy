@@ -268,6 +268,7 @@ gen_require(`
     type minidlna_exec_t;
     type webserver_socket_device_t;
     type nsfs_t;
+    type ddclient_var_run_t;
     type loc_socket_t;
     type loc_hald_t;
 ')
@@ -380,6 +381,9 @@ read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
 search_dirs_pattern(qcmap_cm_t, var_lib_t, var_lib_t)
+
+##### DDNS
+read_files_pattern(qcmap_cm_t, ddclient_var_run_t, ddclient_var_run_t)
 
 ##### MINIUPNPD
 corenet_tcp_connect_virt_migration_port(qcmap_cm_t)
@@ -519,8 +523,9 @@ allow tinyproxy_t net_conf_t:file read_file_perms;
 search_dirs_pattern(tinyproxy_t, init_var_run_t, init_var_run_t)
 corenet_tcp_connect_http_cache_port(tinyproxy_t)
 manage_files_pattern(tinyproxy_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
-dontaudit tinyproxy_t tinyproxy_tmp_t:file {map};
-dontaudit tinyproxy_t etc_t:file {map};
+allow tinyproxy_t tinyproxy_tmp_t:file {map};
+allow tinyproxy_t etc_t:file {map};
+allow tinyproxy_t self:unix_stream_socket { create connect };
 
 #miniupnpd policies
 type miniupnp_t;
