@@ -65,5 +65,6 @@ interface(`msdc_self_socket_perms',`
     allow $1 self:udp_socket { create_socket_perms connected_stream_socket_perms name_bind };
     allow $1 self:netlink_socket { create_socket_perms connected_stream_socket_perms };
     allow $1 self:netlink_route_socket { create_socket_perms nlmsg_read };
+    allow $1 self:qipcrtr_socket { create_socket_perms };
 ')
 

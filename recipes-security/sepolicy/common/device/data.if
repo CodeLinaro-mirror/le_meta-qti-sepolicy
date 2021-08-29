@@ -188,7 +188,7 @@ interface(`data_mount_user_dir',`
         type data_t;
     ')
 
-    allow $1 data_t:dir { mounton getattr };
+    allow $1 data_t:dir { mounton getattr read};
 ')
 
 ########################################

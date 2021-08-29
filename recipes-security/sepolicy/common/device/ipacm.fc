@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,6 +27,7 @@
 
 /usr/bin/ipacm                    --  gen_context(system_u:object_r:ipacm_exec_t,s0)
 /usr/bin/ipacmdiag                --  gen_context(system_u:object_r:ipacm_diag_exec_t,s0)
+/usr/bin/ipa_lnx_agent            --  gen_context(system_u:object_r:ipa_lnx_agent_exec_t,s0)
 /usr/bin/ipacm_perf               --  gen_context(system_u:object_r:ipacm_perf_exec_t,s0)
 /etc/rc\.d/init\.d/ipa_fws_le     --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
 /etc/initscripts/ipa_fws_le       --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
@@ -37,6 +38,7 @@
 
 /dev/ipa                         -c   gen_context(system_u:object_r:ipa_fw_device_t,s0)
 /dev/wwan_ioctl                  -c   gen_context(system_u:object_r:ipa_wwan_device_t,s0)
+/dev/ipa_lnx_stats_ioctl         -c   gen_context(system_u:object_r:ipa_lnx_stats_device_t,s0)
 /dev/ipaNatTable                 -c   gen_context(system_u:object_r:ipa_nat_table_device_t,s0)
 /dev/ipaIpv6CTTable              -c   gen_context(system_u:object_r:ipa_ipv6ct_table_device_t,s0)
 /dev/socket/data/ipa(/.*)?            gen_context(system_u:object_r:ipacm_socket_device_t,s0)
