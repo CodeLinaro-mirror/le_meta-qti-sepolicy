@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -65,6 +65,8 @@ gen_require(`
        type qcmap_var_run_t;
        type default_t;
        type qcmap_tmp_t;
+       type unconfined_t;
+       class service {status start stop};
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -141,16 +143,48 @@ allow ipacm_diag_t self:unix_dgram_socket create_socket_perms;
 data_filetrans(ipacm_diag_t, ipacm_data_t, dir)
 manage_user_data_files(ipacm_diag_t, ipacm_data_t)
 
+### ipa_lnx_agent
+
+type ipa_lnx_agent_t;
+type ipa_lnx_agent_exec_t;
+
+init_vendor_domain(ipa_lnx_agent_t, ipa_lnx_agent_exec_t)
+logging_send_syslog_msg(ipa_lnx_agent_t)
+
+userdebug_or_eng(`
+    rw_diag_dev(ipa_lnx_agent_t)
+    allow unconfined_t ipa_lnx_agent_exec_t:service { status start stop };
+')
+
+dontaudit ipa_lnx_agent_t self:capability { setuid setgid setpcap };
+dontaudit ipa_lnx_agent_t self:process { getcap setcap };
+dev_read_sysfs(ipa_lnx_agent_t);
+fs_manage_tmpfs_dirs(ipa_lnx_agent_t);
+files_rw_qcmap_etc_data_files(ipa_lnx_agent_t)
+sprhd_use_unix_stream_sockets(ipa_lnx_agent_t)
+sprhd_rw_netlink_sockets(ipa_lnx_agent_t)
+allow ipa_lnx_agent_t self:qipcrtr_socket create;
+allow ipa_lnx_agent_t self:netlink_socket create;
+allow ipa_lnx_agent_t self:netlink_socket bind;
+allow ipa_lnx_agent_t self:netlink_socket read;
+allow ipa_lnx_agent_t self:capability {net_admin kill};
+allow ipa_lnx_agent_t qcmap_var_run_t:dir search;
+allow ipa_lnx_agent_t qcmap_var_run_t:sock_file write;
+data_filetrans(ipa_lnx_agent_t, ipacm_data_t, dir)
+manage_user_data_files(ipa_lnx_agent_t, ipacm_data_t)
+
 ### /var/run sockets
 
 type ipacm_var_run_t;
 type ipa_wwan_device_t;
+type ipa_lnx_stats_device_t;
 
 dev_node(ipa_wwan_device_t)
+dev_node(ipa_lnx_stats_device_t)
 files_pid_file(ipacm_var_run_t)
-files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, { sock_file file dir })
-manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
-manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_var_run_t, ipacm_var_run_t)
+files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, { sock_file file dir })
+manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, ipacm_var_run_t)
+manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, ipacm_var_run_t)
 
 gen_require(`
     type device_t;
@@ -160,9 +194,9 @@ gen_require(`
 type ipacm_socket_device_t;
 files_type(ipacm_socket_device_t);
 dev_node(ipacm_socket_device_t);
-device_manage_socket_file({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_socket_device_t);
-manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t }, ipacm_socket_device_t, ipacm_socket_device_t);
-allow { ipacm_t ipacm_diag_t ipacm_perf_t } socket_device_t:dir { search };
+device_manage_socket_file({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_socket_device_t);
+manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_socket_device_t, ipacm_socket_device_t);
+allow { ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t} socket_device_t:dir { search };
 
 userdebug_or_eng(`
     rw_diag_dev(ipacm_diag_t)
@@ -171,6 +205,7 @@ userdebug_or_eng(`
 rw_chr_files_pattern(ipacm_perf_t, device_t, ipa_wwan_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_fw_device_t);
 rw_chr_files_pattern(ipacm_t, device_t, ipa_wwan_device_t);
+rw_chr_files_pattern(ipa_lnx_agent_t, device_t, ipa_lnx_stats_device_t);
 
 type ipacm_tmp_t;
 allow ipacm_t ipacm_tmp_t:dir manage_dir_perms;
@@ -181,5 +216,6 @@ allow ipacm_t var_run_t:file { create rw_file_perms };
 kernel_read_net_sysctls(ipacm_t)
 corecmd_exec_shell(ipacm_t)
 dev_read_sysfs(ipacm_diag_t)
+dev_read_sysfs(ipa_lnx_agent_t)
 dev_read_sysfs(ipacm_perf_t)
 files_tmp_file(ipacm_tmp_t)

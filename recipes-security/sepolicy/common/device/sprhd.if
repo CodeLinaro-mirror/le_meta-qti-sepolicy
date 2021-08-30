@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,9 +25,61 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-######################################
 ## <summary>
-##      tuiapp interface
+##      Statistics Processing Engine for APPS Reported
+##      via Huff Encryption And Diag
 ## </summary>
-#
 
+########################################
+## <summary>
+##      Send and receive netlink messages from spearhead
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`sprhd_rw_netlink_sockets',`
+    gen_require(`
+        type sprhd_t;
+    ')
+
+    allow $1 sprhd_t:{ netlink_socket } rw_socket_perms;
+')
+
+########################################
+## <summary>
+##      Use spearhead unix stream sockets
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`sprhd_use_unix_stream_sockets',`
+    gen_require(`
+        type sprhd_t;
+    ')
+
+    allow $1 sprhd_t:unix_stream_socket { connectto read write };
+')
+
+
+#######################################
+## <summary>
+##      manage sprhd files and directories in /data/data_sprhd
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`sprhd_manage_user_data_files',`
+    gen_require(`
+        type sprhd_data_t;
+    ')
+    manage_user_data_files($1, sprhd_data_t)
+')

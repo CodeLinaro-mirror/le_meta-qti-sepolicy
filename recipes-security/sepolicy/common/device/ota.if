@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,48 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(diag, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type diag_t;
-type diag_exec_t;
-type sdcard_t;
-type pcie_diag_t;
-type pcie_diag_exec_t;
-init_vendor_domain(pcie_diag_t, pcie_diag_exec_t)
-files_mountpoint(sdcard_t)
-gen_require(`
-   type default_t;
-')
-
-init_vendor_domain(diag_t, diag_exec_t)
-
-#============= diag_t ==============
-userdebug_or_eng(`
-   allow diag_t default_t:lnk_file read;
-   rw_diag_dev(diag_t)
-   allow diag_t self:capability { setuid setgid };
-   allow diag_t self:capability2 block_suspend;
-   allow diag_t self:process signal;
-   allow diag_t self:tcp_socket { create setopt connect };
-   dev_rw_sysfs(diag_t)
-   corenet_tcp_connect_all_unreserved_ports(diag_t)
-   manage_files_pattern(diag_t, sdcard_t, sdcard_t)
-   gen_require(`
-      type adb_data_conf_t;
-      type kmsg_device_t;
-      type socket_device_t;
-   ')
-   mls_file_write_all_levels(kmsg_device_t);
-   mls_file_write_all_levels(pcie_diag_t);
-   read_user_data_files(pcie_diag_t, adb_data_conf_t);
-   dev_rw_kmsg(pcie_diag_t)
-   kernel_read_system_state(pcie_diag_t)
-   allow pcie_diag_t self:fifo_file rw_fifo_file_perms;
-   allow pcie_diag_t diag_exec_t:file { execute read map open execute_no_trans };
-   allow pcie_diag_t socket_device_t:dir search;
-')
+## <summary>OTA</summary>

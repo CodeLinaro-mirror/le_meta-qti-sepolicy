@@ -33,12 +33,14 @@ type msdc_exec_t;
 type msdc_data_t;
 
 gen_require(`
-	type default_t;
-	type http_port_t;
-	type netmgrd_socket_device_t;
-	type node_t;
-	type qnetmgrd_t;
-	type unreserved_port_t;
+    type default_t;
+    type http_port_t;
+    type mnt_t;
+    type netmgrd_socket_device_t;
+    type node_t;
+    type qnetmgrd_t;
+    type sdcard_t;
+    type unreserved_port_t;
 ')
 
 # transition from init_rc to vendor domain, upon execution of binary
@@ -48,13 +50,18 @@ init_vendor_domain(msdc_t, msdc_exec_t)
 msdc_data_perms(msdc_t)
 files_read_etc_files(msdc_t)
 
+# read and write files in /mnt/sdcard
+allow msdc_t mnt_t:dir { search getattr };
+allow msdc_t sdcard_t:dir manage_dir_perms;
+allow msdc_t sdcard_t:file manage_file_perms;
+
 # allow permissions for /data/mcm-core/log_config.txt
 optional_policy(`
-	gen_require(`
-		type mcm_ril_data_t;
-	')
-	allow msdc_t mcm_ril_data_t:dir search_dir_perms;
-	allow msdc_t mcm_ril_data_t:file rw_file_perms;
+    gen_require(`
+        type mcm_ril_data_t;
+    ')
+    allow msdc_t mcm_ril_data_t:dir search_dir_perms;
+    allow msdc_t mcm_ril_data_t:file rw_file_perms;
 ')
 
 # allow dsi to read /etc/data/dsi_config.xml
@@ -88,6 +95,9 @@ kernel_read_network_state(msdc_t)
 # for /proc/sys/vm/overcommit_memory and /proc/sys
 # Linux kernel virtual memory management
 kernel_read_vm_overcommit_sysctl(msdc_t)
+
+# for /proc/cpuinfo
+kernel_read_system_state(msdc_t)
 
 # for /sys/module/diagchar/parameters/timestamp_switch and /sys/devices/soc0/soc_id
 dev_read_sysfs(msdc_t)
