@@ -39,10 +39,15 @@
 /data/persist/rfs/msm/mpss(/.*)?   gen_context(system_u:object_r:mpss_persist_t,s0)
 /data/persist/rfs/mdm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 /data/persist/rfs/msm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
+/kernel-tests(/.*)?                gen_context(system_u:object_r:kernel_tests_t,s0)
+/kernel-tests/modules/lib/modules(/.*)?  gen_context(system_u:object_r:modules_object_t,s0)
 
 ### misc files ###
 
 /target -- gen_context(system_u:object_r:target_etc_t,s0)
+/etc/init.post_boot.sh  --      gen_context(system_u:object_r:post_boot_script_exec_t,s0)
+/mnt/tvmapp                     gen_context(system_u:object_r:tvmapp_t,s0)
+/dev/ram5                       gen_context(system_u:object_r:tvmapploader_ramdisk_t, s0)
 
 ### dev nodes ###
 
@@ -66,3 +71,11 @@
 /dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
 /dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)
 /dev/mtd[0-9]+          -c   gen_context(system_u:object_r:mtd_device_t,s0)
+
+### DMA HEAPS ###
+/dev/dma_heap/qcom,tui    -c   gen_context(system_u:object_r:vendor_dmabuf_tui_heap_device_t,s0)
+/dev/dma_heap/qcom,system -c   gen_context(system_u:object_r:vendor_dmabuf_system_heap_device_t,s0)
+
+### MEM_BUF_VM devices ###
+/dev/mem_buf_vm/qcom,trusted_vm -c gen_context(system_u:object_r:vendor_vm_trusted_device_t,s0)
+/dev/mem_buf_vm/qcom,hlos       -c gen_context(system_u:object_r:vendor_vm_hlos_device_t,s0)

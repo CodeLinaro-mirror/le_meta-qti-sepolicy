@@ -1,0 +1,105 @@
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(tuicoreservice, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type tuicoreservice_t;
+type tuicoreservice_exec_t;
+type tuicoreservice_sock_t;
+
+#avoiding dev_node macro to deny unlabeled sevices access to nodes
+type tuicoreservice_dev_t;
+allow tuicoreservice_t tuicoreservice_dev_t:chr_file rw_chr_file_perms;
+
+type tuicoreservice_vendor_t;
+files_type(tuicoreservice_vendor_t)
+allow tuicoreservice_t tuicoreservice_vendor_t:file read_file_perms;
+
+type tuicoreservice_data_t;
+user_data_files_type(tuicoreservice_data_t)
+manage_user_data_files(tuicoreservice_t, tuicoreservice_data_t)
+
+init_vendor_domain(tuicoreservice_t, tuicoreservice_exec_t)
+device_manage_socket_file(tuicoreservice_t, tuicoreservice_sock_t)
+
+gen_require(`
+type dri_device_t;
+type default_t;
+type event_device_t;
+type ion_device_t;
+type mnt_t;
+type persist_t;
+type udev_t;
+type brightness_t;
+type vendor_dmabuf_system_heap_device_t;
+type vendor_dmabuf_tui_heap_device_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_hlos_device_t;
+')
+
+#Search on /vendor/etc
+allow tuicoreservice_t default_t:dir search;
+allow tuicoreservice_t brightness_t:file { read write open };
+
+#permissions to enable/disable autosleep
+dev_rw_sysfs(tuicoreservice_t)
+
+#give udev permission to relabel dev nodes
+allow udev_t tuicoreservice_dev_t:chr_file { relabelto write getattr };
+allow tuicoreservice_dev_t device_t:filesystem associate;
+
+dev_rw_input_dev(tuicoreservice_t)
+dev_rw_dri(tuicoreservice_t)
+kernel_read_system_state(tuicoreservice_t)
+kernel_read_vm_overcommit_sysctl(tuicoreservice_t)
+read_files_pattern(tuicoreservice_t, persist_t, persist_t)
+rw_chr_files_pattern(tuicoreservice_t, device_t, ion_device_t);
+rw_chr_files_pattern(tuicoreservice_t, device_t, dri_device_t);
+
+allow tuicoreservice_t self:capability sys_nice;
+allow tuicoreservice_t self:process setsched;
+allow tuicoreservice_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t vendor_dmabuf_tui_heap_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t self:socket rw_socket_perms;
+allow tuicoreservice_t self:socket create;
+allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
+allow tuicoreservice_t self:qipcrtr_socket create_socket_perms;
+allow tuicoreservice_t self:capability2 block_suspend;
+allow tuicoreservice_sock_t device_t:filesystem associate;
+allow tuicoreservice_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
+dontaudit tuicoreservice_t mnt_t:dir search;
+dontaudit tuicoreservice_t self:capability sys_admin;
+dontaudit init_t tuicoreservice_dev_t:chr_file relabelto;
+
+#needed for /dev/dri dir's s15 context which is accessed by libdrm
+mls_file_read_all_levels(tuicoreservice_t)

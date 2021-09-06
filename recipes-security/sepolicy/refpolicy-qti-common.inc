@@ -17,7 +17,10 @@ RPROVIDES_${PN} += "sepolicy"
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 
-PURGE_POLICY_MODULES += "cgmanager automount"
+# Modules outside of 'services' and 'apps' layer to be removed
+PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
+# Modules inside 'services' and 'apps' layers to keep. All others in these layers are turned off
+CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient bluetooth tinyproxy hostapd xserver nscd"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
@@ -61,3 +64,41 @@ create_data_ubi_mounted_contexts() {
         ${D}/etc/selinux/mls/contexts/files/data_file_contexts
 }
 do_install[postfuncs] += "${@bb.utils.contains('IMAGE_FSTYPES', 'ubi', 'create_data_ubi_mounted_contexts', '', d)}"
+
+python update_modules_conf () {
+    contrib_modules = d.getVar("CONTRIB_MODULES").split()
+    module_conf_name = os.path.join(d.getVar("S"), "policy", "modules.conf")
+    new_file = ""
+
+    with open(module_conf_name, 'r') as modules_file:
+        layer = None
+        for line in modules_file.readlines():
+            if line.startswith('# Layer'):
+                layer = line.split(':')[-1].strip()
+            elif '=' in line:
+                module_name = line.split('=')[0].strip()
+                if (layer == "services" or layer == "apps") and module_name not in contrib_modules:
+                    new_file += module_name + ' = off\n'
+                    continue
+            new_file += line
+
+    # Save the updated modules.conf
+    with open(module_conf_name, 'w') as modules_file:
+        modules_file.write(new_file)
+}
+do_compile[postfuncs] += "update_modules_conf"
+
+do_install_append() {
+    rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
+}
+
+rebuild_policy_append() {
+	policy_version=31
+
+	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
+		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
+		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+	fi
+
+	manage_policy -d ota
+}

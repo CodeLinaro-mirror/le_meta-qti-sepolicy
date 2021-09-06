@@ -75,4 +75,9 @@ ifdef(`init_systemd',`
 
     systemd_tmpfilesd_managed(systemd_resolved_var_run_t, file)
     allow systemd_tmpfiles_t systemd_resolved_var_run_t:file { write getattr open };
+
+    gen_require(`
+        type persist_t;
+    ')
+    allow systemd_tmpfiles_t persist_t:dir { getattr search read write add_name };
 ')

@@ -171,3 +171,5 @@ userdebug_or_eng(`
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
 corecmd_exec_shell(wpa_cli_t)
+
+allow NetworkManager_t self:qipcrtr_socket create_socket_perms;

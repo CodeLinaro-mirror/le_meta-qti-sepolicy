@@ -34,3 +34,4 @@ files_rw_qcmap_etc_data_files(ddclient_t)
 search_dirs_pattern(ddclient_t, init_var_run_t, systemd_resolved_var_run_t)
 dontaudit ddclient_t self:capability { fsetid };
 #allow ddclient_t self:capability { fsetid net_raw };
+allow ddclient_t self:capability { kill };

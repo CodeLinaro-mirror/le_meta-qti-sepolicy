@@ -64,3 +64,5 @@ files_type(webserver_socket_device_t);
 dev_node(webserver_socket_device_t);
 device_manage_socket_file( qcmap_webserver_t, webserver_socket_device_t)
 corecmd_exec_shell(qcmap_webserver_t)
+
+files_type(webserver_t)

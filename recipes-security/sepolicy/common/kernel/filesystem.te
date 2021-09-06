@@ -1,4 +1,4 @@
-# Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2018,2021 The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -36,3 +36,25 @@ files_mountpoint(trace_marker_t)
 genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0
 
 fs_use_xattr ubifs gen_context(system_u:object_r:fs_t,s0);
+
+type brightness_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/max_brightness gen_context(system_u:object_r:brightness_t,s0)
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness     gen_context(system_u:object_r:brightness_t,s0)
+dev_associate_sysfs(brightness_t)
+
+type touch_input_device_t;
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+dev_associate_sysfs(touch_input_device_t)

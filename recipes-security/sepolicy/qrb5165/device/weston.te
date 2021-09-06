@@ -175,7 +175,7 @@ allow weston_t initrc_var_run_t:dir { search getattr write add_name };
 allow weston_t initrc_var_run_t:file { create lock open read write map };
 allow weston_t initrc_var_run_t:sock_file { create write };
 allow weston_t self:process signal;
-allow weston_t self:unix_stream_socket { listen accept };
+allow weston_t self:unix_stream_socket create_stream_socket_perms;
 allow weston_t fonts_cache_t:dir { search_dir_perms setattr write add_name remove_name };
 allow weston_t fonts_cache_t:file { getattr map open read write create link rename unlink };
 allow weston_t fonts_t:dir { search_dir_perms read };
@@ -203,6 +203,13 @@ allow weston_t shell_exec_t:file { execute execute_no_trans open read };
 allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
+
+# Allow weston search /run for wayland socket
+gen_require(`
+ type var_run_t;
+')
+
+allow weston_t var_run_t:dir search_dir_perms;
 
 allow weston_t weston_runtime_t:file { create append open getattr read_file_perms write_file_perms unlink map };
 manage_sock_files_pattern(weston_t, weston_runtime_t, weston_runtime_t)

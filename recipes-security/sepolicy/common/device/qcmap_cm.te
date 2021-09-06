@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -30,19 +30,12 @@ policy_module(qcmap_cm, 1.0)
 type qcmap_cm_t;
 type qcmap_cm_exec_t;
 type qcmap_etc_data_t;
-type datadpo_device_t;
 type datamtd_device_t;
 type qcmap_kernel_module_t;
 init_vendor_domain(qcmap_cm_t, qcmap_cm_exec_t)
 system_data_files_type(qcmap_etc_data_t);
-dev_node(datadpo_device_t)
 dev_node(datamtd_device_t);
 init_script_file(qcmap_kernel_module_t)
-
-#data_path_opt declaration
-type data_path_opt_exec_t;
-type data_path_opt_t;
-init_vendor_domain(data_path_opt_t, data_path_opt_exec_t )
 
 #tinyproxy declaration
 type tinyproxy_exec_t;
@@ -82,6 +75,9 @@ gen_require(`
   type debugfs_t;
   type usb_t;
   type brctl_exec_t;
+  type datadpo_device_t;
+  type data_path_opt_exec_t;
+  type firmware_t;
 ')
 
 userdebug_or_eng(`
@@ -94,6 +90,7 @@ rw_shared_memory_dev(qcmap_cm_t);
 dev_rw_sysfs(qcmap_cm_t);
 read_system_data_files(NetworkManager_t, qcmap_etc_data_t)
 ps_process_pattern(qcmap_cm_t, NetworkManager_t)
+dontaudit initrc_t qcmap_etc_data_t:file { append };
 
 corecmd_exec_shell(qcmap_cm_t)
 corecmd_exec_bin(qcmap_cm_t)
@@ -105,6 +102,7 @@ allow usb_t qcmap_etc_data_t:file { getattr read open };
 allow ifconfig_t qcmap_cm_t:unix_stream_socket { read write };
 allow kmod_t qcmap_cm_t:unix_stream_socket { read write };
 allow qcmap_cm_t brctl_exec_t:file { read open execute execute_no_trans getattr };
+allow qcmap_cm_t self:unix_stream_socket { rw_stream_socket_perms connectto };
 
 userdebug_or_eng(`
         allow qcmap_cm_t kmsg_device_t:chr_file { write };
@@ -272,6 +270,7 @@ gen_require(`
     type minidlna_exec_t;
     type webserver_socket_device_t;
     type nsfs_t;
+    type ddclient_var_run_t;
     type loc_socket_t;
     type loc_hald_t;
 ')
@@ -385,6 +384,9 @@ dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
 search_dirs_pattern(qcmap_cm_t, var_lib_t, var_lib_t)
 
+##### DDNS
+read_files_pattern(qcmap_cm_t, ddclient_var_run_t, ddclient_var_run_t)
+
 ##### MINIUPNPD
 corenet_tcp_connect_virt_migration_port(qcmap_cm_t)
 allow qcmap_cm_t { unreserved_port_t }:tcp_socket { name_connect };
@@ -470,18 +472,11 @@ allow hostapd_cli_qcmap_t qcmap_cm_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t hostapd_cli_qcmap_t:unix_dgram_socket { sendto };
 
 #data_path_opt policies
-modutils_domtrans_insmod(data_path_opt_t)
-dev_read_sysfs(data_path_opt_t)
-corecmd_exec_shell(data_path_opt_t)
-dev_write_kmsg(data_path_opt_t)
 ifdef(`init_systemd',`
     allow qcmap_cm_t data_path_opt_exec_t:service { start stop status reload };
 ')
-kernel_read_system_state(data_path_opt_t)
-dontaudit data_path_opt_t debugfs_t:dir { search };
-allow data_path_opt_t data_path_opt_t:chr_file { write getattr };
-allow data_path_opt_t data_path_opt_t:fifo_file {  getattr read write };
-allow qcmap_cm_t data_path_opt_exec_t:file { getattr execute read open execute_no_trans };
+exec_files_pattern(qcmap_cm_t, bin_t, data_path_opt_exec_t);
+dontaudit qcmap_cm_t data_path_opt_exec_t:file { map };
 
 #allow exectution of mtd tools
 mtd_tools_exec(qcmap_cm_t)
@@ -508,6 +503,7 @@ files_tmp_file(tinyproxy_tmp_t)
 files_tmp_filetrans(tinyproxy_t, tinyproxy_tmp_t, { file dir })
 manage_files_pattern(tinyproxy_t, tmp_t, tinyproxy_tmp_t)
 manage_files_pattern(tinyproxy_t, var_run_t, tinyproxy_var_run_t)
+manage_files_pattern(tinyproxy_t, tinyproxy_etc_t, tinyproxy_etc_t)
 files_pid_file(tinyproxy_var_run_t)
 files_pid_filetrans(tinyproxy_t, tinyproxy_var_run_t, { file dir })
 allow tinyproxy_t var_log_t:lnk_file read_lnk_file_perms;
@@ -529,6 +525,9 @@ allow tinyproxy_t net_conf_t:file read_file_perms;
 search_dirs_pattern(tinyproxy_t, init_var_run_t, init_var_run_t)
 corenet_tcp_connect_http_cache_port(tinyproxy_t)
 manage_files_pattern(tinyproxy_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
+allow tinyproxy_t tinyproxy_tmp_t:file {map};
+allow tinyproxy_t etc_t:file {map};
+allow tinyproxy_t self:unix_stream_socket { create connect };
 
 #miniupnpd policies
 type miniupnp_t;
@@ -586,3 +585,6 @@ read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
 
 kernel_read_system_state(brctl_t)
 kernel_read_kernel_sysctls(qcmap_cm_t)
+dontaudit brctl_t self:capability sys_module;
+dontaudit brctl_t initrc_t:unix_stream_socket { read write };
+allow ifconfig_t firmware_t:dir { search };
