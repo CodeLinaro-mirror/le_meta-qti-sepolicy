@@ -77,6 +77,7 @@ gen_require(`
   type brctl_exec_t;
   type datadpo_device_t;
   type data_path_opt_exec_t;
+  type firmware_t;
 ')
 
 userdebug_or_eng(`
@@ -89,6 +90,7 @@ rw_shared_memory_dev(qcmap_cm_t);
 dev_rw_sysfs(qcmap_cm_t);
 read_system_data_files(NetworkManager_t, qcmap_etc_data_t)
 ps_process_pattern(qcmap_cm_t, NetworkManager_t)
+dontaudit initrc_t qcmap_etc_data_t:file { append };
 
 corecmd_exec_shell(qcmap_cm_t)
 corecmd_exec_bin(qcmap_cm_t)
@@ -584,3 +586,5 @@ read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
 kernel_read_system_state(brctl_t)
 kernel_read_kernel_sysctls(qcmap_cm_t)
 dontaudit brctl_t self:capability sys_module;
+dontaudit brctl_t initrc_t:unix_stream_socket { read write };
+allow ifconfig_t firmware_t:dir { search };
