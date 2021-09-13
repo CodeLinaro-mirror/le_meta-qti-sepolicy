@@ -84,11 +84,11 @@ gen_require(`
     type default_t;
     type initrc_var_run_t;
     type iptables_t;
-
 ')
 dontaudit qnetmgrd_t default_t:dir { search };
 dontaudit qnetmgrd_t iptables_t : process { sigkill };
 dontaudit qnetmgrd_t self:capability { kill };
+dontaudit qnetmgrd_t self : process { sigkill };
 
 iptables_domtrans(qnetmgrd_t)
 
