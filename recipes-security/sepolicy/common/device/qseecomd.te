@@ -42,6 +42,8 @@ gen_require(`
        type firmware_t;
        type sysfs_t;
        class process setcap;
+       type persist_t;
+       type mnt_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -84,3 +86,5 @@ leprop_rw_props(qseecomd_t)
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
 dontaudit qseecomd_t sysfs_t:file { append };
+dontaudit qseecomd_t persist_t:dir read;
+dontaudit qseecomd_t mnt_t:dir read;
