@@ -25,21 +25,21 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(tvmapploader, 1.0)
+policy_module(tuiapp, 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type tvmapploader_t;
-type tvmapploader_exec_t;
+type tuiapp_t;
+type tuiapp_exec_t;
 
-init_vendor_domain(tvmapploader_t, tvmapploader_exec_t)
+init_vendor_domain(tuiapp_t, tuiapp_exec_t)
 
-type tvmapploader_data_t;
-user_data_files_type(tvmapploader_data_t)
-manage_user_data_files(tvmapploader_t, tvmapploader_data_t)
+type tuiapp_data_t;
+user_data_files_type(tuiapp_data_t)
+manage_user_data_files(tuiapp_t, tuiapp_data_t)
 
 gen_require(`
 type socket_device_t;
@@ -48,25 +48,17 @@ type tuicoreservice_dev_t;
 type vendor_dmabuf_system_heap_device_t;
 type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
-type tvmapp_t;
-type mnt_t;
 ')
 
-connect_to_tui_coresvc(tvmapploader_t)
-connect_to_letzd(tvmapploader_t)
-allow tvmapploader_t socket_device_t:dir search;
-allow tvmapploader_t self:capability2 block_suspend;
-allow tvmapploader_t self:unix_stream_socket create_stream_socket_perms;
-allow tvmapploader_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
-allow tvmapploader_t tvmapp_t:dir create_dir_perms;
-allow tvmapploader_t tvmapp_t:dir rw_dir_perms;
-allow tvmapploader_t mnt_t:dir rw_dir_perms;
-#only valid for signed binaries
-manage_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
-exec_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
-#permissions to turn on/off autosleep
-dev_rw_sysfs(tvmapploader_t)
+connect_to_tui_coresvc(tuiapp_t)
+connect_to_letzd(tuiapp_t)
+allow tuiapp_t socket_device_t:dir search;
+allow tuiapp_t self:unix_stream_socket create_stream_socket_perms;
+allow tuiapp_t self:capability2 block_suspend;
+allow tuiapp_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+rw_chr_files_pattern(tuiapp_t, device_t, vendor_dmabuf_system_heap_device_t);
+rw_chr_files_pattern(tuiapp_t, device_t, vendor_vm_trusted_device_t);
+rw_chr_files_pattern(tuiapp_t, device_t, vendor_vm_hlos_device_t);
 
-rw_chr_files_pattern(tvmapploader_t, device_t, vendor_dmabuf_system_heap_device_t);
-rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_trusted_device_t);
-rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_hlos_device_t);
+#permissions to turn on/off autosleep
+dev_rw_sysfs(tuiapp_t)
