@@ -37,6 +37,18 @@ gen_require(`
     type var_run_t;
 ')
 
+userdebug_or_eng(`
+    rw_diag_dev(dlsc_t)
+
+    # Systemd
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t dlsc_exec_t:service { status start stop};
+    dev_write_kmsg(dlsc_t)
+')
+
 # etc data files and var files
 files_rw_qcmap_etc_data_files(dlsc_t)
 qcmap_manage_var_run_data_files(dlsc_t)
