@@ -77,3 +77,4 @@ type qmi_ip_multicli_socket_device_t;
 files_type(qmi_ip_multicli_socket_device_t)
 dev_node(qmi_ip_multicli_socket_device_t)
 device_manage_socket_file(qmi_ip_multiclient_t, qmi_ip_multicli_socket_device_t)
+allow qmi_ip_multiclient_t self:qipcrtr_socket { create_socket_perms };
