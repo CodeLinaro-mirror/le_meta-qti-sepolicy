@@ -52,6 +52,7 @@ ifndef(`init_systemd', `
 
 ## socket files
 /dev/socket/location(/.*)?          gen_context(system_u:object_r:loc_socket_t,s0)
+/dev/socket/loc_client(/.*)?        gen_context(system_u:object_r:loc_socket_t,s0)
 /dev/socket/loc_client/hal_daemon   gen_context(system_u:object_r:loc_socket_t,s0)
 
 #location tmp files
