@@ -68,5 +68,5 @@ userdebug_or_eng(`
 allow mrc_daemon_t mbim_device_t:chr_file rw_chr_file_perms;
 allow mrc_daemon_t mtd_device_t:chr_file { read write getattr open ioctl };
 
-allow mrc_daemon_t proc_t:file { open read };
+allow mrc_daemon_t proc_t:file { getattr open read };
 allow mrc_daemon_t self:socket { create ioctl read write getattr setopt };
