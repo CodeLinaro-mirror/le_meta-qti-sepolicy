@@ -34,6 +34,7 @@ gen_require(`
   type persist_t;
   type qseecomd_data_t;
   type qseecomd_persist_t;
+  type data_t;
 ')
 
 init_script_domain(sfs_config_initrc_t, sfs_config_initrc_exec_t)
@@ -50,3 +51,5 @@ userdebug_or_eng(`
 mls_file_write_all_levels(sfs_config_initrc_t)
 dev_write_kmsg(sfs_config_initrc_t)
 ')
+
+dontaudit sfs_config_initrc_t data_t:dir setattr;
