@@ -33,12 +33,14 @@ gen_require(`
   type device_t;
   type user_tty_device_t;
   type unconfined_t;
+  type dnsmasq_sysfs_t;
   class service {start stop status};
 ')
 
 userdebug_or_eng(`
   rw_diag_dev(dnsmasq_t)
   allow unconfined_t dnsmasq_exec_t:service { start stop status };
+  allow unconfined_t dnsmasq_sysfs_t:file {getattr open read};
   dev_write_kmsg(dnsmasq_t)
   mls_file_write_all_levels(dnsmasq_t);
 ')
@@ -54,3 +56,4 @@ qcmap_manage_var_run_data_files(dnsmasq_t)
 qcmap_manage_user_data_files(dnsmasq_t)
 manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
 list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
+append_files_pattern(dnsmasq_t, sysfs_t, dnsmasq_sysfs_t)
