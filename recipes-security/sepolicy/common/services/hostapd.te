@@ -39,9 +39,6 @@ gen_require(`
  type wifi_system_data_t;
  type qcmap_socket_device_t;
  type socket_device_t;
- type kmsg_device_t;
- type syslogd_var_run_t;
- type user_tmp_t;
 ')
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
 allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
@@ -58,14 +55,6 @@ allow hostapd_t etc_t:file { getattr open read };
 allow hostapd_t wireless_device_t:chr_file { open read };
 allow hostapd_t proc_net_t:file { read };
 allow hostapd_t wifi_system_data_t:dir { search };
-
-userdebug_or_eng('
-        allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };
-        mls_file_write_all_levels(kmsg_device_t);
-')
-allow hostapd_t etc_t:file { map };
-allow hostapd_t syslogd_var_run_t:dir { search  };
-allow hostapd_t user_tmp_t:sock_file{ write };
 
 qcmap_manage_var_run_data_files(hostapd_t)
 networkmanager_read_wifi_sysdata_files(hostapd_t)
