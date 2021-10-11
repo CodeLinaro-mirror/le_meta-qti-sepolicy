@@ -75,9 +75,10 @@ userdebug_or_eng(`
 
     # Run iperf from shell
     allow unconfined_t data_t:file map;
-')
 
-gen_require(`
-    type usb_dev_t;
+    #Run df -h
+    gen_require(`
+        type usb_dev_t;
+    ')
+    allow unconfined_t usb_dev_t:dir search;
 ')
-dontaudit unconfined_t usb_dev_t:dir search;
