@@ -59,12 +59,11 @@ genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_type 
 genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 dev_associate_sysfs(touch_input_device_t)
 
-type boot_kpi_values_t;
-genfscon sysfs /kernel/boot_kpi/kpi_values gen_context(system_u:object_r:boot_kpi_values_t,s0)
-dev_associate_sysfs(boot_kpi_values_t)
+type dnsmasq_sysfs_t;
+genfscon sysfs /kernel/boot_kpi/kpi_values gen_context(system_u:object_r:dnsmasq_sysfs_t,s0)
+dev_associate_sysfs(dnsmasq_sysfs_t)
 
 type sysfs_pcie_t;
 genfscon sysfs /devices/soc0/platform_subtype_id gen_context(system_u:object_r:sysfs_pcie_t,s0)
 genfscon sysfs /devices/soc0/machine gen_context(system_u:object_r:sysfs_pcie_t,s0)
 dev_associate_sysfs(sysfs_pcie_t)
-
