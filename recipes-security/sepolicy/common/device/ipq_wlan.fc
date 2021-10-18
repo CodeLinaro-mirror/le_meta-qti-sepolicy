@@ -35,7 +35,7 @@
 /etc/config/default_wifi_configs(/.*)?	gen_context(system_u:object_r:wifi_system_data_t,s0)
 /systemrw/ipq(/.*)?			gen_context(system_u:object_r:wifi_system_data_t,s0)
 /data/vendor/ipq(/.*)?			gen_context(system_u:object_r:wifi_data_t,s0)
-/usr/share/libubox/jshn.sh		gen_context(system_u:object_r:bin_t,s0)
+/usr/share/libubox/jshn.sh		gen_context(system_u:object_r:wifi_usr_t,s0)
 /tmp/sysinfo(/.*)?			gen_context(system_u:object_r:wlan_service_tmp_t,s0)
 
 /etc/initscripts/start_qca_wifi		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
