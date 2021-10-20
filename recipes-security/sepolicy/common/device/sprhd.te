@@ -54,6 +54,9 @@ logging_send_syslog_msg(sprhd_t)
 #fifo file permissions
 allow sprhd_t self:fifo_file rw_fifo_file_perms;
 
+# Allow execute permission
+allow sprhd_t sprhd_exec_t:file { execute_no_trans };
+
 # Socket permissions
 allow sprhd_t self:socket create_socket_perms;
 allow sprhd_t self:qipcrtr_socket create_socket_perms;

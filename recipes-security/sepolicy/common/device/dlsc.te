@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,35 +25,66 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-type dnsmasq_tmp_t;
-files_tmp_file(dnsmasq_tmp_t)
+policy_module(dlsc, 1.0)
+
+type dlsc_t;
+type dlsc_exec_t;
+
+init_vendor_domain(dlsc_t, dlsc_exec_t)
 
 gen_require(`
-  type systemd_resolved_var_run_t;
-  type device_t;
-  type user_tty_device_t;
-  type unconfined_t;
-  type dnsmasq_sysfs_t;
-  class service {start stop status};
+    type devlog_t;
+    type var_run_t;
 ')
 
 userdebug_or_eng(`
-  rw_diag_dev(dnsmasq_t)
-  allow unconfined_t dnsmasq_exec_t:service { start stop status };
-  allow unconfined_t dnsmasq_sysfs_t:file {getattr open read};
-  dev_write_kmsg(dnsmasq_t)
-  mls_file_write_all_levels(dnsmasq_t);
+    rw_diag_dev(dlsc_t)
+
+    # Systemd
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t dlsc_exec_t:service { status start stop};
+    dev_write_kmsg(dlsc_t)
 ')
 
-dontaudit dnsmasq_t etc_t:file {map};
-manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
-allow dnsmasq_t dnsmasq_tmp_t:file manage_file_perms;
-allow dnsmasq_t dnsmasq_tmp_t:lnk_file manage_lnk_file_perms;
-files_tmp_filetrans(dnsmasq_t, dnsmasq_tmp_t, { lnk_file file })
-read_write_qcmap_cm_socket_files(dnsmasq_t)
-qcmap_manage_tmp_data_files(dnsmasq_t)
-qcmap_manage_var_run_data_files(dnsmasq_t)
-qcmap_manage_user_data_files(dnsmasq_t)
-manage_chr_files_pattern(dnsmasq_t, device_t, user_tty_device_t)
-list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
-append_files_pattern(dnsmasq_t, sysfs_t, dnsmasq_sysfs_t)
+# etc data files and var files
+files_rw_qcmap_etc_data_files(dlsc_t)
+qcmap_manage_var_run_data_files(dlsc_t)
+allow dlsc_t var_run_t:lnk_file read_lnk_file_perms;
+
+# Process Capabilities
+allow dlsc_t self:capability { net_admin };
+allow dlsc_t self:process { signal };
+
+# socket permissions
+allow dlsc_t self:{ socket netlink_socket netlink_route_socket udp_socket } create_socket_perms;
+allow dlsc_t self:qipcrtr_socket create_socket_perms;
+allow dlsc_t self:unix_stream_socket create_stream_socket_perms;
+
+type dlsc_socket_device_t;
+files_type(dlsc_socket_device_t);
+dev_node(dlsc_socket_device_t);
+device_manage_socket_file(dlsc_t, dlsc_socket_device_t);
+device_rw_socket_files(dlsc_t, dlsc_socket_device_t);
+
+# spearhead connection
+sprhd_use_unix_stream_sockets(dlsc_t)
+sprhd_rw_netlink_sockets(dlsc_t)
+
+# devlog
+allow dlsc_t devlog_t:sock_file write;
+
+# shell execution
+corecmd_exec_shell(dlsc_t)
+
+# fifo permissons
+allow dlsc_t self:fifo_file rw_fifo_file_perms;
+
+# Read proc fs
+kernel_read_system_state(dlsc_t)
+
+# ifconfig commands
+sysnet_exec_ifconfig(dlsc_t)
+kernel_read_network_state(dlsc_t)

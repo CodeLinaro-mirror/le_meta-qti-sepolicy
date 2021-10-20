@@ -25,40 +25,48 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(letzd, 1.0)
+policy_module(tvmapploader, 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type letzd_t;
-type letzd_exec_t;
-type letzd_sock_t;
+type tvmapploader_t;
+type tvmapploader_exec_t;
 
-init_vendor_domain(letzd_t, letzd_exec_t)
-device_manage_socket_file(letzd_t, letzd_sock_t)
+init_vendor_domain(tvmapploader_t, tvmapploader_exec_t)
+
+type tvmapploader_data_t;
+user_data_files_type(tvmapploader_data_t)
+manage_user_data_files(tvmapploader_t, tvmapploader_data_t)
 
 gen_require(`
 type socket_device_t;
-type device_t;
-type init_var_run_t;
-type smcinvoke_device_t;
-type syslogd_var_run_t;
-type syslogd_t;
-type devlog_t;
+type sysfs_t;
+type tuicoreservice_dev_t;
+type vendor_dmabuf_system_heap_device_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_hlos_device_t;
+type tvmapp_t;
+type mnt_t;
 ')
 
-logging_send_syslog_msg(letzd_t)
+connect_to_tui_coresvc(tvmapploader_t)
+connect_to_letzd(tvmapploader_t)
+allow tvmapploader_t socket_device_t:dir search;
+allow tvmapploader_t self:capability2 block_suspend;
+allow tvmapploader_t self:unix_stream_socket create_stream_socket_perms;
+allow tvmapploader_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+allow tvmapploader_t tvmapp_t:dir create_dir_perms;
+allow tvmapploader_t tvmapp_t:dir rw_dir_perms;
+allow tvmapploader_t mnt_t:dir rw_dir_perms;
+#only valid for signed binaries
+manage_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
+exec_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
+#permissions to turn on/off autosleep
+dev_rw_sysfs(tvmapploader_t)
 
-allow letzd_sock_t device_t:filesystem associate;
-allow letzd_t self:socket rw_socket_perms;
-allow letzd_t self:socket create;
-allow letzd_t syslogd_var_run_t:sock_file write;
-allow letzd_t self:process signal;
-allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
-allow letzd_t self:qipcrtr_socket create_socket_perms;
-allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
-
-#permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
-dev_rw_sysfs(letzd_t)
+rw_chr_files_pattern(tvmapploader_t, device_t, vendor_dmabuf_system_heap_device_t);
+rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_trusted_device_t);
+rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_hlos_device_t);

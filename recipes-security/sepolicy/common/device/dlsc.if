@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,40 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(letzd, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type letzd_t;
-type letzd_exec_t;
-type letzd_sock_t;
-
-init_vendor_domain(letzd_t, letzd_exec_t)
-device_manage_socket_file(letzd_t, letzd_sock_t)
-
-gen_require(`
-type socket_device_t;
-type device_t;
-type init_var_run_t;
-type smcinvoke_device_t;
-type syslogd_var_run_t;
-type syslogd_t;
-type devlog_t;
-')
-
-logging_send_syslog_msg(letzd_t)
-
-allow letzd_sock_t device_t:filesystem associate;
-allow letzd_t self:socket rw_socket_perms;
-allow letzd_t self:socket create;
-allow letzd_t syslogd_var_run_t:sock_file write;
-allow letzd_t self:process signal;
-allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
-allow letzd_t self:qipcrtr_socket create_socket_perms;
-allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
-
-#permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
-dev_rw_sysfs(letzd_t)
+## <summary> Data Linux Statistics Agent </summary>
