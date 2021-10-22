@@ -74,6 +74,8 @@ dev_read_sysfs(qseecomd_t)
 allow qseecomd_t self:capability { setuid setgid };
 allow qseecomd_t firmware_t:file read_file_perms;
 
+allow qseecomd_t self:capability2 block_suspend;
+
 files_search_default(qseecomd_t)
 
 # allow qseecomd to read/write leproperties
@@ -82,3 +84,4 @@ leprop_rw_props(qseecomd_t)
 # allow qseecomd to read/write to persist partition
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
+allow qseecomd_t sysfs_t:file append;
