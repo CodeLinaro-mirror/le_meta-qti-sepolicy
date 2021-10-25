@@ -28,5 +28,7 @@
 gen_require(`
   type dataqti_ppp_device_t;
   type device_t;
+  type pppd_var_run_t;
 ')
 rw_chr_files_pattern(pppd_t, device_t, dataqti_ppp_device_t)
+dontaudit pppd_t pppd_var_run_t:file {map};
