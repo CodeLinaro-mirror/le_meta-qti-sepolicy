@@ -129,6 +129,7 @@ gen_require(`
     type wireless_device_t;
     type sysctl_t;
     type urandom_device_t;
+    type hostapd_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
@@ -170,6 +171,7 @@ userdebug_or_eng(`
 
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
+allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
 corecmd_exec_shell(wpa_cli_t)
 
 allow NetworkManager_t self:qipcrtr_socket create_socket_perms;
