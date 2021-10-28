@@ -52,6 +52,10 @@ gen_require(`
 systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
 allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
 
+gen_require(`
+    type sysdevice_sysfs_t;
+')
+allow qcmap_cm_t sysdevice_sysfs_t:file { getattr open read };
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
