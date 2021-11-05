@@ -42,24 +42,14 @@ gen_require(`
  type kmsg_device_t;
  type syslogd_var_run_t;
  type user_tmp_t;
- type wpa_cli_t;
- type NetworkManager_tmp_t;
 ')
-type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
 allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
 allow hostapd_cli_qcmap_t var_run_t:dir { write add_name remove_name };
 allow hostapd_cli_qcmap_t hostapd_var_run_t:dir search;
 allow hostapd_cli_qcmap_t socket_device_t:dir search;
-dev_read_urand(hostapd_cli_qcmap_t)
-allow hostapd_t wpa_cli_t:unix_dgram_socket { sendto };
-allow hostapd_t NetworkManager_tmp_t:sock_file { write };
-files_tmp_file(hostapd_tmp_t);
-files_tmp_filetrans(hostapd_t, hostapd_tmp_t, { file dir })
-manage_files_pattern(hostapd_t, hostapd_tmp_t, hostapd_tmp_t)
 
 user_data_files_type(qcmap_data_t)
-
 data_filetrans(hostapd_t, qcmap_data_t, file)
 
 allow hostapd_t var_run_t:sock_file { create write setattr unlink};

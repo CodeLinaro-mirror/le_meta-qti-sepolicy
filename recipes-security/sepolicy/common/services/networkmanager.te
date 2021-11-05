@@ -106,7 +106,6 @@ allow dhcpc_t self:capability kill;
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`
     type firmware_t;
-    type hostapd_var_run_t;
 ')
 allow wlan_initrc_t firmware_t:dir { search getattr open };
 allow wlan_initrc_t firmware_t:file read_file_perms;
@@ -119,9 +118,6 @@ gen_require(`
     type qcmap_var_run_t;
 ')
 allow wpa_cli_t qcmap_var_run_t:file { write getattr };
-dev_read_urand(wpa_cli_t)
-allow wpa_cli_t hostapd_var_run_t:sock_file { write };
-allow wpa_cli_t hostapd_var_run_t:dir search_dir_perms;
 
 # unused pipes
 gen_require(`
