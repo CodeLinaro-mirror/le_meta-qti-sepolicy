@@ -106,3 +106,19 @@ dontaudit init_t tuicoreservice_dev_t:chr_file relabelto;
 
 #needed for /dev/dri dir's s15 context which is accessed by libdrm
 mls_file_read_all_levels(tuicoreservice_t)
+
+ifdef(`init_systemd', `
+    dbus_system_bus_client(tuicoreservice_t)
+    init_dbus_chat(tuicoreservice_t)
+    gen_require(`
+        class service { start status stop reload };
+    ')
+    allow tuicoreservice_t self:dbus send_msg;
+')
+
+allow tuicoreservice_t self:fifo_file rw_fifo_file_perms;
+allow tuicoreservice_t event_device_t:chr_file write;
+allow tuicoreservice_t bin_t:service { start status stop reload};
+
+corecmd_exec_shell(tuicoreservice_t);
+corecmd_exec_bin(tuicoreservice_t);
