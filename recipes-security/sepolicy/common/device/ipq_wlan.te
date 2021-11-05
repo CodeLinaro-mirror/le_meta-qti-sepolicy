@@ -48,9 +48,6 @@ gen_require(`
   type NetworkManager_var_run_t;
 ')
 
-type wifi_usr_t;
-files_type(wifi_usr_t);
-
 manage_system_data_files(wlan_initrc_t, wifi_system_data_t);
 manage_system_data_files(kmod_t, wifi_system_data_t);
 userdom_manage_user_tmp_files(wlan_initrc_t)
@@ -64,6 +61,5 @@ allow wlan_initrc_t self:capability { kill };
 allow wlan_initrc_t wlan_service_exec_t:file { execute read_file_perms execute_no_trans map };
 allow wlan_initrc_t wlan_service_tmp_t:dir manage_dir_perms;
 allow wlan_initrc_t wlan_service_tmp_t:file manage_file_perms;
-allow wlan_initrc_t wifi_usr_t:file read_file_perms;
 allow wlan_initrc_t NetworkManager_var_run_t:file read_file_perms;
 allow kmod_t wlan_service_tmp_t:file { write };
