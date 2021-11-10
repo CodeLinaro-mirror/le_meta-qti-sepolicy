@@ -63,7 +63,7 @@ type dnsmasq_sysfs_t;
 genfscon sysfs /kernel/boot_kpi/kpi_values gen_context(system_u:object_r:dnsmasq_sysfs_t,s0)
 dev_associate_sysfs(dnsmasq_sysfs_t)
 
-type sysdevice_sysfs_t;
-genfscon sysfs /devices/soc0/platform_subtype_id gen_context(system_u:object_r:sysdevice_sysfs_t,s0)
-genfscon sysfs /devices/soc0/machine gen_context(system_u:object_r:sysdevice_sysfs_t,s0)
-dev_associate_sysfs(sysdevice_sysfs_t)
+type sysfs_pcie_t;
+genfscon sysfs /devices/soc0/platform_subtype_id gen_context(system_u:object_r:sysfs_pcie_t,s0)
+genfscon sysfs /devices/soc0/machine gen_context(system_u:object_r:sysfs_pcie_t,s0)
+dev_associate_sysfs(sysfs_pcie_t)

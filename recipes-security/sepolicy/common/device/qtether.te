@@ -58,10 +58,6 @@ allow qtether_t self:netlink_route_socket { create_socket_perms nlmsg_read nlmsg
 allow qtether_t self:fifo_file rw_fifo_file_perms;
 allow qtether_t self:capability { net_raw net_admin };
 
-gen_require(`
-    type sysdevice_sysfs_t;
-')
-allow qtether_t sysdevice_sysfs_t:file { getattr open read };
 userdebug_or_eng('
         allow qtether_t kmsg_device_t:chr_file { write };
         mls_file_write_all_levels(qtether_t);
@@ -112,3 +108,4 @@ dontaudit qtether_t self: capability {setuid setgid};
 
 #for IPA IOCTL
 rw_chr_files_pattern(qtether_t, device_t, ipa_fw_device_t)
+
