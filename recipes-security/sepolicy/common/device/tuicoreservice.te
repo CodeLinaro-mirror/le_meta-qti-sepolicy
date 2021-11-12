@@ -66,6 +66,9 @@ type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
 ')
 
+#allow to connect to letzd
+connect_to_letzd(tuicoreservice_t)
+
 #Search on /vendor/etc
 allow tuicoreservice_t default_t:dir search;
 allow tuicoreservice_t brightness_t:file { read write open };
