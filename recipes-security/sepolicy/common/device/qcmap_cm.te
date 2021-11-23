@@ -52,6 +52,10 @@ gen_require(`
 systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
 allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
 
+gen_require(`
+    type sysdevice_sysfs_t;
+')
+allow qcmap_cm_t sysdevice_sysfs_t:file { getattr open read };
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
@@ -65,6 +69,7 @@ gen_require(`
   type init_var_run_t;
   type wpa_cli_exec_t;
   type sysfs_t;
+  type boot_kpi_values_t;
   type kmod_t;
   type NetworkManager_t;
   type ifconfig_t;
@@ -291,6 +296,7 @@ rw_chr_files_pattern(qcmap_cm_t, device_t, ipa_wwan_device_t)
 rw_files_pattern(qcmap_cm_t, sysfs_t, sysfs_t)
 dontaudit qcmap_cm_t sysfs_t:dir { add_name };
 dontaudit qcmap_cm_t sysfs_t:file { create };
+append_files_pattern(qcmap_cm_t, sysfs_t, boot_kpi_values_t)
 
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
@@ -452,7 +458,7 @@ allow qcmap_cm_t hostapd_cli_exec_t:file exec_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:file read_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
-allow qcmap_cm_t NetworkManager_var_run_t:file read_file_perms;
+allow qcmap_cm_t NetworkManager_var_run_t:file rw_file_perms;
 
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
