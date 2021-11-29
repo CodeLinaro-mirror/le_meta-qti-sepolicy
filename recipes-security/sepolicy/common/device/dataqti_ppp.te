@@ -73,3 +73,4 @@ allow dataqti_ppp_t self:qipcrtr_socket { create_socket_perms };
 
 #dont audit setuid and setgid
 dontaudit dataqti_ppp_t self: capability {setuid setgid};
+dontaudit dataqti_ppp_t self: process { signal };

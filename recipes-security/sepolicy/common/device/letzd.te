@@ -59,6 +59,8 @@ allow letzd_t self:process signal;
 allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
 allow letzd_t self:qipcrtr_socket create_socket_perms;
 allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
+allow letzd_t self:capability2 block_suspend;
+allow letzd_t self:vsock_socket { create bind getattr read write };
 
 #permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
 dev_rw_sysfs(letzd_t)
