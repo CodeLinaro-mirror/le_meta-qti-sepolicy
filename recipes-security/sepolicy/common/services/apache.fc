@@ -30,3 +30,4 @@
 /WEBSERVER/www/cgi-bin/.*          --  gen_context(system_u:object_r:qcmap_webserver_exec_t,s0)
 /WEBSERVER                         -d  gen_context(system_u:object_r:webserver_t,s0)
 /WEBSERVER/www                     -d  gen_context(system_u:object_r:webserver_t,s0)
+/dev/socket/data/www(/.*)?             gen_context(system_u:object_r:webserver_socket_device_t,s0)
