@@ -52,6 +52,7 @@ type tuicoreservice_dev_t;
 type vendor_dmabuf_system_heap_device_t;
 type vendor_vm_oem_device_t;
 type vendor_vm_trusted_device_t;
+type vendor_vm_self_device_t;
 ')
 
 logging_send_syslog_msg(letzd_t)
@@ -71,6 +72,7 @@ allow letzd_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
 allow letzd_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
 allow letzd_t vendor_vm_oem_device_t:chr_file read_chr_file_perms;
 allow letzd_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_self_device_t:chr_file read_chr_file_perms;
 
 #permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
 dev_rw_sysfs(letzd_t)
