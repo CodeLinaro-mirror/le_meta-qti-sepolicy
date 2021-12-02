@@ -450,6 +450,7 @@ gen_require(`
   type hostapd_var_run_t;
   type hostapd_cli_qcmap_t;
   type sysdevice_sysfs_t;
+  type bin_t;
 ')
 
 hostapd_manage_services(qcmap_cm_t)
@@ -461,6 +462,7 @@ allow qcmap_cm_t hostapd_var_run_t:file read_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
 allow qcmap_cm_t NetworkManager_var_run_t:file rw_file_perms;
+allow qcmap_cm_t bin_t:service { start };
 
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
