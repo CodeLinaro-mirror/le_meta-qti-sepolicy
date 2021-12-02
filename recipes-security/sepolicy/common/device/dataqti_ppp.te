@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -72,3 +72,4 @@ device_manage_socket_file(dataqti_ppp_t, qti_ppp_socket_device_t)
 
 #dont audit setuid and setgid
 dontaudit dataqti_ppp_t self: capability {setuid setgid};
+dontaudit dataqti_ppp_t self: process { signal };
