@@ -48,15 +48,18 @@ genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_enabl
 genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 dev_associate_sysfs(touch_input_device_t)
 
 type boot_kpi_values_t;
