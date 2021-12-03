@@ -28,3 +28,5 @@
 userdebug_or_eng(`
     rw_diag_dev(iptables_t)
 ')
+
+dontaudit iptables_t self:capability { kill };
