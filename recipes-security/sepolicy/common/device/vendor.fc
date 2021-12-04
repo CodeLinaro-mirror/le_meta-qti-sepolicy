@@ -80,3 +80,4 @@
 /dev/mem_buf_vm/qcom,trusted_vm -c gen_context(system_u:object_r:vendor_vm_trusted_device_t,s0)
 /dev/mem_buf_vm/qcom,hlos       -c gen_context(system_u:object_r:vendor_vm_hlos_device_t,s0)
 /dev/mem_buf_vm/qcom,oemvm      -c gen_context(system_u:object_r:vendor_vm_oem_device_t,s0)
+/dev/mem_buf_vm/qcom,self       -c gen_context(system_u:object_r:vendor_vm_self_device_t,s0)
