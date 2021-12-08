@@ -54,3 +54,9 @@
 /usr/sbin/ipq/hostapd_cli		gen_context(system_u:object_r:hostapd_cli_exec_t,s0)
 /usr/sbin/ipq/wpa_cli			gen_context(system_u:object_r:wpa_cli_exec_t,s0)
 /usr/sbin/ipq/wpa_supplicant		gen_context(system_u:object_r:NetworkManager_exec_t,s0)
+
+/etc/rc\.common				gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+
+# SigmaDut scripts
+/etc/config/sigma-dut			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/rc\.d/init\.d/sigma-dut		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
