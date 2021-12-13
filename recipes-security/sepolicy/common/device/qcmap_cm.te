@@ -301,6 +301,7 @@ append_files_pattern(qcmap_cm_t, sysfs_t, boot_kpi_values_t)
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
 allow iptables_t qcmap_cm_t:unix_stream_socket { read write };
+allow qcmap_cm_t sysdevice_sysfs_t:file { read open };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
 
@@ -448,6 +449,8 @@ gen_require(`
   type hostapd_exec_t;
   type hostapd_var_run_t;
   type hostapd_cli_qcmap_t;
+  type sysdevice_sysfs_t;
+  type bin_t;
 ')
 
 hostapd_manage_services(qcmap_cm_t)
@@ -459,6 +462,7 @@ allow qcmap_cm_t hostapd_var_run_t:file read_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
 allow qcmap_cm_t NetworkManager_var_run_t:file rw_file_perms;
+allow qcmap_cm_t bin_t:service { start };
 
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
