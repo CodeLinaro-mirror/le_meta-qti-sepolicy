@@ -1,7 +1,3 @@
-POLICY_TYPE = "mls"
-PV = "2.20190201"
-require ${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy_${PV}.inc
-
 FILESEXTRAPATHS_append := "${THISDIR}:${THISDIR}/patches:"
 
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
@@ -12,6 +8,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
             file://Update-busybox-substitution-paths.patch \
             file://common/ \
+            file://${BASEMACHINE}/ \
 "
 
 PROVIDES += "sepolicy"
@@ -53,6 +50,8 @@ def install_device_policy(d, src_root):
 
 do_patch_append() {
     install_device_policy(d, "common")
+    if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
+        install_device_policy(d, d.getVar("BASEMACHINE"))
 }
 
 create_data_ubi_mounted_contexts() {
