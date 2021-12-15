@@ -25,40 +25,24 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-policy_module(tuiapp, 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type tuiapp_t;
-type tuiapp_exec_t;
-
-init_vendor_domain(tuiapp_t, tuiapp_exec_t)
-
-type tuiapp_data_t;
-user_data_files_type(tuiapp_data_t)
-manage_user_data_files(tuiapp_t, tuiapp_data_t)
-
 gen_require(`
-type socket_device_t;
-type sysfs_t;
-type tuicoreservice_dev_t;
-type vendor_dmabuf_system_heap_device_t;
-type vendor_vm_trusted_device_t;
-type vendor_vm_hlos_device_t;
+    attribute file_type;
+    attribute user_data;
+    attribute system_data;
+    type mount_copybind_t;
+    type unconfined_mount_t;
+    type mount_t;
+    type alsa_etc_t;
+    type data_t;
+    type system_dbusd_var_lib_t;
+    type var_lib_t;
+    type var_t;
 ')
 
-connect_to_tui_coresvc(tuiapp_t)
-connect_to_letzd(tuiapp_t)
-allow tuiapp_t socket_device_t:dir search;
-allow tuiapp_t self:unix_stream_socket create_stream_socket_perms;
-allow tuiapp_t self:capability2 block_suspend;
-allow tuiapp_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
-rw_chr_files_pattern(tuiapp_t, device_t, vendor_dmabuf_system_heap_device_t);
-rw_chr_files_pattern(tuiapp_t, device_t, vendor_vm_trusted_device_t);
-rw_chr_files_pattern(tuiapp_t, device_t, vendor_vm_hlos_device_t);
-
-#permissions to turn on/off autosleep
-dev_rw_sysfs(tuiapp_t)
+#for overlayfs
+permissive mount_t;
+permissive mount_copybind_t;
+permissive unconfined_mount_t;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;

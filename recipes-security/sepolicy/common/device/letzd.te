@@ -47,6 +47,12 @@ type smcinvoke_device_t;
 type syslogd_var_run_t;
 type syslogd_t;
 type devlog_t;
+type tuicoreservice_t;
+type tuicoreservice_dev_t;
+type vendor_dmabuf_system_heap_device_t;
+type vendor_vm_oem_device_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_self_device_t;
 ')
 
 logging_send_syslog_msg(letzd_t)
@@ -59,3 +65,14 @@ allow letzd_t self:process signal;
 allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
 allow letzd_t self:qipcrtr_socket create_socket_perms;
 allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
+allow letzd_t self:capability2 block_suspend;
+allow letzd_t self:vsock_socket { create bind getattr read write };
+allow letzd_t tuicoreservice_t:fd use;
+allow letzd_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_oem_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_self_device_t:chr_file read_chr_file_perms;
+
+#permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
+dev_rw_sysfs(letzd_t)

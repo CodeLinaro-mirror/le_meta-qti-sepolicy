@@ -46,6 +46,10 @@ type systemd_tmpfiles_t;
 
 corecmd_exec_shell(trustedinputservice_t)
 connect_to_tui_coresvc(trustedinputservice_t)
+
+#allow to connect to letzd
+connect_to_letzd(trustedinputservice_t)
+
 allow trustedinputservice_t socket_device_t:dir search;
 dev_read_input(trustedinputservice_t)
 allow trustedinputservice_t touch_input_device_t:file { read write open };

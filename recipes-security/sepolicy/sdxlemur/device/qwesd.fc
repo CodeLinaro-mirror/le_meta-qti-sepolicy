@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,8 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/tuiapp      --      gen_context(system_u:object_r:tuiapp_exec_t,s0)
-/usr/bin/eidtuiapp   --      gen_context(system_u:object_r:tuiapp_exec_t,s0)
-/usr/bin/sst_tui_app --      gen_context(system_u:object_r:tuiapp_exec_t,s0)
-
-/usr/data/tui(/.*)?  --      gen_context(system_u:object_r:tuiapp_data_t,s0)
+/usr/bin/qwesd               --         gen_context(system_u:object_r:qwesd_exec_t,s0)
+/data/qwes(/.*)?                        gen_context(system_u:object_r:qwes_data_t,s0)
+/data/qwes_test(/.*)?                   gen_context(system_u:object_r:qwes_data_t,s0)
+/etc/qwesd.rc                           gen_context(system_u:object_r:qwes_config_etc_t,s0)
+/var/run/qwesd/qwes_ipc                 gen_context(system_u:object_r:qwes_mink_socket_t,s0)
+/etc/initscripts/qwes_license_store  -- gen_context(system_u:object_r:qwes_license_store_setup_exec_t,s0)

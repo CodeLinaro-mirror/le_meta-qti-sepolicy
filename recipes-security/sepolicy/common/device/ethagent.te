@@ -79,6 +79,8 @@ corecmd_exec_shell(ethagent_t)
 allow ethagent_t  socket_device_t:dir search;
 allow ethagent_t  var_run_t:dir search;
 allow ethagent_t  var_run_t:lnk_file read;
+allow ethagent_t  self:process signal;
+allow ethagent_t  self:udp_socket { create ioctl };
 kernel_read_system_state(ethagent_t)
 
 sprhd_use_unix_stream_sockets(ethagent_t)

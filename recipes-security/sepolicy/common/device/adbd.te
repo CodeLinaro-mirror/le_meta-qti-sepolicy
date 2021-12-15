@@ -110,6 +110,9 @@ type pcie_initrc_exec_t;
 user_data_files_type(adb_data_conf_t)
 init_script_domain(pcie_initrc_t, pcie_initrc_exec_t)
 init_rw_stream_sockets(pcie_initrc_t)
+gen_require(`
+ type sysdevice_sysfs_t;
+')
 userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
     gen_require(`
@@ -128,11 +131,12 @@ userdebug_or_eng(`
     allow adbd_initrc_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(adbd_initrc_t);
 ')
-
+allow pcie_initrc_t sysdevice_sysfs_t:file { getattr open read };
 type usb_t;
 type usb_exec_t;
 files_type(usb_exec_t)
 init_daemon_domain(usb_t, usb_exec_t)
+allow usb_t sysdevice_sysfs_t:file { getattr open read };
 
 dev_rw_sysfs(usb_t)
 allow usb_t self:unix_stream_socket create_socket_perms;
