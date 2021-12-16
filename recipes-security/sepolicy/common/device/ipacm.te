@@ -65,6 +65,7 @@ gen_require(`
        type qcmap_var_run_t;
        type default_t;
        type qcmap_tmp_t;
+       type sysctl_vm_t;
        type unconfined_t;
        class service {status start stop};
 ')
@@ -83,6 +84,7 @@ allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
 manage_files_pattern(ipacm_t, { tmp_t qcmap_tmp_t }, qcmap_tmp_t);
 files_tmp_filetrans(ipacm_t, qcmap_tmp_t, { dir }, "data");
 allow ipacm_t qcmap_tmp_t:dir { search };
+allow ipacm_t sysctl_vm_t:dir { search };
 kernel_read_system_state(ipacm_t);
 
 dev_node(ipa_nat_table_device_t)

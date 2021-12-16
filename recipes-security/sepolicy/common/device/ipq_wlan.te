@@ -46,6 +46,17 @@ gen_require(`
   type wlan_service_exec_t;
   type wlan_service_tmp_t;
   type NetworkManager_var_run_t;
+  type hostapd_exec_t;
+  type unreserved_port_t;
+  type node_t;
+  type kernel_t;
+  type brctl_exec_t;
+  type hostapd_cli_exec_t;
+  type wpa_cli_exec_t;
+  type console_device_t;
+  type kmsg_device_t;
+  type modules_object_t;
+  type sysctl_dev_t;
 ')
 
 type wifi_usr_t;
@@ -56,14 +67,48 @@ manage_system_data_files(kmod_t, wifi_system_data_t);
 userdom_manage_user_tmp_files(wlan_initrc_t)
 
 manage_files_pattern(wlan_initrc_t, wlan_service_tmp_t, wlan_service_tmp_t)
-files_tmp_filetrans(wlan_initrc_t, wlan_service_tmp_t, { file lnk_file dir })
+files_tmp_filetrans(wlan_initrc_t, wlan_service_tmp_t, { file lnk_file dir sock_file })
 
 dontaudit wlan_initrc_t domain:dir search_dir_perms;
+dontaudit wlan_initrc_t self:capability sys_module;
+
+# Don't audit console/kmsg logs
+dontaudit wlan_initrc_t console_device_t:chr_file write_file_perms;
+dontaudit wlan_initrc_t kmsg_device_t:chr_file write_file_perms;
+
+# General permissions
 allow wlan_initrc_t self:process signal_perms;
-allow wlan_initrc_t self:capability { kill };
+allow wlan_initrc_t self:capability kill;
+allow wlan_initrc_t self:tcp_socket { create_socket_perms };
 allow wlan_initrc_t wlan_service_exec_t:file { execute read_file_perms execute_no_trans map };
 allow wlan_initrc_t wlan_service_tmp_t:dir manage_dir_perms;
 allow wlan_initrc_t wlan_service_tmp_t:file manage_file_perms;
+allow wlan_initrc_t wlan_service_tmp_t:sock_file { create write unlink };
 allow wlan_initrc_t wifi_usr_t:file read_file_perms;
-allow wlan_initrc_t NetworkManager_var_run_t:file read_file_perms;
+allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename };
+allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
+
+# WiFi permissions
+allow wlan_initrc_t var_run_t:file read_file_perms;
+allow wlan_initrc_t modules_object_t:lnk_file read;
+allow wlan_initrc_t modules_object_t:dir search;
+allow wlan_initrc_t sysctl_dev_t:dir search;
+allow wlan_initrc_t brctl_exec_t:file { read open execute execute_no_trans getattr };
+userdebug_or_eng(`
+    gen_require(`
+	type debugfs_t;
+    ')
+
+    allow wlan_initrc_t debugfs_t:dir read;
+')
+
+# Hostapd/wpa_supplicant permissions (wifi command)
+allow wlan_initrc_t hostapd_exec_t:file { execute read_file_perms execute_no_trans map };
+allow wlan_initrc_t self:udp_socket { create_socket_perms connected_stream_socket_perms };
+allow wlan_initrc_t unreserved_port_t:udp_socket name_bind;
+allow wlan_initrc_t node_t:udp_socket node_bind;
+allow wlan_initrc_t kernel_t:system module_request;
+allow wlan_initrc_t hostapd_cli_exec_t:file { read getattr open execute execute_no_trans map };
+allow wlan_initrc_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans map };
+logging_send_syslog_msg(wlan_initrc_t);

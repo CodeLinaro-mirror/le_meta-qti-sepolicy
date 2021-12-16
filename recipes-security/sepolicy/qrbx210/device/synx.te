@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,29 +25,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-userdebug_or_eng(`
-    rw_diag_dev(ifconfig_t)
-')
-dev_rw_null(ifconfig_t)
-rw_shared_memory_dev(ifconfig_t)
+policy_module(synx, 1.0)
 
-files_rw_qcmap_etc_data_files(ifconfig_t)
-read_write_qcmap_cm_socket_files(ifconfig_t)
-qnetmgr_rw_netlink_sockets(ifconfig_t)
-qcmap_cm_rw_netlink_socket_files(ifconfig_t)
-qcmap_cm_rw_unix_dgram_socket_files(ifconfig_t)
-networkmanager_read_wifi_sysdata_files(ifconfig_t)
-kernel_search_debugfs(ifconfig_t)
-qnetmgr_use_unix_stream_sockets(ifconfig_t)
-qnetmgr_rw_netlink_sockets(ifconfig_t)
+#####################################
+#
+# Declarations
+#
 
-gen_require(`
-  type systemd_resolved_var_run_t;
-  type qcmap_tmp_t;
-')
+type synx_device_t;
+dev_node(synx_device_t)
 
-manage_files_pattern(dhcpc_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
-read_files_pattern(ifconfig_t, tmp_t, qcmap_tmp_t)
-
-#dont audit setuid and setgid
-dontaudit ifconfig_t self: capability {setuid setgid};
