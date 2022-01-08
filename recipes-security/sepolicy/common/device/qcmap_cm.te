@@ -414,6 +414,7 @@ systemd_status_power_units(qcmap_cm_t)
 allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
 device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
 allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
+allow qcmap_cm_t system_data_t:lnk_file { read };
 
 ##### WLAN CDI
 allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
@@ -450,6 +451,7 @@ gen_require(`
   type hostapd_var_run_t;
   type hostapd_cli_qcmap_t;
   type sysdevice_sysfs_t;
+  type bin_t;
 ')
 
 hostapd_manage_services(qcmap_cm_t)
@@ -461,6 +463,7 @@ allow qcmap_cm_t hostapd_var_run_t:file read_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
 allow qcmap_cm_t NetworkManager_var_run_t:file rw_file_perms;
+allow qcmap_cm_t bin_t:service { start };
 
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
@@ -598,3 +601,4 @@ kernel_read_kernel_sysctls(qcmap_cm_t)
 dontaudit brctl_t self:capability sys_module;
 dontaudit brctl_t initrc_t:unix_stream_socket { read write };
 allow ifconfig_t firmware_t:dir { search };
+allow NetworkManager_t system_data_t:lnk_file { read };
