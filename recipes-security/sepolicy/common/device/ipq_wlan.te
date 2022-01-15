@@ -97,6 +97,8 @@ allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write
 allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
 
+allow wlan_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
+
 # WiFi permissions
 allow wlan_initrc_t var_run_t:file read_file_perms;
 allow wlan_initrc_t modules_object_t:lnk_file read;
