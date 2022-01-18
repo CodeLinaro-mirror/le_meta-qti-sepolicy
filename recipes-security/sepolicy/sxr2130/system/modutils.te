@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,10 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
-/mnt/sdcard/data(/.*)?          gen_context(system_u:object_r:sdcard_data_t,s0)
-/systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)
-/data/misc/sxr(/.*)?            gen_context(system_u:object_r:sxr_data_t,s0)
-
-#To support coredump in userdebug variant only
-/data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)
+gen_require(`
+    type nsfs_t;
+')
+mls_key_write_to_clearance(kmod_t)
+allow kmod_t nsfs_t:file read_file_perms;

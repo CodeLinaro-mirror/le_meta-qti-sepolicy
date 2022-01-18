@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,10 +25,18 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
-/mnt/sdcard/data(/.*)?          gen_context(system_u:object_r:sdcard_data_t,s0)
-/systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)
-/data/misc/sxr(/.*)?            gen_context(system_u:object_r:sxr_data_t,s0)
+gen_require(`
+    attribute file_type;
+    attribute user_data;
+    attribute system_data;
+    type mount_copybind_t;
+    type unconfined_mount_t;
+    type mount_t;
+')
 
-#To support coredump in userdebug variant only
-/data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)
+permissive mount_t;
+permissive mount_copybind_t;
+permissive unconfined_mount_t;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
