@@ -70,3 +70,7 @@ type sysdevice_sysfs_t;
 genfscon sysfs /devices/soc0/platform_subtype_id gen_context(system_u:object_r:sysdevice_sysfs_t,s0)
 genfscon sysfs /devices/soc0/machine gen_context(system_u:object_r:sysdevice_sysfs_t,s0)
 dev_associate_sysfs(sysdevice_sysfs_t)
+
+type snd_card_state_t;
+genfscon sysfs /kernel/snd_card/card_state gen_context(system_u:object_r:snd_card_state_t,s0)
+dev_associate_sysfs(snd_card_state_t)
