@@ -155,6 +155,7 @@ manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
 userdebug_or_eng(`
     allow usb_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(usb_t);
+    seutil_domtrans_setfiles(usb_t)
 ')
 
 adb_manage_data_files(usb_t)

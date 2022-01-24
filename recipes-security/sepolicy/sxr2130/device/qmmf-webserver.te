@@ -1,0 +1,120 @@
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qmmf-webserver, 1.0)
+
+gen_require(`
+    type system_dir_t;
+    type qmmf_config_file_t;
+')
+
+########################################
+#
+# Declarations
+#
+
+type qmmf_webserver_t;
+type qmmf_webserver_exec_t;
+
+allow qmmf_webserver_t system_dir_t:dir search_dir_perms;
+init_vendor_domain(qmmf_webserver_t, qmmf_webserver_exec_t)
+read_files_pattern(qmmf_webserver_t, qmmf_config_file_t, qmmf_config_file_t)
+
+gen_require(`
+ type device_t;
+ type ion_device_t;
+ type sysctl_t;
+ type qmmf_server_t;
+ type sysctl_net_t;
+ type node_t;
+ type sysfs_t;
+ type net_conf_t;
+ type init_var_run_t;
+ type unreserved_port_t;
+ type reserved_port_t;
+ type sysctl_vm_t;
+ type sysctl_vm_overcommit_t;
+ type fs_t;
+ type urandom_device_t;
+ type systemd_resolved_var_run_t;
+ type socket_device_t;
+')
+
+# For leprop permissions
+leprop_rw_props(qmmf_webserver_t)
+
+rw_chr_files_pattern(qmmf_webserver_t, device_t, ion_device_t);
+
+servicemanager_binder_use(qmmf_webserver_t)
+servicemanager_binder_call(qmmf_webserver_t, qmmf_server_t)
+
+manage_qmmf_data_files(qmmf_webserver_t)
+manage_camera_files_data(qmmf_webserver_t)
+
+allow qmmf_webserver_t self:process getsched;
+allow qmmf_webserver_t self:unix_dgram_socket { create_socket_perms };
+allow qmmf_webserver_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind};
+allow qmmf_webserver_t self:udp_socket { create_socket_perms };
+allow qmmf_webserver_t self:process signal;
+allow qmmf_webserver_t self:capability net_raw;
+
+allow qmmf_webserver_t sysctl_t:dir search;
+allow qmmf_webserver_t sysctl_net_t:dir search;
+allow qmmf_webserver_t sysctl_vm_t:dir search;
+allow qmmf_webserver_t sysctl_net_t:file { read open };
+allow qmmf_webserver_t sysfs_t:file { open append };
+
+allow qmmf_webserver_t node_t:tcp_socket node_bind;
+allow qmmf_webserver_t unreserved_port_t:tcp_socket name_bind;
+allow qmmf_webserver_t node_t:udp_socket node_bind;
+allow qmmf_webserver_t unreserved_port_t:udp_socket name_bind;
+allow qmmf_webserver_t reserved_port_t:udp_socket name_bind;
+
+files_read_etc_files(qmmf_webserver_t);
+
+allow qmmf_webserver_t init_var_run_t:dir search;
+allow qmmf_webserver_t systemd_resolved_var_run_t:file  { getattr open read };
+
+allow qmmf_webserver_t net_conf_t:file { read open getattr };
+allow qmmf_webserver_t sysctl_vm_overcommit_t:file { open read };
+allow qmmf_webserver_t fs_t:filesystem getattr;
+
+allow qmmf_webserver_t urandom_device_t:chr_file { read open };
+allow qmmf_webserver_t qmmf_webserver_exec_t:file execmod;
+allow qmmf_webserver_t systemd_resolved_var_run_t:dir search;
+allow qmmf_webserver_t systemd_resolved_var_run_t:file { read getattr open };
+allow qmmf_webserver_t socket_device_t:dir search;
+
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+        type tracefs_t;
+    ')
+
+    allow qmmf_webserver_t debugfs_t:dir { search };
+    allow qmmf_webserver_t tracefs_t:dir search;
+')
