@@ -191,8 +191,7 @@ qnetmgr_use_unix_stream_sockets(loc_hald_t)
 qnetmgr_write_data_sock_files(loc_hald_t)
 
 # triggered by getgrnam library call - maps /etc/group in read-only pages
-allow loc_hald_t etc_t:file map;
-allow loc_t etc_t:file map;
+allow { loc_t loc_hald_t xtra_daemon_t } etc_t:file map;
 
 search_user_data_dir(loc_hald_t)
 userdebug_or_eng(`
@@ -259,8 +258,6 @@ allow xtwifi_client_t rfs_persist_t:file { write getattr open };
 vendor_read_target(xtwifi_client_t)
 
 allow xtwifi_client_t self:{ socket unix_dgram_socket } create_socket_perms;
-allow xtwifi_client_t loc_socket_t:dir { remove_name add_name };
-allow xtwifi_client_t loc_socket_t:sock_file { create unlink };
 kernel_read_vm_overcommit_sysctl(xtwifi_client_t)
 allow xtwifi_client_t sysctl_vm_t:dir search;
 
@@ -430,6 +427,7 @@ manage_user_data_files(lowi_server_t, loc_data_t)
 kernel_read_network_state(lowi_server_t)
 allow lowi_server_t self:{ netlink_route_socket udp_socket netlink_generic_socket } create_socket_perms;
 allow lowi_server_t self:capability net_admin;
+allow lowi_server_t loc_hald_t:unix_dgram_socket sendto;
 
 files_read_etc_files(lowi_server_t)
 # read location conf files
@@ -481,14 +479,15 @@ device_manage_socket_file({ loc_t loc_hald_t xtra_daemon_t edgnss_daemon_t engin
 ifndef(`init_systemd', `device_manage_socket_file(loc_initrc_t, loc_socket_t)')
 
 allow loc_socket_t device_t:filesystem associate;
-allow { loc_t loc_hald_t xtra_daemon_t edgnss_daemon_t engine_service_t } loc_socket_t:dir manage_dir_perms;
+allow { loc_t loc_hald_t xtra_daemon_t edgnss_daemon_t engine_service_t xtwifi_agent_t xtwifi_client_t lowi_server_t slim_daemon_t } loc_socket_t:dir manage_dir_perms;
 allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t } self:fifo_file rw_fifo_file_perms;
 
-allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
+allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file { create unlink write setattr getattr };
 allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_socket_t:lnk_file { create write};
-allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
 allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
 device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
+allow { lowi_server_t loc_hald_t loc_t } loc_socket_t:lnk_file { create read write };
+allow { lowi_server_t slim_daemon_t xtra_daemon_t } loc_t:unix_dgram_socket { read write sendto };
 
 allow xtra_daemon_t unreserved_port_t:tcp_socket name_connect;
 
