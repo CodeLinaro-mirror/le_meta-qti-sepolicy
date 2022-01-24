@@ -43,6 +43,8 @@ gen_require(`
        type sysfs_t;
        class process setcap;
        type persist_t;
+       type scsi_rpmb_device_t;
+       type storage_disk_device_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -86,3 +88,5 @@ user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
 dontaudit qseecomd_t persist_t:dir read;
 dontaudit qseecomd_t sysfs_t:file { append };
+allow qseecomd_t scsi_rpmb_device_t:chr_file { rw_file_perms setattr };
+allow qseecomd_t storage_disk_device_t:blk_file { rw_file_perms };
