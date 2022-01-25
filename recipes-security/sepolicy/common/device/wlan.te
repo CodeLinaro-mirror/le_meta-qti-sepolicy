@@ -44,6 +44,8 @@ type socket_device_t;
 type default_t;
 type wlan_initrc_t;
 type modules_object_t;
+type initrc_t;
+type system_data_t;
 ')
 
 userdebug_or_eng(`
@@ -56,6 +58,8 @@ allow wlan_service_t self:capability net_admin;
 allow wlan_service_t self:fifo_file rw_fifo_file_perms;
 allow wlan_service_t self:netlink_socket create_socket_perms;
 allow wlan_service_t self:{socket qipcrtr_socket} create_socket_perms;
+allow initrc_t system_data_t:lnk_file { read };
+allow initrc_t system_data_t:dir { search };
 search_dirs_pattern(wlan_service_t, socket_device_t, socket_device_t)
 search_dirs_pattern(wlan_service_t, default_t, default_t)
 userdom_manage_user_tmp_files(wlan_service_t)
