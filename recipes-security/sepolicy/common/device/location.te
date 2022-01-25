@@ -37,6 +37,7 @@ gen_require(`
     type node_t;
     type tmpfs_t;
     type sysctl_t;
+    type commplex_main_port_t;
     type netmgrd_socket_device_t;
 ')
 
@@ -68,6 +69,7 @@ allow loc_t self:{ socket udp_socket } create_socket_perms;
 allow loc_t self:process { setcap signal };
 allow loc_t self:netlink_route_socket read;
 allow loc_t xtra_daemon_t:process signal;
+allow loc_t edgnss_daemon_t:process signal;
 allow loc_t slim_daemon_t:process sigkill;
 allow loc_t self:unix_stream_socket { accept connectto listen };
 kernel_read_vm_overcommit_sysctl(loc_t)
@@ -161,6 +163,7 @@ allow loc_hald_t { loc_t engine_service_t }:unix_dgram_socket sendto;
 allow loc_t loc_hald_t:unix_dgram_socket sendto;
 allow loc_hald_t self:unix_dgram_socket sendto;
 allow loc_hald_t xtra_daemon_t:unix_dgram_socket sendto;
+allow loc_hald_t edgnss_daemon_t:unix_dgram_socket sendto;
 allow loc_hald_t adbd_t:unix_dgram_socket sendto;
 allow loc_hald_t socket_device_t:sock_file { write unlink };
 allow loc_hald_t self:process signal;
@@ -353,6 +356,62 @@ userdebug_or_eng(`
     allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;
 ')
 
+### edgnss-daemon
+type edgnss_daemon_t;
+type edgnss_daemon_exec_t;
+init_vendor_domain(edgnss_daemon_t, edgnss_daemon_exec_t)
+
+# Launched by loc_launcher instead of init
+domtrans_pattern(loc_t, edgnss_daemon_exec_t, edgnss_daemon_t)
+logging_send_syslog_msg(edgnss_daemon_t)
+
+allow edgnss_daemon_t dhcpc_var_run_t:file { read open getattr };
+allow edgnss_daemon_t loc_hald_t:unix_dgram_socket sendto;
+allow edgnss_daemon_t self:{ socket udp_socket } create_socket_perms;
+allow edgnss_daemon_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow edgnss_daemon_t commplex_main_port_t:tcp_socket name_connect;
+# read build.prop
+leprop_read_props(edgnss_daemon_t)
+## this is for access to /run/resolv.conf
+files_read_generic_pids(edgnss_daemon_t)
+allow edgnss_daemon_t self:process signal;
+read_files_pattern(edgnss_daemon_t, init_var_run_t, init_var_run_t);
+read_files_pattern(edgnss_daemon_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
+
+# Read /target node
+vendor_read_target(edgnss_daemon_t)
+
+corenet_tcp_connect_http_port(edgnss_daemon_t)
+sysnet_read_config(edgnss_daemon_t)
+dev_read_urand(edgnss_daemon_t)
+dev_read_rand(edgnss_daemon_t)
+miscfiles_read_generic_certs(edgnss_daemon_t)
+dev_read_sysfs(edgnss_daemon_t)
+leprop_rw_props(edgnss_daemon_t)
+kernel_read_vm_overcommit_sysctl(edgnss_daemon_t)
+kernel_dontaudit_read_system_state(edgnss_daemon_t);
+
+##access qdma socket
+rw_vendor_qdma_sock_file(edgnss_daemon_t);
+
+files_tmp_filetrans(edgnss_daemon_t, loc_tmp_t, file)
+allow edgnss_daemon_t loc_tmp_t:file { create_file_perms write_file_perms read_file_perms };
+files_read_generic_tmp_symlinks(edgnss_daemon_t)
+
+files_read_etc_files(edgnss_daemon_t)
+# read location conf files
+files_read_loc_etc_files(edgnss_daemon_t)
+data_filetrans(edgnss_daemon_t, loc_data_t, { file dir })
+manage_user_data_files(edgnss_daemon_t, loc_data_t)
+allow edgnss_daemon_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+## read resolv.conf
+read_files_pattern(edgnss_daemon_t, qcmap_var_run_t, qcmap_var_run_t);
+
+userdebug_or_eng(`
+    allow edgnss_daemon_t adbd_t:unix_dgram_socket sendto;
+')
+
+
 ### lowi-server
 type lowi_server_t;
 type lowi_server_exec_t;
@@ -415,19 +474,19 @@ kernel_read_vm_overcommit_sysctl(slim_daemon_t)
 type loc_socket_t;
 files_type(loc_socket_t)
 
-device_manage_socket_file({ loc_t loc_hald_t xtra_daemon_t engine_service_t }, loc_socket_t)
+device_manage_socket_file({ loc_t loc_hald_t xtra_daemon_t edgnss_daemon_t engine_service_t }, loc_socket_t)
 ifndef(`init_systemd', `device_manage_socket_file(loc_initrc_t, loc_socket_t)')
 
 allow loc_socket_t device_t:filesystem associate;
-allow { loc_t loc_hald_t xtra_daemon_t engine_service_t } loc_socket_t:dir manage_dir_perms;
-allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } self:fifo_file rw_fifo_file_perms;
+allow { loc_t loc_hald_t xtra_daemon_t edgnss_daemon_t engine_service_t } loc_socket_t:dir manage_dir_perms;
+allow { loc_t loc_hald_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t } self:fifo_file rw_fifo_file_perms;
 
-allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
-allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_socket_t:lnk_file { create write};
-allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
-allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
-device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
+allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t } loc_socket_t:sock_file write;
+allow { xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_socket_t:lnk_file { create write};
+allow { xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t } loc_socket_t:dir search_dir_perms;
+allow { lowi_server_t xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t loc_hald_t } loc_t:unix_stream_socket { connectto rw_stream_socket_perms };
+device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daemon_t lowi_server_t engine_service_t slim_daemon_t}, loc_socket_t)
 
 ## common rules
-dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
-dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t engine_service_t slim_daemon_t} default_t:dir search;
+dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
+dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t} default_t:dir search;
