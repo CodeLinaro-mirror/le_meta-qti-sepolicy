@@ -44,7 +44,6 @@ gen_require(`
  type user_tmp_t;
  type wpa_cli_t;
  type NetworkManager_tmp_t;
- type system_data_t;
 ')
 type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
@@ -69,7 +68,6 @@ allow hostapd_t etc_t:file { getattr open read };
 allow hostapd_t wireless_device_t:chr_file { open read };
 allow hostapd_t proc_net_t:file { read };
 allow hostapd_t wifi_system_data_t:dir { search };
-allow init_t system_data_t:lnk_file { read };
 
 userdebug_or_eng('
         allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };
