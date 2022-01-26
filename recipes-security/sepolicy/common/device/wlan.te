@@ -42,10 +42,6 @@ inittab_domtrans(wlan_service_t, wlan_service_exec_t)
 gen_require(`
 type socket_device_t;
 type default_t;
-type kmod_t;
-type wlan_initrc_t;
-type modules_object_t;
-type system_data_t;
 ')
 
 userdebug_or_eng(`
@@ -53,8 +49,6 @@ userdebug_or_eng(`
 ')
 
 files_tmp_file(wlan_service_tmp_t)
-manage_system_data_files(wlan_initrc_t, wifi_system_data_t);
-manage_system_data_files(kmod_t, wifi_system_data_t);
 
 allow wlan_service_t self:capability net_admin;
 allow wlan_service_t self:fifo_file rw_fifo_file_perms;
@@ -71,8 +65,3 @@ kernel_rw_net_sysctls(wlan_service_t)
 
 networkmanager_read_wifi_sysdata_files(kernel_t)
 allow kernel_t wifi_system_data_t:dir search_dir_perms;
-allow wlan_initrc_t wifi_system_data_t:dir { write add_name remove_name };
-allow wlan_initrc_t wifi_system_data_t:lnk_file { create unlink };
-allow wlan_initrc_t system_data_t:dir { write add_name remove_name };
-allow wlan_initrc_t system_data_t:lnk_file { create unlink };
-allow wlan_initrc_t modules_object_t:file {getattr read};

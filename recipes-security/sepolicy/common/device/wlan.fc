@@ -26,8 +26,3 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/sbin/wlan_services -- gen_context(system_u:object_r:wlan_service_exec_t,s0)
-/usr/sbin/mcc/hostapd -- gen_context(system_u:object_r:hostapd_exec_t,s0)
-/usr/sbin/mcc/hostapd_cli -- gen_context(system_u:object_r:hostapd_cli_exec_t,s0)
-/usr/sbin/mcc/wpa_cli -- gen_context(system_u:object_r:wpa_cli_exec_t,s0)
-/usr/sbin/mcc/wpa_supplicant -- gen_context(system_u:object_r:NetworkManager_exec_t,s0)
-/etc/initscripts/start_cnss_le -- gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
