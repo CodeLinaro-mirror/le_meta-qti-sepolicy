@@ -49,6 +49,7 @@ gen_require(`
     type leprop_sock_t;
     type sysctl_vm_t;
     type sysdevice_sysfs_t;
+    type sysfs_vblank_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -173,6 +174,7 @@ allow post_boot_script_t socket_device_t:dir search;
 allow post_boot_script_t sysctl_vm_t:dir search;
 allow post_boot_script_t sysctl_vm_t:file write_file_perms;
 allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
+allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
