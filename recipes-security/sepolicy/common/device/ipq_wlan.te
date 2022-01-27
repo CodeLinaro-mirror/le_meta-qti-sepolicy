@@ -57,6 +57,9 @@ gen_require(`
   type kmsg_device_t;
   type modules_object_t;
   type sysctl_dev_t;
+  type wlan_initrc_exec_t;
+  type cslistener_port_t;
+  type ifconfig_t;
 ')
 
 type wifi_usr_t;
@@ -72,6 +75,11 @@ files_tmp_filetrans(wlan_initrc_t, wlan_service_tmp_t, { file lnk_file dir sock_
 dontaudit wlan_initrc_t domain:dir search_dir_perms;
 dontaudit wlan_initrc_t self:capability sys_module;
 
+allow wlan_initrc_t wifi_system_data_t:dir { write add_name remove_name };
+allow wlan_initrc_t wifi_system_data_t:lnk_file { create unlink };
+allow wlan_initrc_t system_data_t:dir { write add_name remove_name };
+allow wlan_initrc_t system_data_t:lnk_file { create unlink read };
+
 # Don't audit console/kmsg logs
 dontaudit wlan_initrc_t console_device_t:chr_file write_file_perms;
 dontaudit wlan_initrc_t kmsg_device_t:chr_file write_file_perms;
@@ -79,15 +87,17 @@ dontaudit wlan_initrc_t kmsg_device_t:chr_file write_file_perms;
 # General permissions
 allow wlan_initrc_t self:process signal_perms;
 allow wlan_initrc_t self:capability kill;
-allow wlan_initrc_t self:tcp_socket { create_socket_perms };
+allow wlan_initrc_t self:tcp_socket { create_socket_perms connected_stream_socket_perms };
 allow wlan_initrc_t wlan_service_exec_t:file { execute read_file_perms execute_no_trans map };
 allow wlan_initrc_t wlan_service_tmp_t:dir manage_dir_perms;
 allow wlan_initrc_t wlan_service_tmp_t:file manage_file_perms;
 allow wlan_initrc_t wlan_service_tmp_t:sock_file { create write unlink };
 allow wlan_initrc_t wifi_usr_t:file read_file_perms;
-allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename };
+allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename setattr };
 allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
+
+allow wlan_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
 
 # WiFi permissions
 allow wlan_initrc_t var_run_t:file read_file_perms;
@@ -112,3 +122,19 @@ allow wlan_initrc_t kernel_t:system module_request;
 allow wlan_initrc_t hostapd_cli_exec_t:file { read getattr open execute execute_no_trans map };
 allow wlan_initrc_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans map };
 logging_send_syslog_msg(wlan_initrc_t);
+
+# SigmaDut
+type wlan_initrc_var_log_t;
+logging_log_file(wlan_initrc_var_log_t)
+logging_log_filetrans(wlan_initrc_t, wlan_initrc_var_log_t, { file lnk_file dir } );
+manage_dirs_pattern(wlan_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+manage_files_pattern(wlan_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+manage_lnk_files_pattern(wlan_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+
+allow wlan_initrc_t wlan_initrc_exec_t:file execute_no_trans;
+allow wlan_initrc_t cslistener_port_t:tcp_socket { name_connect name_bind };
+allow wlan_initrc_t node_t:tcp_socket node_bind;
+allow kmod_t wlan_initrc_var_log_t:file { read append };
+allow kmod_t wlan_initrc_t:tcp_socket { read write };
+allow ifconfig_t wlan_initrc_var_log_t:file { read append };
+allow ifconfig_t wlan_initrc_t:tcp_socket { read write };

@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,7 +25,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/qseecomd               --      gen_context(system_u:object_r:qseecomd_exec_t,s0)
-/data/vendor/tzstorage(/.*)?            gen_context(system_u:object_r:qseecomd_data_t,s0)
-/persist/data(/.*)?                     gen_context(system_u:object_r:qseecomd_persist_t,s0)
-/dev/mmcblk0rpmb                -c      gen_context(system_u:object_r:qseecomd_rpmb_t,s0)
+/usr/bin/qmmf-server       --      gen_context(system_u:object_r:qmmf_server_exec_t,s0)
+
+# qmmf data files
+/data/misc/qmmf(/.*)?              gen_context(system_u:object_r:qmmf_data_file_t,s0)
+/data/misc/vam(/.*)?               gen_context(system_u:object_r:qmmf_data_file_t,s0)
+/data/misc/display(/.*)?           gen_context(system_u:object_r:qmmf_data_file_t,s0)
+/mnt/sdcard/data/misc/qmmf(/.*)?   gen_context(system_u:object_r:qmmf_data_file_t,s0)
+
+# qmmf config files
+/system/etc/qmmf(/.*)?             gen_context(system_u:object_r:qmmf_config_file_t,s0)
