@@ -46,6 +46,9 @@ gen_require(`
     type tmpfs_t;
     type security_t;
     type var_run_t;
+    type leprop_sock_t;
+    type sysctl_vm_t;
+    type sysdevice_sysfs_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -162,6 +165,14 @@ allow post_boot_script_t tvmapp_t:filesystem { mount relabelfrom };
 allow post_boot_script_t self:capability sys_admin;
 allow post_boot_script_t var_run_t:dir { getattr search };
 allow post_boot_script_t var_run_t:lnk_file read;
+
+allow post_boot_script_t leprop_sock_t:sock_file write;
+allow post_boot_script_t self:fifo_file rw_file_perms;
+allow post_boot_script_t self:unix_stream_socket { create connect };
+allow post_boot_script_t socket_device_t:dir search;
+allow post_boot_script_t sysctl_vm_t:dir search;
+allow post_boot_script_t sysctl_vm_t:file write_file_perms;
+allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
