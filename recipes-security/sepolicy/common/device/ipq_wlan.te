@@ -78,7 +78,7 @@ dontaudit wlan_initrc_t self:capability sys_module;
 allow wlan_initrc_t wifi_system_data_t:dir { write add_name remove_name };
 allow wlan_initrc_t wifi_system_data_t:lnk_file { create unlink };
 allow wlan_initrc_t system_data_t:dir { write add_name remove_name };
-allow wlan_initrc_t system_data_t:lnk_file { create unlink read };
+allow wlan_initrc_t system_data_t:lnk_file { create unlink read getattr };
 
 # Don't audit console/kmsg logs
 dontaudit wlan_initrc_t console_device_t:chr_file write_file_perms;
@@ -96,6 +96,8 @@ allow wlan_initrc_t wifi_usr_t:file read_file_perms;
 allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename setattr };
 allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
+
+allow wlan_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
 
 # WiFi permissions
 allow wlan_initrc_t var_run_t:file read_file_perms;
