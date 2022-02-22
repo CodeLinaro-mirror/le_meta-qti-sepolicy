@@ -99,7 +99,15 @@ type vendor_dmabuf_tui_heap_device_t;
 type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
 type wlan_hsp_sysfs_t;
+type kmsg_device_t;
 ')
+
+userdebug_or_eng(`
+    dev_write_kmsg(tuicoreservice_t);
+    mls_file_write_all_levels(tuicoreservice_t);
+')
+
+dontaudit tuicoreservice_t kmsg_device_t:chr_file { getattr };
 
 #allow to connect to letzd
 connect_to_letzd(tuicoreservice_t)
