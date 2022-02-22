@@ -77,15 +77,17 @@ gen_require(`
     attribute user_data;
     attribute system_data;
     type sxr_data_t;
+    type qvr_data_t;
+    type sysdevice_sysfs_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -sxr_data_t }:file rw_file_perms;
+neverallow initrc_t { user_data -sxr_data_t -qvr_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
-
+allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 #userdebug_or_eng(`
 #    reboot_write_fifo_files_reboot_device(init_t)
 #')

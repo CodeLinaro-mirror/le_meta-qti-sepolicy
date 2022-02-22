@@ -37,6 +37,12 @@ type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
 
+#TODO: These permissive changes needs to be removed later
+permissive weston_t;
+permissive weston_exec_t;
+permissive weston_socket_device_t;
+permissive weston_usr_t;
+
 init_vendor_domain(weston_t, weston_exec_t)
 
 #domain Transition from unconfined_t to weston_t when executing from adb shell
@@ -57,7 +63,11 @@ gen_require(`
  type ion_device_t;
  type sysfs_t;
  type qmmf_server_t;
+ type brightness_t;
 ')
+
+#TODO: These permissive changes needs to be removed later
+permissive brightness_t;
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
 allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
