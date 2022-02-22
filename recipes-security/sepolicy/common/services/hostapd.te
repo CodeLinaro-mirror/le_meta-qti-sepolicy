@@ -76,3 +76,4 @@ init_unit_file(hostapd_unit_t)
 type hostapd_cli_qcmap_unit_t;
 init_unit_file(hostapd_cli_qcmap_unit_t)
 
+dontaudit hostapd_t self:capability { sys_module };
