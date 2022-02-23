@@ -134,12 +134,14 @@ gen_require(`
     type sysctl_t;
     type urandom_device_t;
     type hostapd_t;
+    type unreserved_port_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
 apache_dontaudit_rw_fifo_file(wpa_cli_t)
 manage_sock_files_pattern(wpa_cli_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
 files_pid_filetrans(wpa_cli_t, NetworkManager_var_run_t, { dir file sock_file })
+allow NetworkManager_t unreserved_port_t:udp_socket { name_bind };
 
 allow wlan_initrc_t NetworkManager_var_run_t:dir { add_name create remove_name search write };
 allow wlan_initrc_t NetworkManager_var_run_t:file { create getattr open read unlink write };
