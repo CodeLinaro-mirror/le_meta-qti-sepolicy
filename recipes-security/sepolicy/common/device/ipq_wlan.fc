@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -36,6 +36,7 @@
 /systemrw/ipq(/.*)?			gen_context(system_u:object_r:wifi_system_data_t,s0)
 /systemrw/wlan/bin(/.*)?		gen_context(system_u:object_r:wlan_service_exec_t,s0)
 /data/vendor/ipq(/.*)?			gen_context(system_u:object_r:wifi_data_t,s0)
+/data/vendor/wifi(/.*)?			gen_context(system_u:object_r:wifi_data_t,s0)
 /usr/share/libubox/jshn.sh		gen_context(system_u:object_r:wifi_usr_t,s0)
 /tmp/sysinfo(/.*)?			gen_context(system_u:object_r:wlan_service_tmp_t,s0)
 
@@ -60,3 +61,14 @@
 # SigmaDut scripts
 /etc/config/sigma-dut			gen_context(system_u:object_r:wifi_system_data_t,s0)
 /etc/rc\.d/init\.d/sigma-dut		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+
+# AFC application
+/etc/afc(/.*)?				gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/pairing(/.*)?			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/rc\.d/init\.d/afc			gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/pairing		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/provision		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/usr/bin/ipq/afc			gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/ipq/encrypt_client_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/ipq/pairing_client_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/ipq/provisioning_test_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)

@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -60,6 +60,11 @@ gen_require(`
   type wlan_initrc_exec_t;
   type cslistener_port_t;
   type ifconfig_t;
+  type user_home_dir_t;
+  type cert_t;
+  type usr_t;
+  type etc_t;
+  type net_conf_t;
 ')
 
 type wifi_usr_t;
@@ -78,11 +83,12 @@ dontaudit wlan_initrc_t self:capability sys_module;
 allow wlan_initrc_t wifi_system_data_t:dir { write add_name remove_name };
 allow wlan_initrc_t wifi_system_data_t:lnk_file { create unlink };
 allow wlan_initrc_t system_data_t:dir { write add_name remove_name };
-allow wlan_initrc_t system_data_t:lnk_file { create unlink read };
+allow wlan_initrc_t system_data_t:lnk_file { create unlink read getattr };
 
 # Don't audit console/kmsg logs
 dontaudit wlan_initrc_t console_device_t:chr_file write_file_perms;
 dontaudit wlan_initrc_t kmsg_device_t:chr_file write_file_perms;
+dontaudit wlan_initrc_t self:capability { dac_read_search dac_override };
 
 # General permissions
 allow wlan_initrc_t self:process signal_perms;
@@ -96,6 +102,8 @@ allow wlan_initrc_t wifi_usr_t:file read_file_perms;
 allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename setattr };
 allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
+
+allow wlan_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
 
 # WiFi permissions
 allow wlan_initrc_t var_run_t:file read_file_perms;
@@ -136,3 +144,15 @@ allow kmod_t wlan_initrc_var_log_t:file { read append };
 allow kmod_t wlan_initrc_t:tcp_socket { read write };
 allow ifconfig_t wlan_initrc_var_log_t:file { read append };
 allow ifconfig_t wlan_initrc_t:tcp_socket { read write };
+
+# AFC application
+filetrans_pattern(wlan_initrc_t, wifi_system_data_t, wifi_system_data_t, file);
+
+allow wlan_initrc_t user_home_dir_t:dir { getattr search };
+allow wlan_initrc_t self:process getsched;
+allow wlan_initrc_t cert_t:dir { read open };
+allow wlan_initrc_t cert_t:lnk_file { read_file_perms };
+allow wlan_initrc_t usr_t:file { read_file_perms };
+allow wlan_initrc_t etc_t:file { read open };
+allow wlan_initrc_t etc_t:lnk_file { read open };
+allow wlan_initrc_t net_conf_t:file { read_file_perms };
