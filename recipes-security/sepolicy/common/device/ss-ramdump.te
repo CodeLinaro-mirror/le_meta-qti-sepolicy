@@ -45,7 +45,7 @@ gen_require(`
 ')
 
 type ss-ramdump_data_t;
-allow ss-ramdump_t self:capability kill;
+
 userdebug_or_eng(`
     user_data_files_type(ss-ramdump_data_t)
     data_filetrans(ss-ramdump_t, ss-ramdump_data_t, { file dir })
