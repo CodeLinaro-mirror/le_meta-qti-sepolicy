@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -89,7 +89,7 @@ data_filetrans(mrc_daemon_t, mrc_data_t, { file dir })
 manage_user_data_files(mrc_daemon_t, mrc_data_t)
 device_search_sockets(mrc_daemon_t, socket_device_t)
 allow mrc_daemon_t mrc_data_t:dir { create rw_dir_perms };
-allow mrc_daemon_t self:capability sys_resource;
+allow mrc_daemon_t self:capability{ sys_resource net_bind_service net_raw };
 allow mrc_daemon_t sysfs_t:lnk_file read;
 allow mrc_daemon_t self:fifo_file { read write };
 allow mrc_daemon_t tmp_t:dir search;
@@ -105,4 +105,4 @@ allow mrc_daemon_t mtd_device_t:chr_file { read write getattr open ioctl };
 allow mrc_daemon_t datamtd_device_t:chr_file { read write getattr open ioctl};
 
 allow mrc_daemon_t proc_t:file { getattr open read };
-allow mrc_daemon_t self:socket { create ioctl read write getattr setopt };
+allow mrc_daemon_t self:socket { create ioctl read write getattr setopt bind };
