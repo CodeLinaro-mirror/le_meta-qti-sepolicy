@@ -71,12 +71,6 @@ type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
 
-#TODO: These permissive changes needs to be removed later
-permissive weston_t;
-permissive weston_exec_t;
-permissive weston_socket_device_t;
-permissive weston_usr_t;
-
 init_vendor_domain(weston_t, weston_exec_t)
 
 #domain Transition from unconfined_t to weston_t when executing from adb shell
@@ -99,10 +93,19 @@ gen_require(`
  type qmmf_server_t;
  type brightness_t;
  type user_runtime_root_t;
+ type etc_t;
+ type event_device_t;
+ type firmware_t;
+ type fonts_cache_t;
+ type fonts_t;
+ type fs_t;
+ type locale_t;
+ type proc_t;
+ type tmp_t;
+ type tmpfs_t;
+ type usr_t;
+ type xkb_var_lib_t;
 ')
-
-#TODO: These permissive changes needs to be removed later
-permissive brightness_t;
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
 allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
@@ -141,8 +144,32 @@ files_type(weston_usr_t);
 allow weston_t weston_usr_t:dir search_dir_perms;
 allow weston_t weston_usr_t:file read_file_perms;
 
-allow weston_t user_runtime_root_t:dir search;
 allow weston_t self:capability kill;
+allow weston_t brightness_t:file rw_file_perms;
+allow weston_t etc_t:file read_file_perms;
+allow weston_t etc_t:lnk_file read_lnk_file_perms;
+allow weston_t event_device_t:chr_file rw_chr_file_perms;
+allow weston_t firmware_t:dir search_dir_perms;
+allow weston_t fonts_cache_t:dir search_dir_perms;
+allow weston_t fonts_cache_t:file { read_file_perms map };
+allow weston_t fonts_t:dir list_dir_perms;
+allow weston_t fonts_t:file { read_file_perms map };
+allow weston_t fs_t:filesystem getattr;
+allow weston_t gpu_device_t:chr_file map;
+allow weston_t locale_t:dir search_dir_perms;
+allow weston_t locale_t:file { read_file_perms map };
+allow weston_t proc_t:file read_file_perms;
+allow weston_t self:unix_stream_socket rw_stream_socket_perms;
+allow weston_t tmp_t:dir search_dir_perms;
+allow weston_t tmpfs_t:file { rw_file_perms map };
+allow weston_t tmpfs_t:filesystem getattr;
+allow weston_t user_runtime_root_t:dir add_entry_dir_perms;
+allow weston_t user_runtime_root_t:file { rw_file_perms create };
+allow weston_t user_runtime_root_t:sock_file create_sock_file_perms;
+allow weston_t user_runtime_root_t:dir search_dir_perms;
+allow weston_t usr_t:dir list_dir_perms;
+allow weston_t usr_t:file read_file_perms;
+allow weston_t xkb_var_lib_t:file { read_file_perms map };
 
 userdebug_or_eng(`
      gen_require(`
