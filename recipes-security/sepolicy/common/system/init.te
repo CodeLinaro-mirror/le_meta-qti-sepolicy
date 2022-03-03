@@ -124,6 +124,13 @@ neverallow initrc_t { user_data -sxr_data_t -qvr_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 allow initrc_t brightness_t:file rw_file_perms;
+
+#allowing init process to access overlay
+gen_require(`
+    type overlay_t;
+')
+allow init_t overlay_t:dir list_dir_perms;
+
 #userdebug_or_eng(`
 #    reboot_write_fifo_files_reboot_device(init_t)
 #')
