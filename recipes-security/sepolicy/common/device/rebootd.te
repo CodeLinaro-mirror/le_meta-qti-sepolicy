@@ -92,3 +92,4 @@ gen_require(`
 ')
 create_lnk_files_pattern(reset_reboot_initrc_t, var_log_t, var_log_t)
 data_filetrans(reset_reboot_initrc_t, reboot_cookie_data_t, file)
+allow reset_reboot_initrc_t init_t:unix_stream_socket { rw_stream_socket_perms };
