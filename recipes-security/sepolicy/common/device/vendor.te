@@ -101,7 +101,7 @@ manage_user_data_files(tftp_server_t, adsp_persist_t)
 mls_file_read_all_levels(tftp_server_t)
 
 allow tftp_server_t self:qipcrtr_socket create_socket_perms;
-dontaudit tftp_server_t self:capability dac_override;
+dontaudit tftp_server_t self:capability { dac_override dac_read_search };
 
 type tombstone_data_t;
 user_data_files_type(tombstone_data_t)
