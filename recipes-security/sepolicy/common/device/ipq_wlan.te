@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -60,6 +60,11 @@ gen_require(`
   type wlan_initrc_exec_t;
   type cslistener_port_t;
   type ifconfig_t;
+  type user_home_dir_t;
+  type cert_t;
+  type usr_t;
+  type etc_t;
+  type net_conf_t;
 ')
 
 type wifi_usr_t;
@@ -139,3 +144,15 @@ allow kmod_t wlan_initrc_var_log_t:file { read append };
 allow kmod_t wlan_initrc_t:tcp_socket { read write };
 allow ifconfig_t wlan_initrc_var_log_t:file { read append };
 allow ifconfig_t wlan_initrc_t:tcp_socket { read write };
+
+# AFC application
+filetrans_pattern(wlan_initrc_t, wifi_system_data_t, wifi_system_data_t, file);
+
+allow wlan_initrc_t user_home_dir_t:dir { getattr search };
+allow wlan_initrc_t self:process getsched;
+allow wlan_initrc_t cert_t:dir { read open };
+allow wlan_initrc_t cert_t:lnk_file { read_file_perms };
+allow wlan_initrc_t usr_t:file { read_file_perms };
+allow wlan_initrc_t etc_t:file { read open };
+allow wlan_initrc_t etc_t:lnk_file { read open };
+allow wlan_initrc_t net_conf_t:file { read_file_perms };
