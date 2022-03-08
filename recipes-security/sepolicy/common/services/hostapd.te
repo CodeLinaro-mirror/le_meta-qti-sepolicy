@@ -79,6 +79,8 @@ gen_require(`
  type wpa_cli_t;
  type NetworkManager_tmp_t;
  type system_data_t;
+ type unreserved_port_t;
+ type node_t;
 ')
 type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
@@ -105,6 +107,9 @@ allow hostapd_t wireless_device_t:chr_file { open read };
 allow hostapd_t proc_net_t:file { read };
 allow hostapd_t wifi_system_data_t:dir { search };
 allow init_t system_data_t:lnk_file { read };
+allow hostapd_t unreserved_port_t:udp_socket { name_bind };
+allow hostapd_t node_t:udp_socket { node_bind };
+dontaudit hostapd_t self:capability { sys_module };
 
 userdebug_or_eng('
         allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };

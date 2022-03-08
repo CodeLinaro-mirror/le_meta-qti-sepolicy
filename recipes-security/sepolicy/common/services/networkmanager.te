@@ -175,6 +175,7 @@ userdebug_or_eng(`
     mls_file_write_all_levels(NetworkManager_t);
 ')
 
+dontaudit wpa_cli_t kmsg_device_t:chr_file { write_file_perms };
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
 allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
