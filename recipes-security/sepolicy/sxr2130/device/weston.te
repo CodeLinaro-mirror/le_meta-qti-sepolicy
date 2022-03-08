@@ -105,6 +105,9 @@ gen_require(`
  type tmpfs_t;
  type usr_t;
  type xkb_var_lib_t;
+ type home_root_t;
+ type user_home_dir_t;
+ type user_tmpfs_t;
 ')
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
@@ -164,12 +167,18 @@ allow weston_t tmp_t:dir search_dir_perms;
 allow weston_t tmpfs_t:file { rw_file_perms map };
 allow weston_t tmpfs_t:filesystem getattr;
 allow weston_t user_runtime_root_t:dir add_entry_dir_perms;
-allow weston_t user_runtime_root_t:file { rw_file_perms create };
-allow weston_t user_runtime_root_t:sock_file create_sock_file_perms;
-allow weston_t user_runtime_root_t:dir search_dir_perms;
+allow weston_t user_runtime_root_t:file { rw_file_perms create unlink };
+allow weston_t user_runtime_root_t:sock_file { create_sock_file_perms unlink };
+allow weston_t user_runtime_root_t:dir manage_dir_perms;
 allow weston_t usr_t:dir list_dir_perms;
 allow weston_t usr_t:file read_file_perms;
 allow weston_t xkb_var_lib_t:file { read_file_perms map };
+allow weston_t home_root_t:dir search_dir_perms;
+allow weston_t user_home_dir_t:dir search_dir_perms;
+allow weston_t socket_device_t:dir manage_dir_perms;
+allow weston_t socket_device_t:file manage_file_perms;
+allow weston_t socket_device_t:sock_file manage_sock_file_perms;
+allow weston_t user_tmpfs_t:file { map rw_file_perms };
 
 userdebug_or_eng(`
      gen_require(`
