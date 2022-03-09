@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2021 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2021-2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -64,6 +64,7 @@ policy_module(mrc_daemon, 1.0)
 type mrc_daemon_t;
 type mrc_daemon_exec_t;
 type mrc_data_t;
+type mrc_daemon_tmp_t;
 
 gen_require(`
     type sysfs_t;
@@ -84,8 +85,10 @@ allow mrc_daemon_t self:unix_dgram_socket { write create connect };
 allow mrc_daemon_t sysfs_t:dir read;
 dev_rw_sysfs(mrc_daemon_t)
 
+files_tmp_file(mrc_daemon_tmp_t)
 user_data_files_type(mrc_data_t)
 data_filetrans(mrc_daemon_t, mrc_data_t, { file dir })
+files_tmp_filetrans(mrc_daemon_t, mrc_daemon_tmp_t, { file dir })
 manage_user_data_files(mrc_daemon_t, mrc_data_t)
 device_search_sockets(mrc_daemon_t, socket_device_t)
 allow mrc_daemon_t mrc_data_t:dir { create rw_dir_perms };
@@ -93,6 +96,9 @@ allow mrc_daemon_t self:capability sys_resource;
 allow mrc_daemon_t sysfs_t:lnk_file read;
 allow mrc_daemon_t self:fifo_file { read write };
 allow mrc_daemon_t tmp_t:dir search;
+allow mrc_daemon_t mrc_daemon_tmp_t:dir { read write add_name };
+allow mrc_daemon_t mrc_daemon_tmp_t:file { create read write open getattr };
+allow mrc_daemon_t self:capability sys_boot;
 allow mrc_daemon_t ubi_device_t:chr_file rw_chr_file_perms;
 dontaudit mrc_daemon_t default_t:dir search;
 
