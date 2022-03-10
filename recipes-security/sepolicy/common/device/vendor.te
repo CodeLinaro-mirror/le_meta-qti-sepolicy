@@ -42,6 +42,9 @@ gen_require(`
     type proc_t;
     type device_t;
     type rebootd_t;
+    type kmsg_device_t;
+    type leprop_sock_t;
+    type sysctl_irq_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -125,6 +128,11 @@ init_script_domain(post_boot_script_t, post_boot_script_exec_t)
 
 dev_rw_sysfs(post_boot_script_t)
 kernel_rw_kernel_sysctl(post_boot_script_t)
+allow post_boot_script_t kmsg_device_t:chr_file open;
+allow post_boot_script_t post_boot_script_t:fifo_file { read getattr write};
+allow post_boot_script_t leprop_sock_t:sock_file write;
+allow post_boot_script_t leprop_sock_t:unix_stream_socket connectto;
+allow post_boot_script_t sysctl_irq_t:dir search;
 
 ### dev nodes ###
 
