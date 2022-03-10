@@ -35,6 +35,8 @@ ifdef(`init_systemd',`
     #  typeattribute does not work in that context.
     gen_require(`
         attribute user_data;
+        type unconfined_t;
+        class dbus send_msg;
     ')
     manage_user_data_files(systemd_tmpfiles_t, user_data)
     relabel_all_data_files(systemd_tmpfiles_t)
@@ -53,6 +55,7 @@ ifdef(`init_systemd',`
     seutil_read_file_contexts(systemd_logind_t)
     allow systemd_logind_t init_t:system { start status stop };
     allow systemd_logind_t self:process { getcap setfscreate };
+    allow systemd_logind_t unconfined_t:dbus { send_msg };
 
     gen_require(`
         type init_var_run_t;
