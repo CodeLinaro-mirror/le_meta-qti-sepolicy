@@ -639,3 +639,5 @@ dontaudit brctl_t self:capability sys_module;
 dontaudit brctl_t initrc_t:unix_stream_socket { read write };
 allow ifconfig_t firmware_t:dir { search };
 allow NetworkManager_t system_data_t:lnk_file { read };
+allow qcmap_cm_t firmware_t:dir { read search };
+allow qcmap_cm_t firmware_t:file { read open };
