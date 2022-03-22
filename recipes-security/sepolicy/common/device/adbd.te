@@ -112,6 +112,7 @@ init_script_domain(pcie_initrc_t, pcie_initrc_exec_t)
 init_rw_stream_sockets(pcie_initrc_t)
 gen_require(`
  type sysdevice_sysfs_t;
+ type sysfs_vblank_t;
 ')
 userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
@@ -211,3 +212,5 @@ gen_require(`
 ')
 allow usb_t debugfs_t:dir rw_dir_perms;
 allow usb_t debugfs_t:file create;
+
+allow usb_t sysfs_vblank_t:file read_file_perms;

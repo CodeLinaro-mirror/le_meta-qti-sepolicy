@@ -83,6 +83,8 @@ userdebug_or_eng(`
     allow unconfined_t usb_dev_t:dir search;
     gen_require(`
         type sysdevice_sysfs_t;
+        type sysfs_vblank_t;
     ')
     allow unconfined_t sysdevice_sysfs_t:file { getattr open read };
+    allow unconfined_t sysfs_vblank_t:file read_file_perms;
 ')
