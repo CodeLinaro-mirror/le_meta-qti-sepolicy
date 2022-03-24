@@ -77,3 +77,7 @@ dev_associate_sysfs(sysdevice_sysfs_t)
 type snd_card_state_t;
 genfscon sysfs /kernel/snd_card/card_state gen_context(system_u:object_r:snd_card_state_t,s0)
 dev_associate_sysfs(snd_card_state_t)
+
+type sysfs_vblank_t;
+genfscon sysfs /module/drm/parameters/vblankoffdelay gen_context(system_u:object_r:sysfs_vblank_t,s0)
+dev_associate_sysfs(sysfs_vblank_t)
