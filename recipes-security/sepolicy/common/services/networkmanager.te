@@ -134,12 +134,14 @@ gen_require(`
     type sysctl_t;
     type urandom_device_t;
     type hostapd_t;
+    type unreserved_port_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
 apache_dontaudit_rw_fifo_file(wpa_cli_t)
 manage_sock_files_pattern(wpa_cli_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
 files_pid_filetrans(wpa_cli_t, NetworkManager_var_run_t, { dir file sock_file })
+allow NetworkManager_t unreserved_port_t:udp_socket { name_bind };
 
 allow wlan_initrc_t NetworkManager_var_run_t:dir { add_name create remove_name search write };
 allow wlan_initrc_t NetworkManager_var_run_t:file { create getattr open read unlink write };
@@ -173,6 +175,7 @@ userdebug_or_eng(`
     mls_file_write_all_levels(NetworkManager_t);
 ')
 
+dontaudit wpa_cli_t kmsg_device_t:chr_file { write_file_perms };
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
 allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };

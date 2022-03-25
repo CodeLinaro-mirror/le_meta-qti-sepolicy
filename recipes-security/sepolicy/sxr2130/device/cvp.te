@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,7 +24,6 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
@@ -59,80 +58,12 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Systemd policies
-ifdef(`init_systemd',`
-    ifdef(`enable_mls',`
-        # systemd-journal is s15
-        # For: allow syslogd_t init_t:unix_dgram_socket sendto;
-        mls_trusted_socket(init_t)
-        mls_file_upgrade(init_t)
-        # Similar to mls_file_downgrade(kernel_t), but init binary has correct
-        #  label from filesystem compilation instead of only after selinux-init
-        #  runtime relabeling.
-        mls_file_downgrade(init_t)
-    ')
+policy_module(cvp, 1.0)
 
-    # Should be included in later upstream versions
-    #allow init_t {
-    #    init_var_run_t
-    #}:service { status start stop };
+#####################################
+#
+# Declarations
+#
 
-    #fs_search_cgroup_dirs(daemon)
-    #allow init_t daemon:unix_stream_socket create_stream_socket_perms;
-    gen_require(`
-        type adbd_system_data_t;
-        type usb_dev_t;
-    ')
-    allow init_t adbd_system_data_t:file write;
-#allow busybox init to search usb_dev directory
-    allow init_t usb_dev_t:dir search;
-    data_mount_user_dir(init_t)
-    data_mount_volatile_bind(init_t)
-    persist_mount_dir(init_t)
-
-    gen_require(`
-        type system_data_t;
-        type kernel_t;
-        type kmod_t;
-    ')
-    allow init_t system_data_t:dir manage_dir_perms;
-    allow init_t kernel_t:key manage_key_perms;
-
-#allow modprobe to load kernel modules
-    allow init_t kmod_t:process2 nnp_transition;
-
-    mls_key_write_all_levels(init_t)
-')
-# find_partitions
-mount_domtrans(initrc_t)
-seutil_domtrans_setfiles(initrc_t)
-
-gen_require(`
-    attribute user_data;
-    attribute system_data;
-    type sxr_data_t;
-    type qvr_data_t;
-    type sysdevice_sysfs_t;
-    type brightness_t;
-    type sysfs_vblank_t;
-')
-
-# If these neverallows are tripped, it likely means a daemon was created
-#  without a unique context. Please update the file that launches the
-#  service with a unique selinux context before allowing access to these
-#  attributes.
-neverallow initrc_t { user_data -sxr_data_t -qvr_data_t }:file rw_file_perms;
-neverallow initrc_t system_data:file rw_file_perms;
-allow initrc_t sysdevice_sysfs_t:file { getattr open read };
-allow initrc_t brightness_t:file rw_file_perms;
-allow initrc_t sysfs_vblank_t:file read_file_perms;
-
-#allowing init process to access overlay
-gen_require(`
-    type overlay_t;
-')
-allow init_t overlay_t:dir list_dir_perms;
-
-#userdebug_or_eng(`
-#    reboot_write_fifo_files_reboot_device(init_t)
-#')
+type cvp_device_t;
+dev_node(cvp_device_t)
