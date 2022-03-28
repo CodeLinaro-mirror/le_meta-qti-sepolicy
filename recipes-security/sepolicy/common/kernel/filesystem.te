@@ -34,7 +34,7 @@
 # disclaimer below) provided that the following conditions are met:
 #
 #     * Redistributions of source code must retain the above copyright
-#      notice, this list of conditions and the following disclaimer.
+#       notice, this list of conditions and the following disclaimer.
 #
 #     * Redistributions in binary form must reproduce the above
 #       copyright notice, this list of conditions and the following
@@ -119,3 +119,7 @@ dev_associate_sysfs(snd_card_state_t)
 type sysfs_vblank_t;
 genfscon sysfs /module/drm/parameters/vblankoffdelay gen_context(system_u:object_r:sysfs_vblank_t,s0)
 dev_associate_sysfs(sysfs_vblank_t)
+
+type wlan_hsp_sysfs_t;
+genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-qca6390 gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+dev_associate_sysfs(wlan_hsp_sysfs_t)
