@@ -125,4 +125,11 @@ userdebug_or_eng(`
       type brightness_t;
     ')
     allow unconfined_t brightness_t:file read_file_perms;
+
+    #Run wifi commands
+    gen_require(`
+        type wlan_hsp_sysfs_t;
+    ')
+    allow unconfined_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
+    allow unconfined_t wlan_hsp_sysfs_t:file { rw_file_perms };
 ')
