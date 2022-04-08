@@ -9,6 +9,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Update-busybox-substitution-paths.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
+            file://poky-ssd-rpmb-storage.patch \
 "
 
 PROVIDES += "sepolicy"
