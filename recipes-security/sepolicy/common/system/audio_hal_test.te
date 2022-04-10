@@ -25,39 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted (subject to the limitations in the
-# disclaimer below) provided that the following conditions are met:
-#
-#    * Redistributions of source code must retain the above copyright
-#      notice, this list of conditions and the following disclaimer.
-#
-#    * Redistributions in binary form must reproduce the above
-#      copyright notice, this list of conditions and the following
-#      disclaimer in the documentation and/or other materials provided
-#      with the distribution.
-#
-#    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
-#      contributors may be used to endorse or promote products derived
-#      from this software without specific prior written permission.
-#
-# NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
-# GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
-# HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-# GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
-# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 policy_module(audio_hal_test, 1.0)
 
 gen_require(`
@@ -65,11 +32,6 @@ gen_require(`
         type trace_marker_t;
         type sound_device_t;
         type csd_device_t;
-        class dbus send_msg;
-        type agm_server_t;
-        type systemd_logind_var_run_t;
-        type system_dbusd_var_run_t;
-        type system_dbusd_t;
 ')
 
 type hal_rec_test_t;
@@ -118,26 +80,6 @@ allow hal_rec_test_t sysfs_t:file write; #/sys/power/wake_lock
 
 dontaudit hal_rec_test_t self:capability dac_override;
 
-#Manage Dbus sockets
-ifdef(`init_systemd',`
-    dbus_system_bus_client(hal_rec_test_t)
-    init_dbus_chat(hal_rec_test_t)
-    allow hal_rec_test_t self:dbus send_msg;
-    rw_sock_files_pattern(hal_rec_test_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
-')
-
-allow hal_rec_test_t self:capability2 block_suspend;
-allow hal_rec_test_t self:unix_stream_socket { create_stream_socket_perms connectto };
-allow hal_rec_test_t shell_exec_t:file exec_file_perms;
-allow hal_rec_test_t system_dbusd_t:unix_stream_socket connectto;
-allow hal_rec_test_t { system_dbusd_var_run_t var_run_t }:dir search_dir_perms;
-allow hal_rec_test_t system_dbusd_var_run_t:sock_file write_sock_file_perms;
-allow hal_rec_test_t var_run_t:dir search_dir_perms;
-allow hal_rec_test_t var_run_t:lnk_file read_lnk_file_perms;
-dontaudit hal_rec_test_t self:capability { dac_read_search dac_override };
-allow hal_rec_test_t agm_server_t:dbus send_msg;
-allow agm_server_t hal_rec_test_t:dbus send_msg;
-
 type hal_play_test_t;
 type hal_play_test_exec_t;
 
@@ -177,26 +119,5 @@ userdebug_or_eng(`
 
 kernel_read_system_state(hal_play_test_t)
 allow hal_play_test_t sound_device_t:chr_file map;
-
-#Manage Dbus sockets
-ifdef(`init_systemd',`
-    dbus_system_bus_client(hal_play_test_t)
-    init_dbus_chat(hal_play_test_t)
-    allow hal_play_test_t self:dbus send_msg;
-    rw_sock_files_pattern(hal_play_test_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
-')
-
-allow hal_play_test_t self:capability2 block_suspend;
-allow hal_play_test_t self:unix_stream_socket { create_stream_socket_perms connectto };
-allow hal_play_test_t shell_exec_t:file exec_file_perms;
-allow hal_play_test_t system_dbusd_t:unix_stream_socket connectto;
-allow hal_play_test_t system_dbusd_var_run_t:dir search_dir_perms;
-allow hal_play_test_t system_dbusd_var_run_t:sock_file write;
-allow hal_play_test_t var_run_t:dir search_dir_perms;
-allow hal_play_test_t var_run_t:lnk_file read_lnk_file_perms;
-dontaudit hal_play_test_t self:capability { dac_read_search dac_override };
-
-allow hal_play_test_t agm_server_t:dbus send_msg;
-allow agm_server_t hal_play_test_t:dbus send_msg;
 
 allow hal_play_test_t sysfs_t:file write; #/sys/power/wake_lock
