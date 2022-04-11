@@ -40,7 +40,6 @@ gen_require(`
     type commplex_main_port_t;
     type xen_port_t;
     type netmgrd_socket_device_t;
-    type usr_t;
 ')
 
 ########################################
@@ -321,9 +320,6 @@ allow xtra_daemon_t self:process signal;
 allow xtra_daemon_t socket_device_t:sock_file write;
 read_files_pattern(xtra_daemon_t, init_var_run_t, init_var_run_t);
 read_files_pattern(xtra_daemon_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
-
-# read certificates in /usr/share/ca-certificates/mozilla for https xtra download
-allow xtra_daemon_t usr_t:file read_file_perms;
 
 # Read /target node
 vendor_read_target(xtra_daemon_t)
