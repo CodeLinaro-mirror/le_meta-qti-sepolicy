@@ -68,6 +68,26 @@ userdebug_or_eng(`
     servicemanager_binder_call(unconfined_t, qmmf_server_t)
 
     gen_require(`
+        type usb_dev_t;
+        type data_t;
+        type policy_config_t;
+        type proc_kmsg_t;
+        type rebootd_pipe_t;
+    ')
+
+    mls_file_read_all_levels(unconfined_t)
+    mls_file_write_all_levels(unconfined_t)
+    storage_raw_read_fixed_disk(unconfined_t)
+    storage_raw_write_fixed_disk(unconfined_t)
+    dev_read_kmsg(unconfined_t)
+    kernel_mounton_message_if(unconfined_t)
+    allow unconfined_t data_t:chr_file getattr_chr_file_perms;
+    allow unconfined_t policy_config_t:dir list_dir_perms;
+    allow unconfined_t policy_config_t:file getattr_file_perms;
+    allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
+    allow unconfined_t usb_dev_t:dir list_dir_perms;
+
+    gen_require(`
         type recovery_exec_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
