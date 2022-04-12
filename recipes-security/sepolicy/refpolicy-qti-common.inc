@@ -101,5 +101,7 @@ rebuild_policy_append() {
 		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
 	fi
 
-	manage_policy -d ota
+	if ${@bb.utils.contains('COMBINED_FEATURES', 'qti-ab-boot', 'false', 'true', d)}; then
+		manage_policy -d ota
+	fi
 }
