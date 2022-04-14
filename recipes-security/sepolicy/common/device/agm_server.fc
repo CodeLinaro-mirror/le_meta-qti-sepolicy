@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,13 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-userdebug_or_eng(`
-    rw_diag_dev(iptables_t)
-')
-
-gen_require(`
-    type systemd_tmpfiles_t;
-')
-systemd_tmpfilesd_managed(iptables_runtime_t, file)
-allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
-dontaudit iptables_t self:capability { kill };
+/usr/bin/agm_server        --   gen_context(system_u:object_r:agm_server_exec_t,s0)
