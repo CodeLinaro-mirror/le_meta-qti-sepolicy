@@ -137,3 +137,5 @@ userdebug_or_eng(`
     allow qvrd_t trace_marker_t:file  write_file_perms;
     allow qvrd_t tracefs_t:dir search_dir_perms;
 ')
+
+perf_hal_sock_req(qvrd_t)
