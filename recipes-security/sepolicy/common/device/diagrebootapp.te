@@ -71,7 +71,8 @@ type diagrebootapp_exec_t;
 init_vendor_domain(diagrebootapp_t, diagrebootapp_exec_t)
 
 gen_require(`
-  type sysfs_t;
+    type sysfs_t;
+    type rebootd_pipe_t;
 ')
 
 allow diagrebootapp_t rebootd_pipe_t:chr_file { read write ioctl open };
