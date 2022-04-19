@@ -1,0 +1,52 @@
+From 6113ed7362be6b2bf1ee861d51e1689b62b40fad Mon Sep 17 00:00:00 2001
+From: Jiten Patel <quic_jitepate@quicinc.com>
+Date: Mon, 29 Nov 2021 16:43:10 +0530
+Subject: [PATCH] modify rpmb and ssd tag
+
+Signed-off-by: Jiten Patel <quic_jitepate@quicinc.com>
+---
+ policy/modules/kernel/storage.fc | 3 ++-
+ policy/modules/kernel/storage.te | 6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/policy/modules/kernel/storage.fc b/policy/modules/kernel/storage.fc
+index cd1b439..ca7fa28 100644
+--- a/policy/modules/kernel/storage.fc
++++ b/policy/modules/kernel/storage.fc
+@@ -6,6 +6,7 @@
+ /dev/n?pt[0-9]+		-c	gen_context(system_u:object_r:tape_device_t,s0)
+ /dev/n?tpqic[12].*	-c	gen_context(system_u:object_r:tape_device_t,s0)
+ /dev/[shmxv]d[^/]*	-b	gen_context(system_u:object_r:fixed_disk_device_t,mls_systemhigh)
++/dev/sda.*		-b	gen_context(system_u:object_r:storage_disk_device_t,mls_systemhigh)
+ /dev/aztcd		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/bpcd		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/bsg/.+		-c	gen_context(system_u:object_r:scsi_generic_device_t,s0)
+@@ -47,7 +48,7 @@ ifdef(`distro_redhat', `
+ ')
+ /dev/s(cd|r)[^/]*	-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/sbpcd.*		-b	gen_context(system_u:object_r:removable_device_t,s0)
+-/dev/sg[0-9]+		-c	gen_context(system_u:object_r:scsi_generic_device_t,s0)
++/dev/sg[0-9]+		-c	gen_context(system_u:object_r:scsi_rpmb_device_t,s0)
+ /dev/sjcd		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/sonycd		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/tape.*		-c	gen_context(system_u:object_r:tape_device_t,s0)
+diff --git a/policy/modules/kernel/storage.te b/policy/modules/kernel/storage.te
+index a049e30..7be7ab0 100644
+--- a/policy/modules/kernel/storage.te
++++ b/policy/modules/kernel/storage.te
+@@ -37,6 +37,12 @@ dev_node(scsi_generic_device_t)
+ neverallow ~{ scsi_generic_read storage_unconfined_type } scsi_generic_device_t:{ chr_file blk_file } read;
+ neverallow ~{ scsi_generic_write storage_unconfined_type } scsi_generic_device_t:{ chr_file blk_file } { append write };
+
++type scsi_rpmb_device_t;
++dev_node(scsi_rpmb_device_t)
++
++type storage_disk_device_t;
++dev_node(storage_disk_device_t)
++
+ #
+ # removable_device_t is the type of
+ # /dev/scd* and /dev/fd*.
+--
+2.29.0
+
