@@ -112,6 +112,7 @@ init_script_domain(pcie_initrc_t, pcie_initrc_exec_t)
 init_rw_stream_sockets(pcie_initrc_t)
 gen_require(`
  type sysdevice_sysfs_t;
+ type sysfs_vblank_t;
 ')
 userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
@@ -155,6 +156,7 @@ manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
 userdebug_or_eng(`
     allow usb_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(usb_t);
+    seutil_domtrans_setfiles(usb_t)
 ')
 
 adb_manage_data_files(usb_t)
@@ -210,3 +212,5 @@ gen_require(`
 ')
 allow usb_t debugfs_t:dir rw_dir_perms;
 allow usb_t debugfs_t:file create;
+
+allow usb_t sysfs_vblank_t:file read_file_perms;
