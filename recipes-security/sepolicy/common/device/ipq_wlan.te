@@ -66,6 +66,7 @@ gen_require(`
   type etc_t;
   type net_conf_t;
   type http_port_t;
+  type init_t;
 ')
 
 type wifi_usr_t;
@@ -103,6 +104,7 @@ allow wlan_initrc_t wifi_usr_t:file read_file_perms;
 allow wlan_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename setattr };
 allow wlan_initrc_t NetworkManager_var_run_t:dir rmdir;
 allow kmod_t wlan_service_tmp_t:file { write };
+allow init_t wifi_system_data_t:dir { search_dir_perms };
 
 allow wlan_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
 
@@ -158,3 +160,6 @@ allow wlan_initrc_t etc_t:file { read open };
 allow wlan_initrc_t etc_t:lnk_file { read open };
 allow wlan_initrc_t net_conf_t:file { read_file_perms };
 allow wlan_initrc_t http_port_t:tcp_socket name_connect;
+
+#Ezmesh Application
+allow wlan_initrc_t self:netlink_socket { create_socket_perms connected_stream_socket_perms };
