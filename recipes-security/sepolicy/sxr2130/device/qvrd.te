@@ -54,6 +54,8 @@ gen_require(`
        type cvp_device_t;
        type sysfs_vblank_t;
        type sysfs_t;
+       type unreserved_port_t;
+       type node_t;
 ')
 
 #read /data/misc/qvr
@@ -118,3 +120,19 @@ allow qvrd_t firmware_t:file read_file_perms;
 
 #Display
 allow qvrd_t sysfs_vblank_t:file rw_file_perms;
+
+#Network
+allow qvrd_t self:udp_socket { create_socket_perms };
+allow qvrd_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
+allow qvrd_t unreserved_port_t:{ tcp_socket udp_socket } name_bind;
+allow qvrd_t node_t:{ tcp_socket udp_socket } node_bind;
+
+userdebug_or_eng(`
+    gen_require(`
+        type trace_marker_t;
+        type tracefs_t;
+    ')
+
+    allow qvrd_t trace_marker_t:file  write_file_perms;
+    allow qvrd_t tracefs_t:dir search_dir_perms;
+')

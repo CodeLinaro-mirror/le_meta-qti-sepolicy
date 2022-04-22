@@ -72,3 +72,25 @@
 /usr/sbin/ipq/encrypt_client_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)
 /usr/sbin/ipq/pairing_client_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)
 /usr/sbin/ipq/provisioning_test_app	gen_context(system_u:object_r:wlan_service_exec_t,s0)
+
+#Ezmesh Application
+/etc/config/ezmesh			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/config/wsplcd			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/config/repacd			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/config/ezlbd			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/lib/functions/repacd-map.sh		gen_context(system_u:object_r:wifi_usr_t,s0)
+/lib/functions/hyfi-iface.sh		gen_context(system_u:object_r:wifi_usr_t,s0)
+/etc/wsplcd(/.*)?			gen_context(system_u:object_r:wifi_system_data_t,s0)
+
+/etc/rc\.d/init\.d/repacd		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/wsplcd		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/ezmesh		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/hyfi-bridging		gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
+
+/usr/sbin/ezmesh			gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/wsplcd-map			gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/wsplcd			gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/ezmesh-cmd		gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/repacdcli			gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/hyctl				gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/usr/sbin/wifimeshconfig	gen_context(system_u:object_r:wlan_service_exec_t,s0)
