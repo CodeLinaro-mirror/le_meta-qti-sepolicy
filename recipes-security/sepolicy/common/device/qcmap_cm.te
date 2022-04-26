@@ -1,4 +1,5 @@
 # Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -113,6 +114,10 @@ allow qcmap_cm_t self:fifo_file rw_fifo_file_perms;
 allow qcmap_cm_t initrc_exec_t:file { read execute open execute_no_trans };
 allow qcmap_cm_t NetworkManager_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t self:netlink_route_socket { nlmsg_write };
+ifdef(`init_systemd', `
+    allow qcmap_cm_t hostapd_exec_t:service status;
+    allow qcmap_cm_t hostapd_cli_exec_t:service status;
+')
 init_rw_utmp(qcmap_cm_t);
 sysnet_signal_dhcpc(qcmap_cm_t);
 sysnet_delete_dhcpc_pid(qcmap_cm_t);
