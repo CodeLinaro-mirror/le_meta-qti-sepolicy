@@ -86,9 +86,11 @@ allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
 # other context
 
 allow qmmf_server_t sysfs_t:file { read getattr open };
+allow qmmf_server_t sysfs_t:lnk_file read;
 
 allow qmmf_server_t binder_device_t:chr_file map;
 allow qmmf_server_t self:qipcrtr_socket create;
+allow qmmf_server_t gpu_device_t:chr_file map;
 
 # Weston Socket
 allow qmmf_server_t weston_socket_device_t:sock_file write;

@@ -62,6 +62,8 @@
 # allow qseecomd
 gen_require(`
     type qseecomd_persist_t;
+    type coredump_data_t;
 ')
 allow init_t qseecomd_persist_t:dir { getattr search };
 allow initrc_t qseecomd_persist_t:dir { setattr search getattr write add_name create};
+allow initrc_t coredump_data_t:dir search;

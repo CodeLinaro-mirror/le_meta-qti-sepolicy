@@ -34,3 +34,8 @@ userdebug_or_eng(`
 ')
 
 allow servicemanager_t self:unix_dgram_socket { write create connect };
+
+gen_require(`
+    type socket_device_t;
+')
+allow servicemanager_t socket_device_t:dir search;

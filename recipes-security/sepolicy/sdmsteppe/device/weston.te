@@ -138,7 +138,7 @@ allow weston_t locale_t:dir search;
 allow weston_t fs_t:filesystem getattr;
 
 #!!!! This avc can be allowed using the boolean 'nscd_use_shm'
-allow weston_t self:unix_stream_socket listen;
+allow weston_t self:unix_stream_socket { listen accept };
 allow weston_t tmp_t:dir search;
 allow weston_t tmpfs_t:file { read map write };
 allow weston_t tmpfs_t:filesystem getattr;
@@ -148,6 +148,7 @@ allow weston_t user_runtime_root_t:sock_file create;
 allow weston_t usr_t:file { getattr open read };
 allow weston_t usr_t:dir read;
 allow weston_t var_t:file { map getattr open read};
+allow weston_t var_t:dir write;
 allow weston_t xkb_var_lib_t:file { map getattr open read };
 
 manage_qmmf_data_files(weston_t)

@@ -27,6 +27,7 @@
 
 gen_require(`
        type sysfs_t;
+       type qseecomd_rpmb_t;
 ')
 
 allow qseecomd_t self:capability chown;
@@ -43,3 +44,4 @@ mls_file_read_all_levels(qseecomd_t)
 mls_file_write_all_levels(qseecomd_t)
 
 allow qseecomd_t self:capability2 block_suspend;
+allow qseecomd_t qseecomd_rpmb_t:chr_file getattr;
