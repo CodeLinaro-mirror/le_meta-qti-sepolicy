@@ -67,6 +67,7 @@ gen_require(`
  type vendor_camera_config_t;
  type weston_socket_device_t;
  type weston_t;
+ type binder_device_t;
 ')
 
 # For video related files
@@ -85,6 +86,9 @@ allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
 # other context
 
 allow qmmf_server_t sysfs_t:file { read getattr open };
+
+allow qmmf_server_t binder_device_t:chr_file map;
+allow qmmf_server_t self:qipcrtr_socket create;
 
 # Weston Socket
 allow qmmf_server_t weston_socket_device_t:sock_file write;

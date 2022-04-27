@@ -109,4 +109,45 @@ userdebug_or_eng(`
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
 ')
 
+
+gen_require(`
+ type brightness_t;
+ type etc_t;
+ type event_device_t;
+ type firmware_t;
+ type fonts_t;
+ type locale_t;
+ type fs_t;
+ type tmp_t;
+ type tmpfs_t;
+ type user_runtime_root_t;
+ type usr_t;
+ type var_t;
+')
+
+allow weston_t brightness_t:file { open read };
+allow weston_t etc_t:file { read getattr open };
+allow weston_t etc_t:lnk_file read;
+allow weston_t event_device_t:chr_file { getattr ioctl open read write };
+allow weston_t firmware_t:dir search;
+allow weston_t fonts_t:file { getattr map open read };
+allow weston_t fonts_t:dir { getattr open read search };
+allow weston_t gpu_device_t:chr_file map;
+allow weston_t locale_t:file { getattr map open read };
+allow weston_t locale_t:dir search;
+allow weston_t fs_t:filesystem getattr;
+
+#!!!! This avc can be allowed using the boolean 'nscd_use_shm'
+allow weston_t self:unix_stream_socket listen;
+allow weston_t tmp_t:dir search;
+allow weston_t tmpfs_t:file { read map write };
+allow weston_t tmpfs_t:filesystem getattr;
+allow weston_t user_runtime_root_t:dir { add_name getattr search write };
+allow weston_t user_runtime_root_t:file { create lock open read write };
+allow weston_t user_runtime_root_t:sock_file create;
+allow weston_t usr_t:file { getattr open read };
+allow weston_t usr_t:dir read;
+allow weston_t var_t:file { map getattr open read};
+allow weston_t xkb_var_lib_t:file { map getattr open read };
+
 manage_qmmf_data_files(weston_t)
