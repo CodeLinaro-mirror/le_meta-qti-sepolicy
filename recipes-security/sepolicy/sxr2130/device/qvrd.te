@@ -56,6 +56,16 @@ gen_require(`
        type sysfs_t;
        type unreserved_port_t;
        type node_t;
+       type user_runtime_root_t;
+       type weston_t;
+       type tmpfs_t;
+       type pulseaudio_var_run_t;
+       type pulseaudio_t;
+       type etc_t;
+       type cpu_scaling_freq_t;
+       type gpumodel_t;
+       type tmp_t;
+       type camera_data_t;
 ')
 
 #read /data/misc/qvr
@@ -139,3 +149,21 @@ userdebug_or_eng(`
 ')
 
 perf_hal_sock_req(qvrd_t)
+
+# display and pulseaudio permission
+allow qvrd_t user_runtime_root_t:dir manage_dir_perms;
+allow qvrd_t user_runtime_root_t:sock_file write_sock_file_perms;
+allow qvrd_t weston_t:unix_stream_socket connectto;
+allow qvrd_t etc_t:file read_file_perms;
+allow qvrd_t tmpfs_t:dir read_file_perms;
+allow qvrd_t tmpfs_t:file { map rw_file_perms };
+allow qvrd_t pulseaudio_var_run_t:dir search_dir_perms;
+allow qvrd_t pulseaudio_var_run_t:sock_file rw_sock_file_perms;
+allow qvrd_t pulseaudio_t:unix_stream_socket { connectto rw_socket_perms };
+
+#set/get cpu frequency
+allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
+
+allow qvrd_t gpumodel_t:file read_file_perms;
+allow qvrd_t camera_data_t:dir { read search };
+allow qvrd_t tmp_t:dir search_dir_perms;
