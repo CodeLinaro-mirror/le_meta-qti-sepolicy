@@ -37,6 +37,8 @@ gen_require(`
 #
 
 type qmmf_server_t;
+permissive qmmf_server_t;
+
 type qmmf_server_exec_t;
 
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)

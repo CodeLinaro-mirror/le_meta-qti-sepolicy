@@ -33,6 +33,7 @@ policy_module(weston, 1.0)
 #
 
 type weston_t;
+permissive weston_t;
 type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;

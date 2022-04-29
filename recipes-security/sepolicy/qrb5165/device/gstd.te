@@ -36,15 +36,3 @@ type gstd_exec_t;
 init_vendor_domain(gstd_t, gstd_exec_t)
 
 permissive gstd_t;
-
-type weston_t;
-permissive weston_t;
-
-type servicemanager_t;
-permissive servicemanager_t;
-
-type qmmf_server_t;
-permissive qmmf_server_t;
-
-type unconfined_t;
-permissive unconfined_t;
