@@ -25,6 +25,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(weston, 1.0)
 
 ########################################
@@ -33,6 +38,7 @@ policy_module(weston, 1.0)
 #
 
 type weston_t;
+permissive weston_t;
 type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
