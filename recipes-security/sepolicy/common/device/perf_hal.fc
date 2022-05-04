@@ -33,5 +33,6 @@
 /usr/bin/perf-hal-service       --      gen_context(system_u:object_r:perf_hal_exec_t,s0)
 /dev/socket/perfservice         -s      gen_context(system_u:object_r:perf_hal_socket_t,s0)
 /etc/perf(/.*)?                 --      gen_context(system_u:object_r:perf_hal_etc_t,s0)
+/etc/powerhint.xml              --      gen_context(system_u:object_r:perf_hal_etc_t,s0)
 /data/vendor/perfd              --      gen_context(system_u:object_r:perf_hal_data_t,s0)
 /data/vendor/perfd(/.*)?        --      gen_context(system_u:object_r:perf_hal_data_t,s0)
