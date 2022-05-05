@@ -9,6 +9,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Update-busybox-substitution-paths.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
+            file://poky-ssd-rpmb-storage.patch \
 "
 
 PROVIDES += "sepolicy"
@@ -16,6 +17,8 @@ RPROVIDES_${PN} += "sepolicy"
 
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
+# Update userdebug_or_eng macro for VM while other machine images are validated
+EXTRA_OEMAKE_append_qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
 
 # Modules outside of 'services' and 'apps' layer to be removed
 PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
@@ -100,5 +103,7 @@ rebuild_policy_append() {
 		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
 	fi
 
-	manage_policy -d ota
+	if ${@bb.utils.contains('COMBINED_FEATURES', 'qti-ab-boot', 'false', 'true', d)}; then
+		manage_policy -d ota
+	fi
 }
