@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,24 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-gen_require(`
-       type sysfs_t;
-')
-
-allow qseecomd_t self:capability chown;
-allow qseecomd_t sysfs_t:file append;
-
-storage_read_scsi_generic(qseecomd_t)
-storage_setattr_scsi_generic_dev(qseecomd_t)
-storage_write_scsi_generic(qseecomd_t)
-storage_raw_read_fixed_disk(qseecomd_t)
-storage_raw_write_fixed_disk(qseecomd_t)
-
-#ssd partiton is /dev/sda1, which mls level is S15, allow qseecomd to access it
-mls_file_read_all_levels(qseecomd_t)
-mls_file_write_all_levels(qseecomd_t)
-
-allow qseecomd_t self:capability2 block_suspend;
-
-# allow qseecomd read/write access to /dev/mmcblk0rpmb
-allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
+/usr/bin/agm_server        --   gen_context(system_u:object_r:agm_server_exec_t,s0)

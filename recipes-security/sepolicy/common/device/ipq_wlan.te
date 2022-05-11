@@ -160,3 +160,6 @@ allow wlan_initrc_t etc_t:file { read open };
 allow wlan_initrc_t etc_t:lnk_file { read open };
 allow wlan_initrc_t net_conf_t:file { read_file_perms };
 allow wlan_initrc_t http_port_t:tcp_socket name_connect;
+
+#Ezmesh Application
+allow wlan_initrc_t self:netlink_socket { create_socket_perms connected_stream_socket_perms };
