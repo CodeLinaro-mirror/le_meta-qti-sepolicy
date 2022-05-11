@@ -43,9 +43,6 @@ gen_require(`
        type proc_t;
        type firmware_t;
        class process setcap;
-       type persist_t;
-       type scsi_rpmb_device_t;
-       type storage_disk_device_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -91,11 +88,4 @@ manage_user_data_files(qseecomd_t, qseecomd_persist_t)
 files_read_etc_files(qseecomd_t)
 
 # allow qseecomd read/write access to /dev/mmcblk0rpmb
-dontaudit qseecomd_t persist_t:dir read;
-dontaudit qseecomd_t sysfs_t:file { append };
-mls_file_write_all_levels(qseecomd_t);
-mls_file_read_all_levels(qseecomd_t);
-allow qseecomd_t self:capability chown;
-allow qseecomd_t self:capability2 block_suspend;
-allow qseecomd_t scsi_rpmb_device_t:chr_file { rw_chr_file_perms setattr };
-allow qseecomd_t storage_disk_device_t:blk_file { rw_blk_file_perms };
+allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
