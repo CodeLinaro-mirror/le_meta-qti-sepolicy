@@ -31,8 +31,6 @@ type qseecomd_t;
 type qseecomd_exec_t;
 type qseecomd_data_t;
 type qseecomd_persist_t;
-type qseecomd_rpmb_t;
-dev_node(qseecomd_rpmb_t);
 
 init_vendor_domain(qseecomd_t, qseecomd_exec_t)
 logging_send_syslog_msg(qseecomd_t)
@@ -86,6 +84,3 @@ user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
 
 files_read_etc_files(qseecomd_t)
-
-# allow qseecomd read/write access to /dev/mmcblk0rpmb
-allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
