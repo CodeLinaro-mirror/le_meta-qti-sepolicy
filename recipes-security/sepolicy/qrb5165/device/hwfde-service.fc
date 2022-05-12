@@ -60,4 +60,4 @@
 
 /usr/bin/hwfde_service            --      gen_context(system_u:object_r:hwfde_service_exec_t,s0)
 /etc/conf/media-encryption.conf   --      gen_context(system_u:object_r:hwfde_conf_file_t,s0)
-/dev/sde26                        -b      gen_context(system_u:object_r:footer_blk_t,s0)
+/dev/mmcblk0p47                   -b      gen_context(system_u:object_r:footer_blk_t,s0)
