@@ -94,13 +94,14 @@ device_search_sockets(mrc_daemon_t, socket_device_t)
 allow mrc_daemon_t mrc_data_t:dir { create rw_dir_perms };
 allow mrc_daemon_t self:capability sys_resource;
 allow mrc_daemon_t sysfs_t:lnk_file read;
-allow mrc_daemon_t self:fifo_file { read write };
+allow mrc_daemon_t self:fifo_file { read write getattr };
 allow mrc_daemon_t tmp_t:dir search;
 allow mrc_daemon_t mrc_daemon_tmp_t:dir { read write add_name };
 allow mrc_daemon_t mrc_daemon_tmp_t:file { create read write open getattr };
 allow mrc_daemon_t self:capability sys_boot;
 allow mrc_daemon_t ubi_device_t:chr_file rw_chr_file_perms;
 dontaudit mrc_daemon_t default_t:dir search;
+corecmd_exec_shell(mrc_daemon_t);
 
 userdebug_or_eng(`
     rw_diag_dev(mrc_daemon_t)
