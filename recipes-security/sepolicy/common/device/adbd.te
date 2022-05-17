@@ -214,3 +214,10 @@ allow usb_t debugfs_t:dir rw_dir_perms;
 allow usb_t debugfs_t:file create;
 
 allow usb_t sysfs_vblank_t:file read_file_perms;
+
+# add permissions for usb_t to access usb_bind_t
+type usb_bind_tmp_t;
+files_tmp_file(usb_bind_tmp_t)
+files_tmp_filetrans(usb_t,usb_bind_tmp_t,{ file dir })
+
+allow usb_t usb_bind_tmp_t:file manage_file_perms;
