@@ -79,6 +79,12 @@ require {
 init_vendor_domain(hwfde_service_t, hwfde_service_exec_t)
 logging_send_syslog_msg(hwfde_service_t)
 
+
+# allow hwfde_service to do basic operation with iceufs driver
+type ice_ufs_t;
+dev_node(ice_ufs_t);
+allow hwfde_service_t ice_ufs_t: chr_file { ioctl open read write };
+
 # allow hwfde_service to mount the encrypted partition
 allow hwfde_service_t proc_t:file getattr_file_perms;
 allow hwfde_service_t overlay_t:dir { getattr_dir_perms mounton };
