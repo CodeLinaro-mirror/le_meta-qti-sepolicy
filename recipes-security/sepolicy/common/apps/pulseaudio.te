@@ -94,3 +94,4 @@ allow pulseaudio_t audio_device_t:chr_file rw_chr_file_perms;
 allow pulseaudio_t snd_card_state_t:file rw_file_perms;
 allow pulseaudio_t etc_t:file map;
 dontaudit pulseaudio_t audio_data_file_t:dir search;
+permissive pulseaudio_t;
