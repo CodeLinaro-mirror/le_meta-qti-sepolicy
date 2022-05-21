@@ -46,6 +46,8 @@ servicemanager_binder_use(fastmmi_t)
 type fastmmi_data_file_t;
 user_data_files_type(fastmmi_data_file_t)
 
+type fastmmi_config_file_t;
+
 userdebug_or_eng(`
     gen_require(`
         type fastmmi_data_file_t;
@@ -78,6 +80,8 @@ userdebug_or_eng(`
     allow fastmmi_t btprop_exec_t:file { read map execute open execute_no_trans };
     allow fastmmi_t devlog_t:sock_file write;
     allow fastmmi_t fastmmi_data_file_t:fifo_file create;
+    allow fastmmi_t fastmmi_config_file_t:dir { search_dir_perms read };
+    allow fastmmi_t fastmmi_config_file_t:file read_file_perms;
     allow fastmmi_t init_var_run_t:dir search;
     allow fastmmi_t proc_t:file read_file_perms;
     allow fastmmi_t removable_device_t:blk_file { open read write };
@@ -86,9 +90,8 @@ userdebug_or_eng(`
     allow fastmmi_t self:fifo_file rw_fifo_file_perms;
     allow fastmmi_t self:process setsched;
     allow fastmmi_t self:unix_stream_socket { listen accept connectto };
-    allow fastmmi_t shell_exec_t:file { read execute open execute_no_trans };
     allow fastmmi_t sysfs_t:dir { read };
-    allow fastmmi_t sysfs_t:file { open read append write getattr };
+    allow fastmmi_t sysfs_t:file read_file_perms;
     allow fastmmi_t sysfs_t:lnk_file { read };
     allow fastmmi_t syslogd_t:unix_dgram_socket sendto;
     allow fastmmi_t syslogd_var_run_t:dir search;

@@ -36,4 +36,6 @@
 # fastmmi data files
 /data/misc/qsys(/.*)?                   gen_context(system_u:object_r:fastmmi_data_file_t,s0)
 /data/FTM_AP(/.*)?                      gen_context(system_u:object_r:fastmmi_data_file_t,s0)
-/etc/mmi(/.*)?                          gen_context(system_u:object_r:fastmmi_data_file_t,s0)
+
+# fastmmi config files
+/etc/mmi(/.*)?                          gen_context(system_u:object_r:fastmmi_config_file_t,s0)
