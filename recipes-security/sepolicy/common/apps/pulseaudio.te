@@ -41,6 +41,9 @@ init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 gen_require(`
 	type debugfs_t;
 	type systemd_logind_var_run_t;
+	type audio_device_t;
+	type snd_card_state_t;
+	type audio_data_file_t;
 ')
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
@@ -86,3 +89,8 @@ allow pulseaudio_t self:process { signal getsched };
 ifdef(`init_systemd', `
     init_dbus_chat(pulseaudio_t)
 ')
+
+allow pulseaudio_t audio_device_t:chr_file rw_chr_file_perms;
+allow pulseaudio_t snd_card_state_t:file rw_file_perms;
+allow pulseaudio_t etc_t:file map;
+dontaudit pulseaudio_t audio_data_file_t:dir search;

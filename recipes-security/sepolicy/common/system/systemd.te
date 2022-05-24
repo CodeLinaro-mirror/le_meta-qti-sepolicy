@@ -87,3 +87,28 @@ ifdef(`init_systemd',`
     ')
     allow systemd_tmpfiles_t persist_t:dir { getattr search read write add_name };
 ')
+
+gen_require(`
+    type udev_t;
+    type tftp_server_t;
+    type kernel_t;
+    type systemd_tmpfiles_t;
+    type system_dbusd_var_lib_t;
+    type usr_t;
+    type syslogd_t;
+    type syslogd_var_run_t;
+')
+
+
+mls_trusted_socket(kernel_t)
+mls_trusted_socket(systemd_tmpfiles_t)
+
+
+allow udev_t kernel_t:unix_dgram_socket sendto;
+allow tftp_server_t kernel_t:unix_dgram_socket sendto;
+allow systemd_tmpfiles_t kernel_t:unix_dgram_socket sendto;
+allow systemd_tmpfiles_t etc_t:file relabelfrom;
+allow systemd_tmpfiles_t system_dbusd_var_lib_t:dir create_dir_perms;
+allow systemd_tmpfiles_t usr_t:file read_file_perms;
+allow syslogd_t kernel_t:netlink_audit_socket rw_socket_perms;
+allow syslogd_t syslogd_var_run_t:sock_file unlink;

@@ -40,12 +40,13 @@ gen_require(`
 userdebug_or_eng(`
     rw_diag_dev(sprhd_t)
 
-    # Systemd
+    # Systemd and fifo file
     gen_require(`
         type unconfined_t;
         class service { start status stop };
     ')
     allow unconfined_t sprhd_exec_t:service { status start stop};
+    allow unconfined_t sprhd_data_t:fifo_file { open write getattr };
     dev_write_kmsg(sprhd_t)
 ')
 
@@ -90,3 +91,6 @@ type sprhd_data_t;
 user_data_files_type(sprhd_data_t)
 sprhd_manage_user_data_files(sprhd_t, sprhd_data_t)
 data_filetrans(sprhd_t, sprhd_data_t, file)
+
+# Allow fifo file read and write
+sprhd_manage_fifo(sprhd_t)
