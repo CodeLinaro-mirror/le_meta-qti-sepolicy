@@ -39,3 +39,4 @@ allow pulseaudio_t system_dbusd_var_lib_t:lnk_file read;
 allow pulseaudio_t default_t:dir search;
 allow pulseaudio_t var_t:dir { add_name read remove_name setattr write };
 allow pulseaudio_t var_t:file { create getattr open rename write };
+allow pulseaudio_t self:capability { dac_read_search dac_override};
