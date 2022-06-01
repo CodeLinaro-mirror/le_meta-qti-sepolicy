@@ -50,7 +50,12 @@ gen_require(`
     type sysctl_vm_t;
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
+    type udev_t;
 ')
+
+# TODO : temporaray fix to unblock the tech teams, need to remove this unlabled_t rule
+allow udev_t unlabeled_t:system module_load;
+
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
 neverallow { vendor_domain -vendor_device_rw_exception } device_t:devfile_class_set rw_file_perms;
