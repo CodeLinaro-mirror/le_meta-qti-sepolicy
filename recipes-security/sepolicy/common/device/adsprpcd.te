@@ -66,7 +66,7 @@ gen_require(`
 
 allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
 userdebug_or_eng(`
-	allow adsprpcd_t debugfs_t:dir search_dir_perms;
+    allow adsprpcd_t debugfs_t:dir search_dir_perms;
 ')
 allow adsprpcd_t sysfs_t:file rw_file_perms;
 allow adsprpcd_t persist_t:dir search_dir_perms;
@@ -89,9 +89,10 @@ rw_chr_files_pattern(adsprpcd_t, device_t, xdsp_device_t);
 #allow adsprpcd_t to acces /dev/adsprpcd-smd
 rw_chr_files_pattern(adsprpcd_t, device_t, qdsp_device_t);
 
+#allow adsprpcd_t to access /dev/dma_heap/system
+allow adsprpcd_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+
 manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
 
 # Manage private files inside /data
 data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
-
-allow adsprpcd_t system_dmabuf_device_t:chr_file read;
