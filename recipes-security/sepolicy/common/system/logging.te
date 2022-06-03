@@ -98,6 +98,7 @@ ifdef(`init_systemd',`
         type system_dbusd_var_lib_t;
         type tinyproxy_log_t;
         type wlan_hsp_sysfs_t;
+        type wlan_msl_sysfs_t;
     ')
 
     allow syslogd_t init_var_run_t:file read_file_perms;
@@ -107,4 +108,6 @@ ifdef(`init_systemd',`
     allow syslogd_t iptables_runtime_t:file create;
     allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
     allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+    allow syslogd_t wlan_msl_sysfs_t:dir { getattr search_dir_perms };
+    allow syslogd_t wlan_msl_sysfs_t:file { create rw_file_perms };
 ')
