@@ -146,6 +146,7 @@ type post_boot_script_t;
 type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
+corecmd_exec_shell(post_boot_script_t)
 
 dev_rw_sysfs(post_boot_script_t)
 kernel_rw_kernel_sysctl(post_boot_script_t)
