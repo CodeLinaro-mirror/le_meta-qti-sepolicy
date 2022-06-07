@@ -313,6 +313,10 @@ gen_require(`
     type loc_socket_t;
     type loc_hald_t;
     type wlan_service_exec_t;
+    type dhcpd_t;
+    type dhcpd_exec_t;
+    type radvd_t;
+    type radvd_exec_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -419,6 +423,8 @@ ifdef(`init_systemd',`
     allow qcmap_cm_t wlan_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t minidlna_exec_t:service { start stop status reload };
     allow qcmap_cm_t qcmap_kernel_module_t:service { start stop status reload };
+    allow qcmap_cm_t dhcpd_exec_t:service { start status stop };
+    allow qcmap_cm_t radvd_exec_t:service { start status stop };
 ')
 read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 
@@ -475,6 +481,9 @@ rw_files_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
 manage_sock_files_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
 files_read_loc_etc_files(qcmap_cm_t);
 allow qcmap_cm_t loc_hald_t:unix_dgram_socket{ sendto };
+
+qcmap_manage_var_run_data_files(dhcpd_t);
+qcmap_manage_var_run_data_files(radvd_t);
 
 gen_require(`
   type syslogd_t;
@@ -641,3 +650,4 @@ allow ifconfig_t firmware_t:dir { search };
 allow NetworkManager_t system_data_t:lnk_file { read };
 allow qcmap_cm_t firmware_t:dir { read search };
 allow qcmap_cm_t firmware_t:file { read open };
+dontaudit ifconfig_t sysdevice_sysfs_t:file { read };
