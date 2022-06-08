@@ -27,3 +27,4 @@
 
 /usr/bin/ssreq_server                              --      gen_context(system_u:object_r:ssreq_server_exec_t,s0)
 /usr/lib/systemd/system/init_audio\.service        --      gen_context(system_u:object_r:audio_unit_t,s0)
+/etc/initscripts/start_audio_le  -- gen_context(system_u:object_r:bin_t,s0)
