@@ -55,7 +55,7 @@ ifndef(`init_systemd', `
 /dev/socket/loc_client(/.*)?        gen_context(system_u:object_r:loc_socket_t,s0)
 /dev/socket/loc_client/hal_daemon   gen_context(system_u:object_r:loc_socket_t,s0)
 
-#location tmp files
+##location tmp files
 /var/tmp/location(/.*)?             gen_context(system_u:object_r:loc_tmp_t,s0)
 
 ## location conf files
@@ -64,3 +64,6 @@ ifndef(`init_systemd', `
 /etc/xtwifi.conf    -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/flp.conf       -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/lowi.conf      -- gen_context(system_u:object_r:loc_etc_t,s0)
+/etc/apdr.conf      -- gen_context(system_u:object_r:loc_etc_t,s0)
+/etc/sap.conf       -- gen_context(system_u:object_r:loc_etc_t,s0)
+/etc/slim.conf      -- gen_context(system_u:object_r:loc_etc_t,s0)
