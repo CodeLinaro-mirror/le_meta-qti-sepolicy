@@ -42,6 +42,7 @@ type data_t;
 typeattribute data_t mountpoint;  # Can't use files_mountpoint here
 user_data_files_type(data_t)
 
+allow initrc_t data_t:dir manage_dir_perms;
 #To support coredump in userdebug variant
 type coredump_data_t;
 user_data_files_type(coredump_data_t)
