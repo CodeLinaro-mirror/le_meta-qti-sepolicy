@@ -141,7 +141,8 @@ allow dhcpc_t self:unix_stream_socket listen;
 allow dhcpc_t var_run_t:sock_file { create setattr unlink };
 allow dhcpc_t self:capability kill;
 allow dhcpc_t chronyd_conf_t:file { rw_file_perms };
-allow dhcpc_t initrc_var_run_t:file { setattr };
+allow dhcpc_t initrc_var_run_t:dir { getattr add_name create write remove_name unlink search open read };
+allow dhcpc_t initrc_var_run_t:file { setattr create unlink };
 allow dhcpc_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow dhcpc_t udev_var_run_t:file { rw_file_perms setattr };
 allow dhcpc_t init_t:system { status };
@@ -178,6 +179,9 @@ gen_require(`
     type urandom_device_t;
     type hostapd_t;
     type unreserved_port_t;
+    type socket_device_t;
+    type tmpfs_t;
+    type user_tmpfs_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
@@ -201,7 +205,7 @@ allow wlan_initrc_t cert_t:dir search;
 allow wlan_initrc_t cert_t:file { getattr open read };
 allow wlan_initrc_t proc_net_t:file read;
 allow wlan_initrc_t sysctl_net_t:dir search;
-allow wlan_initrc_t sysctl_net_t:file { open read write };
+allow wlan_initrc_t sysctl_net_t:file { open read write getattr };
 allow wlan_initrc_t self:capability { net_admin net_raw};
 allow wlan_initrc_t self:netlink_generic_socket { bind create getattr read setopt write };
 allow wlan_initrc_t self:netlink_route_socket { bind create read nlmsg_write write };
@@ -225,3 +229,6 @@ allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
 corecmd_exec_shell(wpa_cli_t)
 
 allow NetworkManager_t self:qipcrtr_socket create_socket_perms;
+allow NetworkManager_t socket_device_t:dir search;
+allow NetworkManager_t tmpfs_t:dir search;
+allow NetworkManager_t user_tmpfs_t:sock_file write;
