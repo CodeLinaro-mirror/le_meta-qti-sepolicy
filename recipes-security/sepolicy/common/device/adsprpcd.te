@@ -86,4 +86,3 @@ manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
 
 # Manage private files inside /data
 data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
-permissive adsprpcd_t;
