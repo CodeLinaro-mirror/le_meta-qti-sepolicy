@@ -82,6 +82,7 @@ type initrc_t;
 type system_data_t;
 type fs_t;
 type wlan_hsp_sysfs_t;
+type wlan_msl_sysfs_t;
 ')
 
 userdebug_or_eng(`
@@ -114,3 +115,5 @@ allow wlan_initrc_t fs_t:filesystem getattr;
 allow wlan_initrc_t default_t:dir search_dir_perms;
 allow wlan_initrc_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
 allow wlan_initrc_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+allow wlan_initrc_t wlan_msl_sysfs_t:dir { add_name write search };
+allow wlan_initrc_t wlan_msl_sysfs_t:file { create open write };

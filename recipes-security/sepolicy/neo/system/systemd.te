@@ -31,6 +31,9 @@ type systemd_modules_load_exec_t;
 init_system_domain(systemd_modules_load_t, systemd_modules_load_exec_t)
 kernel_load_module(systemd_modules_load_t);
 
+# TODO : temporaray fix to unblock the tech teams, need to remove this service from permissive
+permissive systemd_modules_load_t;
+
 gen_require(`
  type syslogd_var_run_t;
  type kmsg_device_t;
@@ -68,6 +71,8 @@ dev_write_kmsg(systemd_modules_load_t)
 
 mls_file_write_all_levels(systemd_modules_load_t)
 mls_key_write_to_clearance(systemd_modules_load_t)
+
+mls_file_write_all_levels(systemd_update_done_t)
 
 modutils_read_module_objects(systemd_modules_load_t)
 allow systemd_modules_load_t modules_object_t:dir search;
@@ -113,3 +118,4 @@ allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
+allow systemd_update_done_t kernel_t:unix_dgram_socket sendto;
