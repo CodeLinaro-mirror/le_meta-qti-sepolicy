@@ -62,6 +62,7 @@ allow letzd_t self:socket rw_socket_perms;
 allow letzd_t self:socket create;
 allow letzd_t syslogd_var_run_t:sock_file write;
 allow letzd_t self:process signal;
+allow letzd_t self:process signull;
 allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
 allow letzd_t self:qipcrtr_socket create_socket_perms;
 allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
