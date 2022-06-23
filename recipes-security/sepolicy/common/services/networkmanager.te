@@ -225,3 +225,9 @@ allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
 corecmd_exec_shell(wpa_cli_t)
 
 allow NetworkManager_t self:qipcrtr_socket create_socket_perms;
+
+gen_require(`
+  type hostapd_tmp_t;
+')
+
+allow NetworkManager_t hostapd_tmp_t:file { rw_file_perms };

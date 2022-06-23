@@ -222,6 +222,8 @@ files_read_loc_etc_files(xtwifi_agent_t)
 allow xtwifi_agent_t self:{ udp_socket unix_dgram_socket } create_socket_perms;
 allow xtwifi_agent_t proc_t:file read_file_perms;
 
+allow xtwifi_agent_t cert_t:dir search;
+allow xtwifi_agent_t cert_t:file { getattr open read };
 data_filetrans(xtwifi_agent_t, loc_data_t, { file dir })
 manage_user_data_files(xtwifi_agent_t, loc_data_t)
 corenet_tcp_connect_http_port(xtwifi_agent_t)
@@ -254,6 +256,7 @@ gen_require(`
 ')
 
 allow xtwifi_client_t rfs_persist_t:file { write getattr open };
+allow xtwifi_client_t self:qipcrtr_socket create_socket_perms;
 
 # Read /target node
 vendor_read_target(xtwifi_client_t)

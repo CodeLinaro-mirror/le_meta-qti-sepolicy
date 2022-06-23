@@ -124,7 +124,11 @@ gen_require(`
 neverallow initrc_t { user_data -sxr_data_t -qvr_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
+
+# start_display_le script runs in initrc_t context and needs permission to
+# change ownership of brightness nodes after display kernel module loading.
 allow initrc_t brightness_t:file rw_file_perms;
+allow initrc_t brightness_t:file { setattr };
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 
 #allowing init process to access overlay

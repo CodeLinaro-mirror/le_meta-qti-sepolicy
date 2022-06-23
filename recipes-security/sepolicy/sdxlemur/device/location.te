@@ -1,0 +1,15 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## location.te - Rules for location specific to sdxlemur target
+
+gen_require(`
+    type qwesd_t;
+    type qwes_mink_socket_t;
+')
+
+
+### xtwifi_client
+# Qwes access
+allow xtwifi_client_t qwesd_t:unix_stream_socket connectto;
+allow xtwifi_client_t qwes_mink_socket_t:sock_file write;
