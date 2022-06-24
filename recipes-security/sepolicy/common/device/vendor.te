@@ -51,6 +51,10 @@ gen_require(`
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
     type udev_t;
+    type setprop_exec_t;
+    type removable_device_t;
+    type image_variant_sysfs_t;
+    type image_version_sysfs_t;
 ')
 
 # TODO : temporaray fix to unblock the tech teams, need to remove this unlabled_t rule
@@ -148,7 +152,6 @@ files_type(target_etc_t)
 ### init.post_boot.sh
 
 type post_boot_script_t;
-permissive post_boot_script_t;
 type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
@@ -181,6 +184,14 @@ allow post_boot_script_t sysctl_vm_t:dir search;
 allow post_boot_script_t sysctl_vm_t:file write_file_perms;
 allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
+
+allow post_boot_script_t self:unix_stream_socket rw_socket_perms;
+allow post_boot_script_t image_variant_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t image_variant_sysfs_t:file manage_file_perms;
+allow post_boot_script_t image_version_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t image_version_sysfs_t:file manage_file_perms;
+allow post_boot_script_t removable_device_t:blk_file getattr;
+allow post_boot_script_t setprop_exec_t:file exec_file_perms;
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
