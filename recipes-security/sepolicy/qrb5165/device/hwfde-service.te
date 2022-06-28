@@ -70,11 +70,21 @@ type hwfde_service_exec_t;
 
 require {
         type qseecom_device_t;
-    type proc_t;
+        type proc_t;
+        type overlay_t;
+        type debugfs_t;
+        type storage_disk_device_t;
 }
 
 init_vendor_domain(hwfde_service_t, hwfde_service_exec_t)
 logging_send_syslog_msg(hwfde_service_t)
+
+# allow hwfde_service to mount the encrypted partition
+allow hwfde_service_t proc_t:file getattr_file_perms;
+allow hwfde_service_t overlay_t:dir { getattr_dir_perms mounton };
+mls_file_read_all_levels(hwfde_service_t);
+mls_file_write_all_levels(hwfde_service_t);
+allow hwfde_service_t storage_disk_device_t:blk_file rw_blk_file_perms;
 
 # allow hwfde_service to read metadata from media-encryption.conf file
 type hwfde_conf_file_t;
@@ -83,7 +93,7 @@ allow hwfde_service_t hwfde_conf_file_t:file { open read };
 # allow hwfde_service to get metadata from footer partition
 type footer_blk_t;
 dev_node(footer_blk_t);
-allow hwfde_service_t footer_blk_t:blk_file { open read write };
+allow hwfde_service_t footer_blk_t:blk_file rw_blk_file_perms;
 
 # allow hwfde_service to read/write leproperties
 device_search_sockets(hwfde_service_t)
@@ -103,3 +113,10 @@ storage_raw_read_removable_device(hwfde_service_t)
 fs_mount_xattr_fs(hwfde_service_t)
 files_polyinstantiate_all(hwfde_service_t)
 overlay_mount_user_dir(hwfde_service_t)
+
+userdebug_or_eng(`
+     gen_require(`
+        type debugfs_t;
+    ')
+        allow hwfde_service_t debugfs_t:dir search_dir_perms;
+')
