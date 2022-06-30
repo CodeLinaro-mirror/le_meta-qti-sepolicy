@@ -87,6 +87,7 @@ genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_enabl
 genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.spi/spi_master/spi0/spi0.0/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a8c000.i2c/i2c-0/0-0062/trusted_touch_enable  gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
@@ -94,12 +95,22 @@ genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_event
 genfscon sysfs /devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.spi/spi_master/spi0/spi0.0/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a8c000.i2c/i2c-0/0-0062/trusted_touch_event   gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0049/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/988000.i2c/i2c-0/0-0038/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/a94000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 genfscon sysfs /devices/platform/soc/980000.spi/spi_master/spi0/spi0.0/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/primary/trusted_touch_enable                            gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/secondary/trusted_touch_enable                          gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/primary/trusted_touch_event                             gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/secondary/trusted_touch_event                           gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/primary/trusted_touch_type                              gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/secondary/trusted_touch_type                            gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/primary/trusted_touch_device_path                       gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /kernel/qts/secondary/trusted_touch_device_path                     gen_context(system_u:object_r:touch_input_device_t,s0)
+genfscon sysfs /devices/platform/soc/a8c000.i2c/i2c-0/0-0062/trusted_touch_type    gen_context(system_u:object_r:touch_input_device_t,s0)
 dev_associate_sysfs(touch_input_device_t)
 
 type boot_kpi_values_t;
@@ -126,3 +137,31 @@ dev_associate_sysfs(sysfs_vblank_t)
 type wlan_hsp_sysfs_t;
 genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-qca6390 gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
 dev_associate_sysfs(wlan_hsp_sysfs_t)
+
+type sysfs_panel0_backlight_bl_power_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/bl_power gen_context(system_u:object_r:sysfs_panel0_backlight_bl_power_t,s0)
+dev_associate_sysfs(sysfs_panel0_backlight_bl_power_t)
+
+type sysfs_cpu_present;
+genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:sysfs_cpu_present,s0)
+dev_associate_sysfs(sysfs_cpu_present)
+
+type sysfs_cpu_capacity;
+genfscon sysfs /devices/system/cpu/cpu0/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu1/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu2/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu3/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu4/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu5/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu6/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+genfscon sysfs /devices/system/cpu/cpu7/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
+dev_associate_sysfs(sysfs_cpu_capacity)
+
+type cpu_scaling_freq_t;
+genfscon sysfs /devices/system/cpu/cpufreq/policy0/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy0/scaling_max_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy4/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy4/scaling_max_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy7/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy7/scaling_max_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+dev_associate_sysfs(cpu_scaling_freq_t)
