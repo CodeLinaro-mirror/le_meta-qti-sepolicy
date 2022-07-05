@@ -254,6 +254,13 @@ gen_require(`
     type systemd_logind_var_run_t;
 ')
 
+#DHCPCD Rules
+files_pid_file(dhcpc_var_run_t)
+manage_sock_files_pattern(dhcpc_t, dhcpc_var_run_t, dhcpc_var_run_t)
+files_pid_filetrans(dhcpc_t, dhcpc_var_run_t, sock_file)
+allow dhcpc_t self:capability { kill };
+write_sock_files_pattern(dhcpc_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
+
 #Manage Dbus sockets
 ifdef(`init_systemd',`
     dbus_system_bus_client(qcmap_cm_t)
@@ -456,6 +463,18 @@ allow qcmap_cm_t wlan_service_exec_t:service { start status };
 ##### WLAN CDI
 allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
 allow hostapd_cli_qcmap_t self: process { getcap setcap };
+
+#### WLAN STA Backhaul
+allow wpa_cli_t self: capability { setpcap setgid setuid };
+allow wpa_cli_t self: process { getcap setcap };
+allow wpa_cli_t urandom_device_t:chr_file { open read getattr ioctl};
+
+##### QXDM logs for QCMAP STA interface
+userdebug_or_eng(`
+     rw_diag_dev(hostapd_cli_qcmap_t);
+     rw_diag_dev(wpa_cli_t);
+')
+
 
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
