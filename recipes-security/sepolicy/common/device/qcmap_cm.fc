@@ -36,6 +36,8 @@
 /data/entropy_file                --  gen_context(system_u:object_r:qcmap_data_t,s0)
 /data/entropy_file1               --  gen_context(system_u:object_r:qcmap_data_t,s0)
 
+/usr/bin/dnsmasq                  --  gen_context(system_u:object_r:dnsmasq_exec_t,s0)
+
 /data/lighttpd\.conf              --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/mdm9625\.com\.crt           --  gen_context(system_u:object_r:httpd_data_t,s0)
 /data/mdm9625\.com\.key           --  gen_context(system_u:object_r:httpd_data_t,s0)
@@ -62,6 +64,9 @@
 /usr/lib/systemd/system/qcmap_wlan_bootup\.service  --  gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
 /usr/sbin/minidlnad             --    gen_context(system_u:object_r:minidlna_exec_t,s0)
+
+#dhcpcd
+/var/run/dhcpcd.sock                  system_u:object_r:dhcpc_var_run_t:s0
 
 #TinyProxy
 /usr/sbin/tinyproxy             --    gen_context(system_u:object_r:tinyproxy_exec_t,s0)
