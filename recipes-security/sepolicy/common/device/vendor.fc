@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ### tftp server ###
 
@@ -73,7 +77,7 @@
 /dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)
 /dev/mtd[0-9]+          -c   gen_context(system_u:object_r:mtd_device_t,s0)
 /dev/adsprpc-smd            -c  gen_context(system_u:object_r:qdsp_device_t,s0)
-/dev/adsprpc-smd-secure            -c  gen_context(system_u:object_r:xdsp_device_t,s0)
+/dev/adsprpc-smd-secure     -c gen_context(system_u:object_r:xdsp_device_t,s0)
 
 ### DMA HEAPS ###
 /dev/dma_heap/qcom,tui    -c   gen_context(system_u:object_r:vendor_dmabuf_tui_heap_device_t,s0)

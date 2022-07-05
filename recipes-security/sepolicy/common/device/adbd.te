@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(adbd, 1.0)
 
@@ -118,6 +122,7 @@ userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
     gen_require(`
         type dataqti_device_t;
+        type frpc_root_exec_t;
     ')
     allow pcie_initrc_t dataqti_device_t:chr_file getattr;
     allow pcie_initrc_t self:fifo_file rw_fifo_file_perms;
@@ -131,6 +136,8 @@ userdebug_or_eng(`
     mls_file_write_all_levels(pcie_initrc_t)
     allow adbd_initrc_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(adbd_initrc_t);
+    allow adbd_t frpc_root_exec_t:dir { getattr search write add_name create };
+    allow adbd_t frpc_root_exec_t:file { create write open setattr };
 ')
 allow pcie_initrc_t sysdevice_sysfs_t:file { getattr open read };
 type usb_t;
