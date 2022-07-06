@@ -104,6 +104,7 @@ gen_require(`
  type weston_socket_device_t;
  type weston_t;
  type binder_device_t;
+ type user_runtime_root_t;
 ')
 
 # For video related files
@@ -191,3 +192,8 @@ userdebug_or_eng(`
 manage_qmmf_data_files(qmmf_server_t)
 manage_camera_files_data(qmmf_server_t)
 device_search_sockets(qmmf_server_t)
+allow qmmf_server_t user_runtime_root_t:dir search;
+gen_require(`
+    type weston_runtime_t;
+')
+manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
