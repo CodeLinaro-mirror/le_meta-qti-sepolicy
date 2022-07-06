@@ -67,4 +67,11 @@ userdebug_or_eng(`
     servicemanager_binder_call(unconfined_t, qmmf_server_t)
 
     mls_file_read_all_levels(unconfined_t)
+
+    gen_require(`
+        type weston_runtime_t;
+    ')
+
+    allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
+    allow unconfined_t weston_runtime_t:file { getattr setattr };
 ')
