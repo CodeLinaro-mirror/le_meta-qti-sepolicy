@@ -133,6 +133,7 @@ gen_require(`
     type initrc_var_run_t;
     type udev_var_run_t;
     type init_t;
+    type wlan_msl_sysfs_t;
 ')
 logging_send_syslog_msg(dhcpc_t)
 allow dhcpc_t systemd_resolved_var_run_t:file { open write };
@@ -146,6 +147,8 @@ allow dhcpc_t initrc_var_run_t:file { setattr create unlink };
 allow dhcpc_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow dhcpc_t udev_var_run_t:file { rw_file_perms setattr };
 allow dhcpc_t init_t:system { status };
+allow dhcpc_t wlan_msl_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
+allow dhcpc_t wlan_msl_sysfs_t:file { rw_file_perms };
 #TODO properly con_mode node
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`
@@ -182,6 +185,7 @@ gen_require(`
     type socket_device_t;
     type tmpfs_t;
     type user_tmpfs_t;
+    type wlan_msl_sysfs_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
@@ -232,3 +236,5 @@ allow NetworkManager_t self:qipcrtr_socket create_socket_perms;
 allow NetworkManager_t socket_device_t:dir search;
 allow NetworkManager_t tmpfs_t:dir search;
 allow NetworkManager_t user_tmpfs_t:sock_file write;
+allow NetworkManager_t wlan_msl_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
+allow NetworkManager_t wlan_msl_sysfs_t:file { rw_file_perms };
