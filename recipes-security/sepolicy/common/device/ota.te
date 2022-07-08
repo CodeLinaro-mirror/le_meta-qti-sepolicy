@@ -93,7 +93,7 @@ manage_user_data_files(recovery_t, data_t)
 manage_system_data_files(recovery_t, system_data)
 
 allow recovery_t shell_exec_t:file { execute execute_no_trans };
-
+allow recovery_t recovery_exec_t:file execute_no_trans;
 allow recovery_t { system_dir_t cache_t }:dir mounton;
 
 selinux_get_fs_mount(recovery_t)
