@@ -24,6 +24,12 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following
+# license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 
 policy_module(ipacm, 1.0)
 
@@ -66,6 +72,7 @@ gen_require(`
        type default_t;
        type qcmap_tmp_t;
        type sysctl_vm_t;
+       type proc_net_t;
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -84,6 +91,7 @@ allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
 manage_files_pattern(ipacm_t, { tmp_t qcmap_tmp_t }, qcmap_tmp_t);
 files_tmp_filetrans(ipacm_t, qcmap_tmp_t, { dir }, "data");
 allow ipacm_t qcmap_tmp_t:dir { search };
+allow ipacm_t proc_net_t:file { read };
 kernel_read_system_state(ipacm_t);
 
 dev_node(ipa_nat_table_device_t)
