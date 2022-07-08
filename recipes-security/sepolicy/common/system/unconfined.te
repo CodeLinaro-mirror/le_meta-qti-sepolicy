@@ -72,6 +72,7 @@ userdebug_or_eng(`
 
     dev_write_kmsg(unconfined_t)
     mls_file_write_all_levels(unconfined_t)
+    mls_file_read_all_levels(unconfined_t)
 
     wlan_start_stop(unconfined_t)
 
@@ -136,4 +137,9 @@ userdebug_or_eng(`
       type gpumodel_t;
     ')
     allow unconfined_t gpumodel_t:file read_file_perms;
+    #Collect kmsg
+    gen_require(`
+        type proc_kmsg_t;
+    ')
+    allow unconfined_t proc_kmsg_t:file read_file_perms;
 ')

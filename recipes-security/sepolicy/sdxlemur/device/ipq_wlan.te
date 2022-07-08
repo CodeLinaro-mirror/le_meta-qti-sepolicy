@@ -67,6 +67,16 @@ gen_require(`
   type net_conf_t;
   type http_port_t;
   type init_t;
+  type wlan_ezmesh_initrc_t;
+  type wlan_ezmesh_initrc_exec_t;
+  type var_run_t;
+  type var_spool_t;
+  type hostapd_var_run_t;
+  type hostapd_t;
+  type qcmap_cm_t;
+  type qcmap_etc_data_t;
+  type var_t;
+  type proc_net_t;
 ')
 
 type wifi_usr_t;
@@ -166,5 +176,107 @@ allow wlan_initrc_t etc_t:lnk_file { read open };
 allow wlan_initrc_t net_conf_t:file { read_file_perms };
 allow wlan_initrc_t http_port_t:tcp_socket name_connect;
 
-#Ezmesh Application
-allow wlan_initrc_t self:netlink_socket { create_socket_perms connected_stream_socket_perms };
+#Ezmesh Application related permissions
+manage_system_data_files(wlan_ezmesh_initrc_t, wifi_system_data_t);
+userdom_manage_user_tmp_files(wlan_ezmesh_initrc_t)
+
+manage_files_pattern(wlan_ezmesh_initrc_t, wlan_service_tmp_t, wlan_service_tmp_t)
+files_tmp_filetrans(wlan_ezmesh_initrc_t, wlan_service_tmp_t, { file lnk_file dir sock_file })
+
+dontaudit wlan_ezmesh_initrc_t domain:dir search_dir_perms;
+dontaudit wlan_ezmesh_initrc_t self:capability sys_module;
+
+allow wlan_ezmesh_initrc_t wifi_system_data_t:dir rw_dir_perms;
+allow wlan_ezmesh_initrc_t wifi_system_data_t:lnk_file { create unlink };
+allow wlan_ezmesh_initrc_t system_data_t:dir rw_dir_perms;
+allow wlan_ezmesh_initrc_t system_data_t:lnk_file { create unlink read_lnk_file_perms };
+
+# Don't audit console/kmsg logs needed for Ezmesh
+dontaudit wlan_ezmesh_initrc_t console_device_t:chr_file write_file_perms;
+dontaudit wlan_ezmesh_initrc_t kmsg_device_t:chr_file write_file_perms;
+dontaudit wlan_ezmesh_initrc_t self:capability { dac_read_search dac_override };
+
+# General permissions needed for Ezmesh
+allow wlan_ezmesh_initrc_t self:process signal_perms;
+allow wlan_ezmesh_initrc_t self:capability kill;
+allow wlan_ezmesh_initrc_t self:tcp_socket connected_stream_socket_perms;
+allow wlan_ezmesh_initrc_t wlan_service_exec_t:file { execute read_file_perms execute_no_trans map };
+allow wlan_ezmesh_initrc_t wlan_service_tmp_t:dir manage_dir_perms;
+allow wlan_ezmesh_initrc_t wlan_service_tmp_t:file manage_file_perms;
+allow wlan_ezmesh_initrc_t wlan_service_tmp_t:sock_file { create write unlink };
+allow wlan_ezmesh_initrc_t wifi_usr_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t NetworkManager_var_run_t:file { read_file_perms append write rename setattr };
+allow wlan_ezmesh_initrc_t NetworkManager_var_run_t:dir rmdir;
+
+allow wlan_ezmesh_initrc_t self:{socket qipcrtr_socket netlink_socket} create_socket_perms;
+
+# WiFi permissions needed by Ezmesh
+allow wlan_ezmesh_initrc_t var_run_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t modules_object_t:lnk_file read;
+allow wlan_ezmesh_initrc_t modules_object_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t sysctl_dev_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t brctl_exec_t:file { read open execute execute_no_trans getattr };
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+    ')
+
+    allow wlan_ezmesh_initrc_t debugfs_t:dir read;
+')
+
+# Hostapd/wpa_supplicant permissions (wifi command) needed by Ezmesh
+allow wlan_ezmesh_initrc_t hostapd_exec_t:file { execute read_file_perms execute_no_trans map };
+allow wlan_ezmesh_initrc_t self:udp_socket create_socket_perms;
+allow wlan_ezmesh_initrc_t unreserved_port_t:udp_socket name_bind;
+allow wlan_ezmesh_initrc_t node_t:udp_socket node_bind;
+allow wlan_ezmesh_initrc_t kernel_t:system module_request;
+allow wlan_ezmesh_initrc_t hostapd_cli_exec_t:file { read getattr open execute execute_no_trans map };
+allow wlan_ezmesh_initrc_t wpa_cli_exec_t:file { read getattr open execute execute_no_trans map };
+logging_send_syslog_msg(wlan_ezmesh_initrc_t);
+
+logging_log_filetrans(wlan_ezmesh_initrc_t, wlan_initrc_var_log_t, { file lnk_file dir } );
+manage_dirs_pattern(wlan_ezmesh_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+manage_files_pattern(wlan_ezmesh_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+manage_lnk_files_pattern(wlan_ezmesh_initrc_t, wlan_initrc_var_log_t, wlan_initrc_var_log_t)
+
+allow wlan_ezmesh_initrc_t wlan_ezmesh_initrc_exec_t:file execute_no_trans;
+allow wlan_ezmesh_initrc_t cslistener_port_t:tcp_socket { name_connect name_bind };
+allow wlan_ezmesh_initrc_t node_t:tcp_socket node_bind;
+allow kmod_t wlan_ezmesh_initrc_t:tcp_socket { read write };
+allow ifconfig_t wlan_ezmesh_initrc_t:tcp_socket { read write };
+
+#AFC Application related permissions needed by Ezmesh
+filetrans_pattern(wlan_ezmesh_initrc_t, wifi_system_data_t, wifi_system_data_t, file);
+allow wlan_ezmesh_initrc_t user_home_dir_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t self:process getsched;
+allow wlan_ezmesh_initrc_t cert_t:dir { read open };
+allow wlan_ezmesh_initrc_t cert_t:lnk_file { read_file_perms };
+allow wlan_ezmesh_initrc_t usr_t:file { read_file_perms };
+allow wlan_ezmesh_initrc_t net_conf_t:file { read_file_perms };
+allow wlan_ezmesh_initrc_t http_port_t:tcp_socket name_connect;
+
+#Ezmesh Application specific permission
+allow wlan_ezmesh_initrc_t self:netlink_socket create_socket_perms;
+allow wlan_ezmesh_initrc_t self:shm { create unix_read unix_write read write associate };
+allow wlan_ezmesh_initrc_t var_run_t:fifo_file { create unlink rw_fifo_file_perms };
+allow wlan_ezmesh_initrc_t var_spool_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t self:netlink_crypto_socket create_socket_perms;
+allow wlan_ezmesh_initrc_t unreserved_port_t:tcp_socket name_bind;
+allow wlan_ezmesh_initrc_t hostapd_var_run_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t self:packet_socket getopt;
+allow wlan_ezmesh_initrc_t hostapd_var_run_t:sock_file write_sock_file_perms;
+allow wlan_ezmesh_initrc_t hostapd_t:unix_dgram_socket sendto;
+allow hostapd_t NetworkManager_var_run_t:sock_file write;
+allow hostapd_t wlan_ezmesh_initrc_t:unix_dgram_socket sendto;
+allow wlan_ezmesh_initrc_t qcmap_etc_data_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t var_run_t:sock_file unlink;
+allow wlan_ezmesh_initrc_t proc_net_t:file read_file_perms;
+allow wlan_initrc_t wlan_ezmesh_initrc_exec_t:file exec_file_perms;
+
+#Sigma-Dut invoked Ezmesh dependent permissions
+allow wlan_initrc_t self:shm { create unix_read unix_write read write associate };
+allow wlan_initrc_t var_run_t:fifo_file { create unlink rw_fifo_file_perms };
+allow wlan_initrc_t self:netlink_crypto_socket create_socket_perms;
+allow wlan_initrc_t qcmap_etc_data_t:file read_file_perms;
+allow wlan_initrc_t unreserved_port_t:tcp_socket name_bind;
+allow wlan_initrc_t self:packet_socket getopt;
