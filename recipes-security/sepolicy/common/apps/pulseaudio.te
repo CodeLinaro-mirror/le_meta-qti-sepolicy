@@ -46,6 +46,8 @@ gen_require(`
 	type audio_data_file_t;
 	type system_dmabuf_device_t;
 ')
+user_data_files_type(audio_data_file_t);
+manage_user_data_files(pulseaudio_t, audio_data_file_t);
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
 allow pulseaudio_t self:process { getcap getsched setcap setrlimit setsched signal signull };
