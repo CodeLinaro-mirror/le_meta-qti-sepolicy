@@ -178,6 +178,85 @@ allow wlan_initrc_t etc_t:lnk_file { read open };
 allow wlan_initrc_t net_conf_t:file { read_file_perms };
 allow wlan_initrc_t http_port_t:tcp_socket name_connect;
 
+### EasyConnect permissions
+allow wlan_service_t wifi_usr_t:file read_file_perms;
+allow wlan_service_t wlan_service_exec_t:file execute_no_trans;
+
+### EasyConnect - hostapd and hostapd_cli permissions
+gen_require(`
+  type hostapd_cli_qcmap_t;
+  type hostapd_tmp_t;
+')
+files_tmp_filetrans(hostapd_t, hostapd_tmp_t, sock_file)
+rw_sock_files_pattern(hostapd_t, hostapd_tmp_t, hostapd_tmp_t)
+filetrans_pattern(hostapd_cli_qcmap_t, var_run_t, hostapd_var_run_t, file)
+manage_files_pattern(hostapd_cli_qcmap_t, hostapd_var_run_t, hostapd_var_run_t)
+manage_system_data_files(hostapd_cli_qcmap_t, wifi_system_data_t)
+files_tmp_filetrans(hostapd_cli_qcmap_t, hostapd_tmp_t, { file sock_file dir })
+manage_files_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
+manage_sock_files_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
+rw_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
+create_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
+
+# Include /bin/sh in shell scripts
+corecmd_exec_shell(hostapd_cli_qcmap_t)
+
+# WLAN device entries in /sys/class/net
+dev_rw_sysfs(hostapd_cli_qcmap_t)
+
+# hostapd_cli action scripts in /lib/wifi
+libs_exec_lib_files(hostapd_cli_qcmap_t)
+
+# /proc/filesystems
+kernel_dontaudit_read_system_state(hostapd_cli_qcmap_t)
+
+allow hostapd_cli_qcmap_t self:fifo_file rw_fifo_file_perms;
+allow hostapd_cli_qcmap_t wlan_service_exec_t:file exec_file_perms;
+allow hostapd_cli_qcmap_t wlan_service_tmp_t:dir search_dir_perms;
+allow hostapd_cli_qcmap_t wlan_service_tmp_t:file rw_file_perms;
+allow hostapd_cli_qcmap_t wifi_usr_t:file read_file_perms;
+
+# Config files in /systemrw
+allow hostapd_cli_qcmap_t system_data_t:dir search_dir_perms;
+allow hostapd_cli_qcmap_t system_data_t:lnk_file read;
+
+allow hostapd_cli_qcmap_t hostapd_cli_exec_t:file execute_no_trans;
+allow hostapd_cli_qcmap_t self:process signal;
+
+### EasyConnect - wpa_cli and NetworkManager permissions
+gen_require(`
+  type wpa_cli_t;
+  type NetworkManager_tmp_t;
+')
+filetrans_pattern(wpa_cli_t, tmp_t, NetworkManager_tmp_t, { file dir })
+manage_files_pattern(wpa_cli_t, NetworkManager_tmp_t, NetworkManager_tmp_t)
+manage_dirs_pattern(wpa_cli_t, NetworkManager_tmp_t, NetworkManager_tmp_t)
+manage_files_pattern(wpa_cli_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
+manage_system_data_files(wpa_cli_t, wifi_system_data_t)
+
+# WLAN device entries in /sys/class/net
+dev_rw_sysfs(wpa_cli_t)
+
+# wpa_cli action scripts in /lib/wifi
+libs_exec_lib_files(wpa_cli_t)
+
+# /proc/filesystems
+kernel_dontaudit_read_system_state(wpa_cli_t)
+
+allow wpa_cli_t NetworkManager_var_run_t:file create_file_perms;
+allow wpa_cli_t self:fifo_file rw_fifo_file_perms;
+allow wpa_cli_t wlan_service_exec_t:file exec_file_perms;
+
+# Config files in /systemrw
+allow wpa_cli_t system_data_t:dir search_dir_perms;
+allow wpa_cli_t system_data_t:lnk_file read;
+
+allow wpa_cli_t wpa_cli_exec_t:file execute_no_trans;
+allow wpa_cli_t wifi_usr_t:file read_file_perms;
+allow wpa_cli_t wlan_service_tmp_t:dir search_dir_perms;
+allow wpa_cli_t wlan_service_tmp_t:file rw_file_perms;
+allow wpa_cli_t self:process signal;
+
 #Ezmesh Application related permissions
 manage_system_data_files(wlan_ezmesh_initrc_t, wifi_system_data_t);
 userdom_manage_user_tmp_files(wlan_ezmesh_initrc_t)
