@@ -30,6 +30,7 @@ policy_module(alogd, 1.0)
 type alogd_t;
 type alogd_exec_t;
 
+
 # TODO : temporaray fix to unblock the tech teams, need to remove this service from permissive
 permissive alogd_t;
 init_vendor_domain(alogd_t, alogd_exec_t)
@@ -60,6 +61,10 @@ dev_node(alogd_sock_t)
 device_manage_socket_file(alogd_t, alogd_sock_t, "logd")
 device_manage_socket_file(alogd_t, alogd_sock_t, "logdr")
 device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
+
+type pmsg_device_t;
+dev_node(pmsg_device_t);
+allow alogd_t pmsg_device_t:chr_file { write open };
 
 leprop_rw_props(alogd_t)
 
