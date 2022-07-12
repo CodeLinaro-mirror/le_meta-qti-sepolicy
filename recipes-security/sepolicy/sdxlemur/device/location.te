@@ -13,3 +13,9 @@ gen_require(`
 # Qwes access
 allow xtwifi_client_t qwesd_t:unix_stream_socket connectto;
 allow xtwifi_client_t qwes_mink_socket_t:sock_file write;
+
+
+### xtwifi_inet_agent
+# Qwes access
+allow xtwifi_agent_t qwesd_t:unix_stream_socket connectto;
+allow xtwifi_agent_t qwes_mink_socket_t:sock_file write;
