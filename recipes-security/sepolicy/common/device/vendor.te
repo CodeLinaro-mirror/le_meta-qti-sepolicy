@@ -146,6 +146,7 @@ type post_boot_script_t;
 type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
+corecmd_exec_shell(post_boot_script_t)
 
 dev_rw_sysfs(post_boot_script_t)
 kernel_rw_kernel_sysctl(post_boot_script_t)
@@ -288,3 +289,4 @@ init_rw_stream_sockets(touch_script_t)
 kernel_read_system_state(touch_script_t);
 allow touch_script_t self:capability { chown };
 allow touch_script_t touch_input_device_t:file { getattr setattr };
+corecmd_exec_shell(touch_script_t)
