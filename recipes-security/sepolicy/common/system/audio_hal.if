@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -54,6 +54,7 @@ interface(`audio_hal_files_access',`
     allow $1 audio_hal_etc_t:file { read open getattr };
     allow $1 audio_hal_etc_acdb_t:file { read getattr open };
     allow $1 audio_hal_etc_acdb_t:dir { read search getattr open };
+    allow $1 self:fifo_file rw_fifo_file_perms;
 ')
 
 interface(`audio_hal_access',`
