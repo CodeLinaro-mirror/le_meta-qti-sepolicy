@@ -40,6 +40,7 @@ logging_send_syslog_msg(thermal-engine_t)
 
 gen_require(`
     type default_t;
+    type image_variant_sysfs_t;
 ')
 
 # Manage socket files inside /dev/socket
@@ -64,6 +65,8 @@ allow thermal-engine_t self:fifo_file rw_fifo_file_perms;
 allow thermal-engine_t self:unix_stream_socket create_stream_socket_perms;
 allow thermal-engine_t syslogd_var_run_t:dir search;
 allow thermal-engine_t self:qipcrtr_socket { write read create getattr setopt };
+allow thermal-engine_t image_variant_sysfs_t:dir search;
+allow thermal-engine_t image_variant_sysfs_t:file manage_file_perms;
 
 userdebug_or_eng(`
     rw_diag_dev(thermal-engine_t)

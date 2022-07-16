@@ -61,6 +61,7 @@ gen_require(`
     type unlabeled_t;
     type etc_t;
     type post_boot_script_t;
+    type image_variant_sysfs_t;
 ')
 
 #etc files
@@ -88,6 +89,7 @@ allow perf_hal_t sysctl_kernel_t:file rw_file_perms;
 allow perf_hal_t sysctl_t:dir search_dir_perms;
 allow perf_hal_t sysctl_vm_t:dir search_dir_perms;
 allow perf_hal_t sysctl_vm_t:file rw_file_perms;
+allow perf_hal_t image_variant_sysfs_t:dir search;
 
 #==== dev_rw_sysfs for below link files and directories ===
 #/sys/devices/soc0/soc_id
