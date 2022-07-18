@@ -73,6 +73,7 @@ userdebug_or_eng(`
         type policy_config_t;
         type proc_kmsg_t;
         type rebootd_pipe_t;
+        type image_variant_sysfs_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -95,4 +96,6 @@ userdebug_or_eng(`
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t brightness_t:file write_file_perms;
     allow unconfined_t tuicoreservice_dev_t: chr_file read_chr_file_perms;
+    allow unconfined_t image_variant_sysfs_t:dir list_dir_perms;
+    allow unconfined_t image_variant_sysfs_t:file manage_file_perms;
 ')
