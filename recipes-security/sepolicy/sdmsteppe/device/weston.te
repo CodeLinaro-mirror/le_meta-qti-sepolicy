@@ -72,6 +72,7 @@ type weston_t;
 type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
+type weston_runtime_t;
 
 init_vendor_domain(weston_t, weston_exec_t)
 
@@ -203,4 +204,8 @@ allow weston_t var_t:file { create map getattr open read};
 allow weston_t var_t:dir { create setattr write add_name };
 allow weston_t xkb_var_lib_t:file { map getattr open read };
 
+allow weston_t weston_runtime_t:file { create append open getattr read_file_perms write_file_perms unlink map };
+manage_sock_files_pattern(weston_t, weston_runtime_t, weston_runtime_t)
+filetrans_pattern(weston_t, user_runtime_root_t, weston_runtime_t, { dir file sock_file })
+fs_associate_tmpfs(weston_runtime_t)
 manage_qmmf_data_files(weston_t)
