@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -59,12 +59,11 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-userdebug_or_eng(`
-    gen_require(`
-        type qmmf_server_t;
-    ')
-
-    servicemanager_binder_call(unconfined_t, qmmf_server_t)
-
-    mls_file_read_all_levels(unconfined_t)
+# allow qseecomd
+gen_require(`
+    type qseecomd_persist_t;
+    type coredump_data_t;
 ')
+allow init_t qseecomd_persist_t:dir { getattr search };
+allow initrc_t qseecomd_persist_t:dir { setattr search getattr write add_name create};
+allow initrc_t coredump_data_t:dir search;

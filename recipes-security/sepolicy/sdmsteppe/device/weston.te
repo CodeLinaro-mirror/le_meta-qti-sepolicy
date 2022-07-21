@@ -25,6 +25,42 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following
+# license:
+
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted (subject to the limitations in the
+# disclaimer below) provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#
+#     * Neither the name of Qualcomm Innovation Center, Inc. nor the
+#       names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior
+#       written permission.
+#
+# NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+# GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+# HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+# GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 policy_module(weston, 1.0)
 
 ########################################
@@ -58,6 +94,14 @@ gen_require(`
  type sysfs_t;
  type qmmf_server_t;
 ')
+
+#For weston-terminal
+type weston_pty_t;
+term_create_pty(weston_t, weston_pty_t)
+allow weston_t weston_pty_t:chr_file rw_term_perms;
+
+#For windows+k combo key to close weston-terminal
+allow weston_t self:process sigkill;
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
 allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
@@ -98,15 +142,65 @@ allow weston_t weston_usr_t:file read_file_perms;
 
 userdebug_or_eng(`
      gen_require(`
+        type debugfs_t;
+        type shell_exec_t;
         type trace_marker_t;
         type tracefs_t;
-        type debugfs_t;
     ')
 
     allow weston_t debugfs_t:dir search;
+    allow weston_t shell_exec_t:file { execute execute_no_trans open read };
     allow weston_t trace_marker_t:file { write open };
     allow weston_t tracefs_t:dir search;
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
 ')
+
+
+gen_require(`
+ type brightness_t;
+ type devpts_t;
+ type etc_t;
+ type event_device_t;
+ type firmware_t;
+ type fonts_t;
+ type fs_t;
+ type locale_t;
+ type ptmx_t;
+ type tmp_t;
+ type tmpfs_t;
+ type user_runtime_root_t;
+ type user_tmpfs_t;
+ type usr_t;
+ type var_t;
+')
+
+allow weston_t brightness_t:file { open read };
+allow weston_t devpts_t:chr_file open;
+allow weston_t devpts_t:filesystem getattr;
+allow weston_t etc_t:file { read getattr open map };
+allow weston_t etc_t:lnk_file read;
+allow weston_t event_device_t:chr_file { getattr ioctl open read write };
+allow weston_t firmware_t:dir search;
+allow weston_t fonts_t:file { getattr map open read };
+allow weston_t fonts_t:dir { getattr open read write search };
+allow weston_t fs_t:filesystem getattr;
+allow weston_t gpu_device_t:chr_file map;
+allow weston_t locale_t:file { getattr map open read };
+allow weston_t locale_t:dir search;
+allow weston_t ptmx_t:chr_file { ioctl open read write };
+allow weston_t self:fifo_file read;
+allow weston_t self:unix_stream_socket { listen accept connectto };
+allow weston_t tmp_t:dir search;
+allow weston_t tmpfs_t:file { read map write };
+allow weston_t tmpfs_t:filesystem getattr;
+allow weston_t user_runtime_root_t:dir { add_name getattr search write remove_name };
+allow weston_t user_runtime_root_t:file { create lock open read write map unlink };
+allow weston_t user_runtime_root_t:sock_file { getattr unlink write create };
+allow weston_t usr_t:file { getattr open read };
+allow weston_t usr_t:dir read;
+allow weston_t user_tmpfs_t:file { read write map };
+allow weston_t var_t:file { create map getattr open read};
+allow weston_t var_t:dir { create setattr write add_name };
+allow weston_t xkb_var_lib_t:file { map getattr open read };
 
 manage_qmmf_data_files(weston_t)
