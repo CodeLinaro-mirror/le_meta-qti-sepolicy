@@ -25,6 +25,16 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
 #In QC build, getty requires kill capability. Hence added this rule.
 allow getty_t self:capability kill;
 allow getty_t etc_t:file map;
+
+gen_require(`
+	type  dataqti_ppp_device_t;
+')
+rw_chr_files_pattern(getty_t, device_t, dataqti_ppp_device_t)

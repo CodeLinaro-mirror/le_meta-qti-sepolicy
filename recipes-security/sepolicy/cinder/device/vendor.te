@@ -1,0 +1,7 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# TODO :we may need this for early boot
+# need to remove this once we clear all denials
+
+#permissive tftp_server_t;
