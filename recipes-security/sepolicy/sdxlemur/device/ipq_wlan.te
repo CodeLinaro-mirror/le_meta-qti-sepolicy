@@ -77,6 +77,8 @@ gen_require(`
   type qcmap_etc_data_t;
   type var_t;
   type proc_net_t;
+  type proc_t;
+  type wlan_service_t;
 ')
 
 type wifi_usr_t;
@@ -272,6 +274,9 @@ allow wlan_ezmesh_initrc_t qcmap_etc_data_t:file read_file_perms;
 allow wlan_ezmesh_initrc_t var_run_t:sock_file unlink;
 allow wlan_ezmesh_initrc_t proc_net_t:file read_file_perms;
 allow wlan_initrc_t wlan_ezmesh_initrc_exec_t:file exec_file_perms;
+allow wlan_ezmesh_initrc_t wlan_initrc_exec_t:file read_file_perms;
+allow wlan_service_t proc_t:file read_file_perms;
+allow wlan_service_t var_run_t:file read_file_perms;
 
 #Sigma-Dut invoked Ezmesh dependent permissions
 allow wlan_initrc_t self:shm { create unix_read unix_write read write associate };
