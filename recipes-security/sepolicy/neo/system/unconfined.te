@@ -74,6 +74,9 @@ userdebug_or_eng(`
         type proc_kmsg_t;
         type rebootd_pipe_t;
         type image_variant_sysfs_t;
+        type fbe_secure_data_t;
+        type hwfde_conf_file_t;
+        type install_evict_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -98,4 +101,8 @@ userdebug_or_eng(`
     allow unconfined_t tuicoreservice_dev_t: chr_file read_chr_file_perms;
     allow unconfined_t image_variant_sysfs_t:dir list_dir_perms;
     allow unconfined_t image_variant_sysfs_t:file manage_file_perms;
+    allow unconfined_t fbe_secure_data_t:dir search_dir_perms;
+    allow unconfined_t fbe_secure_data_t:file read_file_perms;
+    allow unconfined_t hwfde_conf_file_t:file read_file_perms;
+    allow unconfined_t install_evict_t:file exec_file_perms;
 ')
