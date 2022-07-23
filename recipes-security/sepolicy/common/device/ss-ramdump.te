@@ -59,6 +59,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
 policy_module(ss-ramdump, 1.0)
 
 ########################################
@@ -77,19 +78,6 @@ gen_require(`
     type vendor_qdmastatsd_ramdump_device_t;
 ')
 
-type ramdump_md_ipa_fws_device_t;
-type ramdump_ipa_fws_device_t;
-type ramdump_md_modem_device_t;
-type ramdump_modem_device_t;
-type ramdump_wlan_device_t;
-type ramdump_smem_device_t;
-dev_node(ramdump_md_ipa_fws_device_t)
-dev_node(ramdump_ipa_fws_device_t)
-dev_node(ramdump_md_modem_device_t)
-dev_node(ramdump_modem_device_t)
-dev_node(ramdump_wlan_device_t)
-dev_node(ramdump_smem_device_t)
-
 type ss-ramdump_data_t;
 allow ss-ramdump_t self:capability kill;
 userdebug_or_eng(`
@@ -97,6 +85,18 @@ userdebug_or_eng(`
     data_filetrans(ss-ramdump_t, ss-ramdump_data_t, { file dir })
     manage_user_data_files(ss-ramdump_t, ss-ramdump_data_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, vendor_qdmastatsd_ramdump_device_t)
+    type ramdump_md_ipa_fws_device_t;
+    type ramdump_ipa_fws_device_t;
+    type ramdump_md_modem_device_t;
+    type ramdump_modem_device_t;
+    type ramdump_wlan_device_t;
+    type ramdump_smem_device_t;
+    dev_node(ramdump_md_ipa_fws_device_t)
+    dev_node(ramdump_ipa_fws_device_t)
+    dev_node(ramdump_md_modem_device_t)
+    dev_node(ramdump_modem_device_t)
+    dev_node(ramdump_wlan_device_t)
+    dev_node(ramdump_smem_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_ipa_fws_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_ipa_fws_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_modem_device_t)

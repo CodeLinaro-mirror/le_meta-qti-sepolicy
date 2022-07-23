@@ -124,7 +124,6 @@ allow qvrd_t sysfs_vblank_t:file rw_file_perms;
 #Network
 allow qvrd_t self:udp_socket { create_socket_perms };
 allow qvrd_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
-allow qvrd_t self:netlink_route_socket { write getattr read bind create nlmsg_read };
 allow qvrd_t unreserved_port_t:{ tcp_socket udp_socket } name_bind;
 allow qvrd_t node_t:{ tcp_socket udp_socket } node_bind;
 
@@ -137,5 +136,3 @@ userdebug_or_eng(`
     allow qvrd_t trace_marker_t:file  write_file_perms;
     allow qvrd_t tracefs_t:dir search_dir_perms;
 ')
-
-perf_hal_sock_req(qvrd_t)

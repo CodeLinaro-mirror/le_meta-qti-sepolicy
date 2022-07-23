@@ -82,8 +82,6 @@ type tuicoreservice_dev_t;
 type vendor_dmabuf_system_heap_device_t;
 type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
-type vendor_vm_oem_device_t;
-type vendor_vm_self_device_t;
 type tvmapp_t;
 type mnt_t;
 ')
@@ -93,7 +91,6 @@ connect_to_letzd(tvmapploader_t)
 allow tvmapploader_t socket_device_t:dir search;
 allow tvmapploader_t self:capability2 block_suspend;
 allow tvmapploader_t self:unix_stream_socket create_stream_socket_perms;
-allow tvmapploader_t self:vsock_socket { create connect getattr read write shutdown };
 allow tvmapploader_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
 allow tvmapploader_t tvmapp_t:dir create_dir_perms;
 allow tvmapploader_t tvmapp_t:dir rw_dir_perms;
@@ -107,5 +104,3 @@ dev_rw_sysfs(tvmapploader_t)
 rw_chr_files_pattern(tvmapploader_t, device_t, vendor_dmabuf_system_heap_device_t);
 rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_trusted_device_t);
 rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_hlos_device_t);
-rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_oem_device_t);
-rw_chr_files_pattern(tvmapploader_t, device_t, vendor_vm_self_device_t);

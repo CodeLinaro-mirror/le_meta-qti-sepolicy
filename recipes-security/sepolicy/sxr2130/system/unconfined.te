@@ -89,8 +89,6 @@ userdebug_or_eng(`
 
     gen_require(`
         type recovery_exec_t;
-        type syslogd_tmp_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
-    allow unconfined_t syslogd_tmp_t:file { read_file_perms };
 ')
