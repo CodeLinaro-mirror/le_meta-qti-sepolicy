@@ -77,6 +77,7 @@ userdebug_or_eng(`
         type fbe_secure_data_t;
         type hwfde_conf_file_t;
         type install_evict_t;
+        type proc_sched_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -88,6 +89,8 @@ userdebug_or_eng(`
     allow unconfined_t data_t:chr_file getattr_chr_file_perms;
     allow unconfined_t policy_config_t:dir list_dir_perms;
     allow unconfined_t policy_config_t:file getattr_file_perms;
+    allow unconfined_t proc_sched_t:file getattr_file_perms;
+    allow unconfined_t proc_sched_t:dir list_dir_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
 

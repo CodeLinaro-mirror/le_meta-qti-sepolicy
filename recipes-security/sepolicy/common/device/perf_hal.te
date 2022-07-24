@@ -62,6 +62,8 @@ gen_require(`
     type etc_t;
     type post_boot_script_t;
     type image_variant_sysfs_t;
+    type proc_sched_t;
+    type pmsg_device_t;
 ')
 
 #etc files
@@ -73,6 +75,14 @@ manage_user_data_files(perf_hal_t, perf_hal_data_t)
 allow perf_hal_t perf_hal_data_t:file create_file_perms;
 allow perf_hal_t perf_hal_data_t:file rw_file_perms;
 allow perf_hal_t perf_hal_data_t:dir rw_dir_perms;
+
+#proc/sys/walt/ files
+allow perf_hal_t proc_sched_t:file rw_file_perms;
+allow perf_hal_t proc_sched_t:dir search_dir_perms;
+
+allow perf_hal_t pmsg_device_t:chr_file rw_chr_file_perms;
+
+allow perf_hal_t image_variant_sysfs_t:file read_file_perms;
 
 #perf_hal socket
 type perf_hal_socket_t;
