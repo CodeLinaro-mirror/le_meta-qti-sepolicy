@@ -126,3 +126,11 @@ dev_associate_sysfs(sysfs_vblank_t)
 type wlan_hsp_sysfs_t;
 genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-qca6390 gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
 dev_associate_sysfs(wlan_hsp_sysfs_t)
+
+type hwfde_icepath_sysfs_t;
+genfscon sysfs /devices/platform/soc/1d90000.ufsice/fde_partitions/userdata/encr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/1d90000.ufsice/fde_partitions/userdata/decr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/7C8000.sdcc1ice/fde_partitions/userdata/encr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/7C8000.sdcc1ice/fde_partitions/userdata/decr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
+dev_associate_sysfs(hwfde_icepath_sysfs_t)
+

@@ -95,6 +95,14 @@ gen_require(`
  type qmmf_server_t;
 ')
 
+#For weston-terminal
+type weston_pty_t;
+term_create_pty(weston_t, weston_pty_t)
+allow weston_t weston_pty_t:chr_file rw_term_perms;
+
+#For windows+k combo key to close weston-terminal
+allow weston_t self:process sigkill;
+
 dontaudit weston_t self:capability { setuid sys_admin } ;
 allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
 allow weston_t sysfs_t:dir read; #/sys/devices/platform/soc/
@@ -134,12 +142,14 @@ allow weston_t weston_usr_t:file read_file_perms;
 
 userdebug_or_eng(`
      gen_require(`
+        type debugfs_t;
+        type shell_exec_t;
         type trace_marker_t;
         type tracefs_t;
-        type debugfs_t;
     ')
 
     allow weston_t debugfs_t:dir search;
+    allow weston_t shell_exec_t:file { execute execute_no_trans open read };
     allow weston_t trace_marker_t:file { write open };
     allow weston_t tracefs_t:dir search;
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
@@ -148,34 +158,38 @@ userdebug_or_eng(`
 
 gen_require(`
  type brightness_t;
+ type devpts_t;
  type etc_t;
  type event_device_t;
  type firmware_t;
  type fonts_t;
- type locale_t;
  type fs_t;
+ type locale_t;
+ type ptmx_t;
  type tmp_t;
  type tmpfs_t;
  type user_runtime_root_t;
+ type user_tmpfs_t;
  type usr_t;
  type var_t;
- type user_tmpfs_t;
 ')
 
 allow weston_t brightness_t:file { open read };
-allow weston_t etc_t:file { read getattr open };
+allow weston_t devpts_t:chr_file open;
+allow weston_t devpts_t:filesystem getattr;
+allow weston_t etc_t:file { read getattr open map };
 allow weston_t etc_t:lnk_file read;
 allow weston_t event_device_t:chr_file { getattr ioctl open read write };
 allow weston_t firmware_t:dir search;
 allow weston_t fonts_t:file { getattr map open read };
 allow weston_t fonts_t:dir { getattr open read write search };
+allow weston_t fs_t:filesystem getattr;
 allow weston_t gpu_device_t:chr_file map;
 allow weston_t locale_t:file { getattr map open read };
 allow weston_t locale_t:dir search;
-allow weston_t fs_t:filesystem getattr;
-
-#!!!! This avc can be allowed using the boolean 'nscd_use_shm'
-allow weston_t self:unix_stream_socket { listen accept };
+allow weston_t ptmx_t:chr_file { ioctl open read write };
+allow weston_t self:fifo_file read;
+allow weston_t self:unix_stream_socket { listen accept connectto };
 allow weston_t tmp_t:dir search;
 allow weston_t tmpfs_t:file { read map write };
 allow weston_t tmpfs_t:filesystem getattr;
