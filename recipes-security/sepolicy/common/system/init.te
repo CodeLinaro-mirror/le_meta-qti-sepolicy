@@ -97,7 +97,7 @@ ifdef(`init_systemd',`
     ')
     allow init_t system_data_t:dir manage_dir_perms;
     allow init_t kernel_t:key manage_key_perms;
-
+    allow initrc_t kernel_t:key manage_key_perms;
 #allow modprobe to load kernel modules
     allow init_t kmod_t:process2 nnp_transition;
 
@@ -129,7 +129,6 @@ allow initrc_t brightness_t:file rw_file_perms;
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 allow initrc_t image_variant_sysfs_t:dir search;
 allow initrc_t image_variant_sysfs_t:file manage_file_perms;
-
 #allowing init process to access overlay
 gen_require(`
     type overlay_t;

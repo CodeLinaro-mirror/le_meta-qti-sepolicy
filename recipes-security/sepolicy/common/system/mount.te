@@ -92,8 +92,11 @@ userdebug_or_eng(`
 gen_require(`
    type mount_runtime_t;
    type sdcard_t;
+   type overlay_t;
 ')
 allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
 allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
 allow mount_t init_var_run_t:file getattr;
+allow mount_t kernel_t:process setsched;
+allow mount_t overlay_t:chr_file { create link rename unlink };

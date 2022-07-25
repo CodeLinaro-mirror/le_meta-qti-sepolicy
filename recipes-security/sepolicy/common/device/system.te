@@ -36,3 +36,16 @@ policy_module(system, 1.0)
 type system_dir_t;
 
 files_type(system_dir_t)
+
+type qti_verity_t;
+type qti_verity_exec_t;
+type qti_verity_system_data_t;
+type qti_verity_var_log_t;
+
+init_vendor_domain(qti_verity_t, qti_verity_exec_t)
+system_data_files_type(qti_verity_system_data_t)
+#domtrans_pattern(unconfined_t, qti_verity_exec_t, qti_verity_t)
+permissive qti_verity_t;
+
+
+
