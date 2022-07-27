@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
 
@@ -146,6 +150,7 @@ type post_boot_script_t;
 type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
+corecmd_exec_shell(post_boot_script_t)
 
 dev_rw_sysfs(post_boot_script_t)
 kernel_rw_kernel_sysctl(post_boot_script_t)
@@ -228,6 +233,12 @@ dev_node(qseecom_device_t);
 type mtd_device_t;
 dev_node(mtd_device_t);
 
+type qdsp_device_t;
+dev_node(qdsp_device_t);
+
+type xdsp_device_t;
+dev_node(xdsp_device_t);
+
 ###DMA HEAP TYPES ###
 type vendor_dmabuf_tui_heap_device_t;
 dev_node(vendor_dmabuf_tui_heap_device_t);
@@ -248,6 +259,9 @@ dev_node(vendor_vm_oem_device_t);
 type vendor_vm_self_device_t;
 dev_node(vendor_vm_self_device_t);
 
+type vendor_virtio_mem_device_t;
+dev_node(vendor_virtio_mem_device_t);
+
 # Allow relabeling and changing DAC permissions of /dev/socket/* from systemd-tmpfiles
 gen_require(`
     type systemd_tmpfiles_t;
@@ -262,3 +276,24 @@ gen_require(`
 ')
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
 systemd_tmpfilesd_managed(socket_device_t, dir)
+
+#sepolicy for touch start le script
+type touch_script_t;
+type touch_script_exec_t;
+gen_require(`
+    type touch_input_device_t;
+')
+files_type(touch_script_exec_t)
+init_script_domain(touch_script_t, touch_script_exec_t)
+modutils_domtrans_insmod(touch_script_t)
+userdebug_or_eng(`
+    dev_write_kmsg(touch_script_t)
+    mls_file_write_all_levels(touch_script_t)
+')
+files_read_etc_files(touch_script_t)
+dev_read_sysfs(touch_script_t)
+init_rw_stream_sockets(touch_script_t)
+kernel_read_system_state(touch_script_t);
+allow touch_script_t self:capability { chown };
+allow touch_script_t touch_input_device_t:file { getattr setattr };
+corecmd_exec_shell(touch_script_t)

@@ -64,10 +64,8 @@ gen_require(`
        type etc_t;
        type cpu_scaling_freq_t;
        type gpumodel_t;
-       type data_t;
        type tmp_t;
-       type proc_net_t;
-       type shell_exec_t;
+       type camera_data_t;
 ')
 
 #read /data/misc/qvr
@@ -167,7 +165,5 @@ allow qvrd_t pulseaudio_t:unix_stream_socket { connectto rw_socket_perms };
 allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
 
 allow qvrd_t gpumodel_t:file read_file_perms;
-allow qvrd_t data_t:dir read_file_perms;
+allow qvrd_t camera_data_t:dir { read search };
 allow qvrd_t tmp_t:dir search_dir_perms;
-allow qvrd_t proc_net_t:file read_file_perms;
-allow qvrd_t shell_exec_t:file exec_file_perms;
