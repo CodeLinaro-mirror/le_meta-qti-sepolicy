@@ -50,4 +50,4 @@ manage_files_pattern(dhcpc_t, systemd_resolved_var_run_t, systemd_resolved_var_r
 read_files_pattern(ifconfig_t, tmp_t, qcmap_tmp_t)
 
 #dont audit setuid and setgid
-dontaudit ifconfig_t self: capability {setuid setgid};
+dontaudit ifconfig_t self: capability {setuid setgid kill};
