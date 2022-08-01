@@ -31,8 +31,6 @@ type alogd_t;
 type alogd_exec_t;
 
 
-# TODO : temporaray fix to unblock the tech teams, need to remove this service from permissive
-permissive alogd_t;
 init_vendor_domain(alogd_t, alogd_exec_t)
 
 allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
