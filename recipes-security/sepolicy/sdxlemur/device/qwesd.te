@@ -50,7 +50,7 @@ gen_require(`
        type http_port_t;
        type cert_t;
 ')
-
+allow qwesd_t net_conf_t:file write_file_perms;
 #allow qwesd to read qnetmgrd confi file.
 #qnetmgr_read_config_file(qwesd_t)
 
