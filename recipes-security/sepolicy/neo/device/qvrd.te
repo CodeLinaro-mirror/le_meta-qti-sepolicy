@@ -56,6 +56,7 @@ gen_require(`
        type sysfs_t;
        type unreserved_port_t;
        type node_t;
+       type system_dmabuf_device_t;
 ')
 
 #read /data/misc/qvr
@@ -138,3 +139,9 @@ userdebug_or_eng(`
 ')
 
 perf_hal_sock_req(qvrd_t)
+
+allow qvrd_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+kernel_read_system_state(qvrd_t)
+
+#needed for /dev/dri dir's s15 context which is accessed by libdrm
+mls_file_read_all_levels(qvrd_t)
