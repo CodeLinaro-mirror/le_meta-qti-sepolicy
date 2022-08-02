@@ -59,6 +59,10 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Systemd policies
 ifdef(`init_systemd',`
     ifdef(`enable_mls',`
@@ -140,3 +144,10 @@ allow init_t overlay_t:dir list_dir_perms;
 #userdebug_or_eng(`
 #    reboot_write_fifo_files_reboot_device(init_t)
 #')
+#
+# This is only needed in newer kernel which support
+# nnp_transistion as sepolicy code can get kernel
+# update so add it , if support is not there it will
+# be simply ignore.
+#
+allow init_t initrc_t:process2 nnp_transition;
