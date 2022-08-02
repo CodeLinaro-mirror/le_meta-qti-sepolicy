@@ -74,8 +74,6 @@ gen_require(`
     type kmod_t;
     class service { start status stop reload };
 ')
-# TODO: Clean-up this WA
-permissive kmod_t;
 allow ssreq_server_t self:socket create_socket_perms;
 allow ssreq_server_t self:qipcrtr_socket create_socket_perms;
 dontaudit ssreq_server_t default_t:dir search;
