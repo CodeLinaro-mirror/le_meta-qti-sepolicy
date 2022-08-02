@@ -51,6 +51,7 @@ gen_require(`
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
     type udev_t;
+    type lib_t;
     type setprop_exec_t;
     type removable_device_t;
     type image_variant_sysfs_t;
@@ -61,6 +62,7 @@ gen_require(`
 allow udev_t unlabeled_t:system module_load;
 allow udev_t image_variant_sysfs_t:dir { getattr search };
 allow udev_t image_variant_sysfs_t:file manage_file_perms;
+allow udev_t lib_t:system module_load;
 
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
