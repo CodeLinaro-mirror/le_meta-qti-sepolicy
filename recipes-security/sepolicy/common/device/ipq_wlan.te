@@ -64,6 +64,7 @@ gen_require(`
   type cert_t;
   type usr_t;
   type etc_t;
+  type lib_t;
   type net_conf_t;
   type http_port_t;
   type init_t;
@@ -168,3 +169,6 @@ allow wlan_initrc_t http_port_t:tcp_socket name_connect;
 
 #Ezmesh Application
 allow wlan_initrc_t self:netlink_socket { create_socket_perms connected_stream_socket_perms };
+
+#kmod_t
+allow kmod_t lib_t:system module_load;
