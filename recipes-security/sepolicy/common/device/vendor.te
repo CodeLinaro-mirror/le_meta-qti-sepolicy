@@ -51,10 +51,16 @@ gen_require(`
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
     type udev_t;
+    type setprop_exec_t;
+    type removable_device_t;
+    type image_variant_sysfs_t;
+    type image_version_sysfs_t;
 ')
 
 # TODO : temporaray fix to unblock the tech teams, need to remove this unlabled_t rule
 allow udev_t unlabeled_t:system module_load;
+allow udev_t image_variant_sysfs_t:dir { getattr search };
+allow udev_t image_variant_sysfs_t:file manage_file_perms;
 
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -148,7 +154,6 @@ files_type(target_etc_t)
 ### init.post_boot.sh
 
 type post_boot_script_t;
-permissive post_boot_script_t;
 type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
@@ -181,6 +186,14 @@ allow post_boot_script_t sysctl_vm_t:dir search;
 allow post_boot_script_t sysctl_vm_t:file write_file_perms;
 allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
+
+allow post_boot_script_t self:unix_stream_socket rw_socket_perms;
+allow post_boot_script_t image_variant_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t image_variant_sysfs_t:file manage_file_perms;
+allow post_boot_script_t image_version_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t image_version_sysfs_t:file manage_file_perms;
+allow post_boot_script_t removable_device_t:blk_file getattr;
+allow post_boot_script_t setprop_exec_t:file exec_file_perms;
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
@@ -234,6 +247,12 @@ dev_node(qseecom_device_t);
 type mtd_device_t;
 dev_node(mtd_device_t);
 
+type qdsp_device_t;
+dev_node(qdsp_device_t);
+
+type xdsp_device_t;
+dev_node(xdsp_device_t);
+
 ###DMA HEAP TYPES ###
 type vendor_dmabuf_tui_heap_device_t;
 dev_node(vendor_dmabuf_tui_heap_device_t);
@@ -243,6 +262,9 @@ dev_node(vendor_dmabuf_system_heap_device_t);
 
 type system_dmabuf_device_t;
 dev_node(system_dmabuf_device_t);
+
+type vendor_dmabuf_audioml_heap_device_t;
+dev_node(vendor_dmabuf_audioml_heap_device_t);
 
 type vendor_dmabuf_qseecom_heap_device_t;
 dev_node(vendor_dmabuf_qseecom_heap_device_t);

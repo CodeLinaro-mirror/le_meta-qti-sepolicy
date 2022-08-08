@@ -130,3 +130,14 @@ dev_associate_sysfs(wlan_hsp_sysfs_t)
 type wlan_msl_sysfs_t;
 genfscon sysfs /devices/platform/soc/17210040.qcom,wcn6750 gen_context(system_u:object_r:wlan_msl_sysfs_t,s0)
 dev_associate_sysfs(wlan_msl_sysfs_t)
+
+type image_variant_sysfs_t;
+genfscon sysfs /devices/soc0 gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+dev_associate_sysfs(image_variant_sysfs_t)
+
+type image_version_sysfs_t;
+genfscon sysfs /devices/soc0/image_version gen_context(system_u:object_r:image_version_sysfs_t,s0)
+dev_associate_sysfs(image_version_sysfs_t)
+
+type proc_sched_t;
+genfscon proc /sys/walt/ gen_context(system_u:object_r:proc_sched_t,s0)

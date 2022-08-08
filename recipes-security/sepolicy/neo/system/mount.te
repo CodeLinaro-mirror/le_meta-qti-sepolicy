@@ -66,11 +66,13 @@ gen_require(`
     type mount_copybind_t;
     type unconfined_mount_t;
     type mount_t;
+    type hwfde_conf_file_t;
 ')
 
 permissive mount_t;
 permissive mount_copybind_t;
 permissive unconfined_mount_t;
+allow mount_t hwfde_conf_file_t:file read_file_perms;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;

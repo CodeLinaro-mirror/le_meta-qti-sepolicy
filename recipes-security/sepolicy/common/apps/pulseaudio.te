@@ -39,13 +39,16 @@ files_type(pulseaudio_tmp_t);
 init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 
 gen_require(`
-	type debugfs_t;
-	type systemd_logind_var_run_t;
-	type audio_device_t;
-	type snd_card_state_t;
-	type audio_data_file_t;
-	type system_dmabuf_device_t;
+        type debugfs_t;
+        type systemd_logind_var_run_t;
+        type audio_device_t;
+        type snd_card_state_t;
+        type audio_data_file_t;
+        type system_dmabuf_device_t;
+        type vendor_dmabuf_audioml_heap_device_t;
 ')
+user_data_files_type(audio_data_file_t);
+manage_user_data_files(pulseaudio_t, audio_data_file_t);
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };
 allow pulseaudio_t self:process { getcap getsched setcap setrlimit setsched signal signull };
@@ -57,6 +60,7 @@ allow pulseaudio_t self:tcp_socket { accept listen };
 allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow pulseaudio_t self:qipcrtr_socket create_socket_perms;
 allow pulseaudio_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+allow pulseaudio_t vendor_dmabuf_audioml_heap_device_t:chr_file read_chr_file_perms;
 
 audio_hal_access(pulseaudio_t)
 

@@ -79,6 +79,7 @@ files_type(tuicoreservice_vendor_t)
 allow tuicoreservice_t tuicoreservice_vendor_t:file read_file_perms;
 
 type tuicoreservice_data_t;
+dev_node(tuicoreservice_dev_t)
 user_data_files_type(tuicoreservice_data_t)
 manage_user_data_files(tuicoreservice_t, tuicoreservice_data_t)
 

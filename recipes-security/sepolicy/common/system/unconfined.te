@@ -66,6 +66,8 @@ userdebug_or_eng(`
         type alogd_t;
         type node_t;
         type data_t;
+        type snd_card_state_t;
+        type aud_dev_sysfs_t;
     ')
     manage_user_data_files(unconfined_t, user_data)
     manage_system_data_files(unconfined_t, system_data)
@@ -84,6 +86,8 @@ userdebug_or_eng(`
 
     allow domain unconfined_t:unix_dgram_socket sendto;
     allow unconfined_t self:process execmem;
+    allow unconfined_t snd_card_state_t:file rw_file_perms;
+    allow unconfined_t aud_dev_sysfs_t:file write_file_perms;
 
     ifdef(`init_systemd', `
         gen_require(`
