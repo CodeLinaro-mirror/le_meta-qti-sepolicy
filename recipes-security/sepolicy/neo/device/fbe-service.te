@@ -41,6 +41,7 @@ mls_file_write_all_levels(fbe_service_t);
 fs_mount_xattr_fs(fbe_service_t)
 files_polyinstantiate_all(fbe_service_t)
 overlay_mount_user_dir(fbe_service_t)
+leprop_rw_props(fbe_service_t)
 allow initrc_t fbe_secure_data_t:dir create_dir_perms;
 allow initrc_t overlay_t:dir manage_dir_perms;
 
