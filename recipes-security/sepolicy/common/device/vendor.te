@@ -206,7 +206,7 @@ dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
 
 allow post_boot_script_t proc_sched_t:file rw_file_perms;
-
+allow post_boot_script_t proc_sched_t:dir search_dir_perms;
 
 
 ### dev nodes ###
