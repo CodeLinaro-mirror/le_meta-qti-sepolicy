@@ -56,6 +56,7 @@ gen_require(`
     type removable_device_t;
     type image_variant_sysfs_t;
     type image_version_sysfs_t;
+    type proc_sched_t;
 ')
 
 # TODO : temporaray fix to unblock the tech teams, need to remove this unlabled_t rule
@@ -203,6 +204,10 @@ allow post_boot_script_t security_t:filesystem { getattr };
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
+
+allow post_boot_script_t proc_sched_t:file rw_file_perms;
+
+
 
 ### dev nodes ###
 
