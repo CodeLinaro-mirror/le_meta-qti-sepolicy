@@ -66,6 +66,8 @@ gen_require(`
        type gpumodel_t;
        type tmp_t;
        type camera_data_t;
+       type xdsp_device_t;
+       type qdsp_device_t;
 ')
 
 #read /data/misc/qvr
@@ -104,6 +106,8 @@ rw_chr_files_pattern(qvrd_t, device_t, dri_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, video_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, ion_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, cvp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, xdsp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, qdsp_device_t);
 
 leprop_rw_props(qvrd_t);
 
@@ -165,5 +169,5 @@ allow qvrd_t pulseaudio_t:unix_stream_socket { connectto rw_socket_perms };
 allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
 
 allow qvrd_t gpumodel_t:file read_file_perms;
-allow qvrd_t camera_data_t:dir { read search };
+allow qvrd_t camera_data_t:dir list_dir_perms;
 allow qvrd_t tmp_t:dir search_dir_perms;
