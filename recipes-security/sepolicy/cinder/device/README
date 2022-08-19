@@ -1,0 +1,9 @@
+# Readme for creating seperate target specific file for cinder target
+#
+# this is place holder where any service only seein on cinder
+# will have the sepolicy added here:
+# .te  --- files with sepolicy allows ...
+# .if  --- files with interfaces
+# .fc  --- files context  for files used by the driver
+#
+# To better understand study sepolicy for yocto.

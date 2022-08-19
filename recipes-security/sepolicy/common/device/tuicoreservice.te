@@ -100,6 +100,7 @@ type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
 type wlan_hsp_sysfs_t;
 type kmsg_device_t;
+type vendor_virtio_mem_device_t;
 ')
 
 userdebug_or_eng(`
@@ -138,6 +139,7 @@ allow tuicoreservice_t self:process setsched;
 allow tuicoreservice_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
 allow tuicoreservice_t vendor_dmabuf_tui_heap_device_t:chr_file read_chr_file_perms;
 allow tuicoreservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow tuicoreservice_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow tuicoreservice_t self:socket rw_socket_perms;
 allow tuicoreservice_t self:socket create;
 allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
