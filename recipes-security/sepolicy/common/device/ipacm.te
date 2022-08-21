@@ -69,6 +69,10 @@ gen_require(`
        type sysctl_vm_overcommit_t;
        type unconfined_t;
        class service {status start stop};
+       type proc_net_t;
+       type wlan_ezmesh_initrc_t;
+       type wlan_initrc_t;
+       type system_data_t;
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -146,6 +150,17 @@ allow ipacm_diag_t tmpfs_t:sock_file create;
 allow ipacm_diag_t self:unix_dgram_socket create_socket_perms;
 data_filetrans(ipacm_diag_t, ipacm_data_t, dir)
 manage_user_data_files(ipacm_diag_t, ipacm_data_t)
+
+#============= ipacm_t ==============
+allow ipacm_t proc_net_t:file read;
+allow ipacm_t self:netlink_generic_socket { write getattr setopt read bind create };
+allow ipacm_t system_data_t:lnk_file read;
+
+#============= wlan_ezmesh_initrc_t ==============
+allow wlan_ezmesh_initrc_t ipacm_t:lnk_file read;
+
+#============= wlan_initrc_t ==============
+allow wlan_initrc_t ipacm_t:file open;
 
 ### ipa_lnx_agent
 
