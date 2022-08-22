@@ -57,6 +57,9 @@ gen_require(`
        type unreserved_port_t;
        type node_t;
        type system_dmabuf_device_t;
+       type image_variant_sysfs_t;
+       type xdsp_device_t;
+       type qdsp_device_t;
 ')
 
 #read /data/misc/qvr
@@ -95,6 +98,8 @@ rw_chr_files_pattern(qvrd_t, device_t, dri_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, video_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, ion_device_t);
 rw_chr_files_pattern(qvrd_t, device_t, cvp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, xdsp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, qdsp_device_t);
 
 leprop_rw_props(qvrd_t);
 
@@ -145,3 +150,6 @@ kernel_read_system_state(qvrd_t)
 
 #needed for /dev/dri dir's s15 context which is accessed by libdrm
 mls_file_read_all_levels(qvrd_t)
+
+allow qvrd_t image_variant_sysfs_t:dir search_dir_perms;
+allow qvrd_t image_variant_sysfs_t:file read_file_perms;
