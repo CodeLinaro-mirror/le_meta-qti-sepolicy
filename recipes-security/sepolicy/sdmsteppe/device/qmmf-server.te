@@ -177,6 +177,8 @@ userdebug_or_eng(`
         type debugfs_t;
         type tracefs_t;
         type trace_marker_t;
+        type qdsp_device_t;
+        type xdsp_device_t;
     ')
 
     rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
@@ -187,6 +189,8 @@ userdebug_or_eng(`
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t qdsp_device_t:chr_file rw_chr_file_perms;
+    allow qmmf_server_t xdsp_device_t:chr_file rw_chr_file_perms;
 ')
 
 manage_qmmf_data_files(qmmf_server_t)
