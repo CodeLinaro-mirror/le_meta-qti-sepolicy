@@ -129,6 +129,9 @@ allow initrc_t brightness_t:file rw_file_perms;
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 allow initrc_t image_variant_sysfs_t:dir search;
 allow initrc_t image_variant_sysfs_t:file manage_file_perms;
+
+allow initrc_t lib_t:system module_load;
+
 #allowing init process to access overlay
 gen_require(`
     type overlay_t;
