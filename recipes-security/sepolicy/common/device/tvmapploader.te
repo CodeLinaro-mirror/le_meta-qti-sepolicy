@@ -86,6 +86,7 @@ type vendor_vm_oem_device_t;
 type vendor_vm_self_device_t;
 type tvmapp_t;
 type mnt_t;
+type vendor_virtio_mem_device_t;
 ')
 
 connect_to_tui_coresvc(tvmapploader_t)
@@ -95,6 +96,7 @@ allow tvmapploader_t self:capability2 block_suspend;
 allow tvmapploader_t self:unix_stream_socket create_stream_socket_perms;
 allow tvmapploader_t self:vsock_socket { create connect getattr read write shutdown };
 allow tvmapploader_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+allow tvmapploader_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow tvmapploader_t tvmapp_t:dir create_dir_perms;
 allow tvmapploader_t tvmapp_t:dir rw_dir_perms;
 allow tvmapploader_t mnt_t:dir rw_dir_perms;

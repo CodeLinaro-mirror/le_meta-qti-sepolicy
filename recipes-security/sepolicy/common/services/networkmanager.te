@@ -212,12 +212,6 @@ allow wlan_initrc_t sysctl_t:dir search;
 allow wlan_initrc_t wireless_device_t:chr_file { open read };
 manage_user_data_files(wlan_initrc_t, wifi_data_t)
 
-# /dev/kmsg
-userdebug_or_eng(`
-    dev_write_kmsg(NetworkManager_t);
-    mls_file_write_all_levels(NetworkManager_t);
-')
-
 dontaudit wpa_cli_t kmsg_device_t:chr_file { write_file_perms };
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
@@ -231,3 +225,63 @@ gen_require(`
 ')
 
 allow NetworkManager_t hostapd_tmp_t:file { rw_file_perms };
+
+###Ezmesh Initscripts###
+type wlan_ezmesh_initrc_exec_t;
+type wlan_ezmesh_initrc_t;
+init_script_domain(wlan_ezmesh_initrc_t, wlan_ezmesh_initrc_exec_t)
+
+# /dev/kmsg
+userdebug_or_eng(`
+    dev_write_kmsg(NetworkManager_t);
+    mls_file_write_all_levels(NetworkManager_t);
+    mls_file_write_all_levels(wlan_ezmesh_initrc_t);
+    kernel_search_debugfs(wlan_ezmesh_initrc_t);
+')
+
+corecmd_exec_shell(wlan_ezmesh_initrc_t)
+corecmd_exec_bin(wlan_ezmesh_initrc_t)
+dev_write_kmsg(wlan_ezmesh_initrc_t)
+kernel_read_system_state(wlan_ezmesh_initrc_t)  # uname
+sysnet_domtrans_ifconfig(wlan_ezmesh_initrc_t)
+modutils_domtrans_insmod(wlan_ezmesh_initrc_t)
+# The above rule doesn't seem to grant read permissions
+modutils_exec_insmod(wlan_ezmesh_initrc_t)
+
+allow wlan_ezmesh_initrc_t self:fifo_file rw_file_perms;
+allow wlan_ezmesh_initrc_t self:fifo_file rw_file_perms;
+allow wlan_ezmesh_initrc_t NetworkManager_exec_t:file { read_file_perms exec_file_perms };
+
+#TODO properly con_mode node
+dev_rw_sysfs(wlan_ezmesh_initrc_t)
+allow wlan_ezmesh_initrc_t firmware_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t firmware_t:file read_file_perms;
+files_search_home(wlan_ezmesh_initrc_t)
+getty_use_fds(wlan_ezmesh_initrc_t)
+term_use_unallocated_ttys(wlan_ezmesh_initrc_t)
+
+allow wlan_ezmesh_initrc_t NetworkManager_var_run_t:dir rw_dir_perms;
+allow wlan_ezmesh_initrc_t NetworkManager_var_run_t:file { create rw_file_perms };
+manage_sock_files_pattern(wlan_ezmesh_initrc_t, NetworkManager_var_run_t, NetworkManager_var_run_t)
+files_pid_filetrans(wlan_ezmesh_initrc_t, NetworkManager_var_run_t, { dir file sock_file })
+
+userdom_write_user_tmp_sockets(wlan_ezmesh_initrc_t)
+
+allow wlan_ezmesh_initrc_t init_t:unix_stream_socket rw_socket_perms;
+allow wlan_ezmesh_initrc_t kmod_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t random_device_t:chr_file read_chr_file_perms;
+allow wlan_ezmesh_initrc_t wifi_data_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t cert_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t cert_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t proc_net_t:file read_file_perms;
+allow wlan_ezmesh_initrc_t sysctl_net_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t sysctl_net_t:file rw_file_perms;
+allow wlan_ezmesh_initrc_t self:capability { net_admin net_raw};
+allow wlan_ezmesh_initrc_t self:netlink_generic_socket create_socket_perms;
+allow wlan_ezmesh_initrc_t self:netlink_route_socket create_netlink_socket_perms;
+allow wlan_ezmesh_initrc_t self:packet_socket create_socket_perms;
+allow wlan_ezmesh_initrc_t self:udp_socket { create ioctl };
+allow wlan_ezmesh_initrc_t urandom_device_t:chr_file read_chr_file_perms;
+allow wlan_ezmesh_initrc_t sysctl_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t wireless_device_t:chr_file read_chr_file_perms;
+manage_user_data_files(wlan_ezmesh_initrc_t, wifi_data_t)
