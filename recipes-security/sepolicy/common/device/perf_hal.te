@@ -132,6 +132,8 @@ userdebug_or_eng(`
     allow perf_hal_t debugfs_t:dir search_dir_perms;
     allow perf_hal_t tracefs_t:dir search_dir_perms;
     perf_hal_sock_req(unconfined_t)
+    allow perf_hal_t unconfined_t:dir search;
+    allow perf_hal_t unconfined_t:file read_file_perms;
 
     ifdef(`init_systemd',`
         gen_require(`
