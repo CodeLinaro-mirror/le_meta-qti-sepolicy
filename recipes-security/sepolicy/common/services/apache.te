@@ -41,6 +41,7 @@ gen_require(`
 qcmap_manage_var_run_qcmap_dir(httpd_t)
 
 dontaudit httpd_t httpd_data_t:file {map};
+dontaudit httpd_t etc_t:file {map};
 qcmap_httpd_data_filetrans(httpd_t, file )
 allow httpd_t httpd_t: capability {sys_chroot};
 search_dirs_pattern(qcmap_webserver_t, qcmap_data_t, qcmap_data_t)
