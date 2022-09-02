@@ -91,6 +91,7 @@ userdebug_or_eng(`
     allow unconfined_t policy_config_t:file getattr_file_perms;
     allow unconfined_t proc_sched_t:file getattr_file_perms;
     allow unconfined_t proc_sched_t:dir list_dir_perms;
+    allow unconfined_t proc_sched_t:file read_file_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
 
@@ -98,6 +99,8 @@ userdebug_or_eng(`
         type recovery_exec_t;
         type brightness_t;
         type tuicoreservice_dev_t;
+        type NetworkManager_exec_t;
+        class service { start status stop };
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t brightness_t:file write_file_perms;
@@ -108,4 +111,5 @@ userdebug_or_eng(`
     allow unconfined_t fbe_secure_data_t:file read_file_perms;
     allow unconfined_t hwfde_conf_file_t:file read_file_perms;
     allow unconfined_t install_evict_t:file exec_file_perms;
+    allow unconfined_t NetworkManager_exec_t:service { status start stop};
 ')

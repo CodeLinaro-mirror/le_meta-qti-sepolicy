@@ -132,8 +132,11 @@ allow initrc_t image_variant_sysfs_t:file manage_file_perms;
 #allowing init process to access overlay
 gen_require(`
     type overlay_t;
+    type proc_sched_t;
 ')
 allow init_t overlay_t:dir list_dir_perms;
+allow init_t proc_sched_t:file rw_file_perms;
+allow init_t proc_sched_t:dir search_dir_perms;
 
 #userdebug_or_eng(`
 #    reboot_write_fifo_files_reboot_device(init_t)

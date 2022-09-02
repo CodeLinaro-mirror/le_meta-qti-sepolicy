@@ -137,7 +137,7 @@ userdebug_or_eng(`
         gen_require(`
             class service { status start stop reload};
         ')
-        allow unconfined_t perf_hal_exec_t:service { status start };
+        allow unconfined_t perf_hal_exec_t:service { status start stop };
     ')
 ')
 

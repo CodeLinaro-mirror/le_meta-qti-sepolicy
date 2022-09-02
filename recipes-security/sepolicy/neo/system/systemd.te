@@ -31,8 +31,6 @@ type systemd_modules_load_exec_t;
 init_system_domain(systemd_modules_load_t, systemd_modules_load_exec_t)
 kernel_load_module(systemd_modules_load_t);
 
-# TODO : temporaray fix to unblock the tech teams, need to remove this service from permissive
-permissive systemd_modules_load_t;
 
 gen_require(`
  type syslogd_var_run_t;
@@ -41,6 +39,7 @@ gen_require(`
  type modules_object_t;
  type sysctl_t;
  type init_var_run_t;
+ type initrc_var_run_t;
  type modules_conf_t;
  type proc_t;
  type init_t;
@@ -54,6 +53,7 @@ gen_require(`
  type kernel_t;
  type debugfs_t;
  type proc_t;
+ type lib_t;
  type tracefs_t;
 ')
 
@@ -119,3 +119,7 @@ allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
 allow systemd_update_done_t kernel_t:unix_dgram_socket sendto;
+
+#/lib/modules mount point denials for system_module_load_t
+allow systemd_modules_load_t initrc_var_run_t:lnk_file read_lnk_file_perms;
+allow systemd_modules_load_t lib_t:system module_load;
