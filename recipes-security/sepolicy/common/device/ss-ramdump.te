@@ -44,6 +44,7 @@ gen_require(`
     type vendor_qdmastatsd_ramdump_device_t;
 ')
 
+
 type ss-ramdump_data_t;
 allow ss-ramdump_t self:capability kill;
 userdebug_or_eng(`
@@ -72,4 +73,7 @@ userdebug_or_eng(`
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_smem_device_t)
     dev_read_sysfs(ss-ramdump_t)
     logging_send_syslog_msg(ss-ramdump_t)
+    allow ss-ramdump_t self : netlink_kobject_uevent_socket create_socket_perms;
+    allow ss-ramdump_t self : capability net_admin;
+    allow ss-ramdump_t sysfs_t : file write;
 ')
