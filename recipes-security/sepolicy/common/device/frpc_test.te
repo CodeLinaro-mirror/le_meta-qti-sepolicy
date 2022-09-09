@@ -39,7 +39,7 @@ userdebug_or_eng(`
     allow frpc_test_t debugfs_t:dir search_dir_perms;
     allow frpc_test_t default_t:dir search_dir_perms;
     # Rules required for fastrpc_tests
-    # allow frpc_test_t device_t:chr_file getattr;
+    #allow frpc_test_t device_t:chr_file getattr;
     # above line is commented due tocompilaiton error
     # need to be fixed later
     allow frpc_test_t firmware_t:dir search;
@@ -48,5 +48,5 @@ userdebug_or_eng(`
     allow frpc_test_t lib_t:file { append create unlink write };
     allow frpc_test_t self:fifo_file { getattr read write };
     allow frpc_test_t shell_exec_t:file { execute execute_no_trans open read };
-    allow frpc_test_t proc_t:file { read open getattr };
+    allow frpc_test_t proc_t:file { read open getattr};
 ')
