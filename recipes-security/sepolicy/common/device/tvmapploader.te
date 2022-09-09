@@ -71,6 +71,10 @@ type tvmapploader_exec_t;
 
 init_vendor_domain(tvmapploader_t, tvmapploader_exec_t)
 
+type tvmapp_tmp_t;
+files_tmpfs_file(tvmapp_tmp_t)
+fs_tmpfs_filetrans(tvmapploader_t, tvmapp_tmp_t, file)
+
 type tvmapploader_data_t;
 user_data_files_type(tvmapploader_data_t)
 manage_user_data_files(tvmapploader_t, tvmapploader_data_t)
@@ -87,6 +91,7 @@ type vendor_vm_self_device_t;
 type tvmapp_t;
 type mnt_t;
 type vendor_virtio_mem_device_t;
+attribute vendor_domain;
 ')
 
 connect_to_tui_coresvc(tvmapploader_t)
@@ -100,6 +105,10 @@ allow tvmapploader_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow tvmapploader_t tvmapp_t:dir create_dir_perms;
 allow tvmapploader_t tvmapp_t:dir rw_dir_perms;
 allow tvmapploader_t mnt_t:dir rw_dir_perms;
+allow tvmapploader_t tvmapp_tmp_t:file { read write map getattr open execute };
+
+neverallow { vendor_domain - tvmapploader_t } tvmapp_tmp_t:file { read write map open execute };
+
 #only valid for signed binaries
 manage_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
 exec_files_pattern(tvmapploader_t, tvmapp_t, tvmapp_t);
