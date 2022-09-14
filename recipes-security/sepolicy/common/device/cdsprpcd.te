@@ -43,21 +43,24 @@ gen_require(`
     type xdsp_device_t;
 ')
 
+#allow cdsprpcd_t to acces /dev/adsprpcd-smd
+allow cdsprpcd_t xdsp_device_t:chr_file rw_chr_file_perms;
+
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
 userdebug_or_eng(`
-	gen_require(`
-	    type debugfs_t;
-	')
-	allow cdsprpcd_t debugfs_t:dir search_dir_perms;
+        gen_require(`
+            type debugfs_t;
+        ')
+        allow cdsprpcd_t debugfs_t:dir search_dir_perms;
 ')
 
 files_search_mnt(cdsprpcd_t)
 files_search_default(cdsprpcd_t)
 device_search_sockets(cdsprpcd_t)
 
+adsprpcd_files_access(cdsprpcd_t);
+
 #allow cdsprpcd_t to acces /dev/ion
 rw_chr_files_pattern(cdsprpcd_t, device_t, ion_device_t);
-#allow cdsprpcd_t to acces /dev/adsprpcd-smd-secure
-rw_chr_files_pattern(cdsprpcd_t, device_t, qdsp_device_t);
 #allow cdsprpcd_t to acces /dev/adsprpcd-smd
-rw_chr_files_pattern(cdsprpcd_t, device_t, xdsp_device_t);
+rw_chr_files_pattern(cdsprpcd_t, device_t, qdsp_device_t);
