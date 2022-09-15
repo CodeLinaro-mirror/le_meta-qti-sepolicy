@@ -10,6 +10,7 @@ gen_require(`
 	type var_spool_t;
 	type var_t;
 	type shell_exec_t;
+	type hwfde_conf_file_t;
 
 ')
 
@@ -23,3 +24,4 @@ allow mount_copybind_t var_t:dir { add_name create read write };
 
 #some code is tying to call bin/mksh(shell domain )which needs read /execute;
 allow mount_copybind_t shell_exec_t:file { execute map read };
+allow mount_t hwfde_conf_file_t:file read_file_perms;
