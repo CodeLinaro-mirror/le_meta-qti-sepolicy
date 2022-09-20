@@ -197,6 +197,7 @@ manage_files_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 manage_sock_files_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 rw_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 create_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
+allow hostapd_cli_qcmap_t self:capability kill;
 
 # Include /bin/sh in shell scripts
 corecmd_exec_shell(hostapd_cli_qcmap_t)
