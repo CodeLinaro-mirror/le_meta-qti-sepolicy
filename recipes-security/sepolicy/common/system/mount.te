@@ -93,6 +93,18 @@ gen_require(`
    type mount_runtime_t;
    type sdcard_t;
    type overlay_t;
+   type modules_object_t;
+   type dbusd_etc_t;
+   type syslog_conf_t;
+   type cache_recovery_t;
+   type post_boot_script_exec_t;
+   type lib_t;
+   type udev_helper_exec_t;
+   type adbd_system_data_t;
+   type file_context_t;
+   type usb_var_lock_t;
+   type semanage_store_t;
+   type semanage_read_lock_t;
 ')
 allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
@@ -100,3 +112,22 @@ allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
 allow mount_t init_var_run_t:file getattr;
 allow mount_t kernel_t:process setsched;
 allow mount_t overlay_t:chr_file { create link rename unlink };
+
+allow mount_t modules_object_t:dir mounton;
+allow mount_t dbusd_etc_t:file { read open getattr};
+allow mount_t syslog_conf_t:file { read open getattr};
+allow mount_t syslog_conf_t:dir read;
+allow mount_t self:capability { dac_read_search fowner };
+allow mount_t cache_recovery_t:dir { read create setattr write rename reparent add_name };
+allow mount_t cache_recovery_t:file { create append open getattr read };
+allow mount_t post_boot_script_exec_t:file { open read execute };
+allow mount_t etc_t:dir { rmdir reparent };
+allow mount_t lib_t:filesystem relabelfrom;
+allow mount_t udev_helper_exec_t:file { execute read open };
+allow mount_t adbd_system_data_t:file { read setattr write open link };
+allow mount_t overlay_t:dir { add_name remove_name reparent rename rmdir };
+allow mount_t file_context_t:file { read open getattr};
+allow mount_t usb_var_lock_t:file { getattr unlink };
+
+allow mount_copybind_t semanage_store_t:dir { search getattr read open };
+allow mount_copybind_t semanage_read_lock_t:file { getattr read };
