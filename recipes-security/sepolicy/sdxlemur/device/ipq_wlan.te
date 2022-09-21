@@ -88,6 +88,9 @@ manage_system_data_files(wlan_initrc_t, wifi_system_data_t);
 manage_system_data_files(kmod_t, wifi_system_data_t);
 userdom_manage_user_tmp_files(wlan_initrc_t)
 
+data_rw_system_data_files(wlan_service_t, wifi_system_data_t);
+allow wlan_service_t self:capability kill;
+
 manage_files_pattern(wlan_initrc_t, wlan_service_tmp_t, wlan_service_tmp_t)
 files_tmp_filetrans(wlan_initrc_t, wlan_service_tmp_t, { file lnk_file dir sock_file })
 
