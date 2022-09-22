@@ -1,0 +1,15 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+######################################
+## <summary>
+##      vmfilexferservice interface
+## </summary>
+
+interface(`vmfilexferservice_read_persist_display_files',`
+    gen_require(`
+        type persist_display_t;
+    ')
+
+    read_user_data_files($1, persist_display_t)
+')
