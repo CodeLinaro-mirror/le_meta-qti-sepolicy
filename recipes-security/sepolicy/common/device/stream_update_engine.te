@@ -38,7 +38,6 @@ type stream_update_engine_data_t;
 type stream_update_service_t;
 type stream_update_service_exec_t;
 
-
 gen_require(`
     type sysfs_t;
     type default_t;
@@ -54,6 +53,7 @@ gen_require(`
     type sysctl_vm_overcommit_t;
     type sysctl_vm_t;
     type sysctl_t;
+    type unconfined_t;
 ')
 
 init_vendor_domain(stream_update_engine_t, stream_update_engine_exec_t)
@@ -88,3 +88,10 @@ allow stream_update_engine_t debugfs_t:dir search;
 dev_read_urand(stream_update_engine_t)
 
 allow stream_update_engine_t mtd_device_t:chr_file { read write ioctl open };
+
+allow stream_update_engine_t sysctl_t:dir search;
+allow stream_update_engine_t sysctl_kernel_t:dir search;
+allow stream_update_engine_t sysctl_vm_t:dir search;
+allow stream_update_engine_t unconfined_t:binder call;
+allow stream_update_engine_t sysctl_vm_overcommit_t:file { read open };
+allow stream_update_engine_t sysctl_kernel_t:file { read open };

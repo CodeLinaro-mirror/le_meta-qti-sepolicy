@@ -84,6 +84,9 @@ userdebug_or_eng(`
     allow unconfined_t webserver_t:dir getattr;
     allow unconfined_t stream_update_engine_t:binder call;
 
+    #============= unconfined_t ==============
+    allow unconfined_t stream_update_engine_t:binder transfer;
+
     ifdef(`init_systemd', `
         gen_require(`
             type init_t;
