@@ -1,0 +1,13 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+# cpu_scaling_min/max can be set from user shell in testing
+# so adding this
+userdebug_or_eng(`
+	gen_require(`
+		type cpu_scaling_freq_t;
+	')
+
+allow unconfined_t cpu_scaling_freq_t:file { getattr open read };
+')

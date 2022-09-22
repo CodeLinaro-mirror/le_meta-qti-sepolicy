@@ -3,5 +3,8 @@
 
 # TODO :we may need this for early boot
 # need to remove this once we clear all denials
-
-#permissive tftp_server_t;
+gen_require(`
+	type sysadm_t;
+ ')
+permissive sysadm_t;
+#
