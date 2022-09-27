@@ -67,6 +67,8 @@ gen_require(`
     type unconfined_mount_t;
     type mount_t;
     type hwfde_conf_file_t;
+    type lib_t;
+    type overlay_t;
 ')
 
 permissive mount_t;
@@ -77,3 +79,11 @@ dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir }
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } self:capability { dac_read_search dac_override fowner fsetid };
+
+
+allow mount_t kernel_t:process setsched;
+allow mount_t lib_t:filesystem relabelfrom;
+allow mount_t overlay_t:chr_file { create link rename unlink };
+allow mount_t var_t:chr_file unlink;
+allow mount_t data_t:sock_file { create unlink };
+allow unconfined_mount_t kernel_t:process setsched; #will be removing this line in futare
