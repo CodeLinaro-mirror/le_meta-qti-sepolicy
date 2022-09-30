@@ -262,6 +262,9 @@ dev_node(vendor_vm_self_device_t);
 type vendor_virtio_mem_device_t;
 dev_node(vendor_virtio_mem_device_t);
 
+type vendor_vm_cp_pixel_device_t;
+dev_node(vendor_vm_cp_pixel_device_t);
+
 # Allow relabeling and changing DAC permissions of /dev/socket/* from systemd-tmpfiles
 gen_require(`
     type systemd_tmpfiles_t;
