@@ -49,11 +49,18 @@ gen_require(`
     type debugfs_t;
     type urandom_device_t;
     type mtd_device_t;
+    type ubi_device_t;
     type sysctl_kernel_t;
     type sysctl_vm_overcommit_t;
     type sysctl_vm_t;
     type sysctl_t;
     type unconfined_t;
+    type telaf_lib_t;
+    type telaf_sys_t;
+    type telaf_apptmp_rw_t;
+    type telaf_sdir_t;
+    type telaf_fw_t;
+    type telaf_app_rw_t;
 ')
 
 init_vendor_domain(stream_update_engine_t, stream_update_engine_exec_t)
@@ -95,3 +102,20 @@ allow stream_update_engine_t sysctl_vm_t:dir search;
 allow stream_update_engine_t unconfined_t:binder call;
 allow stream_update_engine_t sysctl_vm_overcommit_t:file { read open };
 allow stream_update_engine_t sysctl_kernel_t:file { read open };
+#============= telaf flash access ==============
+allow stream_update_engine_t telaf_lib_t:dir search;
+allow stream_update_engine_t telaf_lib_t:file { read getattr open execute };
+allow stream_update_engine_t telaf_sys_t:dir { read write search };
+
+allow stream_update_engine_t self:process setsched;
+allow stream_update_engine_t telaf_apptmp_rw_t:sock_file write;
+allow stream_update_engine_t telaf_sdir_t:unix_stream_socket connectto;
+allow stream_update_engine_t telaf_fw_t:dir search;
+allow stream_update_engine_t telaf_apptmp_rw_t:dir search;
+allow stream_update_engine_t tmp_t:dir write;
+allow stream_update_engine_t telaf_lib_t:lnk_file read;
+allow stream_update_engine_t telaf_app_rw_t:dir search;
+allow stream_update_engine_t telaf_lib_t:dir getattr;
+allow stream_update_engine_t ubi_device_t:chr_file { getattr read write ioctl open };
+allow stream_update_engine_t tmp_t:dir add_name;
+allow stream_update_engine_t tmp_t:file { write create open getattr };
