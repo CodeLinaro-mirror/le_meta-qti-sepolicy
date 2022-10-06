@@ -38,3 +38,6 @@ gen_require(`
 	type  dataqti_ppp_device_t;
 ')
 rw_chr_files_pattern(getty_t, device_t, dataqti_ppp_device_t)
+
+# Needed  for  { setattr }  comm="agetty" name="ttyGS0" dev="devtmpfs"
+allow getty_t dataqti_ppp_device_t:chr_file setattr;

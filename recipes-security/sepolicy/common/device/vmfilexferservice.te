@@ -1,0 +1,30 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(vmfilexferservice, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type vmfilexferservice_t;
+type vmfilexferservice_exec_t;
+type persist_display_t;
+
+init_vendor_domain(vmfilexferservice_t, vmfilexferservice_exec_t)
+gen_require(`
+type tuicoreservice_dev_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_hlos_device_t;
+type persist_t;
+')
+allow vmfilexferservice_t tuicoreservice_dev_t:chr_file rw_chr_file_perms;
+allow vmfilexferservice_t self:qipcrtr_socket create_socket_perms;
+allow vmfilexferservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow vmfilexferservice_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
+user_data_files_type(persist_display_t)
+filetrans_pattern(vmfilexferservice_t, persist_t, persist_display_t, { file dir })
+manage_user_data_files(vmfilexferservice_t, persist_display_t);
+corecmd_exec_shell(vmfilexferservice_t);
+corecmd_exec_bin(vmfilexferservice_t);
