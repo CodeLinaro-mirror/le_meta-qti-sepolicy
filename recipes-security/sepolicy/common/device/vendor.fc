@@ -88,6 +88,7 @@
 /dev/mem_buf_vm/qcom,hlos       -c gen_context(system_u:object_r:vendor_vm_hlos_device_t,s0)
 /dev/mem_buf_vm/qcom,oemvm      -c gen_context(system_u:object_r:vendor_vm_oem_device_t,s0)
 /dev/mem_buf_vm/qcom,self       -c gen_context(system_u:object_r:vendor_vm_self_device_t,s0)
+/dev/mem_buf_vm/qcom,cp_pixel   -c gen_context(system_u:object_r:vendor_vm_cp_pixel_device_t,s0)
 /dev/qti_virtio_mem       -c gen_context(system_u:object_r:vendor_virtio_mem_device_t,s0)
 
 ### Touch script ###
