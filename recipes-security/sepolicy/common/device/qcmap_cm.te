@@ -653,3 +653,4 @@ allow NetworkManager_t system_data_t:lnk_file { read };
 allow qcmap_cm_t firmware_t:dir { read search };
 allow qcmap_cm_t firmware_t:file { read open };
 dontaudit ifconfig_t sysdevice_sysfs_t:file { read };
+dontaudit ifconfig_t ipa_fw_device_t:chr_file { read write};

@@ -118,9 +118,13 @@ userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
     gen_require(`
         type dataqti_device_t;
+        type shell_exec_t;
+        type sysfs_t;
     ')
     allow pcie_initrc_t dataqti_device_t:chr_file getattr;
     allow pcie_initrc_t self:fifo_file rw_fifo_file_perms;
+    allow pcie_initrc_t shell_exec_t:file { read map execute };
+    allow pcie_initrc_t sysfs_t:file { read open };
     diag_domtrans(pcie_initrc_t)
     dev_write_kmsg(pcie_initrc_t)
     kernel_read_system_state(pcie_initrc_t)

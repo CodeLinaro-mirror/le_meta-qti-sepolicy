@@ -169,5 +169,5 @@ allow qvrd_t pulseaudio_t:unix_stream_socket { connectto rw_socket_perms };
 allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
 
 allow qvrd_t gpumodel_t:file read_file_perms;
-allow qvrd_t camera_data_t:dir { read search open getattr};
+allow qvrd_t camera_data_t:dir list_dir_perms;
 allow qvrd_t tmp_t:dir search_dir_perms;
