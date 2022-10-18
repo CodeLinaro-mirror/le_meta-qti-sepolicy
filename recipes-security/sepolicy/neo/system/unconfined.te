@@ -91,7 +91,7 @@ userdebug_or_eng(`
     allow unconfined_t policy_config_t:file getattr_file_perms;
     allow unconfined_t proc_sched_t:file getattr_file_perms;
     allow unconfined_t proc_sched_t:dir list_dir_perms;
-    allow unconfined_t proc_sched_t:file read_file_perms;
+    allow unconfined_t proc_sched_t:file rw_file_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
 
