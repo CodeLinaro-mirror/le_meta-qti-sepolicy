@@ -86,6 +86,7 @@ ifdef(`init_systemd',`
     gen_require(`
         type adbd_system_data_t;
         type usb_dev_t;
+        type qvr_data_t;
     ')
     allow init_t adbd_system_data_t:file write;
 #allow busybox init to search usb_dev directory
@@ -140,6 +141,8 @@ gen_require(`
     type overlay_t;
 ')
 allow init_t overlay_t:dir list_dir_perms;
+allow init_t qvr_data_t:dir list_dir_perms;
+allow init_t qvr_data_t:file {manage_file_perms};
 
 #userdebug_or_eng(`
 #    reboot_write_fifo_files_reboot_device(init_t)
