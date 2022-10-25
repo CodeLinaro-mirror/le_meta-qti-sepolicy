@@ -1,4 +1,4 @@
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-#
+/usr/bin/VMFileTransferService  --      gen_context(system_u:object_r:vmfilexferservice_exec_t,s0)
