@@ -25,7 +25,9 @@ type persist_display_t;
 dev_rw_sysfs(demuratnservice_t)
 vmfilexferservice_read_persist_display_files(demuratnservice_t);
 manage_user_data_files(demuratnservice_t, persist_display_t);
-allow demuratnservice_t persist_t:dir search;
+allow demuratnservice_t persist_t:dir { search read };
+allow demuratnservice_t persist_display_t:dir { search read write open add_name remove_name getattr };
+allow demuratnservice_t persist_display_t:file { read write create open append rename unlink };
 allow demuratnservice_t tuicoreservice_dev_t:chr_file rw_chr_file_perms;
 allow demuratnservice_t self:qipcrtr_socket create_socket_perms;
 allow demuratnservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
@@ -34,5 +36,6 @@ allow demuratnservice_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow demuratnservice_t vendor_vm_cp_pixel_device_t:chr_file read_chr_file_perms;
 allow demuratnservice_t self:process signal;
 allow demuratnservice_t self:capability2 block_suspend;
+kernel_read_vm_overcommit_sysctl(demuratnservice_t)
 corecmd_exec_shell(demuratnservice_t);
 corecmd_exec_bin(demuratnservice_t);
