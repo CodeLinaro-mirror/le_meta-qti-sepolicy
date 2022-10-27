@@ -63,6 +63,9 @@
 
 /usr/sbin/minidlnad             --    gen_context(system_u:object_r:minidlna_exec_t,s0)
 
+#dhcpcd
+/var/run/dhcpcd.sock                  system_u:object_r:dhcpc_var_run_t:s0
+
 #TinyProxy
 /usr/sbin/tinyproxy             --    gen_context(system_u:object_r:tinyproxy_exec_t,s0)
 /usr/bin/tinyproxy              --    gen_context(system_u:object_r:tinyproxy_exec_t,s0)

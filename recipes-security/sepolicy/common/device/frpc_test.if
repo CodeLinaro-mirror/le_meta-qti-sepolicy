@@ -1,0 +1,9 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear.
+
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+## <summary>ADSPRPCD</summary>
+########################################
+## <summary>
+##      frpc_test to have frpc_root_exec_t file access
+## </summary>
