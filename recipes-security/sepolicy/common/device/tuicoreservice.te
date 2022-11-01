@@ -138,6 +138,7 @@ allow tuicoreservice_t self:socket create;
 allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
 allow tuicoreservice_t self:qipcrtr_socket create_socket_perms;
 allow tuicoreservice_t self:capability2 block_suspend;
+allow tuicoreservice_t self:process signal;
 allow tuicoreservice_sock_t device_t:filesystem associate;
 allow tuicoreservice_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
 dontaudit tuicoreservice_t mnt_t:dir search;
