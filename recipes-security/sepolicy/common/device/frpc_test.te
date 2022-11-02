@@ -9,7 +9,8 @@ policy_module(frpc_test , 1.0)
 #
 type frpc_test_t;
 type frpc_root_exec_t;
-
+type dsp_tests_data_t;
+type dsp_test_t;
 
 userdebug_or_eng(`
     gen_require(`
@@ -26,9 +27,12 @@ userdebug_or_eng(`
         type lib_t;
         type shell_exec_t;
         type proc_t;
+        type adbd_t;
     ')
     init_vendor_domain(frpc_test_t, frpc_root_exec_t)
+    init_vendor_domain(dsp_test_t, dsp_tests_data_t)
     domtrans_pattern(unconfined_t, frpc_root_exec_t, frpc_test_t)
+    domtrans_pattern(unconfined_t, dsp_tests_data_t, dsp_test_t)
     allow frpc_root_exec_t fs_t:filesystem associate;
     allow frpc_test_t ion_device_t:chr_file read_chr_file_perms;
     allow frpc_test_t qdsp_device_t:chr_file read_chr_file_perms;
@@ -49,4 +53,8 @@ userdebug_or_eng(`
     allow frpc_test_t self:fifo_file { getattr read write };
     allow frpc_test_t shell_exec_t:file { execute execute_no_trans open read };
     allow frpc_test_t proc_t:file { read open getattr};
+    allow frpc_test_t dsp_tests_data_t:dir { add_name write search };
+    allow frpc_test_t dsp_tests_data_t:file { append create getattr open read };
+    allow dsp_tests_data_t fs_t:filesystem associate;
+    allow frpc_test_t adbd_t:fifo_file read;
 ')
