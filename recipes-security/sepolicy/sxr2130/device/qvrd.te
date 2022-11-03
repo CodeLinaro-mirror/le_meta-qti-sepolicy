@@ -68,10 +68,14 @@ gen_require(`
        type camera_data_t;
        type xdsp_device_t;
        type qdsp_device_t;
+       type fs_t;
+       type data_otapackage_t;
+       type cache_recoveryupgrade_t;
+       type recovery_initrc_tmp_t;
 ')
 
 #read /data/misc/qvr
-allow qvrd_t qvr_data_t:file { rw_file_perms create map };
+allow qvrd_t qvr_data_t:file { rw_file_perms create map unlink};
 allow qvrd_t qvr_data_t:dir add_entry_dir_perms;
 allow qvrd_t sxr_data_t:file { rw_file_perms create map };
 allow qvrd_t sxr_data_t:dir add_entry_dir_perms;
@@ -135,6 +139,11 @@ allow qvrd_t firmware_t:file read_file_perms;
 #Display
 allow qvrd_t sysfs_vblank_t:file rw_file_perms;
 
+# allow stat /data partition.
+allow qvrd_t fs_t:filesystem getattr;
+recovery_upgrade_rw_files(qvrd_t);
+allow qvrd_t cache_recoveryupgrade_t:file {create write rw_file_perms};
+
 #Network
 allow qvrd_t self:udp_socket { create_socket_perms };
 allow qvrd_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
@@ -171,3 +180,4 @@ allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
 allow qvrd_t gpumodel_t:file read_file_perms;
 allow qvrd_t camera_data_t:dir list_dir_perms;
 allow qvrd_t tmp_t:dir search_dir_perms;
+allow qvrd_t tmp_t:file read_file_perms;
