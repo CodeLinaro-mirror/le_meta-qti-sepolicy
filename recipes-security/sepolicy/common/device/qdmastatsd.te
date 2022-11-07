@@ -76,4 +76,5 @@ rw_vendor_qdma_sock_file(vendor_qdmastatsd_t);
 dontaudit vendor_qdmastatsd_t default_t:dir search;
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:dir { write remove_name add_name };
 allow vendor_qdmastatsd_t vendor_qdma_sock_t:sock_file { create unlink setattr };
+allow vendor_qdmastatsd_t self:qipcrtr_socket create_socket_perms;
 
