@@ -1,19 +1,8 @@
-From 6113ed7362be6b2bf1ee861d51e1689b62b40fad Mon Sep 17 00:00:00 2001
-From: Jiten Patel <quic_jitepate@quicinc.com>
-Date: Mon, 29 Nov 2021 16:43:10 +0530
-Subject: [PATCH] modify rpmb and ssd tag
-
-Signed-off-by: Jiten Patel <quic_jitepate@quicinc.com>
----
- policy/modules/kernel/storage.fc | 3 ++-
- policy/modules/kernel/storage.te | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
 diff --git a/policy/modules/kernel/storage.fc b/policy/modules/kernel/storage.fc
-index cd1b439..ca7fa28 100644
+index c7e3ac0..c30d68a 100644
 --- a/policy/modules/kernel/storage.fc
 +++ b/policy/modules/kernel/storage.fc
-@@ -6,6 +6,7 @@
+@@ -6,9 +6,11 @@
  /dev/n?pt[0-9]+		-c	gen_context(system_u:object_r:tape_device_t,s0)
  /dev/n?tpqic[12].*	-c	gen_context(system_u:object_r:tape_device_t,s0)
  /dev/[shmxv]d[^/]*	-b	gen_context(system_u:object_r:fixed_disk_device_t,mls_systemhigh)
@@ -21,7 +10,11 @@ index cd1b439..ca7fa28 100644
  /dev/aztcd		-b	gen_context(system_u:object_r:removable_device_t,s0)
  /dev/bpcd		-b	gen_context(system_u:object_r:removable_device_t,s0)
  /dev/bsg/.+		-c	gen_context(system_u:object_r:scsi_generic_device_t,s0)
-@@ -47,7 +48,7 @@ ifdef(`distro_redhat', `
++/dev/bsg/0:0:0:49476    -c      gen_context(system_u:object_r:vendor_bsg_device_t,s0)
+ /dev/cdu.*		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/cm20.*		-b	gen_context(system_u:object_r:removable_device_t,s0)
+ /dev/dasd[^/]*		-b	gen_context(system_u:object_r:fixed_disk_device_t,mls_systemhigh)
+@@ -49,7 +51,7 @@ ifdef(`distro_redhat', `
  ')
  /dev/s(cd|r)[^/]*	-b	gen_context(system_u:object_r:removable_device_t,s0)
  /dev/sbpcd.*		-b	gen_context(system_u:object_r:removable_device_t,s0)
@@ -31,10 +24,24 @@ index cd1b439..ca7fa28 100644
  /dev/sonycd		-b	gen_context(system_u:object_r:removable_device_t,s0)
  /dev/tape.*		-c	gen_context(system_u:object_r:tape_device_t,s0)
 diff --git a/policy/modules/kernel/storage.te b/policy/modules/kernel/storage.te
-index a049e30..7be7ab0 100644
+index c10290c..58b69d7 100644
 --- a/policy/modules/kernel/storage.te
 +++ b/policy/modules/kernel/storage.te
-@@ -37,6 +37,12 @@ dev_node(scsi_generic_device_t)
+@@ -28,6 +28,13 @@ type fuse_device_t;
+ dev_node(fuse_device_t)
+
+ #
++# vendor_bsg_device_t is the type of /dev/bsg/*
++# it gives access to ALL bsg devices (both fixed and removable)
++#
++type vendor_bsg_device_t;
++dev_node(vendor_bsg_device_t)
++
++#
+ # scsi_generic_device_t is the type of /dev/sg*
+ # it gives access to ALL SCSI devices (both fixed and removable)
+ #
+@@ -37,6 +44,12 @@ dev_node(scsi_generic_device_t)
  neverallow ~{ scsi_generic_read storage_unconfined_type } scsi_generic_device_t:{ chr_file blk_file } read;
  neverallow ~{ scsi_generic_write storage_unconfined_type } scsi_generic_device_t:{ chr_file blk_file } { append write };
 
@@ -47,6 +54,3 @@ index a049e30..7be7ab0 100644
  #
  # removable_device_t is the type of
  # /dev/scd* and /dev/fd*.
---
-2.29.0
-
