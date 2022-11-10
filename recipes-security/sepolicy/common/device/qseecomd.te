@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019,2022 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -45,6 +45,7 @@ gen_require(`
        class process setcap;
        type persist_t;
        type scsi_rpmb_device_t;
+       type vendor_bsg_device_t;
        type storage_disk_device_t;
 ')
 
@@ -98,4 +99,5 @@ mls_file_read_all_levels(qseecomd_t);
 allow qseecomd_t self:capability chown;
 allow qseecomd_t self:capability2 block_suspend;
 allow qseecomd_t scsi_rpmb_device_t:chr_file { rw_chr_file_perms setattr };
+allow qseecomd_t vendor_bsg_device_t:chr_file { rw_chr_file_perms setattr };
 allow qseecomd_t storage_disk_device_t:blk_file { rw_blk_file_perms };
