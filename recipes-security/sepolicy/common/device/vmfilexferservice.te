@@ -18,7 +18,9 @@ type tuicoreservice_dev_t;
 type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
 type persist_t;
+type persist_display_t;
 ')
+allow vmfilexferservice_t persist_display_t:file { read open getattr };
 allow vmfilexferservice_t tuicoreservice_dev_t:chr_file rw_chr_file_perms;
 allow vmfilexferservice_t self:qipcrtr_socket create_socket_perms;
 allow vmfilexferservice_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
@@ -28,3 +30,14 @@ filetrans_pattern(vmfilexferservice_t, persist_t, persist_display_t, { file dir 
 manage_user_data_files(vmfilexferservice_t, persist_display_t);
 corecmd_exec_shell(vmfilexferservice_t);
 corecmd_exec_bin(vmfilexferservice_t);
+
+### persistcheck.sh
+type persistcheck_script_t;
+type persistcheck_script_exec_t;
+files_type(persistcheck_script_exec_t)
+init_script_domain(persistcheck_script_t, persistcheck_script_exec_t)
+
+allow persistcheck_script_t init_t:unix_stream_socket { read write ioctl };
+allow persistcheck_script_t shell_exec_t:file { map read execute };
+allow persistcheck_script_t persist_t:dir search;
+allow persistcheck_script_t persist_display_t:dir getattr;
