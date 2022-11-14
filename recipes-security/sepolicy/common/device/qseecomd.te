@@ -46,8 +46,6 @@ gen_require(`
        type persist_t;
        type scsi_rpmb_device_t;
        type storage_disk_device_t;
-       type smcinvoke_device_t;
-       type vendor_dmabuf_qseecom_heap_device_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -57,9 +55,6 @@ rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);
 
 #allow qseecomd_t to acces /dev/qseecom
 rw_chr_files_pattern(qseecomd_t, device_t, qseecom_device_t);
-
-#allow qseecomd_t to access /dev/smcinvoke
-rw_chr_files_pattern(qseecomd_t, device_t, smcinvoke_device_t);
 
 # allow qseecomd to read commandline from /proc/cmdline
 allow qseecomd_t proc_t:file read_file_perms;
@@ -96,7 +91,6 @@ manage_user_data_files(qseecomd_t, qseecomd_persist_t)
 files_read_etc_files(qseecomd_t)
 
 # allow qseecomd read/write access to /dev/mmcblk0rpmb
-allow qseecomd_t qseecomd_rpmb_t:chr_file {rw_chr_file_perms};
 dontaudit qseecomd_t persist_t:dir read;
 dontaudit qseecomd_t sysfs_t:file { append };
 mls_file_write_all_levels(qseecomd_t);
@@ -105,6 +99,3 @@ allow qseecomd_t self:capability chown;
 allow qseecomd_t self:capability2 block_suspend;
 allow qseecomd_t scsi_rpmb_device_t:chr_file { rw_chr_file_perms setattr };
 allow qseecomd_t storage_disk_device_t:blk_file { rw_blk_file_perms };
-
-#allow access to qseecom DMABUF device
-allow qseecomd_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
