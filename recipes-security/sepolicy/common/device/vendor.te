@@ -247,12 +247,6 @@ dev_node(vendor_dmabuf_tui_heap_device_t);
 type vendor_dmabuf_system_heap_device_t;
 dev_node(vendor_dmabuf_system_heap_device_t);
 
-type system_dmabuf_device_t;
-dev_node(system_dmabuf_device_t);
-
-type vendor_dmabuf_qseecom_heap_device_t;
-dev_node(vendor_dmabuf_qseecom_heap_device_t);
-
 ### MEM_BUF_VM TYPES ###
 type vendor_vm_trusted_device_t;
 dev_node(vendor_vm_trusted_device_t);
