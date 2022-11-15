@@ -1,0 +1,5 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/DemuraTnService  --      gen_context(system_u:object_r:demuratnservice_exec_t,s0)
+/data/display-tests/feature_enabler(/.*)?   --    gen_context(system_u:object_r:demuratnservice_data_t,s0)

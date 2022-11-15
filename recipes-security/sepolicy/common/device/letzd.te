@@ -89,7 +89,10 @@ allow letzd_t self:capability setuid;
 allow letzd_t self:process setcap;
 gen_require(`
     type vendor_virtio_mem_device_t;
+    type fixed_disk_device_t;
 ')
 allow letzd_t vendor_virtio_mem_device_t:chr_file rw_file_perms;
+allow letzd_t fixed_disk_device_t:blk_file getattr;
+mls_file_read_all_levels(letzd_t);
 # send key to cryptsetup
 allow letzd_t self:fifo_file { getattr write ioctl };
