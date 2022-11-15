@@ -129,7 +129,6 @@ allow tftp_server_t self:capability { setuid chown setgid setpcap };
 allow tftp_server_t self:process setcap;
 allow tftp_server_t rfs_persist_t:dir create_dir_perms;
 allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
-files_read_etc_files(tftp_server_t)
 
 ### misc properties ###
 
