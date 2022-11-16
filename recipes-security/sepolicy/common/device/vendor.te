@@ -55,6 +55,8 @@ gen_require(`
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
     type setprop_exec_t;
+    type sysfs_power_state_t;
+    type sysfs_usb_mode_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -191,6 +193,11 @@ allow post_boot_script_t security_t:filesystem { getattr };
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
+
+allow post_boot_script_t etc_t:file read_file_perms;
+allow post_boot_script_t sysfs_power_state_t:file { getattr_file_perms setattr_file_perms };
+allow post_boot_script_t sysfs_usb_mode_t:file { getattr_file_perms setattr_file_perms };
+allow post_boot_script_t self:capability chown;
 
 ### dev nodes ###
 
