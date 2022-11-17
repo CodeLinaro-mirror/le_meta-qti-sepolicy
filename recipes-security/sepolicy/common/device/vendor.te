@@ -161,6 +161,10 @@ type post_boot_script_exec_t;
 files_type(post_boot_script_exec_t)
 init_script_domain(post_boot_script_t, post_boot_script_exec_t)
 
+type  init_qti_debug_t;
+files_type(init_qti_debug_t)
+init_script_domain(post_boot_script_t, init_qti_debug_t)
+
 dev_rw_sysfs(post_boot_script_t)
 kernel_rw_kernel_sysctl(post_boot_script_t)
 fstools_domtrans(post_boot_script_t)
@@ -296,6 +300,7 @@ gen_require(`
 
 userdebug_or_eng(`
     allow kmod_t kernel_tests_t:dir search;
+    allow post_boot_script_t init_qti_debug_t:file exec_file_perms;
 ')
 
 gen_require(`
