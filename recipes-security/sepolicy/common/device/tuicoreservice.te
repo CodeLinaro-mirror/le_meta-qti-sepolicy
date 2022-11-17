@@ -101,6 +101,7 @@ type vendor_vm_hlos_device_t;
 type wlan_hsp_sysfs_t;
 type kmsg_device_t;
 type vendor_virtio_mem_device_t;
+type persist_display_t;
 ')
 
 userdebug_or_eng(`
@@ -145,6 +146,7 @@ allow tuicoreservice_t self:socket create;
 allow tuicoreservice_t self:unix_stream_socket create_stream_socket_perms;
 allow tuicoreservice_t self:qipcrtr_socket create_socket_perms;
 allow tuicoreservice_t self:capability2 block_suspend;
+allow tuicoreservice_t self:process signal;
 allow tuicoreservice_sock_t device_t:filesystem associate;
 allow tuicoreservice_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
 dontaudit tuicoreservice_t mnt_t:dir search;
@@ -167,5 +169,10 @@ allow tuicoreservice_t self:fifo_file rw_fifo_file_perms;
 allow tuicoreservice_t event_device_t:chr_file write;
 allow tuicoreservice_t bin_t:service { start status stop reload};
 
+vmfilexferservice_read_persist_display_files(tuicoreservice_t);
+user_data_files_type(persist_display_t)
+filetrans_pattern(tuicoreservice_t, persist_t, persist_display_t, { file dir })
+manage_user_data_files(tuicoreservice_t, persist_display_t);
+allow tuicoreservice_t persist_t:dir search;
 corecmd_exec_shell(tuicoreservice_t);
 corecmd_exec_bin(tuicoreservice_t);
