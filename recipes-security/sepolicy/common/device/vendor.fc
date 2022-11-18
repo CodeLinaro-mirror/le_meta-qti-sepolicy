@@ -82,6 +82,8 @@
 ### DMA HEAPS ###
 /dev/dma_heap/qcom,tui    -c   gen_context(system_u:object_r:vendor_dmabuf_tui_heap_device_t,s0)
 /dev/dma_heap/qcom,system -c   gen_context(system_u:object_r:vendor_dmabuf_system_heap_device_t,s0)
+/dev/dma_heap/system -c   gen_context(system_u:object_r:system_dmabuf_device_t,s0)
+/dev/dma_heap/qcom,qseecom -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
 
 ### MEM_BUF_VM devices ###
 /dev/mem_buf_vm/qcom,trusted_vm -c gen_context(system_u:object_r:vendor_vm_trusted_device_t,s0)
