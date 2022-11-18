@@ -1,0 +1,183 @@
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted (subject to the limitations in the
+#disclaimer below) provided that the following conditions are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above
+#      copyright notice, this list of conditions and the following
+#      disclaimer in the documentation and/or other materials provided
+#      with the distribution.
+#
+#    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#      contributors may be used to endorse or promote products derived
+#      from this software without specific prior written permission.
+#
+#NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+#GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+#HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+#WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+#ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+#GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+#IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+#IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+
+policy_module(qvrd, 1.0)
+type qvrd_t;
+type qvrd_exec_t;
+init_vendor_domain(qvrd_t, qvrd_exec_t)
+
+gen_require(`
+       type qvr_data_t;
+       type sxr_data_t;
+       type default_t;
+       type dri_device_t;
+       type sound_device_t;
+       type debugfs_t;
+       type adsprpcd_t;
+       type system_dir_t;
+       type ion_device_t;
+       type video_device_t;
+       type vendor_camera_config_t;
+       type sysdevice_sysfs_t;
+       type unconfined_t;
+       type urandom_device_t;
+       type firmware_t;
+       type cvp_device_t;
+       type sysfs_vblank_t;
+       type sysfs_t;
+       type unreserved_port_t;
+       type node_t;
+       type user_runtime_root_t;
+       type weston_t;
+       type tmpfs_t;
+       type pulseaudio_var_run_t;
+       type pulseaudio_t;
+       type etc_t;
+       type cpu_scaling_freq_t;
+       type gpumodel_t;
+       type tmp_t;
+       type camera_data_t;
+       type xdsp_device_t;
+       type qdsp_device_t;
+       type fs_t;
+       type data_otapackage_t;
+       type cache_recoveryupgrade_t;
+       type recovery_initrc_tmp_t;
+')
+
+#read /data/misc/qvr
+allow qvrd_t qvr_data_t:file { rw_file_perms create map unlink};
+allow qvrd_t qvr_data_t:dir add_entry_dir_perms;
+allow qvrd_t sxr_data_t:file { rw_file_perms create map };
+allow qvrd_t sxr_data_t:dir add_entry_dir_perms;
+
+#access qvr config file
+type qvr_config_t;
+files_type(qvr_config_t)
+allow qvrd_t qvr_config_t:dir list_dir_perms;
+allow qvrd_t qvr_config_t:file read_file_perms;
+allow qvrd_t system_dir_t:dir search_dir_perms;
+
+allow qvrd_t self:fifo_file rw_fifo_file_perms;
+allow qvrd_t self:qipcrtr_socket {create_socket_perms};
+
+#access camera configuration
+allow qvrd_t vendor_camera_config_t:dir search_dir_perms;
+allow qvrd_t vendor_camera_config_t:file read_file_perms;
+allow qvrd_t sysfs_t:{ lnk_file dir file } read_file_perms;
+
+#qvr socket
+type qvrd_socket_t;
+dev_node(qvrd_socket_t)
+device_manage_socket_file(qvrd_t, qvrd_socket_t, "qvrservice")
+device_manage_socket_file(qvrd_t, qvrd_socket_t, "qvrservice_camera")
+
+allow qvrd_t qvrd_socket_t:sock_file rw_sock_file_perms;
+allow qvrd_t self:unix_stream_socket { create_stream_socket_perms connectto };
+allow qvrd_t self:capability { sys_nice };
+allow qvrd_t self:process { setsched signal };
+
+rw_chr_files_pattern(qvrd_t, device_t, dri_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, video_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, ion_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, cvp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, xdsp_device_t);
+rw_chr_files_pattern(qvrd_t, device_t, qdsp_device_t);
+
+leprop_rw_props(qvrd_t);
+
+allow qvrd_t sound_device_t:chr_file rw_chr_file_perms;
+allow qvrd_t debugfs_t:dir search_dir_perms;
+
+allow qvrd_t adsprpcd_t:dir list_dir_perms;
+allow qvrd_t adsprpcd_t:file read_file_perms;
+
+allow qvrd_t sysdevice_sysfs_t:file read_file_perms;
+
+userdebug_or_eng(`
+    allow unconfined_t qvrd_socket_t:sock_file rw_sock_file_perms;
+    allow unconfined_t qvr_data_t:file map;
+    allow qvrd_t unconfined_t:process setsched;
+')
+
+allow qvrd_t urandom_device_t:chr_file read_chr_file_perms;
+allow qvrd_t default_t:dir search_dir_perms;
+
+#access ver_info
+allow qvrd_t firmware_t:dir search_dir_perms;
+allow qvrd_t firmware_t:file read_file_perms;
+
+#Display
+allow qvrd_t sysfs_vblank_t:file rw_file_perms;
+
+# allow stat /data partition.
+allow qvrd_t fs_t:filesystem getattr;
+recovery_upgrade_rw_files(qvrd_t);
+allow qvrd_t cache_recoveryupgrade_t:file {create write rw_file_perms};
+
+#Network
+allow qvrd_t self:udp_socket { create_socket_perms };
+allow qvrd_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
+allow qvrd_t self:netlink_route_socket { write getattr read bind create nlmsg_read };
+allow qvrd_t unreserved_port_t:{ tcp_socket udp_socket } name_bind;
+allow qvrd_t node_t:{ tcp_socket udp_socket } node_bind;
+
+userdebug_or_eng(`
+    gen_require(`
+        type trace_marker_t;
+        type tracefs_t;
+    ')
+
+    allow qvrd_t trace_marker_t:file  write_file_perms;
+    allow qvrd_t tracefs_t:dir search_dir_perms;
+')
+
+perf_hal_sock_req(qvrd_t)
+
+# display and pulseaudio permission
+allow qvrd_t user_runtime_root_t:dir manage_dir_perms;
+allow qvrd_t user_runtime_root_t:sock_file write_sock_file_perms;
+allow qvrd_t weston_t:unix_stream_socket connectto;
+allow qvrd_t etc_t:file read_file_perms;
+allow qvrd_t tmpfs_t:dir read_file_perms;
+allow qvrd_t tmpfs_t:file { map rw_file_perms };
+allow qvrd_t pulseaudio_var_run_t:dir search_dir_perms;
+allow qvrd_t pulseaudio_var_run_t:sock_file rw_sock_file_perms;
+allow qvrd_t pulseaudio_t:unix_stream_socket { connectto rw_socket_perms };
+
+#set/get cpu frequency
+allow qvrd_t cpu_scaling_freq_t:file rw_file_perms;
+
+allow qvrd_t gpumodel_t:file read_file_perms;
+allow qvrd_t camera_data_t:dir list_dir_perms;
+allow qvrd_t tmp_t:dir search_dir_perms;
+allow qvrd_t tmp_t:file read_file_perms;

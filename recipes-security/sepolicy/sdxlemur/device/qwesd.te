@@ -1,0 +1,195 @@
+# Copyright (c) 2019-2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qwesd, 1.0)
+
+type qwesd_t;
+type qwesd_exec_t;
+type qwes_data_t;
+type qwes_config_etc_t;
+type qwes_mink_socket_t;
+
+files_type(qwes_config_etc_t)
+
+init_vendor_domain(qwesd_t, qwesd_exec_t)
+logging_send_syslog_msg(qwesd_t)
+
+gen_require(`
+       type smcinvoke_device_t;
+       type qseecom_device_t;
+       type ion_device_t;
+       type qcmap_etc_data_t;
+       type etc_t;
+       type netmgrd_socket_device_t;
+       type qnetmgrd_t;
+       type systemd_resolved_var_run_t;
+       type http_port_t;
+       type cert_t;
+')
+allow qwesd_t net_conf_t:file write_file_perms;
+#allow qwesd to read qnetmgrd confi file.
+#qnetmgr_read_config_file(qwesd_t)
+
+# allow qwesd to read /etc/qwesd.rc config file
+files_read_etc_files(qwesd_t)
+allow qwesd_t etc_t:dir list_dir_perms;
+read_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
+read_lnk_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
+
+##################################################################
+# Rules starting for loading TA using QSEECOM
+##################################################################
+#allow qwesd to acces /dev/qseecom
+rw_chr_files_pattern(qwesd_t, device_t, qseecom_device_t);
+
+#allow qwesd ion_device_t:chr_file read;
+rw_chr_files_pattern(qwesd_t, device_t, ion_device_t);
+
+# allow qwesd to read /firmware/image/haventkn.mbn TA file
+firmware_read_files(qwesd_t);
+
+# allow qwesd to read /dev/smcinvoke file
+rw_chr_files_pattern(qwesd_t, device_t, smcinvoke_device_t);
+#################################################################
+# Rules ending for loading TA using QSEECOM
+##################################################################
+
+#################################################################
+# Rules starting for generic permissions for qwesd.
+##################################################################
+
+files_getattr_all_files(qwesd_t)
+
+# allow qwesd to read/write to /data/qwes/qwesd.conf file
+search_user_data_dir(qwesd_t);
+user_data_files_type(qwes_data_t)
+data_filetrans(qwesd_t, qwes_data_t, { file dir })
+manage_user_data_files(qwesd_t, qwes_data_t)
+rw_files_pattern(qwesd_t, qwes_data_t, qwes_data_t)
+
+# allow qwesd to read/write to /var/run/qwes_ipc minksocket file.
+allow qwesd_t self:udp_socket create_socket_perms;
+allow qwesd_t self:tcp_socket create_socket_perms;
+files_pid_file(qwes_mink_socket_t)
+files_pid_filetrans({ qwesd_t }, qwes_mink_socket_t, { sock_file file dir })
+manage_sock_files_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
+manage_dirs_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
+allow qwesd_t self:socket { create rw_socket_perms };
+
+# allow qwesd for self capability.
+allow qwesd_t self:capability { net_raw chown net_bind_service };
+allow qwesd_t self:process signal;
+allow qwesd_t self:fifo_file rw_fifo_file_perms;
+allow qwesd_t self:qipcrtr_socket { read create write getattr setopt };
+kernel_read_system_state(qwesd_t)
+#################################################################
+# Rules ending for generic permissions for qwesd.
+##################################################################
+
+#################################################################################
+# Rules starting for configuring network connection for sync.
+#################################################################################
+# allow qwesd to read /dev/daig file
+userdebug_or_eng(`rw_diag_dev(qwesd_t)')
+
+# allow qwesd to access qcmap files for accessing network configurations.
+data_rw_system_data_files(qwesd_t, qcmap_etc_data_t)
+search_dirs_pattern(qwesd_t, qcmap_etc_data_t, qcmap_etc_data_t)
+device_rw_socket_files(qwesd_t, netmgrd_socket_device_t)
+qnetmgr_use_unix_stream_sockets(qwesd_t)
+qnetmgr_write_data_sock_files(qwesd_t)
+sysnet_read_config(qwesd_t)
+allow qwesd_t http_port_t :tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow qwesd_t self:unix_stream_socket { accept listen };
+allow qwesd_t self:capability kill;
+
+# Need to execute command to set route.
+corecmd_exec_shell(qwesd_t)
+allow qwesd_t systemd_resolved_var_run_t:file { read open write };
+
+# allow qwesd to use netlink socket for network connection.
+allow qwesd_t self:capability { net_admin fsetid };
+allow qwesd_t self:netlink_socket { read bind create ioctl};
+dev_read_sysfs(qwesd_t)
+dontaudit qwesd_t self:capability { dac_override dac_read_search };
+allow qwesd_t qnetmgrd_t:unix_stream_socket { connectto };
+allow qwesd_t self:netlink_route_socket { create_socket_perms nlmsg_read };
+allow qwesd_t cert_t:file { open read getattr };
+mls_file_read_all_levels(qwesd_t)
+mls_file_write_all_levels(qwesd_t)
+#################################################################################
+# Rules ending for configuring network connection for sync.
+#################################################################################
+
+#################################################################################
+# Rules starting for setting up qwes_license_store.
+#################################################################################
+type qwes_license_store_setup_t;
+type qwes_license_store_setup_exec_t;
+
+init_script_domain(qwes_license_store_setup_t, qwes_license_store_setup_exec_t)
+
+gen_require(`
+  type persist_t;
+  type qseecomd_data_t;
+  type qseecomd_persist_t;
+  type qwes_data_t;
+')
+
+logging_send_syslog_msg(qwes_license_store_setup_t)
+
+# Allow read/write to /persist/data/ path.
+allow qwes_license_store_setup_t qseecomd_persist_t:file { write create open getattr setattr };
+filetrans_pattern(qwes_license_store_setup_t, persist_t, qseecomd_persist_t, { file dir })
+allow qwes_license_store_setup_t qseecomd_persist_t:dir manage_dir_perms;
+allow qwes_license_store_setup_t init_t:unix_stream_socket { read write };
+
+# Allow read access to /etc/passwd file for chown command.
+files_read_etc_files(qwes_license_store_setup_t)
+
+# Allow read/write to /data/vendor/tzstorage path.
+data_filetrans(qwes_license_store_setup_t, qseecomd_data_t, { file dir })
+manage_user_data_files(qwes_license_store_setup_t, qseecomd_data_t)
+
+#Allow to manage path /data/qwes/.
+manage_user_data_files(qwes_license_store_setup_t, qwes_data_t)
+allow qwes_license_store_setup_t qwes_data_t:dir manage_dir_perms;
+
+# Generic permissions for script.
+allow qwes_license_store_setup_t self:fifo_file rw_fifo_file_perms;
+dev_read_sysfs(qwes_license_store_setup_t)
+kernel_read_system_state(qwes_license_store_setup_t)
+
+#Allow write echo messages of script to /dev/kmsg.
+dev_write_kmsg(qwes_license_store_setup_t)
+mls_file_read_all_levels(qwes_license_store_setup_t)
+mls_file_write_all_levels(qwes_license_store_setup_t)
+
+allow qwes_license_store_setup_t self:capability { fowner chown };
+#################################################################################
+# Rules ending for setting up qwes_license_store.
+#################################################################################

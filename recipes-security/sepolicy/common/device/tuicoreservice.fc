@@ -24,11 +24,18 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#Changes from Qualcomm Innovation Center are provided under the following license:
+#
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/TUICoreService      --      gen_context(system_u:object_r:tuicoreservice_exec_t,s0)
 /dev/socket/TUICoreSVC       -c      gen_context(system_u:object_r:tuicoreservice_sock_t,s0)
+/dev/membuf                  -c      gen_context(system_u:object_r:tuicoreservice_dev_t,s0)
 
 /usr/data/display(/.*)?        --      gen_context(system_u:object_r:tuicoreservice_data_t,s0)
 /vendor/etc/display(/.*)?      --    gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
 /vendor/etc/snapdragon_color_libs_config.xml -- gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
-
+/etc/initscripts/start_display_le  -- gen_context(system_u:object_r:bin_t,s0)
+/persist/display -d gen_context(system_u:object_r:persist_display_t,s0)

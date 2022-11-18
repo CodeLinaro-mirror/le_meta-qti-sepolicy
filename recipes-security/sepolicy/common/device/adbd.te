@@ -110,13 +110,21 @@ type pcie_initrc_exec_t;
 user_data_files_type(adb_data_conf_t)
 init_script_domain(pcie_initrc_t, pcie_initrc_exec_t)
 init_rw_stream_sockets(pcie_initrc_t)
+gen_require(`
+ type sysdevice_sysfs_t;
+ type sysfs_vblank_t;
+')
 userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
     gen_require(`
         type dataqti_device_t;
+        type shell_exec_t;
+        type sysfs_t;
     ')
     allow pcie_initrc_t dataqti_device_t:chr_file getattr;
     allow pcie_initrc_t self:fifo_file rw_fifo_file_perms;
+    allow pcie_initrc_t shell_exec_t:file { read map execute };
+    allow pcie_initrc_t sysfs_t:file { read open };
     diag_domtrans(pcie_initrc_t)
     dev_write_kmsg(pcie_initrc_t)
     kernel_read_system_state(pcie_initrc_t)
@@ -128,11 +136,12 @@ userdebug_or_eng(`
     allow adbd_initrc_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(adbd_initrc_t);
 ')
-
+allow pcie_initrc_t sysdevice_sysfs_t:file { getattr open read };
 type usb_t;
 type usb_exec_t;
 files_type(usb_exec_t)
 init_daemon_domain(usb_t, usb_exec_t)
+allow usb_t sysdevice_sysfs_t:file { getattr open read };
 
 dev_rw_sysfs(usb_t)
 allow usb_t self:unix_stream_socket create_socket_perms;
@@ -151,6 +160,7 @@ manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
 userdebug_or_eng(`
     allow usb_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(usb_t);
+    seutil_domtrans_setfiles(usb_t)
 ')
 
 adb_manage_data_files(usb_t)
@@ -206,3 +216,12 @@ gen_require(`
 ')
 allow usb_t debugfs_t:dir rw_dir_perms;
 allow usb_t debugfs_t:file create;
+
+allow usb_t sysfs_vblank_t:file read_file_perms;
+
+# add permissions for usb_t to access usb_bind_t
+type usb_bind_tmp_t;
+files_tmp_file(usb_bind_tmp_t)
+files_tmp_filetrans(usb_t,usb_bind_tmp_t,{ file dir })
+
+allow usb_t usb_bind_tmp_t:file manage_file_perms;

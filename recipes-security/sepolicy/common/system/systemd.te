@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ifdef(`init_systemd',`
     # This should respect systemd_tmpfiles_manage_all tunable, but
@@ -42,6 +46,13 @@ ifdef(`init_systemd',`
         type sysfs_t;
     ')
     allow systemd_tmpfiles_t sysfs_t:{ lnk_file dir file } setattr;
+
+    # Update boot_kpi_values_t(sysfs node) file access permissions
+    gen_require(`
+        type boot_kpi_values_t;
+    ')
+    allow systemd_tmpfiles_t boot_kpi_values_t:{ lnk_file dir file } { setattr getattr };
+    dontaudit systemd_tmpfiles_t boot_kpi_values_t:file { relabelfrom };
 
     # Relabel /tmp partition
     gen_require(`
@@ -75,4 +86,11 @@ ifdef(`init_systemd',`
 
     systemd_tmpfilesd_managed(systemd_resolved_var_run_t, file)
     allow systemd_tmpfiles_t systemd_resolved_var_run_t:file { write getattr open };
+
+    gen_require(`
+        type persist_t;
+    ')
+    allow systemd_tmpfiles_t persist_t:dir { getattr search read write add_name };
+
+    dev_read_sysfs(systemd_tmpfiles_t);
 ')

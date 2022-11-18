@@ -9,6 +9,7 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Update-busybox-substitution-paths.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
+            file://poky-ssd-rpmb-storage.patch \
 "
 
 PROVIDES += "sepolicy"
@@ -16,11 +17,13 @@ RPROVIDES_${PN} += "sepolicy"
 
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
+# Update userdebug_or_eng macro for VM while other machine images are validated
+EXTRA_OEMAKE_append_qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
 
 # Modules outside of 'services' and 'apps' layer to be removed
 PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
 # Modules inside 'services' and 'apps' layers to keep. All others in these layers are turned off
-CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient bluetooth tinyproxy hostapd xserver nscd"
+CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient bluetooth tinyproxy hostapd xserver nscd radvd"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
@@ -87,3 +90,20 @@ python update_modules_conf () {
         modules_file.write(new_file)
 }
 do_compile[postfuncs] += "update_modules_conf"
+
+do_install_append() {
+    rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
+}
+
+rebuild_policy_append() {
+	policy_version=31
+
+	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
+		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
+		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+	fi
+
+	if ${@bb.utils.contains('COMBINED_FEATURES', 'qti-ab-boot', 'false', 'true', d)}; then
+		manage_policy -d ota
+	fi
+}

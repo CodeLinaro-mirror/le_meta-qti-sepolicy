@@ -1,0 +1,137 @@
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted (subject to the limitations in the
+#disclaimer below) provided that the following conditions are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above
+#      copyright notice, this list of conditions and the following
+#      disclaimer in the documentation and/or other materials provided
+#      with the distribution.
+#
+#    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#      contributors may be used to endorse or promote products derived
+#      from this software without specific prior written permission.
+#
+#NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+#GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+#HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+#WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+#ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+#GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+#IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+#IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(perf_hal, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type perf_hal_t;
+type perf_hal_exec_t;
+init_vendor_domain(perf_hal_t, perf_hal_exec_t)
+
+
+#data files
+type perf_hal_data_t;
+user_data_files_type(perf_hal_data_t);
+
+gen_require(`
+    attribute user_data;
+    type initrc_t;
+    type unconfined_t;
+    type sysctl_kernel_t;
+    type sysctl_vm_t;
+    type sysfs_t;
+    type sysctl_t;
+    type trace_marker_t;
+    type debugfs_t;
+    type tracefs_t;
+    type proc_t;
+    type unlabeled_t;
+    type etc_t;
+    type post_boot_script_t;
+')
+
+#etc files
+type perf_hal_etc_t;
+files_type(perf_hal_etc_t)
+
+allow perf_hal_t perf_hal_etc_t:file rw_file_perms;
+manage_user_data_files(perf_hal_t, perf_hal_data_t)
+allow perf_hal_t perf_hal_data_t:file create_file_perms;
+allow perf_hal_t perf_hal_data_t:file rw_file_perms;
+allow perf_hal_t perf_hal_data_t:dir rw_dir_perms;
+
+#perf_hal socket
+type perf_hal_socket_t;
+dev_node(perf_hal_socket_t)
+device_manage_socket_file(perf_hal_t, perf_hal_socket_t, "perfservice")
+
+allow perf_hal_t perf_hal_socket_t:sock_file rw_sock_file_perms;
+allow perf_hal_t self:unix_stream_socket { create_stream_socket_perms connectto };
+
+#============= perf_hal_t ==============
+allow perf_hal_t self:process { getsched setsched signal };
+allow perf_hal_t sysctl_kernel_t:dir search_dir_perms;
+allow perf_hal_t sysctl_kernel_t:file rw_file_perms;
+allow perf_hal_t sysctl_t:dir search_dir_perms;
+allow perf_hal_t sysctl_vm_t:dir search_dir_perms;
+allow perf_hal_t sysctl_vm_t:file rw_file_perms;
+
+#==== dev_rw_sysfs for below link files and directories ===
+#/sys/devices/soc0/soc_id
+#/sys/devices/soc0/soc_id
+#/sys/class/drm/card0-DSI-1
+#/sys/devices/system/cpu
+#/sys/class/kgsl/kgsl-3d0
+#/sys/class/devfreq/soc:qcom,gpubw
+#/sys/class/scsi_host/host0
+#/sys/class/devfreq
+#/sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+#/sys/module/msm_performance/events/cpu_hotplug
+#/sys/module/msm_performance/parameters/cpu_min_freq
+#/sys/module/msm_performance/parameters/cpu_max_freq
+#/sys/devices/system/cpu/cpu4/sched_load_boost
+#/sys/devices/platform/soc/1d84000.ufshc/clkscale_enable
+#/sys/devices/platform/soc/soc:qcom,cpu-cpu-llcc-bw/devfreq/soc:qcom,cpu-cpu-llcc-bw/min_freq
+#/sys/devices/platform/soc/soc:qcom,cpu-llcc-ddr-bw/devfreq/soc:qcom,cpu-llcc-ddr-bw/min_freq
+#/sys/devices/platform/soc/18590000.qcom,devfreq-l3/18590000.qcom,devfreq-l3:qcom,cpu0-cpu-l3-lat/devfreq/18590000.qcom,devfreq-l3:qcom,cpu0-cpu-l3-lat/min_freq
+#/sys/devices/platform/soc/18590000.qcom,devfreq-l3/18590000.qcom,devfreq-l3:qcom,cpu4-cpu-l3-lat/devfreq/18590000.qcom,devfreq-l3:qcom,cpu4-cpu-l3-lat/min_freq
+#/sys/devices/system/cpu/cpu0/core_ctl/enable
+#/sys/devices/platform/soc/soc:qcom,cpu-cpu-llcc-bw/devfreq/soc:qcom,cpu-cpu-llcc-bw/polling_interval
+dev_rw_sysfs(perf_hal_t)
+
+allow perf_hal_t proc_t:file read_file_perms;
+allow perf_hal_t self:capability { sys_nice };
+
+userdebug_or_eng(`
+    allow perf_hal_t trace_marker_t:file rw_file_perms;
+    allow perf_hal_t debugfs_t:dir search_dir_perms;
+    allow perf_hal_t tracefs_t:dir search_dir_perms;
+    perf_hal_sock_req(unconfined_t)
+
+    ifdef(`init_systemd',`
+        gen_require(`
+            class service { status start stop reload};
+        ')
+        allow unconfined_t perf_hal_exec_t:service { status start };
+    ')
+')
+
+allow perf_hal_t etc_t:file read_file_perms;
+dontaudit perf_hal_t self:capability { dac_override dac_read_search };
+
+
+leprop_rw_props(perf_hal_t);
+leprop_rw_props(post_boot_script_t);

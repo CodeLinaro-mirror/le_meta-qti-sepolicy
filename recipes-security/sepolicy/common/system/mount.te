@@ -51,6 +51,14 @@ seutil_read_config(mount_copybind_t)
 selinux_get_fs_mount(mount_copybind_t)
 seutil_domtrans_setfiles(mount_copybind_t)
 
+gen_require(`
+    type var_lib_t;
+    type var_t;
+')
+allow mount_copybind_t var_t:dir { write add_name create };
+allow mount_copybind_t var_lib_t:dir { getattr };
+
+
 # Do not allow access to mount-copybind from a vendor domain
 gen_require(`
     attribute vendor_domain;
@@ -68,8 +76,9 @@ allow mount_copybind_t self:capability { chown fowner dac_read_search fsetid dac
 gen_require(`
     type bluetooth_conf_t;
 ')
-allow mount_copybind_t bluetooth_conf_t:dir search_dir_perms;
+allow mount_copybind_t bluetooth_conf_t:dir list_dir_perms;
 bluetooth_read_config(mount_copybind_t)
+allow mount_t bluetooth_conf_t:file { read_file_perms mounton };
 
 # Perform a bind mount with the real mount context
 mount_domtrans(mount_copybind_t)
@@ -96,3 +105,4 @@ allow mount_t sdcard_t:filesystem relabelfrom;
 manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
 allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
 allow mount_t init_var_run_t:file getattr;
+allow mount_copybind_t self:capability kill;

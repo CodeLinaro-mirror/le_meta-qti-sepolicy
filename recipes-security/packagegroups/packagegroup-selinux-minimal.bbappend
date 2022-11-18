@@ -1,5 +1,5 @@
 RDEPENDS_${PN}_remove = "${@bb.utils.contains("DISTRO_FEATURES", "systemd", "selinux-init selinux-labeldev", "", d)}"
 
-# Replace coreutils with busybox utilities
+# Replace coreutils
 RDEPENDS_${PN}_remove = "coreutils"
-RDEPENDS_${PN}_append = "busybox"
+RDEPENDS_${PN}_append = "${PREFERRED_PROVIDER_virtual/base-utils}"

@@ -39,6 +39,7 @@ init_vendor_domain(data_path_opt_t, data_path_opt_exec_t )
 
 gen_require(`
   type debugfs_t;
+  type kmod_t;
 ')
 
 
@@ -56,3 +57,5 @@ kernel_read_system_state(data_path_opt_t)
 dontaudit data_path_opt_t debugfs_t:dir { search };
 allow data_path_opt_t data_path_opt_t:chr_file { write getattr };
 allow data_path_opt_t data_path_opt_t:fifo_file {  getattr read write };
+
+dontaudit kmod_t self:capability { dac_read_search };

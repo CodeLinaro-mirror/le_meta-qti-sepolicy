@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,7 +24,40 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+#
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted (subject to the limitations in the
+# disclaimer below) provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#
+#     * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+# GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+# HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+# GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 policy_module(ss-ramdump, 1.0)
 
@@ -44,27 +77,34 @@ gen_require(`
     type vendor_qdmastatsd_ramdump_device_t;
 ')
 
-type ss-ramdump_data_t;
+type ramdump_md_ipa_fws_device_t;
+type ramdump_ipa_fws_device_t;
+type ramdump_md_modem_device_t;
+type ramdump_modem_device_t;
+type ramdump_wlan_device_t;
+type ramdump_smem_device_t;
+dev_node(ramdump_md_ipa_fws_device_t)
+dev_node(ramdump_ipa_fws_device_t)
+dev_node(ramdump_md_modem_device_t)
+dev_node(ramdump_modem_device_t)
+dev_node(ramdump_wlan_device_t)
+dev_node(ramdump_smem_device_t)
 
+type ss-ramdump_data_t;
+allow ss-ramdump_t self:capability kill;
+allow ss-ramdump_t self:netlink_kobject_uevent_socket { read bind create setopt };
 userdebug_or_eng(`
+    user_data_files_type(ss-ramdump_data_t)
+    data_filetrans(ss-ramdump_t, ss-ramdump_data_t, { file dir })
     manage_user_data_files(ss-ramdump_t, ss-ramdump_data_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, vendor_qdmastatsd_ramdump_device_t)
-    type ramdump_md_ipa_fws_device_t;
-    type ramdump_ipa_fws_device_t;
-    type ramdump_md_modem_device_t;
-    type ramdump_modem_device_t;
-    type ramdump_wlan_device_t;
-    dev_node(ramdump_md_ipa_fws_device_t)
-    dev_node(ramdump_ipa_fws_device_t)
-    dev_node(ramdump_md_modem_device_t)
-    dev_node(ramdump_modem_device_t)
-    dev_node(ramdump_wlan_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_ipa_fws_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_ipa_fws_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_md_modem_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_modem_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_wlan_device_t)
     read_chr_files_pattern(ss-ramdump_t, device_t, event_device_t)
+    read_chr_files_pattern(ss-ramdump_t, device_t, ramdump_smem_device_t)
     dev_read_sysfs(ss-ramdump_t)
     logging_send_syslog_msg(ss-ramdump_t)
 ')

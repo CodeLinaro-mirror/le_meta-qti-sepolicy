@@ -24,6 +24,40 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#Changes from Qualcomm Innovation Center are provided under the following license:
+#
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted (subject to the limitations in the
+#disclaimer below) provided that the following conditions are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above
+#      copyright notice, this list of conditions and the following
+#      disclaimer in the documentation and/or other materials provided
+#      with the distribution.
+#
+#    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#      contributors may be used to endorse or promote products derived
+#      from this software without specific prior written permission.
+#
+#NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+#GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+#HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+#WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+#ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+#GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+#IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+#IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 type hostapd_cli_qcmap_t;
 type hostapd_cli_exec_t;
@@ -39,14 +73,31 @@ gen_require(`
  type wifi_system_data_t;
  type qcmap_socket_device_t;
  type socket_device_t;
+ type kmsg_device_t;
+ type syslogd_var_run_t;
+ type user_tmp_t;
+ type wpa_cli_t;
+ type NetworkManager_tmp_t;
+ type system_data_t;
+ type unreserved_port_t;
+ type node_t;
 ')
+type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
 allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
 allow hostapd_cli_qcmap_t var_run_t:dir { write add_name remove_name };
 allow hostapd_cli_qcmap_t hostapd_var_run_t:dir search;
 allow hostapd_cli_qcmap_t socket_device_t:dir search;
+dev_read_urand(hostapd_cli_qcmap_t)
+allow hostapd_t wpa_cli_t:unix_dgram_socket { sendto };
+allow hostapd_t NetworkManager_tmp_t:sock_file { write };
+allow hostapd_t NetworkManager_tmp_t:file rw_file_perms;
+files_tmp_file(hostapd_tmp_t);
+files_tmp_filetrans(hostapd_t, hostapd_tmp_t, { file dir })
+manage_files_pattern(hostapd_t, hostapd_tmp_t, hostapd_tmp_t)
 
 user_data_files_type(qcmap_data_t)
+
 data_filetrans(hostapd_t, qcmap_data_t, file)
 
 allow hostapd_t var_run_t:sock_file { create write setattr unlink};
@@ -55,6 +106,18 @@ allow hostapd_t etc_t:file { getattr open read };
 allow hostapd_t wireless_device_t:chr_file { open read };
 allow hostapd_t proc_net_t:file { read };
 allow hostapd_t wifi_system_data_t:dir { search };
+allow init_t system_data_t:lnk_file { read };
+allow hostapd_t unreserved_port_t:udp_socket { name_bind };
+allow hostapd_t node_t:udp_socket { node_bind };
+dontaudit hostapd_t self:capability { sys_module };
+
+userdebug_or_eng('
+        allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };
+        mls_file_write_all_levels(kmsg_device_t);
+')
+allow hostapd_t etc_t:file { map };
+allow hostapd_t syslogd_var_run_t:dir { search  };
+allow hostapd_t user_tmp_t:sock_file{ write };
 
 qcmap_manage_var_run_data_files(hostapd_t)
 networkmanager_read_wifi_sysdata_files(hostapd_t)

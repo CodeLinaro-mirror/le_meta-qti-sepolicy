@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(letzd, 1.0)
 
@@ -47,6 +51,12 @@ type smcinvoke_device_t;
 type syslogd_var_run_t;
 type syslogd_t;
 type devlog_t;
+type tuicoreservice_t;
+type tuicoreservice_dev_t;
+type vendor_dmabuf_system_heap_device_t;
+type vendor_vm_oem_device_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_self_device_t;
 ')
 
 logging_send_syslog_msg(letzd_t)
@@ -56,6 +66,33 @@ allow letzd_t self:socket rw_socket_perms;
 allow letzd_t self:socket create;
 allow letzd_t syslogd_var_run_t:sock_file write;
 allow letzd_t self:process signal;
+allow letzd_t self:process signull;
 allow letzd_t smcinvoke_device_t:chr_file { read write open ioctl };
 allow letzd_t self:qipcrtr_socket create_socket_perms;
 allow letzd_t self:unix_stream_socket { connectto sendto listen accept };
+allow letzd_t self:capability2 block_suspend;
+allow letzd_t self:vsock_socket { create bind getattr read write };
+allow letzd_t tuicoreservice_t:fd use;
+allow letzd_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_oem_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow letzd_t vendor_vm_self_device_t:chr_file read_chr_file_perms;
+
+#permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
+dev_rw_sysfs(letzd_t)
+
+# cryptsetup permissions
+lvm_domtrans(letzd_t)
+corecmd_exec_shell(letzd_t)
+allow letzd_t self:capability setuid;
+allow letzd_t self:process setcap;
+gen_require(`
+    type vendor_virtio_mem_device_t;
+    type fixed_disk_device_t;
+')
+allow letzd_t vendor_virtio_mem_device_t:chr_file rw_file_perms;
+allow letzd_t fixed_disk_device_t:blk_file getattr;
+mls_file_read_all_levels(letzd_t);
+# send key to cryptsetup
+allow letzd_t self:fifo_file { getattr write ioctl };

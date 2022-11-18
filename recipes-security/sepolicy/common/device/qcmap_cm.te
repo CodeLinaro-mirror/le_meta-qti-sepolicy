@@ -24,6 +24,40 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#Changes from Qualcomm Innovation Center are provided under the following license:
+#
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted (subject to the limitations in the
+#disclaimer below) provided that the following conditions are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above
+#      copyright notice, this list of conditions and the following
+#      disclaimer in the documentation and/or other materials provided
+#      with the distribution.
+#
+#    * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#      contributors may be used to endorse or promote products derived
+#      from this software without specific prior written permission.
+#
+#NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+#GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+#HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+#WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+#ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+#GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+#IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+#IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 policy_module(qcmap_cm, 1.0)
 
@@ -52,6 +86,10 @@ gen_require(`
 systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
 allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
 
+gen_require(`
+    type sysdevice_sysfs_t;
+')
+allow qcmap_cm_t sysdevice_sysfs_t:file { getattr open read };
 wlan_start_stop(qcmap_cm_t)
 dontaudit qcmap_cm_t domain:lnk_file read;
 dontaudit qcmap_cm_t domain:dir search_dir_perms;
@@ -65,6 +103,7 @@ gen_require(`
   type init_var_run_t;
   type wpa_cli_exec_t;
   type sysfs_t;
+  type boot_kpi_values_t;
   type kmod_t;
   type NetworkManager_t;
   type ifconfig_t;
@@ -77,6 +116,7 @@ gen_require(`
   type brctl_exec_t;
   type datadpo_device_t;
   type data_path_opt_exec_t;
+  type firmware_t;
 ')
 
 userdebug_or_eng(`
@@ -89,6 +129,7 @@ rw_shared_memory_dev(qcmap_cm_t);
 dev_rw_sysfs(qcmap_cm_t);
 read_system_data_files(NetworkManager_t, qcmap_etc_data_t)
 ps_process_pattern(qcmap_cm_t, NetworkManager_t)
+dontaudit initrc_t qcmap_etc_data_t:file { append };
 
 corecmd_exec_shell(qcmap_cm_t)
 corecmd_exec_bin(qcmap_cm_t)
@@ -264,12 +305,19 @@ gen_require(`
     type pppd_exec_t;
     type adbd_initrc_exec_t;
     type wlan_initrc_exec_t;
+    type wlan_ezmesh_initrc_exec_t;
     type wpa_cli_t;
     type minidlna_exec_t;
     type webserver_socket_device_t;
     type nsfs_t;
+    type ddclient_var_run_t;
     type loc_socket_t;
     type loc_hald_t;
+    type wlan_service_exec_t;
+    type dhcpd_t;
+    type dhcpd_exec_t;
+    type radvd_t;
+    type radvd_exec_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -288,10 +336,12 @@ rw_chr_files_pattern(qcmap_cm_t, device_t, ipa_wwan_device_t)
 rw_files_pattern(qcmap_cm_t, sysfs_t, sysfs_t)
 dontaudit qcmap_cm_t sysfs_t:dir { add_name };
 dontaudit qcmap_cm_t sysfs_t:file { create };
+append_files_pattern(qcmap_cm_t, sysfs_t, boot_kpi_values_t)
 
 #Miscellaneous
 allow iptables_t qcmap_tmp_t:file { read };
 allow iptables_t qcmap_cm_t:unix_stream_socket { read write };
+allow qcmap_cm_t sysdevice_sysfs_t:file { read open };
 rw_ipacm_data_config_files(qcmap_cm_t)
 shutdown_domtrans(qcmap_cm_t)
 
@@ -372,14 +422,20 @@ ifdef(`init_systemd',`
     allow qcmap_cm_t avahi_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t pppd_exec_t:service { start stop status reload };
     allow qcmap_cm_t wlan_initrc_exec_t:service { start stop status reload };
+    allow qcmap_cm_t wlan_ezmesh_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t minidlna_exec_t:service { start stop status reload };
     allow qcmap_cm_t qcmap_kernel_module_t:service { start stop status reload };
+    allow qcmap_cm_t dhcpd_exec_t:service { start status stop };
+    allow qcmap_cm_t radvd_exec_t:service { start status stop };
 ')
 read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 
 dontaudit qcmap_cm_t default_t:dir { search };
 fs_manage_configfs_files(qcmap_cm_t)
 search_dirs_pattern(qcmap_cm_t, var_lib_t, var_lib_t)
+
+##### DDNS
+read_files_pattern(qcmap_cm_t, ddclient_var_run_t, ddclient_var_run_t)
 
 ##### MINIUPNPD
 corenet_tcp_connect_virt_migration_port(qcmap_cm_t)
@@ -401,6 +457,9 @@ systemd_status_power_units(qcmap_cm_t)
 allow wpa_cli_t qcmap_cm_t:unix_dgram_socket { sendto };
 device_rw_socket_files(wpa_cli_t, qcmap_socket_device_t)
 allow qcmap_cm_t wifi_system_data_t: file write_file_perms;
+allow qcmap_cm_t system_data_t:lnk_file { read };
+read_system_data_files(wlan_service_t, wifi_system_data_t)
+allow qcmap_cm_t wlan_service_exec_t:service { start status };
 
 ##### WLAN CDI
 allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
@@ -425,6 +484,9 @@ manage_sock_files_pattern(qcmap_cm_t, socket_device_t, loc_socket_t);
 files_read_loc_etc_files(qcmap_cm_t);
 allow qcmap_cm_t loc_hald_t:unix_dgram_socket{ sendto };
 
+qcmap_manage_var_run_data_files(dhcpd_t);
+qcmap_manage_var_run_data_files(radvd_t);
+
 gen_require(`
   type syslogd_t;
   type var_run_t;
@@ -436,6 +498,8 @@ gen_require(`
   type hostapd_exec_t;
   type hostapd_var_run_t;
   type hostapd_cli_qcmap_t;
+  type sysdevice_sysfs_t;
+  type bin_t;
 ')
 
 hostapd_manage_services(qcmap_cm_t)
@@ -443,8 +507,11 @@ hostapd_manage_services(qcmap_cm_t)
 allow qcmap_cm_t hostapd_exec_t:service { start stop status };
 allow qcmap_cm_t hostapd_cli_exec_t:service { start stop status };
 allow qcmap_cm_t hostapd_cli_exec_t:file exec_file_perms;
+allow qcmap_cm_t hostapd_var_run_t:file read_file_perms;
 allow qcmap_cm_t hostapd_var_run_t:dir search;
 allow qcmap_cm_t hostapd_t:dir search;
+allow qcmap_cm_t NetworkManager_var_run_t:file rw_file_perms;
+allow qcmap_cm_t bin_t:service { start };
 
 # TODO: Create hostapd_var_run_t sockets instead only if necessary
 #manage_sock_files_pattern(hostapd_cli_qcmap_t, var_run_t, var_run_t)
@@ -519,8 +586,9 @@ allow tinyproxy_t net_conf_t:file read_file_perms;
 search_dirs_pattern(tinyproxy_t, init_var_run_t, init_var_run_t)
 corenet_tcp_connect_http_cache_port(tinyproxy_t)
 manage_files_pattern(tinyproxy_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t)
-dontaudit tinyproxy_t tinyproxy_tmp_t:file {map};
-dontaudit tinyproxy_t etc_t:file {map};
+allow tinyproxy_t tinyproxy_tmp_t:file {map};
+allow tinyproxy_t etc_t:file {map};
+allow tinyproxy_t self:unix_stream_socket { create connect };
 
 #miniupnpd policies
 type miniupnp_t;
@@ -579,3 +647,11 @@ read_lnk_files_pattern(qcmap_cm_t, tmp_t, qcmap_tmp_t);
 kernel_read_system_state(brctl_t)
 kernel_read_kernel_sysctls(qcmap_cm_t)
 dontaudit brctl_t self:capability sys_module;
+dontaudit brctl_t initrc_t:unix_stream_socket { read write };
+allow ifconfig_t firmware_t:dir { search };
+allow NetworkManager_t system_data_t:lnk_file { read };
+allow qcmap_cm_t firmware_t:dir { read search };
+allow qcmap_cm_t firmware_t:file { read open };
+dontaudit ifconfig_t sysdevice_sysfs_t:file { read };
+dontaudit ifconfig_t ipa_fw_device_t:chr_file { read write};
+dontaudit iptables_t ipa_fw_device_t:chr_file { read write};
