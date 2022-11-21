@@ -53,5 +53,16 @@ allow recovery_initrc_t mtd_tools_exec_t:file { read open getattr execute execut
 allow recovery_initrc_t self:fifo_file { read write getattr ioctl};
 allow setfiles_t cache_recoveryupgrade_t:{ dir file } relabelto;
 
+gen_require(`
+    type qvr_data_t;
+    type leprop_t;
+')
+
 type recovery_t;
 type recovery_exec_t;
+
+
+allow recovery_t self:unix_stream_socket {connect create write read};
+kernel_rw_vm_sysctls(recovery_t)
+allow recovery_t leprop_t:unix_stream_socket {connectto};
+allow recovery_t qvr_data_t:file {read_file_perms map};

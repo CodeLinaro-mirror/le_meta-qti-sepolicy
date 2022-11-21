@@ -1,4 +1,4 @@
-# Copyright (c) 2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,20 +24,25 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+########################################
 
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
+## <summary>EMAC</summary>
 
+########################################
+## <summary>
+##	Allow /dev/emac node to read data from udev script into Ethernet driver..
+## </summary>
+## <param name="domain">
+##       <summary>
+##       Domain allowed access.
+##       </summary>
+## </param>
+## <rolecap/>
+#
+interface(`emac_rw_dev',`
+	gen_require(`
+		type emac_dev_t;
+	')
 
-#In QC build, getty requires kill capability. Hence added this rule.
-allow getty_t self:capability kill;
-allow getty_t etc_t:file map;
-
-gen_require(`
-	type  dataqti_ppp_device_t;
+	allow $1 emac_dev_t:chr_file {open read write};
 ')
-rw_chr_files_pattern(getty_t, device_t, dataqti_ppp_device_t)
-
-# Needed  for  { setattr }  comm="agetty" name="ttyGS0" dev="devtmpfs"
-allow getty_t dataqti_ppp_device_t:chr_file setattr;
