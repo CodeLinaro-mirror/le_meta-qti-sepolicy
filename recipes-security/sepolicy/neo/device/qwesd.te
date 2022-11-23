@@ -49,6 +49,7 @@ gen_require(`
        type etc_t;
        type systemd_resolved_var_run_t;
        type cert_t;
+       type pmsg_device_t;
 ')
 
 # allow qwesd to read /etc/qwesd.rc config file
@@ -57,6 +58,7 @@ allow qwesd_t etc_t:dir list_dir_perms;
 read_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
 read_lnk_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
 
+allow qwesd_t pmsg_device_t:chr_file { write open };
 ##################################################################
 # Rules starting for loading TA using QSEECOM
 ##################################################################
