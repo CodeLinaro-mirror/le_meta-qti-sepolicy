@@ -60,6 +60,9 @@ gen_require(`
        type image_variant_sysfs_t;
        type xdsp_device_t;
        type qdsp_device_t;
+       type vendor_dmabuf_system_heap_device_t;
+       type gpumodel_t;
+       type camera_data_t;
 ')
 
 #read /data/misc/qvr
@@ -130,6 +133,7 @@ allow qvrd_t sysfs_vblank_t:file rw_file_perms;
 #Network
 allow qvrd_t self:udp_socket { create_socket_perms };
 allow qvrd_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
+allow qvrd_t self:netlink_route_socket { write getattr read bind create nlmsg_read };
 allow qvrd_t unreserved_port_t:{ tcp_socket udp_socket } name_bind;
 allow qvrd_t node_t:{ tcp_socket udp_socket } node_bind;
 
@@ -153,3 +157,7 @@ mls_file_read_all_levels(qvrd_t)
 
 allow qvrd_t image_variant_sysfs_t:dir search_dir_perms;
 allow qvrd_t image_variant_sysfs_t:file read_file_perms;
+
+allow qvrd_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow qvrd_t gpumodel_t:file read_file_perms;
+allow qvrd_t camera_data_t:dir list_dir_perms;
