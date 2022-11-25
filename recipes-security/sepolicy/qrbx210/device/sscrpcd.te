@@ -29,67 +29,64 @@
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(adsprpcd , 1.0)
+policy_module(sscrpcd , 1.0)
 
 ########################################
 #
 # Declarations
 #
 
-type adsprpcd_t;
-files_mountpoint(adsprpcd_t);
+type sscrpcd_t;
+type sscrpcd_exec_t;
+files_type(sscrpcd_exec_t);
 
-#avoiding dev_node macro to deny untrusted sevices access to secure node
-#allow adsprpcd_t to acces /dev/adsprpcd-smd-secure
-type xdsp_device_t;
-allow adsprpcd_t xdsp_device_t:chr_file rw_chr_file_perms;
+type sensors_persist_data_t;
+files_type(sensors_persist_data_t)
 
-type adsprpcd_exec_t;
-files_type(adsprpcd_exec_t);
+init_daemon_domain(sscrpcd_t, sscrpcd_exec_t)
+files_mountpoint(sensors_persist_data_t)
 
-init_daemon_domain(adsprpcd_t, adsprpcd_exec_t)
+allow sscrpcd_t self:capability chown;
 
 gen_require(`
-    type debugfs_t;
-    type sound_device_t;
     type ion_device_t;
-    type sysfs_t;
-    type persist_t;
-    type system_dir_t;
-    type xdsp_device_t;
     type qdsp_device_t;
-    type udev_t;
+    type xdsp_device_t;
+    type unconfined_t;
 ')
 
-allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
+#allow sscrpcd_t to acces /dev/adsprpcd-smd-secure
+allow sscrpcd_t xdsp_device_t:chr_file rw_chr_file_perms;
+leprop_rw_props(sscrpcd_t)
+
+allow sscrpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
 userdebug_or_eng(`
-    allow adsprpcd_t debugfs_t:dir search_dir_perms;
-
+        gen_require(`
+            type debugfs_t;
+            type system_dir_t;
+            type sysfs_t;
+            type persist_t;
+        ')
+        allow sscrpcd_t debugfs_t:dir search_dir_perms;
 ')
-allow adsprpcd_t sysfs_t:file rw_file_perms;
-allow adsprpcd_t persist_t:dir search_dir_perms;
-allow adsprpcd_t system_dir_t:dir { search open read getattr};
-allow adsprpcd_t system_dir_t:file read_file_perms;
 
-#With dev_node even /tmp has access to secure node in adb unroot.
-#So, we removed dev_node rule in vendor.te and added below rules, now we are
-#not able to access from /tmp or any directory from adb shell.
-#give udev permission to relabel dev nodes
-allow udev_t xdsp_device_t:chr_file {relabelto write read getattr ioctl };
-allow xdsp_device_t device_t:filesystem associate;
+allow sscrpcd_t sysfs_t:file rw_file_perms;
+allow sscrpcd_t persist_t:dir search_dir_perms;
+allow sscrpcd_t system_dir_t:dir { search open read getattr};
+allow sscrpcd_t system_dir_t:file read_file_perms;
 
-dontaudit init_t xdsp_device_t:chr_file relabelto;
+files_search_mnt(sscrpcd_t)
+files_search_default(sscrpcd_t)
+device_search_sockets(sscrpcd_t)
 
-#allow adsprpcd_audiopd.service to access /proc/sys/vm/overcommit_memory
-kernel_read_vm_overcommit_sysctl(adsprpcd_t)
+adsprpcd_files_access(sscrpcd_t);
 
-rw_chr_files_pattern(adsprpcd_t, device_t, sound_device_t);
+#allow sscrpcd_t to acces /dev/ion
+rw_chr_files_pattern(sscrpcd_t, device_t, ion_device_t);
+#allow sscrpcd_t to acces /dev/adsprpcd-smd
+rw_chr_files_pattern(sscrpcd_t, device_t, qdsp_device_t);
 
-files_search_mnt(adsprpcd_t)
-files_search_default(adsprpcd_t)
-device_search_sockets(adsprpcd_t)
+manage_system_data_files(sscrpcd_t, sensors_persist_data_t)
 
-#allow adsprpcd_t to acces /dev/ion
-read_chr_files_pattern(adsprpcd_t, device_t, ion_device_t);
-#allow adsprpcd_t to acces /dev/adsprpcd-smd
-rw_chr_files_pattern(adsprpcd_t, device_t, qdsp_device_t);
+# Manage private files inside /data
+data_filetrans(sscrpcd_t, sensors_persist_data_t, { file dir })
