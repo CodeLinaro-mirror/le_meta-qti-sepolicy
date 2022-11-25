@@ -51,6 +51,14 @@ seutil_read_config(mount_copybind_t)
 selinux_get_fs_mount(mount_copybind_t)
 seutil_domtrans_setfiles(mount_copybind_t)
 
+gen_require(`
+    type var_lib_t;
+    type var_t;
+')
+allow mount_copybind_t var_t:dir { write add_name create };
+allow mount_copybind_t var_lib_t:dir { getattr };
+
+
 # Do not allow access to mount-copybind from a vendor domain
 gen_require(`
     attribute vendor_domain;

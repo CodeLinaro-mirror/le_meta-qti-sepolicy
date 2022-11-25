@@ -165,6 +165,9 @@ allow wpa_cli_t qcmap_var_run_t:file { write getattr };
 dev_read_urand(wpa_cli_t)
 allow wpa_cli_t hostapd_var_run_t:sock_file { write };
 allow wpa_cli_t hostapd_var_run_t:dir search_dir_perms;
+allow NetworkManager_t hostapd_var_run_t:dir search_dir_perms;
+allow NetworkManager_t hostapd_var_run_t:dir { add_name write search remove_name };
+allow NetworkManager_t hostapd_var_run_t:sock_file { create read write setattr };
 
 # unused pipes
 gen_require(`

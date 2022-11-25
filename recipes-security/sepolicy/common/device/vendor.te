@@ -129,6 +129,7 @@ allow tftp_server_t self:capability { setuid chown setgid setpcap };
 allow tftp_server_t self:process setcap;
 allow tftp_server_t rfs_persist_t:dir create_dir_perms;
 allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
+files_read_etc_files(tftp_server_t)
 
 ### misc properties ###
 
@@ -245,6 +246,12 @@ dev_node(vendor_dmabuf_tui_heap_device_t);
 
 type vendor_dmabuf_system_heap_device_t;
 dev_node(vendor_dmabuf_system_heap_device_t);
+
+type system_dmabuf_device_t;
+dev_node(system_dmabuf_device_t);
+
+type vendor_dmabuf_qseecom_heap_device_t;
+dev_node(vendor_dmabuf_qseecom_heap_device_t);
 
 ### MEM_BUF_VM TYPES ###
 type vendor_vm_trusted_device_t;

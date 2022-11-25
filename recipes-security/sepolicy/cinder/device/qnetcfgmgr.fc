@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,18 +24,30 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
 #Changes from Qualcomm Innovation Center are provided under the following license:
-#
 #Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/usr/bin/TUICoreService      --      gen_context(system_u:object_r:tuicoreservice_exec_t,s0)
-/dev/socket/TUICoreSVC       -c      gen_context(system_u:object_r:tuicoreservice_sock_t,s0)
-/dev/membuf                  -c      gen_context(system_u:object_r:tuicoreservice_dev_t,s0)
+# QNet executables
+/usr/bin/QNet_Config_Manager       		--  gen_context(system_u:object_r:qnetcfgmgr_exec_t,s0)
+/usr/bin/QNet_Config_Manager_Client     --  gen_context(system_u:object_r:qnetcfgmgr_exec_t,s0)
 
-/usr/data/display(/.*)?        --      gen_context(system_u:object_r:tuicoreservice_data_t,s0)
-/vendor/etc/display(/.*)?      --    gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
-/vendor/etc/snapdragon_color_libs_config.xml -- gen_context(system_u:object_r:tuicoreservice_vendor_t,s0)
-/etc/initscripts/start_display_le  -- gen_context(system_u:object_r:bin_t,s0)
-/persist/display -d gen_context(system_u:object_r:persist_display_t,s0)
+# Script files
+/etc/data/macsec_eth01\.sh       		-- gen_context(system_u:object_r:qnetcfgmgr_macsec_exec_t,s0)
+
+# /etc/data Files
+/etc/data/qnetmgr_cfg\.xml       		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
+/etc/data/wpa_supplicant\.conf   		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
+/etc/data/dhcp/* 				 		   gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
+
+# Files
+/var/run/dhclient*\.pid\.*				-- gen_context(system_u:object_r:qnetcfgmgr_var_t,s0)
+/var/run/data/rt_tables.tmp				-- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
+/etc/data/iproute2/rt_tables			-- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
+/proc/sys/net/ipv6/conf/				-- gen_context(system_u:object_r:qnetcfgmgr_ipv6_net_t,s0)
+/sys/devices/soc0/chip_id				   gen_context(system_u:object_r:qnetcfgmgr_chip_t,s0)
+
+# Tools
+/usr/bin/dig							-- gen_context(system_u:object_r:qnetcfgmgr_dig_exec_t,s0)
+/usr/bin/dhclient						-- gen_context(system_u:object_r:qnetcfgmgr_dhcp_exec_t,s0)
+/usr/sbin/wpa_supplicant-2.9			-- gen_context(system_u:object_r:NetworkManager_exec_t,s0)
