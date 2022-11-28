@@ -57,4 +57,7 @@ userdebug_or_eng(`
     allow frpc_test_t dsp_tests_data_t:file { append create getattr open read };
     allow dsp_tests_data_t fs_t:filesystem associate;
     allow frpc_test_t adbd_t:fifo_file read;
+    #Denials on QRB5165 with root for calculator
+    allow frpc_test_t adsprpcd_t:file { read open getattr };
+    dontaudit frpc_test_t self:capability { dac_override dac_read_search kill };
 ')
