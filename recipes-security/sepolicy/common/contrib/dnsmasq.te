@@ -24,6 +24,11 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+#
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type dnsmasq_tmp_t;
 files_tmp_file(dnsmasq_tmp_t)
@@ -46,6 +51,9 @@ userdebug_or_eng(`
 manage_files_pattern(dnsmasq_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);
 allow dnsmasq_t dnsmasq_tmp_t:file manage_file_perms;
 allow dnsmasq_t dnsmasq_tmp_t:lnk_file manage_lnk_file_perms;
+allow dnsmasq_t self:{ netlink_route_socket netlink_generic_socket netlink_socket netlink_netfilter_socket} create_socket_perms;
+allow dnsmasq_t self:netlink_route_socket { nlmsg_write };
+allow dnsmasq_t self:netlink_route_socket nlmsg_write;
 files_tmp_filetrans(dnsmasq_t, dnsmasq_tmp_t, { lnk_file file })
 read_write_qcmap_cm_socket_files(dnsmasq_t)
 qcmap_manage_tmp_data_files(dnsmasq_t)
