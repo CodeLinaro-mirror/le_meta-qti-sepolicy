@@ -20,11 +20,20 @@ type vendor_virtio_mem_device_t;
 type vendor_vm_cp_pixel_device_t;
 type persist_t;
 type persist_display_t;
+type socket_device_t;
+type letzd_t;
+type letzd_sock_t;
+type tuicoreservice_data_t;
 ')
 #permissions for /sys/power/wake_lock /sys/power/wake_unlock
 dev_rw_sysfs(demuratnservice_t)
 vmfilexferservice_read_persist_display_files(demuratnservice_t);
 manage_user_data_files(demuratnservice_t, persist_display_t);
+
+type demuratnservice_data_t;
+user_data_files_type(demuratnservice_data_t)
+manage_user_data_files(demuratnservice_t, demuratnservice_data_t)
+
 allow demuratnservice_t persist_t:dir { search read };
 allow demuratnservice_t persist_display_t:dir { search read write open add_name remove_name getattr };
 allow demuratnservice_t persist_display_t:file { read write create open append rename unlink };
@@ -36,6 +45,10 @@ allow demuratnservice_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow demuratnservice_t vendor_vm_cp_pixel_device_t:chr_file read_chr_file_perms;
 allow demuratnservice_t self:process signal;
 allow demuratnservice_t self:capability2 block_suspend;
+allow demuratnservice_t socket_device_t:dir search;
+allow demuratnservice_t letzd_sock_t:sock_file write;
+allow demuratnservice_t letzd_t:unix_stream_socket connectto;
+allow demuratnservice_t tuicoreservice_data_t:file { read open };
 kernel_read_vm_overcommit_sysctl(demuratnservice_t)
 corecmd_exec_shell(demuratnservice_t);
 corecmd_exec_bin(demuratnservice_t);
