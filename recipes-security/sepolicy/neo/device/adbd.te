@@ -44,6 +44,7 @@ gen_require(`
     type tmpfs_t;
     type leprop_sock_t;
     type leprop_t;
+    type pmsg_device_t;
 ')
 allow usb_t cgroup_t:filesystem getattr;
 allow usb_t debugfs_t:dir search;
@@ -52,6 +53,7 @@ allow usb_t event_device_t:chr_file getattr;
 allow usb_t fs_t:filesystem getattr;
 allow usb_t port_bridge_usb_device_t:chr_file { relabelfrom relabelto getattr };
 allow usb_t self:capability fowner;
+allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
 
 # /sbin/start_usb exec restorecon and setprop command
 allow usb_t setfiles_exec_t:file { read map getattr open execute execute_no_trans };
