@@ -87,6 +87,7 @@ userdebug_or_eng(`
 ')
 # dhcpc_t access syslogd_var_run_t, systemd_resolved_var_run_t, init_var_run_t
 gen_require(`
+    type system_dbusd_t;
     type syslogd_var_run_t;
     type systemd_resolved_var_run_t;
     type init_var_run_t;
@@ -94,6 +95,7 @@ gen_require(`
 allow dhcpc_t syslogd_var_run_t:sock_file { write };
 allow dhcpc_t systemd_resolved_var_run_t:file { open write };
 allow dhcpc_t init_var_run_t:file { getattr setattr open write };
+allow system_dbusd_t syslogd_var_run_t:sock_file { write };
 #TODO properly con_mode node
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`

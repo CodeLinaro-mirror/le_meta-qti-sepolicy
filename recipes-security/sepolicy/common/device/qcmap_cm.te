@@ -194,6 +194,8 @@ gen_require(`
     type netmgrd_socket_device_t;
     type systemd_logind_var_run_t;
 ')
+allow NetworkManager_t systemd_logind_var_run_t:sock_file write;
+allow NetworkManager_t data_t:file {create append open };
 
 #DHCPCD Rules
 files_pid_file(dhcpc_var_run_t)
