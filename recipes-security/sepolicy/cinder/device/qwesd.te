@@ -49,6 +49,7 @@ gen_require(`
        type etc_t;
        type systemd_resolved_var_run_t;
        type cert_t;
+       type socket_device_t;
 ')
 
 # allow qwesd to read /etc/qwesd.rc config file
@@ -90,6 +91,8 @@ files_pid_filetrans({ qwesd_t }, qwes_mink_socket_t, { sock_file file dir })
 manage_sock_files_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
 manage_dirs_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
 allow qwesd_t self:socket { create rw_socket_perms };
+allow qwesd_t socket_device_t:dir { write add_name };
+allow qwesd_t socket_device_t:sock_file { create setattr };
 
 # allow qwesd for self capability.
 allow qwesd_t self:capability { chown };
@@ -97,6 +100,14 @@ allow qwesd_t self:process signal;
 allow qwesd_t self:fifo_file rw_fifo_file_perms;
 allow qwesd_t self:qipcrtr_socket { read create write getattr setopt };
 allow qwesd_t self:process signull;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t qwesd_exec_t:service { start status stop };
+')
 #################################################################
 # Rules ending for generic permissions for qwesd.
 ##################################################################
@@ -156,6 +167,7 @@ dev_write_kmsg(qwes_license_store_setup_t)
 mls_file_read_all_levels(qwes_license_store_setup_t)
 mls_file_write_all_levels(qwes_license_store_setup_t)
 
+allow qwes_license_store_setup_t etc_t:file map;
 allow qwes_license_store_setup_t shell_exec_t:file map;
 allow qwes_license_store_setup_t shell_exec_t:file { read execute };
 allow qwes_license_store_setup_t self:capability { fowner chown };
