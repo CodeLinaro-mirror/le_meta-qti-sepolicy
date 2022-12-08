@@ -80,6 +80,7 @@ gen_require(`
   type event_device_t;
   type NetworkManager_t;
   type NetworkManager_exec_t;
+  type sysctl_net_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -156,6 +157,9 @@ logging_send_syslog_msg(qnetcfgmgr_t)
 allow qnetcfgmgr_t self:fifo_file { read getattr write };
 allow qnetcfgmgr_t self:netlink_kobject_uevent_socket { create bind setopt read };
 corecmd_exec_shell(qnetcfgmgr_t)
+allow qnetcfgmgr_t sysctl_t:dir search;
+allow qnetcfgmgr_t sysctl_net_t:dir search;
+allow qnetcfgmgr_t sysctl_net_t:file { write open };
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
