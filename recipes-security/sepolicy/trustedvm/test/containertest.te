@@ -1,0 +1,85 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(containertest, 1.0)
+
+# Root daemon equivalent
+type launchertest_t;
+type launchertest_exec_t;
+platform_launcher_domain_type(launchertest_t, launchertest_exec_t)
+
+# Trusted process equivalent
+type containertest_t;
+type containertest_exec_t;
+platform_container_domain_type(containertest_t, containertest_exec_t)
+domtrans_pattern(launchertest_t, containertest_exec_t, containertest_t)
+
+userdebug_or_eng(`
+    # launchertest_t
+    unconfined_domtrans_to(launchertest_t, launchertest_exec_t);
+
+    # Look for /mnt/test.txt (mount namespace test)
+    files_search_mnt(launchertest_t)
+    # /proc/sys/wake_(un)lock
+    dev_rw_sysfs(launchertest_t)
+    allow launchertest_t self:capability2 block_suspend;
+    # why does this default to systemd-journal? 
+    logging_send_syslog_msg(launchertest_t)
+
+    # hotplug /dev/dri script
+    # launcher checks for /dev/dri existance before launching child process,
+    # but does not actually use it
+    gen_require(`
+        type device_t;
+        type dri_device_t;
+        type tmpfs_t;
+    ')
+    allow launchertest_t device_t:dir search;
+    allow launchertest_t dri_device_t:chr_file getattr;
+    fs_read_nsfs_files(launchertest_t)  # nsenter
+    allow launchertest_t self:capability { sys_chroot mknod };
+    corecmd_exec_shell(launchertest_t)
+    kernel_dontaudit_search_kernel_sysctl(launchertest_t)
+
+    # TODO: is this common? and can we transition everything to *_tmpfs_t instead?
+    allow launchertest_t tmpfs_t:chr_file { read write ioctl open create };
+    allow launchertest_t tmpfs_t:dir { write search create add_name };
+    allow launchertest_t tmpfs_t:lnk_file create;
+    mls_file_read_all_levels(launchertest_t)
+
+    # Memfd testing - copy elf contents to tmpfs and transition
+    allow launchertest_t tmpfs_t:file { write map };
+    domtrans_pattern(launchertest_t, tmpfs_t, containertest_t)
+
+    # Trusted process equivalent
+
+    unconfined_domtrans_to(containertest_t, containertest_exec_t)
+
+    allow containertest_t containertest_exec_t:file entrypoint;
+    can_exec(containertest_t containertest_exec_t)
+
+    # /dev/dri
+    dev_rw_dri(containertest_t)
+    mls_file_read_all_levels(containertest_t)
+    mls_file_write_all_levels(containertest_t)
+    
+    # /dev/socket/letzd
+    optional_policy(`
+        gen_require(`
+            type socket_device_t;
+            type letzd_sock_t;
+        ')
+        allow containertest_t socket_device_t:dir { getattr search };
+        allow containertest_t letzd_sock_t:sock_file getattr;
+    ')
+
+    # Inspect process list. Not all containers will care about this
+    kernel_list_proc(containertest_t)
+    corecmd_exec_shell(containertest_t)
+    # /mnt/test.txt (mount namespace test)
+    allow containertest_t tmpfs_t:file { read write create open };
+
+    # Memfd testing
+    can_exec(containertest_t, tmpfs_t)
+    allow containertest_t tmpfs_t:file { entrypoint map };
+')  # userdebug_or_eng

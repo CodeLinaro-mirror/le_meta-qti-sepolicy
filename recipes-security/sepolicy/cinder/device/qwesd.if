@@ -24,33 +24,15 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(sfs_config, 1.0)
+## <summary>qwesd daemon</summary>
 
-type sfs_config_initrc_t;
-type sfs_config_initrc_exec_t;
-
-gen_require(`
-  type persist_t;
-  type qseecomd_data_t;
-  type qseecomd_persist_t;
-  type data_t;
-')
-
-init_script_domain(sfs_config_initrc_t, sfs_config_initrc_exec_t)
-
-data_filetrans(sfs_config_initrc_t, qseecomd_data_t, { file dir })
-manage_user_data_files(sfs_config_initrc_t, qseecomd_data_t)
-filetrans_pattern(sfs_config_initrc_t, persist_t, qseecomd_persist_t, { file dir })
-allow sfs_config_initrc_t qseecomd_persist_t:dir manage_dir_perms;
-allow sfs_config_initrc_t self:fifo_file rw_fifo_file_perms;
-dev_read_sysfs(sfs_config_initrc_t)
-kernel_read_system_state(sfs_config_initrc_t)
-
-userdebug_or_eng(`
-mls_file_write_all_levels(sfs_config_initrc_t)
-dev_write_kmsg(sfs_config_initrc_t)
-')
-
-dontaudit sfs_config_initrc_t data_t:dir setattr;
-dontaudit sfs_config_initrc_t self:capability { fsetid };
+#######################################
+## <summary>
+##       qwesd interface
+## </summary>
+#
