@@ -142,5 +142,10 @@ type image_version_sysfs_t;
 genfscon sysfs /devices/soc0/image_version gen_context(system_u:object_r:image_version_sysfs_t,s0)
 dev_associate_sysfs(image_version_sysfs_t)
 
+type wakelock_sysfs_t;
+genfscon sysfs /power/wake_lock gen_context(system_u:object_r:wakelock_sysfs_t,s0)
+genfscon sysfs /power/wake_unlock gen_context(system_u:object_r:wakelock_sysfs_t,s0)
+dev_associate_sysfs(wakelock_sysfs_t)
+
 type proc_sched_t;
 genfscon proc /sys/walt/ gen_context(system_u:object_r:proc_sched_t,s0)

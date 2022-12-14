@@ -48,6 +48,7 @@ gen_require(`
        type storage_disk_device_t;
        type smcinvoke_device_t;
        type vendor_dmabuf_qseecom_heap_device_t;
+       type wakelock_sysfs_t;
 ')
 
 allow qseecomd_t self:process setcap;
@@ -60,6 +61,7 @@ rw_chr_files_pattern(qseecomd_t, device_t, qseecom_device_t);
 
 #allow qseecomd_t to access /dev/smcinvoke
 rw_chr_files_pattern(qseecomd_t, device_t, smcinvoke_device_t);
+
 
 # allow qseecomd to read commandline from /proc/cmdline
 allow qseecomd_t proc_t:file read_file_perms;
@@ -83,6 +85,8 @@ dev_read_sysfs(qseecomd_t)
 #dev_rw_generic_chr_files(qseecomd_t)
 allow qseecomd_t self:capability { setuid setgid };
 allow qseecomd_t firmware_t:file read_file_perms;
+
+allow qseecomd_t wakelock_sysfs_t:file rw_file_perms;
 
 files_search_default(qseecomd_t)
 
