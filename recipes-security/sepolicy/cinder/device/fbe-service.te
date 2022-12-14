@@ -32,7 +32,6 @@ gen_require(`
         type proc_t;
         type socket_device_t;
         type mount_t;
-        type data_t;
 ')
 
 kernel_dontaudit_read_system_state(fbe_service_t)
@@ -42,7 +41,6 @@ mls_file_write_all_levels(fbe_service_t);
 fs_mount_xattr_fs(fbe_service_t)
 files_polyinstantiate_all(fbe_service_t)
 overlay_mount_user_dir(fbe_service_t)
-leprop_rw_props(fbe_service_t)
 allow initrc_t fbe_secure_data_t:dir create_dir_perms;
 allow initrc_t overlay_t:dir manage_dir_perms;
 
@@ -54,7 +52,6 @@ allow fbe_service_t overlay_t:dir manage_dir_perms;
 
 allow fbe_service_t urandom_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t init_var_run_t:dir search_dir_perms;
-allow fbe_service_t proc_t:file read_file_perms;
 allow fbe_service_t fbe_secure_data_t:dir manage_dir_perms;
 allow fbe_service_t devlog_t:sock_file write_sock_file_perms;
 allow fbe_service_t fbe_secure_data_t:file rw_file_perms;
@@ -63,4 +60,3 @@ allow fbe_service_t smcinvoke_device_t:chr_file rw_chr_file_perms;
 allow fbe_service_t socket_device_t:dir search_dir_perms;
 allow fbe_service_t hwfde_conf_file_t:file read_file_perms;
 allow fbe_service_t fbe_secure_data_t:file { create };
-allow fbe_service_t data_t:dir { read ioctl };
