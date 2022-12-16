@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := "${THISDIR}:${THISDIR}/patches:"
+FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Assign-proc_t-to-proc-dir.patch \
@@ -13,12 +13,12 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
 "
 
 PROVIDES += "sepolicy"
-RPROVIDES_${PN} += "sepolicy"
+RPROVIDES:${PN} += "sepolicy"
 
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 # Update userdebug_or_eng macro for VM while other machine images are validated
-EXTRA_OEMAKE_append_qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
+EXTRA_OEMAKE:append:qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
 
 # Modules outside of 'services' and 'apps' layer to be removed
 PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
@@ -51,7 +51,7 @@ def install_device_policy(d, src_root):
             else:
                 copy_policy_file(os.path.join(src_dir, policy_file), dst_path)
 
-do_patch_append() {
+do_patch:append() {
     install_device_policy(d, "common")
     if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
         install_device_policy(d, d.getVar("BASEMACHINE"))
@@ -91,11 +91,11 @@ python update_modules_conf () {
 }
 do_compile[postfuncs] += "update_modules_conf"
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
 }
 
-rebuild_policy_append() {
+rebuild_policy:append() {
 	policy_version=31
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then

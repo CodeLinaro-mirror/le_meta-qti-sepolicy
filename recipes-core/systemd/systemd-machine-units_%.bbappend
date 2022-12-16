@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/systemd:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/systemd:"
 
-SRC_URI_append += " \
+SRC_URI:append += " \
     file://label-cache.service \
     file://label-persist.service \
     file://label-systemrw.service \
@@ -18,7 +18,7 @@ append_selinux_mount_option() {
     fi
 }
 
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
         install -d ${D}${systemd_system_unitdir}/local-fs.target.wants
         install -d ${D}${systemd_system_unitdir}/multi-user.target.wants

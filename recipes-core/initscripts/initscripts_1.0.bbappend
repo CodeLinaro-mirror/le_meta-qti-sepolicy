@@ -1,4 +1,4 @@
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','selinux','true','false',d)}; then
         # Remove recursive restorecon calls
         sed -i '/^test ! -x \/sbin\/restorecon/ d' ${D}${sysconfdir}/init.d/populate-volatile.sh

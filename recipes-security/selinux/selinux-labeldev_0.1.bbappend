@@ -4,7 +4,7 @@
 INITSCRIPT_PARAMS = "start 04 S ."
 SELINUX_SCRIPT_DST = "${BPN}"
 
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'false', 'true', d)}; then
         # Sysvinit targets use inittab to create /dev/socket. The sysfs
         #  initscript will then remount /dev and that file will be lost. When

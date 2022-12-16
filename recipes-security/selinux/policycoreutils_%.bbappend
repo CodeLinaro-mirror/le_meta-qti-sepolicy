@@ -1,5 +1,5 @@
 # Replace coreutils and findutils
-RDEPENDS_${BPN}-fixfiles_remove = "grep findutils"
-RDEPENDS_${BPN}-fixfiles_append = " ${PREFERRED_PROVIDER_virtual/base-utils}"
-RDEPENDS_${BPN}_remove = "grep findutils"
-RDEPENDS_${BPN}_append = " ${PREFERRED_PROVIDER_virtual/base-utils}"
+RDEPENDS:${BPN}-fixfiles:remove = "grep findutils"
+RDEPENDS:${BPN}-fixfiles:append = " ${PREFERRED_PROVIDER_virtual/base-utils}"
+RDEPENDS:${BPN}:remove = "grep findutils"
+RDEPENDS:${BPN}:append = " ${PREFERRED_PROVIDER_virtual/base-utils}"
