@@ -1,0 +1,27 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> libcontainer interface </summary>
+
+########################################
+## <summary>
+##      Allow bind-mounting of the specified type into a platform container
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed to have the specified type
+##      </summary>
+## </param>
+## <param name="file">
+##      <summary>
+##      Type of the file to bind mount
+##      </summary>
+## </param>
+#
+interface(`platform_container_bind_mount_type',`
+    gen_require(`
+        attribute platform_container_bind_mount;
+    ')
+
+    typeattribute $2 platform_container_bind_mount;
+')

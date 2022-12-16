@@ -1,0 +1,50 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(platform_container, 1.0)
+
+# TODO: neverallows
+
+attribute platform_container_domain;
+
+gen_require(`
+    attribute platform_launcher_domain;
+')
+
+getty_use_fds(platform_container_domain)
+term_use_unallocated_ttys(platform_container_domain)
+allow platform_container_domain platform_launcher_domain:fd use;
+
+# /proc/sys/kernel/cap_last_cap
+kernel_read_kernel_sysctls(platform_container_domain)
+
+# /dev namespacing. These policies include the 10 or so base nodes.
+#  Specific bind-mounted nodes should be handled at a type level.
+# TODO: Why are platform_container_domain types requesting these capabilities?
+allow platform_container_domain self:capability { sys_admin mknod chown setgid setuid setpcap };
+allow platform_container_domain self:process { getcap setcap };
+
+# TODO: Transition these away from default tmp_t/tmpfs_t/device_t labels?
+gen_require(`
+    type tmp_t;
+    type tmpfs_t;
+    type device_t;
+')
+allow platform_container_domain tmp_t:dir { getattr write search add_name create remove_name mounton rmdir open };
+allow platform_container_domain tmpfs_t:dir { getattr read write search mounton create add_name setattr open };
+allow platform_container_domain tmpfs_t:chr_file { open getattr create read write };
+allow platform_container_domain tmpfs_t:lnk_file create;
+allow platform_container_domain tmpfs_t:filesystem { getattr mount unmount };
+allow platform_container_domain device_t:filesystem { getattr remount unmount };
+allow platform_container_domain device_t:dir { search mounton };
+
+# TODO: isn't AT_SECURE a good thing to have?
+allow platform_launcher_domain platform_container_domain:process noatsecure;
+allow platform_launcher_domain platform_container_domain:process { rlimitinh siginh };
+
+gen_require(`
+    type container_mount_t;
+')
+    
+allow platform_container_domain container_mount_t:process { noatsecure rlimitinh siginh };
+allow platform_container_domain container_mount_t:process2 { nnp_transition nosuid_transition };
