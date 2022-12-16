@@ -28,4 +28,5 @@
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
 
-
+kernel_read_system_state(post_boot_script_t)
+allow post_boot_script_t self:fifo_file rw_file_perms;
