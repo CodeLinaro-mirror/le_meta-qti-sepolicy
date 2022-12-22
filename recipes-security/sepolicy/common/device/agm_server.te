@@ -24,6 +24,11 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 
 policy_module(agm_server, 1.0)
 
@@ -44,11 +49,22 @@ gen_require(`
     type csd_device_t;
     type aud_dev_sysfs_t;
     type csd_sysfs_t;
+    type device_t;
+    type system_dmabuf_device_t;
         ifdef(`init_systemd', `
             class dbus send_msg;
         ')
 
 ')
+
+type pmsg0_t;
+dev_node(pmsg0_t)
+rw_chr_files_pattern(agm_server_t, device_t, pmsg0_t)
+
+type dma_heap_audio_t;
+dev_node(dma_heap_audio_t)
+rw_chr_files_pattern(agm_server_t, device_t, dma_heap_audio_t)
+
 init_vendor_domain(agm_server_t, agm_server_exec_t)
 
 #dev_node(agm_device_t)
@@ -75,6 +91,7 @@ allow agm_server_t self:qipcrtr_socket create_socket_perms;
 allow agm_server_t sound_device_t:chr_file map;
 allow agm_server_t aud_dev_sysfs_t:file write_file_perms;
 allow agm_server_t csd_device_t:chr_file rw_chr_file_perms;
+allow agm_server_t system_dmabuf_device_t:chr_file rw_chr_file_perms;
 kernel_read_system_state(agm_server_t)
 dontaudit hal_play_test_t socket_device_t:dir search_dir_perms;
 dontaudit agm_server_t self:capability { dac_read_search dac_override };
