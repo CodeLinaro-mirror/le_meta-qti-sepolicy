@@ -50,6 +50,7 @@ gen_require(`
     type aud_dev_sysfs_t;
     type csd_sysfs_t;
     type device_t;
+    type telux_audio_server_t;
     type system_dmabuf_device_t;
         ifdef(`init_systemd', `
             class dbus send_msg;
@@ -106,4 +107,4 @@ ifdef(`init_systemd', `
 
     allow agm_server_t self:dbus send_msg;
 ')
-
+allow agm_server_t telux_audio_server_t:dbus send_msg;
