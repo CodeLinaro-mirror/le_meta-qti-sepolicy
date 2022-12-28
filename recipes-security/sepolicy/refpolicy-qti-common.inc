@@ -1,3 +1,13 @@
+POLICY_TYPE = "mls"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy:"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/files:"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy:"
+
+require ${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy_git.inc
+
 FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
@@ -6,7 +16,6 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
             file://Move-root-user-to-unconfined-context.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
-            file://Update-busybox-substitution-paths.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
             file://poky-ssd-rpmb-storage.patch \
@@ -53,8 +62,6 @@ def install_device_policy(d, src_root):
 
 do_patch:append() {
     install_device_policy(d, "common")
-    if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
-        install_device_policy(d, d.getVar("BASEMACHINE"))
 }
 
 create_data_ubi_mounted_contexts() {
@@ -96,7 +103,7 @@ do_install:append() {
 }
 
 rebuild_policy:append() {
-	policy_version=31
+	policy_version=33
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
 		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
