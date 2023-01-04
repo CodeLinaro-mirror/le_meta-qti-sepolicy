@@ -431,6 +431,7 @@ allow hostapd_cli_qcmap_t self: process { getcap setcap };
 allow wpa_cli_t self: capability { setpcap setgid setuid };
 allow wpa_cli_t self: process { getcap setcap };
 allow wpa_cli_t urandom_device_t:chr_file { open read getattr ioctl};
+dev_read_sysfs(wpa_cli_t)
 
 ##### QXDM logs for QCMAP STA interface
 userdebug_or_eng(`
