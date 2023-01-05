@@ -70,8 +70,15 @@ userdebug_or_eng(`
 
     gen_require(`
         type weston_runtime_t;
+        type fbe_secure_data_t;
+        type hwfde_conf_file_t;
+        type install_evict_t;
     ')
 
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
     allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t fbe_secure_data_t:dir search_dir_perms;
+    allow unconfined_t fbe_secure_data_t:file read_file_perms;
+    allow unconfined_t hwfde_conf_file_t:file read_file_perms;
+    allow unconfined_t install_evict_t:file exec_file_perms;
 ')
