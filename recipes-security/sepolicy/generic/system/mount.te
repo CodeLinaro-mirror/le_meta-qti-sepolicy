@@ -1,0 +1,62 @@
+#Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Copyright (c) 2020, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+permissive mount_t;
+permissive mount_copybind_t;
+permissive unconfined_mount_t;
+
+gen_require(`
+   type semanage_read_lock_t;
+   type semanage_trans_lock_t;
+   type init_var_lib_t;
+   type qseecomd_data_t;
+   type data_t;
+   type default_context_t;
+   type leprop_system_data_t;
+   type modules_conf_t;
+   type usb_t;
+')
+
+#allow mount_t usb_var_lock_t:file { create write open };
+
+allow mount_t data_t:dir { create relabelfrom relabelto add_name };
+allow mount_t self:capability { fsetid };
+allow mount_t qseecomd_data_t:dir {create read open getattr setattr relabelfrom relabelto };
+allow mount_t default_context_t:file { getattr read open };
+allow mount_t etc_t:file { execute map create write };
+allow mount_t etc_t:dir { create setattr rename };
+allow mount_t leprop_system_data_t:file { setattr read open link write };
+allow mount_t modules_conf_t:file { getattr read open };
+allow mount_t modules_conf_t:dir { read open write };
+
+#allow mount_copybind_t semanage_store_t:file { getattr read open };
+#allow mount_copybind_t semanage_read_lock_t:file { open };
+#allow mount_copybind_t semanage_trans_lock_t:file { getattr read open };
+allow mount_copybind_t init_var_lib_t:dir { getattr read open };
