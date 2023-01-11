@@ -50,6 +50,7 @@ userdebug_or_eng(`
          type init_var_run_t;
     ')
     corecmd_exec_shell(rebootd_t)
+    #todo: cleanup commented line
     #files_read_generic_pids(rebootd_t)
     init_read_state(rebootd_t)
     allow rebootd_t self:capability net_admin;

@@ -83,7 +83,8 @@ init_vendor_domain(tinyproxy_t, tinyproxy_exec_t )
 gen_require(`
     type systemd_tmpfiles_t;
 ')
-systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
+#todo: cleanup commented line
+#systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
 allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
 
 gen_require(`
@@ -229,7 +230,8 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-systemd_tmpfilesd_managed(qcmap_tmp_t, dir)
+#todo: cleanup commented line
+#systemd_tmpfilesd_managed(qcmap_tmp_t, dir)
 allow qcmap_cm_t qcmap_tmp_t:file { relabelfrom relabelto };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
@@ -321,7 +323,8 @@ gen_require(`
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
-modutils_domtrans_insmod(qcmap_cm_t)
+#todo: cleanup commented line
+#modutils_domtrans_insmod(qcmap_cm_t)
 
 #Manage Socket Files
 corenet_tcp_bind_all_unreserved_ports(qcmap_cm_t)

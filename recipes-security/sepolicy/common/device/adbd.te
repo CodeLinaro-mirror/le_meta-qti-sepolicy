@@ -35,6 +35,7 @@ dev_node(usb_dev_t)
 
 gen_require(`
     type device_t;
+    type kernel_t;
 ')
 
 # not using init_vendor_domain here due to unconfined_domain
@@ -223,5 +224,4 @@ allow usb_t sysfs_vblank_t:file read_file_perms;
 type usb_bind_tmp_t;
 files_tmp_file(usb_bind_tmp_t)
 files_tmp_filetrans(usb_t,usb_bind_tmp_t,{ file dir })
-
 allow usb_t usb_bind_tmp_t:file manage_file_perms;

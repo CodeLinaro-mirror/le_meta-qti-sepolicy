@@ -39,11 +39,12 @@ files_type(pulseaudio_tmp_t);
 init_daemon_domain(pulseaudio_t, pulseaudio_exec_t);
 
 gen_require(`
-	type debugfs_t;
-	type systemd_logind_var_run_t;
-	type audio_device_t;
-	type snd_card_state_t;
-	type audio_data_file_t;
+        type debugfs_t;
+        type systemd_logind_var_run_t;
+        type audio_device_t;
+        type snd_card_state_t;
+        type audio_data_file_t;
+        type init_var_run_t;
 ')
 
 allow pulseaudio_t self:capability { chown fowner fsetid setgid setuid sys_nice sys_resource sys_tty_config };

@@ -82,6 +82,7 @@ type initrc_t;
 type system_data_t;
 type fs_t;
 type wlan_hsp_sysfs_t;
+type kernel_t;
 ')
 
 userdebug_or_eng(`

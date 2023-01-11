@@ -97,9 +97,11 @@ corecmd_exec_bin(wlan_initrc_t)
 dev_write_kmsg(wlan_initrc_t)
 kernel_read_system_state(wlan_initrc_t)  # uname
 sysnet_domtrans_ifconfig(wlan_initrc_t)
-modutils_domtrans_insmod(wlan_initrc_t)
+#todo: cleanup commented line
+#modutils_domtrans_insmod(wlan_initrc_t)
 # The above rule doesn't seem to grant read permissions
-modutils_exec_insmod(wlan_initrc_t)
+#todo: cleanup commented line
+#modutils_exec_insmod(wlan_initrc_t)
 
 allow wlan_initrc_t self:fifo_file rw_file_perms;
 qcmap_cm_rw_unix_dgram_socket(NetworkManager_t)
@@ -181,6 +183,7 @@ gen_require(`
     type urandom_device_t;
     type hostapd_t;
     type unreserved_port_t;
+    type kmod_t;
 ')
 dontaudit NetworkManager_t httpd_t:fd use;
 dontaudit wpa_cli_t httpd_t:fd use;
@@ -247,9 +250,11 @@ corecmd_exec_bin(wlan_ezmesh_initrc_t)
 dev_write_kmsg(wlan_ezmesh_initrc_t)
 kernel_read_system_state(wlan_ezmesh_initrc_t)  # uname
 sysnet_domtrans_ifconfig(wlan_ezmesh_initrc_t)
-modutils_domtrans_insmod(wlan_ezmesh_initrc_t)
+#todo: cleanup commented line
+#modutils_domtrans_insmod(wlan_ezmesh_initrc_t)
 # The above rule doesn't seem to grant read permissions
-modutils_exec_insmod(wlan_ezmesh_initrc_t)
+#todo: cleanup commented line
+#modutils_exec_insmod(wlan_ezmesh_initrc_t)
 
 allow wlan_ezmesh_initrc_t self:fifo_file rw_file_perms;
 allow wlan_ezmesh_initrc_t self:fifo_file rw_file_perms;

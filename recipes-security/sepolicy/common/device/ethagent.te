@@ -43,7 +43,6 @@ gen_require(`
     class service {status start stop};
     type wifi_data_t;
     type debugfs_t;
-    type kernel_t;
     type proc_net_t;
     type qcmap_cm_t;
     type qcmap_var_run_t;

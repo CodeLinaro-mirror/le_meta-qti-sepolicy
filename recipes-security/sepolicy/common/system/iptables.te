@@ -32,6 +32,7 @@ userdebug_or_eng(`
 gen_require(`
     type systemd_tmpfiles_t;
 ')
-systemd_tmpfilesd_managed(iptables_runtime_t, file)
+#todo: cleanup commented line
+#systemd_tmpfilesd_managed(iptables_runtime_t, file)
 allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
 dontaudit iptables_t self:capability { kill };

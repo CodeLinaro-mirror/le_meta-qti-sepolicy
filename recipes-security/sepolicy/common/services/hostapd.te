@@ -81,7 +81,11 @@ gen_require(`
  type system_data_t;
  type unreserved_port_t;
  type node_t;
+ type tmp_t;
+ type qcmap_tmp_t;
+ type kmsg_device_t;
 ')
+
 type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
 allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
@@ -111,10 +115,6 @@ allow hostapd_t unreserved_port_t:udp_socket { name_bind };
 allow hostapd_t node_t:udp_socket { node_bind };
 dontaudit hostapd_t self:capability { sys_module };
 
-userdebug_or_eng('
-        allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };
-        mls_file_write_all_levels(kmsg_device_t);
-')
 allow hostapd_t etc_t:file { map };
 allow hostapd_t syslogd_var_run_t:dir { search  };
 allow hostapd_t user_tmp_t:sock_file{ write };
@@ -123,11 +123,6 @@ qcmap_manage_var_run_data_files(hostapd_t)
 networkmanager_read_wifi_sysdata_files(hostapd_t)
 allow hostapd_t self:udp_socket connected_socket_perms;
 
-gen_require(`
-    type tmp_t;
-    type qcmap_tmp_t;
-    type kmsg_device_t;
-')
 rw_sock_files_pattern(hostapd_t, tmp_t, qcmap_tmp_t)
 
 type hostapd_unit_t;
@@ -143,6 +138,8 @@ corecmd_exec_shell(hostapd_cli_qcmap_unit_t)
 userdebug_or_eng(`
     dev_write_kmsg(hostapd_t);
     mls_file_write_all_levels(hostapd_t);
+    allow hostapd_t kmsg_device_t:chr_file { write getattr ioctl };
+    mls_file_write_all_levels(kmsg_device_t);
 ')
 
 dontaudit hostapd_t kmsg_device_t:chr_file { getattr };

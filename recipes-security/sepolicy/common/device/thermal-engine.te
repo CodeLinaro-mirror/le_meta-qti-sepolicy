@@ -40,6 +40,7 @@ logging_send_syslog_msg(thermal-engine_t)
 
 gen_require(`
     type default_t;
+    type syslogd_var_run_t;
 ')
 
 # Manage socket files inside /dev/socket

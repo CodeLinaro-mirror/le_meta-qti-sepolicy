@@ -41,6 +41,7 @@ gen_require(`
     type xen_port_t;
     type netmgrd_socket_device_t;
     type usr_t;
+    type init_var_run_t;
 ')
 
 ########################################

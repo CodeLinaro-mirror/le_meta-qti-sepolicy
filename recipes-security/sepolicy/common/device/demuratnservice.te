@@ -10,27 +10,27 @@ policy_module(demuratnservice, 1.0)
 
 type demuratnservice_t;
 type demuratnservice_exec_t;
+type demuratnservice_data_t;
 
 init_vendor_domain(demuratnservice_t, demuratnservice_exec_t)
 gen_require(`
-type tuicoreservice_dev_t;
-type vendor_vm_trusted_device_t;
-type vendor_vm_hlos_device_t;
-type vendor_virtio_mem_device_t;
-type vendor_vm_cp_pixel_device_t;
-type persist_t;
-type persist_display_t;
-type socket_device_t;
-type letzd_t;
-type letzd_sock_t;
-type tuicoreservice_data_t;
+    type tuicoreservice_dev_t;
+    type vendor_vm_trusted_device_t;
+    type vendor_vm_hlos_device_t;
+    type vendor_virtio_mem_device_t;
+    type vendor_vm_cp_pixel_device_t;
+    type persist_t;
+    type persist_display_t;
+    type socket_device_t;
+    type letzd_t;
+    type letzd_sock_t;
+    type tuicoreservice_data_t;
 ')
 #permissions for /sys/power/wake_lock /sys/power/wake_unlock
 dev_rw_sysfs(demuratnservice_t)
 vmfilexferservice_read_persist_display_files(demuratnservice_t);
 manage_user_data_files(demuratnservice_t, persist_display_t);
 
-type demuratnservice_data_t;
 user_data_files_type(demuratnservice_data_t)
 manage_user_data_files(demuratnservice_t, demuratnservice_data_t)
 

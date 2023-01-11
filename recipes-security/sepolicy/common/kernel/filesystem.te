@@ -68,8 +68,6 @@ files_mountpoint(configfs_t)
 files_mountpoint(trace_marker_t)
 genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0
 
-fs_use_xattr ubifs gen_context(system_u:object_r:fs_t,s0);
-
 type brightness_t;
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/max_brightness gen_context(system_u:object_r:brightness_t,s0)
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness     gen_context(system_u:object_r:brightness_t,s0)

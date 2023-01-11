@@ -31,6 +31,7 @@ init_write_utmp(chronyd_t);
 init_read_utmp(chronyd_t);
 gen_require(`
     type systemd_resolved_var_run_t;
+    type init_var_run_t;
 ')
 allow chronyd_t systemd_resolved_var_run_t:file { open read getattr };
 allow chronyd_t init_var_run_t:file { open read getattr };

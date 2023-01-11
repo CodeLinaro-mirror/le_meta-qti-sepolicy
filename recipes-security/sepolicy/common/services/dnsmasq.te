@@ -35,6 +35,7 @@ gen_require(`
   type unconfined_t;
   type boot_kpi_values_t;
   type initrc_var_run_t;
+  type init_var_run_t;
   class service {start stop status};
 ')
 
