@@ -114,3 +114,6 @@ allow wlan_initrc_t fs_t:filesystem getattr;
 allow wlan_initrc_t default_t:dir search_dir_perms;
 allow wlan_initrc_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
 allow wlan_initrc_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+allow wlan_initrc_t wlan_service_tmp_t:dir manage_dir_perms;
+allow wlan_initrc_t wlan_service_tmp_t:file manage_file_perms;
+allow wlan_initrc_t wlan_service_tmp_t:sock_file { create write unlink };

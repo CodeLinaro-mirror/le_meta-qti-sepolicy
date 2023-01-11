@@ -225,3 +225,7 @@ files_tmp_file(usb_bind_tmp_t)
 files_tmp_filetrans(usb_t,usb_bind_tmp_t,{ file dir })
 
 allow usb_t usb_bind_tmp_t:file manage_file_perms;
+
+# Add permissions for usb_t to access adb_data_conf_t, so that
+# /data/debug_transport.conf can be accessed by start_usb
+allow usb_t adb_data_conf_t:file read_file_perms;
