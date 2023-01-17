@@ -44,7 +44,7 @@ interface(`voiceui_manage_avs_fifo',`
         type voice-ui-app_fifo_t;
      ')
 
-    files_pid_filetrans($1, voice-ui-app_fifo_t, { fifo_file } )
+    files_runtime_filetrans($1, voice-ui-app_fifo_t, { fifo_file } )
     manage_fifo_files_pattern($1, voice-ui-app_fifo_t, voice-ui-app_fifo_t)
 	allow $1 self:fifo_file { read write };
 ')

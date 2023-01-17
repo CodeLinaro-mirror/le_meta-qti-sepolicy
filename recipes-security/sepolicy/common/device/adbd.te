@@ -155,7 +155,7 @@ user_data_files_type(usb_var_lock_t)
 data_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
 manage_user_data_files(usb_t, usb_var_lock_t)
 auditallow usb_t usb_var_lock_t:file manage_file_perms;
-files_pid_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
+files_runtime_filetrans(usb_t, usb_var_lock_t, file, "usb_bind_in_progress")
 manage_files_pattern(usb_t, usb_var_lock_t, usb_var_lock_t)
 
 userdebug_or_eng(`
@@ -193,7 +193,7 @@ allow usb_t sysfs_t:dir rw_dir_perms;
 allow usb_t sysfs_t:file create;
 
 allow usb_t usb_exec_t:file execute_no_trans;
-files_search_pids(usb_t)  # TODO: what to look for?
+files_search_runtime(usb_t)  # TODO: what to look for?
 
 type_transition usb_t device_t:dir usb_dev_t;
 manage_files_pattern(usb_t, { device_t usb_dev_t }, usb_dev_t)

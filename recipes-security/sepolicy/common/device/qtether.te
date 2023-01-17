@@ -137,10 +137,10 @@ allow qtether_t self:netlink_kobject_uevent_socket create_socket_perms;
 
 #Manage private files inside /var/run
 type qtether_var_run_t;
-files_pid_file(qtether_var_run_t)
+files_runtime_file(qtether_var_run_t)
 allow qtether_t qtether_var_run_t:sock_file { create write };
 qcmap_manage_var_run_data_files(qtether_t)
-files_pid_filetrans(qtether_t, qtether_var_run_t, { file sock_file dir })
+files_runtime_filetrans(qtether_t, qtether_var_run_t, { file sock_file dir })
 allow qtether_t dataqti_ppp_t:unix_dgram_socket { sendto };
 
 #dont audit setuid and setgid

@@ -58,7 +58,7 @@ corenet_tcp_connect_http_port(alexa_t)
 #################
 
 type alexa_avs_fifo_t;
-files_pid_file(alexa_avs_fifo_t)
+files_runtime_file(alexa_avs_fifo_t)
 alexa_manage_avs_fifo(alexa_t)
 
 leprop_rw_props(alexa_t)
@@ -90,7 +90,7 @@ dontaudit alexa_t self:capability dac_override;
 
 dev_rw_realtime_clock(alexa_t)
 dev_rw_input_dev(alexa_t)
-sysnet_read_dhcpc_pid(alexa_t)
+sysnet_read_dhcpc_runtime_files(alexa_t)
 #allow alexa_t debugfs_t:dir { search };
 
 ##required for wake_lock request
@@ -100,7 +100,7 @@ corecmd_exec_shell(alexa_t)
 allow alexa_t self:netlink_kobject_uevent_socket { create setopt bind getattr };
 dev_rw_sysfs(alexa_t)
 rw_video_dev(alexa_t)
-udev_read_pid_files(alexa_t)
+udev_read_runtime_files(alexa_t)
 allow alexa_t firmware_t:dir { search };
 firmware_search_dirs(alexa_t)
 dev_read_video_dev(alexa_t)

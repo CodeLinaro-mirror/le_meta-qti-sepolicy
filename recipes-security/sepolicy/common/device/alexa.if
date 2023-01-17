@@ -57,6 +57,6 @@ interface(`alexa_manage_avs_fifo',`
         type alexa_avs_fifo_t;
      ')
 
-    files_pid_filetrans($1, alexa_avs_fifo_t, { fifo_file } )
+    files_runtime_filetrans($1, alexa_avs_fifo_t, { fifo_file } )
     manage_fifo_files_pattern($1, alexa_avs_fifo_t, alexa_avs_fifo_t)
 ')

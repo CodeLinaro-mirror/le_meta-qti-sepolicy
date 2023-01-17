@@ -61,8 +61,8 @@
 
 #todo: cleanup commented line
 #ifdef(`init_systemd',`
-    #  dev-log is supposed to obtain its context from either
-    #  files_pid_filetrans (for var_run_t directories) or
+    # dev-log is supposed to obtain its context from either
+    # files_runtime_filetrans (for var_run_t directories) or
     #  init_pid_filetrans (for init_var_run_t directories). SELinux
     #  denials are also pointing to syslogd_var_run_t as a parent directory
     type_transition syslogd_t syslogd_var_run_t:sock_file devlog_t "dev-log";
@@ -84,8 +84,7 @@
     # syslogd_tmp_t has a higher mls clearance than systemd-tmpfiles, so dontaudit this
     dontaudit systemd_tmpfiles_t syslogd_tmp_t:dir { setattr relabelfrom relabelto create };
     # Allow creating additional files/directories in generic var_log_t directories
-#todo: cleanup commented lines
-#    systemd_tmpfilesd_managed(var_log_t, dir)
+    systemd_tmpfilesd_managed(var_log_t)
 
     allow systemd_tmpfiles_t syslogd_var_run_t:dir search_dir_perms;
     # If auditd is not running, don't report attempts from

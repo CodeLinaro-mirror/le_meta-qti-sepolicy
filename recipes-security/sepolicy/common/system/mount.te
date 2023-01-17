@@ -46,7 +46,7 @@ term_use_all_terms(mount_copybind_t)
 kernel_read_system_state(mount_copybind_t)
 allow mount_copybind_t self:process setfscreate;
 
-files_search_pids(mount_copybind_t)
+files_search_runtime(mount_copybind_t)
 seutil_read_config(mount_copybind_t)
 selinux_get_fs_mount(mount_copybind_t)
 seutil_domtrans_setfiles(mount_copybind_t)

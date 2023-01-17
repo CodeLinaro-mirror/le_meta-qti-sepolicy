@@ -218,7 +218,7 @@ manage_system_data_files(allplay_t, alexa_data_t)
 
 # curl
 sysnet_dns_name_resolve(allplay_t)
-sysnet_read_dhcpc_pid(allplay_t) # /etc/resolv.conf symlinks to var/run
+sysnet_read_dhcpc_runtime_files(allplay_t) # /etc/resolv.conf symlinks to var/run
 
 alexa_manage_avs_fifo(allplay_t)
 

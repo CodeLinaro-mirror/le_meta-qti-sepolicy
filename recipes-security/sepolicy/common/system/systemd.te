@@ -83,8 +83,7 @@ ifdef(`init_systemd',`
     ')
     allow systemd_tmpfiles_t system_dbusd_var_lib_t:dir { read write add_name };
     allow systemd_tmpfiles_t system_dbusd_var_lib_t:lnk_file create;
-    #todo: cleanup commented lines
-    #systemd_tmpfilesd_managed(systemd_resolved_var_run_t, file)
+    systemd_tmpfilesd_managed(systemd_resolved_var_run_t)
     allow systemd_tmpfiles_t systemd_resolved_var_run_t:file { write getattr open };
 
     gen_require(`

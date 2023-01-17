@@ -72,11 +72,10 @@ dev_node(dataadpl_odl_device_t)
 
 # Manage private files inside /var/run
 type dataadpl_var_run_t;
-files_pid_file(dataadpl_var_run_t)
+files_runtime_file(dataadpl_var_run_t)
 allow dataadpl_t dataadpl_var_run_t:sock_file { create write };
 qcmap_manage_var_run_data_files(dataadpl_t)
-files_pid_filetrans(dataadpl_t, dataadpl_var_run_t, { file sock_file dir })
-
+files_runtime_filetrans(dataadpl_t, dataadpl_var_run_t, { file sock_file dir })
 
 # Manage socket files inside /dev/socket
 type dataadpl_socket_device_t;

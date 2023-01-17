@@ -65,11 +65,11 @@ files_rw_qcmap_etc_data_files(qmi_ip_multiclient_t)
 
 # Manage private files inside /var/run
 type qmi_ip_var_run_t;
-files_pid_file(qmi_ip_var_run_t)
+files_runtime_file(qmi_ip_var_run_t)
 allow qmi_ip_multiclient_t qmi_ip_var_run_t:file manage_file_perms;
 allow qmi_ip_multiclient_t qmi_ip_var_run_t:sock_file manage_sock_file_perms;
 manage_dirs_pattern(qmi_ip_multiclient_t, qmi_ip_var_run_t, qmi_ip_var_run_t)
-files_pid_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })
+files_runtime_filetrans(qmi_ip_multiclient_t, qmi_ip_var_run_t, { file sock_file dir })
 allow qmi_ip_multiclient_t self:unix_dgram_socket sendto;
 
 # Manage socket files inside /dev/socket
