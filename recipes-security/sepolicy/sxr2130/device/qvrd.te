@@ -72,6 +72,8 @@ gen_require(`
        type data_otapackage_t;
        type cache_recoveryupgrade_t;
        type recovery_initrc_tmp_t;
+       type sysfs_power_state_t;
+       type sysfs_usb_mode_t;
 ')
 
 #read /data/misc/qvr
@@ -181,3 +183,5 @@ allow qvrd_t gpumodel_t:file read_file_perms;
 allow qvrd_t camera_data_t:dir list_dir_perms;
 allow qvrd_t tmp_t:dir search_dir_perms;
 allow qvrd_t tmp_t:file read_file_perms;
+allow qvrd_t sysfs_power_state_t:file write_file_perms;
+allow qvrd_t sysfs_usb_mode_t:file write_file_perms;

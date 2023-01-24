@@ -165,3 +165,11 @@ genfscon sysfs /devices/system/cpu/cpufreq/policy4/scaling_max_freq        gen_c
 genfscon sysfs /devices/system/cpu/cpufreq/policy7/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
 genfscon sysfs /devices/system/cpu/cpufreq/policy7/scaling_max_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
 dev_associate_sysfs(cpu_scaling_freq_t)
+
+type sysfs_power_state_t;
+genfscon sysfs /power/state gen_context(system_u:object_r:sysfs_power_state_t,s0)
+dev_associate_sysfs(sysfs_power_state_t)
+
+type sysfs_usb_mode_t;
+genfscon sysfs /devices/platform/soc/a600000.ssusb/mode gen_context(system_u:object_r:sysfs_usb_mode_t,s0)
+dev_associate_sysfs(sysfs_usb_mode_t)

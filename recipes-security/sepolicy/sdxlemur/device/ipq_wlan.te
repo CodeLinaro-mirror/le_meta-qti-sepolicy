@@ -109,6 +109,11 @@ dontaudit wlan_initrc_t console_device_t:chr_file write_file_perms;
 dontaudit wlan_initrc_t kmsg_device_t:chr_file write_file_perms;
 dontaudit wlan_initrc_t self:capability { dac_read_search dac_override };
 
+# Don't audit sys_resource
+# WiFi script modifies the OOM score of cnss_daemon to prevent it from being
+# killed
+dontaudit wlan_initrc_t self:capability sys_resource;
+
 # General permissions
 allow wlan_initrc_t self:process signal_perms;
 allow wlan_initrc_t self:capability kill;
