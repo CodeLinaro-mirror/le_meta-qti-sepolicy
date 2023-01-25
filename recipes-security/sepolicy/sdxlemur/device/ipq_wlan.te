@@ -377,7 +377,7 @@ allow hostapd_t wlan_service_tmp_t:sock_file write;
 allow hostapd_t self:capability kill;
 allow hostapd_t self:tcp_socket { accept listen };
 allow hostapd_t unreserved_port_t:tcp_socket { name_bind name_connect };
-allow wlan_ezmesh_initrc_t etc_t:file { create read write open append getattr execute };
+allow wlan_ezmesh_initrc_t etc_t:file { create read write open append getattr };
 allow hostapd_t node_t:tcp_socket node_bind;
 
 #Sigma-Dut invoked Ezmesh dependent permissions
@@ -390,4 +390,3 @@ allow wlan_initrc_t self:packet_socket getopt;
 
 allow wlan_initrc_t initrc_exec_t:file { open read execute execute_no_trans };
 allow wlan_initrc_t etc_t:dir write;
-allow mount_t etc_t:file mounton;
