@@ -135,6 +135,11 @@ allow tftp_server_t rfs_persist_t:dir create_dir_perms;
 allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
 files_read_etc_files(tftp_server_t)
 
+type vendor_pddump_rfs_data_t;
+user_data_files_type(vendor_pddump_rfs_data_t)
+
+allow tftp_server_t vendor_pddump_rfs_data_t:dir create_dir_perms;
+allow tftp_server_t vendor_pddump_rfs_data_t:file { create_file_perms rw_file_perms };
 ### misc properties ###
 
 type mpss_persist_t;
