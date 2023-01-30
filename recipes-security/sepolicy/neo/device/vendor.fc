@@ -28,3 +28,6 @@
 # dev node
 /dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
 /etc/init.qti.debug.sh  -- gen_context(system_u:object_r:init_qti_debug_t,s0)
+
+### synx_device ###
+/dev/synx_device           -c  gen_context(system_u:object_r:synx_device_t,s0)

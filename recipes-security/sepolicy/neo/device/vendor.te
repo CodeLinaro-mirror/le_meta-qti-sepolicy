@@ -28,4 +28,7 @@
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
 
+type synx_device_t;
+dev_node(synx_device_t);
+
 
