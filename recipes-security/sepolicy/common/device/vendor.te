@@ -93,8 +93,8 @@ inittab_domtrans(tftp_server_t, tftp_server_exec_t)
 type dumgr_config_t;
 allow tftp_server_t dumgr_config_t:dir { search read };
 allow tftp_server_t dumgr_config_t:file { getattr open read};
-allow initrc_t dumgr_config_t:dir { relabelto getattr };
-allow initrc_t dumgr_config_t:file relabelto;
+allow initrc_t dumgr_config_t:dir { relabelto relabelfrom getattr search open read };
+allow initrc_t dumgr_config_t:file { relabelto relabelfrom read_file_perms };
 allow init_t dumgr_config_t:dir search;
 allow setfiles_t dumgr_config_t:dir search;
 allow dumgr_config_t fs_t:filesystem associate;
