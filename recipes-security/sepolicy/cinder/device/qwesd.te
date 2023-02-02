@@ -50,6 +50,10 @@ gen_require(`
        type systemd_resolved_var_run_t;
        type cert_t;
        type socket_device_t;
+       type adbd_t;
+       type systemd_tmpfiles_t;
+       type unconfined_t;
+       attribute domain;
 ')
 
 # allow qwesd to read /etc/qwesd.rc config file
@@ -84,6 +88,7 @@ search_user_data_dir(qwesd_t);
 user_data_files_type(qwes_data_t)
 data_filetrans(qwesd_t, qwes_data_t, { file dir })
 manage_user_data_files(qwesd_t, qwes_data_t)
+neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t} qwes_data_t:file { write };
 
 # allow qwesd to read/write to /var/run/qwes_ipc minksocket file.
 files_pid_file(qwes_mink_socket_t)
@@ -93,6 +98,8 @@ manage_dirs_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
 allow qwesd_t self:socket { create rw_socket_perms };
 allow qwesd_t socket_device_t:dir { write add_name };
 allow qwesd_t socket_device_t:sock_file { create setattr };
+allow qwesd_t socket_device_t:dir remove_name;
+allow qwesd_t socket_device_t:sock_file unlink;
 
 # allow qwesd for self capability.
 allow qwesd_t self:capability { chown };
