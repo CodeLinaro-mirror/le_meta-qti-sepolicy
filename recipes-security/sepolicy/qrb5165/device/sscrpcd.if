@@ -29,25 +29,4 @@
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-gen_require(`
-    type sysdevice_sysfs_t;
-')
-
-allow adsprpcd_t sysdevice_sysfs_t:file { open read getattr };
-
-type sensors_persist_data_t;
-files_type(sensors_persist_data_t)
-
-files_mountpoint(sensors_persist_data_t)
-
-# sensor initscript
-type sensors_initrc_exec_t;
-type sensors_initrc_t;
-init_script_domain(sensors_initrc_t, sensors_initrc_exec_t)
-unconfined_domain(sensors_initrc_t)
-allow sensors_initrc_t data_t:dir search;
-
-manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
-
-# Manage private files inside /data
-data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
+## <summary>SSCRPCD</summary>
