@@ -66,6 +66,8 @@ userdebug_or_eng(`
         type alogd_t;
         type node_t;
         type data_t;
+        type sysfs_usb_mode_t;
+        type sysfs_power_state_t;
     ')
     manage_user_data_files(unconfined_t, user_data)
     manage_system_data_files(unconfined_t, system_data)
@@ -142,4 +144,6 @@ userdebug_or_eng(`
         type proc_kmsg_t;
     ')
     allow unconfined_t proc_kmsg_t:file read_file_perms;
+    allow unconfined_t sysfs_power_state_t:file read_file_perms;
+    allow unconfined_t sysfs_usb_mode_t:file getattr_file_perms;
 ')
