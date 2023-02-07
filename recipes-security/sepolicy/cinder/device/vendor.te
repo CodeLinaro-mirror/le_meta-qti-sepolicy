@@ -1,4 +1,13 @@
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-#
+
+#seems nbd driver need to do
+#need to invistagate check
+gen_require(`
+    type mount_t;
+    type  kernel_t;
+
+')
+#set scheduling parameters for a kernel domain task.
+allow mount_t  kernel_t:process {setsched } ;
