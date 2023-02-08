@@ -69,3 +69,8 @@ allow setprop_t self:unix_stream_socket { create write connect };
 init_dontaudit_use_fds(setprop_t)
 term_dontaudit_use_unallocated_ttys(setprop_t)
 
+gen_require(`
+    type pmsg_device_t;
+')
+
+allow setprop_t pmsg_device_t:chr_file write;
