@@ -1,0 +1,5 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear.
+
+/usr/bin/fastrpc_root_test(/.*)?     gen_context(system_u:object_r:frpc_root_exec_t,s0)
+/data/local(/.*)?                 gen_context(system_u:object_r:dsp_tests_data_t,s0)

@@ -118,6 +118,7 @@ userdebug_or_eng(`
     # Check existance of /dev/mhi_ctrl
     gen_require(`
         type dataqti_device_t;
+        type frpc_root_exec_t;
     ')
     allow pcie_initrc_t dataqti_device_t:chr_file getattr;
     allow pcie_initrc_t self:fifo_file rw_fifo_file_perms;
@@ -131,6 +132,8 @@ userdebug_or_eng(`
     mls_file_write_all_levels(pcie_initrc_t)
     allow adbd_initrc_t kmsg_device_t:chr_file { write };
     mls_file_write_all_levels(adbd_initrc_t);
+    allow adbd_t frpc_root_exec_t:dir { getattr search write add_name create };
+    allow adbd_t frpc_root_exec_t:file { create write open setattr };
 ')
 allow pcie_initrc_t sysdevice_sysfs_t:file { getattr open read };
 type usb_t;
