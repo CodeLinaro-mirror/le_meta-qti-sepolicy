@@ -251,6 +251,9 @@ dev_node(smcinvoke_device_t);
 type qseecom_device_t;
 dev_node(qseecom_device_t);
 
+type smmu_proxy_device_t;
+dev_node(smmu_proxy_device_t);
+
 type mtd_device_t;
 dev_node(mtd_device_t);
 
