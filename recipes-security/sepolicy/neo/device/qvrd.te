@@ -64,10 +64,12 @@ gen_require(`
        type gpumodel_t;
        type camera_data_t;
        type synx_device_t;
+       type tmp_t;
+       type fs_t;
 ')
 
 #read /data/misc/qvr
-allow qvrd_t qvr_data_t:file { rw_file_perms create map };
+allow qvrd_t qvr_data_t:file { rw_file_perms create map unlink};
 allow qvrd_t qvr_data_t:dir add_entry_dir_perms;
 allow qvrd_t sxr_data_t:file { rw_file_perms create map };
 allow qvrd_t sxr_data_t:dir add_entry_dir_perms;
@@ -163,3 +165,8 @@ allow qvrd_t image_variant_sysfs_t:file read_file_perms;
 allow qvrd_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
 allow qvrd_t gpumodel_t:file read_file_perms;
 allow qvrd_t camera_data_t:dir list_dir_perms;
+
+# To read from /tmp folder
+allow qvrd_t tmp_t:file read_file_perms;
+# allow stat /data partition.
+allow qvrd_t fs_t:filesystem getattr;
