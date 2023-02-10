@@ -30,3 +30,4 @@
 /data/ota_package(/.*)?       gen_context(system_u:object_r:data_otapackage_t,s0)
 
 /usr/bin/recovery gen_context(system_u:object_r:recovery_exec_t,s0)
+/usr/bin/mirror_copy gen_context(system_u:object_r:recovery_exec_t,s0)

@@ -92,6 +92,7 @@ dev_node(ramdump_smem_device_t)
 
 type ss-ramdump_data_t;
 allow ss-ramdump_t self:capability kill;
+dontaudit ss-ramdump_t self:capability net_admin;
 allow ss-ramdump_t self:netlink_kobject_uevent_socket { read bind create setopt };
 userdebug_or_eng(`
     user_data_files_type(ss-ramdump_data_t)

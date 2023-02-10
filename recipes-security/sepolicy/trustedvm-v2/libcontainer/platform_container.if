@@ -1,0 +1,45 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> libcontainer interface </summary>
+
+########################################
+## <summary>
+##      Create a new platform container domain.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Type to be used as a platform container domain.
+##      </summary>
+## </param>
+## <param name="entry_point">
+##      <summary>
+##      Type of the program to be used as an entry point to this domain.
+##      </summary>
+## </param>
+#
+interface(`platform_container_domain_type',`
+    gen_require(`
+        attribute platform_container_domain;
+        role system_r;
+        type mount_exec_t;
+        type container_mount_t;
+    ')
+
+    typeattribute $1 platform_container_domain;
+    domain_type($1)
+    role system_r types $1;
+
+    can_exec($1, $2)
+
+    # TODO: Any way to fine-tune this?
+    mls_file_read_all_levels($1)
+    mls_file_write_all_levels($1)
+
+    # Most services will need bind-mounting
+    #  Use a custom context which only allows specific
+    #  listed files to be mounted.
+    # TODO: Can we dynamically create a custom mount type here?
+    domtrans_pattern($1, mount_exec_t, container_mount_t)
+    allow $1 mount_exec_t:file entrypoint;
+')

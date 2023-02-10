@@ -73,6 +73,8 @@ userdebug_or_eng(`
         type policy_config_t;
         type proc_kmsg_t;
         type rebootd_pipe_t;
+        type sysfs_usb_mode_t;
+        type sysfs_power_state_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -93,4 +95,6 @@ userdebug_or_eng(`
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t syslogd_tmp_t:file { read_file_perms };
+    allow unconfined_t sysfs_power_state_t:file read_file_perms;
+    allow unconfined_t sysfs_usb_mode_t:file getattr_file_perms;
 ')

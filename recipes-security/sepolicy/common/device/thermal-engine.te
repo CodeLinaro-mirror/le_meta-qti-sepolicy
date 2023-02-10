@@ -60,6 +60,7 @@ allow thermal-engine_t self:capability sys_nice;
 allow thermal-engine_t self:process setsched;
 allow thermal-engine_t self:capability2 block_suspend;
 allow thermal-engine_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
+allow thermal-engine_t self:netlink_generic_socket create_socket_perms;
 allow thermal-engine_t self:fifo_file rw_fifo_file_perms;
 allow thermal-engine_t self:unix_stream_socket create_stream_socket_perms;
 allow thermal-engine_t syslogd_var_run_t:dir search;
