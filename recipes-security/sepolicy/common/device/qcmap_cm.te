@@ -83,7 +83,7 @@ init_vendor_domain(tinyproxy_t, tinyproxy_exec_t )
 gen_require(`
     type systemd_tmpfiles_t;
 ')
-systemd_tmpfilesd_managed(tinyproxy_log_t, dir)
+systemd_tmpfilesd_managed(tinyproxy_log_t)
 allow systemd_tmpfiles_t tinyproxy_log_t:dir { getattr read open };
 
 gen_require(`
@@ -170,7 +170,7 @@ allow qcmap_cm_t NetworkManager_t:unix_dgram_socket { sendto };
 allow qcmap_cm_t self:netlink_route_socket { nlmsg_write };
 init_rw_utmp(qcmap_cm_t);
 sysnet_signal_dhcpc(qcmap_cm_t);
-sysnet_delete_dhcpc_pid(qcmap_cm_t);
+sysnet_delete_dhcpc_runtime_files(qcmap_cm_t);
 dontaudit dhcpc_t self:capability { fowner };
 
 dev_write_kmsg(qcmap_cm_t)
@@ -204,10 +204,10 @@ read_write_qcmap_cm_socket_files(kmod_t)
 read_write_qcmap_cm_socket_files(dhcpc_t)
 dev_rw_wireless(qcmap_cm_t)
 read_write_qcmap_cm_socket_files(ifconfig_t)
-networkmanager_read_pid_files(qcmap_cm_t);
+networkmanager_read_runtime_files(qcmap_cm_t);
 qcmap_cm_rw_sock_files(qcmap_cm_t)
 qcmap_cm_sendto_unix_dgram_socket(qcmap_cm_t)
-sysnet_read_dhcpc_pid(qcmap_cm_t)
+sysnet_read_dhcpc_runtime_files(qcmap_cm_t)
 sysnet_kill_dhcpc(qcmap_cm_t)
 networkmanager_signal(qcmap_cm_t)
 init_search_run(qcmap_cm_t)
@@ -216,9 +216,9 @@ qnetmgr_use_unix_stream_sockets(qcmap_cm_t)
 
 # Manage private files inside /var/run
 type qcmap_var_run_t;
-files_pid_file(qcmap_var_run_t)
+files_runtime_file(qcmap_var_run_t)
 qcmap_manage_var_run_data_files(qcmap_cm_t)
-files_pid_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file dir })
+files_runtime_filetrans(qcmap_cm_t, qcmap_var_run_t, { file sock_file dir })
 
 # Manage private files inside /data
 type qcmap_data_t;
@@ -229,7 +229,7 @@ data_filetrans(qcmap_cm_t, qcmap_data_t, file)
 # Manage private files inside /tmp
 type qcmap_tmp_t;
 files_tmp_file(qcmap_tmp_t)
-systemd_tmpfilesd_managed(qcmap_tmp_t, dir)
+systemd_tmpfilesd_managed(qcmap_tmp_t)
 allow qcmap_cm_t qcmap_tmp_t:file { relabelfrom relabelto };
 allow qcmap_cm_t qcmap_tmp_t:sock_file manage_sock_file_perms;
 files_tmp_filetrans(qcmap_cm_t, qcmap_tmp_t, { file sock_file })
@@ -321,7 +321,7 @@ gen_require(`
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
-modutils_domtrans_insmod(qcmap_cm_t)
+modutils_domtrans(qcmap_cm_t)
 
 #Manage Socket Files
 corenet_tcp_bind_all_unreserved_ports(qcmap_cm_t)
@@ -565,8 +565,8 @@ files_tmp_filetrans(tinyproxy_t, tinyproxy_tmp_t, { file dir })
 manage_files_pattern(tinyproxy_t, tmp_t, tinyproxy_tmp_t)
 manage_files_pattern(tinyproxy_t, var_run_t, tinyproxy_var_run_t)
 manage_files_pattern(tinyproxy_t, tinyproxy_etc_t, tinyproxy_etc_t)
-files_pid_file(tinyproxy_var_run_t)
-files_pid_filetrans(tinyproxy_t, tinyproxy_var_run_t, { file dir })
+files_runtime_file(tinyproxy_var_run_t)
+files_runtime_filetrans(tinyproxy_t, tinyproxy_var_run_t, { file dir })
 allow tinyproxy_t var_log_t:lnk_file read_lnk_file_perms;
 search_dirs_pattern(tinyproxy_t, qcmap_etc_data_t, qcmap_etc_data_t)
 search_dirs_pattern(tinyproxy_t, var_log_t, tinyproxy_log_t)
@@ -597,7 +597,7 @@ type miniupnp_var_run_t;
 
 init_vendor_domain(miniupnp_t, miniupnp_exec_t)
 
-files_pid_file(miniupnp_var_run_t)
+files_runtime_file(miniupnp_var_run_t)
 
 gen_require(`
   type ssdp_port_t;
@@ -619,7 +619,7 @@ corenet_udp_bind_generic_node(miniupnp_t)
 allow miniupnp_t self:udp_socket create_socket_perms;
 allow miniupnp_t miniupnp_t: socket  create_socket_perms;
 allow miniupnp_t self:fifo_file rw_fifo_file_perms;
-files_pid_filetrans(miniupnp_t, miniupnp_var_run_t, { dir file sock_file })
+files_runtime_filetrans(miniupnp_t, miniupnp_var_run_t, { dir file sock_file })
 allow miniupnp_t miniupnp_var_run_t  : dir {create};
 allow miniupnp_t self:tcp_socket create_stream_socket_perms;
 allow miniupnp_t self:netlink_route_socket { create_socket_perms nlmsg_read };

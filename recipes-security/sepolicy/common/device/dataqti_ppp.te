@@ -59,10 +59,10 @@ rw_chr_files_pattern(dataqti_ppp_t, dataqti_ppp_device_t, dataqti_ppp_device_t)
 kernel_dontaudit_read_system_state(dataqti_ppp_t)
 
 type dataqti_ppp_var_run_t;
-files_pid_file(dataqti_ppp_var_run_t)
+files_runtime_file(dataqti_ppp_var_run_t)
 allow dataqti_ppp_t dataqti_ppp_var_run_t:sock_file manage_sock_file_perms;
 manage_dirs_pattern(dataqti_ppp_t, dataqti_ppp_var_run_t, dataqti_ppp_var_run_t)
-files_pid_filetrans(dataqti_ppp_t, dataqti_ppp_var_run_t, { sock_file dir })
+files_runtime_filetrans(dataqti_ppp_t, dataqti_ppp_var_run_t, { sock_file dir })
 
 # Manage socket files inside /dev/socket
 type qti_ppp_socket_device_t;

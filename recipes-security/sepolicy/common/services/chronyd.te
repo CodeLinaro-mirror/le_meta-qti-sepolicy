@@ -31,9 +31,10 @@ init_write_utmp(chronyd_t);
 init_read_utmp(chronyd_t);
 gen_require(`
     type systemd_resolved_var_run_t;
+    type init_var_run_t;
 ')
 allow chronyd_t systemd_resolved_var_run_t:file { open read getattr };
 allow chronyd_t init_var_run_t:file { open read getattr };
 allow chronyd_t self:capability net_raw;
 allow chronyd_t etc_t:file map;
-sysnet_read_dhcpc_pid(chronyd_t)
+sysnet_read_dhcpc_runtime_files(chronyd_t)

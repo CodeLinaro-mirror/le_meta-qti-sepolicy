@@ -38,10 +38,10 @@ type trustedinputservice_exec_t;
 init_vendor_domain(trustedinputservice_t, trustedinputservice_exec_t)
 
 gen_require(`
-type socket_device_t;
-type sysfs_t;
-type touch_input_device_t;
-type systemd_tmpfiles_t;
+    type socket_device_t;
+    type sysfs_t;
+    type touch_input_device_t;
+    type systemd_tmpfiles_t;
 ')
 
 corecmd_exec_shell(trustedinputservice_t)

@@ -49,7 +49,7 @@ userdebug_or_eng(`
 ')
 
 #data_path_opt policies
-modutils_domtrans_insmod(data_path_opt_t)
+modutils_domtrans(data_path_opt_t)
 dev_read_sysfs(data_path_opt_t)
 corecmd_exec_shell(data_path_opt_t)
 

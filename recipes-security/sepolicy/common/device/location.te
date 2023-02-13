@@ -41,6 +41,7 @@ gen_require(`
     type xen_port_t;
     type netmgrd_socket_device_t;
     type usr_t;
+    type init_var_run_t;
 ')
 
 ########################################
@@ -318,7 +319,7 @@ allow xtra_daemon_t xen_port_t:tcp_socket name_connect;
 # read build.prop
 leprop_read_props(xtra_daemon_t)
 ## this is for access to /run/resolv.conf
-files_read_generic_pids(xtra_daemon_t)
+files_read_runtime_files(xtra_daemon_t)
 allow xtra_daemon_t self:process signal;
 allow xtra_daemon_t socket_device_t:sock_file write;
 read_files_pattern(xtra_daemon_t, init_var_run_t, init_var_run_t);
@@ -379,7 +380,7 @@ allow edgnss_daemon_t commplex_main_port_t:tcp_socket name_connect;
 # read build.prop
 leprop_read_props(edgnss_daemon_t)
 ## this is for access to /run/resolv.conf
-files_read_generic_pids(edgnss_daemon_t)
+files_read_runtime_files(edgnss_daemon_t)
 allow edgnss_daemon_t self:process signal;
 read_files_pattern(edgnss_daemon_t, init_var_run_t, init_var_run_t);
 read_files_pattern(edgnss_daemon_t, systemd_resolved_var_run_t, systemd_resolved_var_run_t);

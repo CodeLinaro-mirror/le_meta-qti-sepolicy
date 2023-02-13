@@ -98,7 +98,7 @@ interface(`sprhd_manage_fifo',`
      gen_require(`
         type sprhd_data_t;
      ')
-    files_pid_filetrans($1, sprhd_data_t, { fifo_file } )
+    files_runtime_filetrans($1, sprhd_data_t, { fifo_file } )
     manage_fifo_files_pattern($1, sprhd_data_t, sprhd_data_t)
 allow $1 self:fifo_file { read write };
 ')

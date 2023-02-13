@@ -59,9 +59,10 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ifdef(`init_systemd',`
+#todo: cleanup commented line
+#ifdef(`init_systemd',`
     # dev-log is supposed to obtain its context from either
-    #  files_pid_filetrans (for var_run_t directories) or
+    # files_runtime_filetrans (for var_run_t directories) or
     #  init_pid_filetrans (for init_var_run_t directories). SELinux
     #  denials are also pointing to syslogd_var_run_t as a parent directory
     type_transition syslogd_t syslogd_var_run_t:sock_file devlog_t "dev-log";
@@ -75,11 +76,15 @@ ifdef(`init_systemd',`
     #  log directories before systemd-tmpfiles has a chance to create them.
     gen_require(`
         type systemd_tmpfiles_t;
+        type init_var_run_t;
+        type iptables_runtime_t;
+        type device_t;
+        type wlan_hsp_sysfs_t;
     ')
     # syslogd_tmp_t has a higher mls clearance than systemd-tmpfiles, so dontaudit this
     dontaudit systemd_tmpfiles_t syslogd_tmp_t:dir { setattr relabelfrom relabelto create };
     # Allow creating additional files/directories in generic var_log_t directories
-    systemd_tmpfilesd_managed(var_log_t, dir)
+    systemd_tmpfilesd_managed(var_log_t)
 
     allow systemd_tmpfiles_t syslogd_var_run_t:dir search_dir_perms;
     # If auditd is not running, don't report attempts from
@@ -90,16 +95,6 @@ ifdef(`init_systemd',`
     mls_fd_use_all_levels(syslogd_t)
     mls_socket_write_all_levels(syslogd_t)
 
-    gen_require(`
-        type init_var_run_t;
-        type iptables_runtime_t;
-        type qcmap_tmp_t;
-        type syslogd_tmp_t;
-        type system_dbusd_var_lib_t;
-        type tinyproxy_log_t;
-        type wlan_hsp_sysfs_t;
-    ')
-
     allow syslogd_t init_var_run_t:file read_file_perms;
     allow syslogd_t self:netlink_audit_socket nlmsg_write;
     allow syslogd_t self:unix_stream_socket { write setopt shutdown };
@@ -107,4 +102,4 @@ ifdef(`init_systemd',`
     allow syslogd_t iptables_runtime_t:file create;
     allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
     allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
-')
+#')

@@ -1,4 +1,14 @@
-FILESEXTRAPATHS_append := "${THISDIR}:${THISDIR}/patches:"
+POLICY_TYPE = "mls"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy:"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/files:"
+
+FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy:"
+
+require ${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy_git.inc
+
+FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Assign-proc_t-to-proc-dir.patch \
@@ -6,19 +16,18 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
             file://Move-root-user-to-unconfined-context.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
-            file://Update-busybox-substitution-paths.patch \
             file://common/ \
             file://${BASEMACHINE}/ \
             file://poky-ssd-rpmb-storage.patch \
 "
 
 PROVIDES += "sepolicy"
-RPROVIDES_${PN} += "sepolicy"
+RPROVIDES:${PN} += "sepolicy"
 
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 # Update userdebug_or_eng macro for VM while other machine images are validated
-EXTRA_OEMAKE_append_qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
+EXTRA_OEMAKE:append:qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm', 'y', 'n', d)}"
 
 # Modules outside of 'services' and 'apps' layer to be removed
 PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
@@ -51,10 +60,8 @@ def install_device_policy(d, src_root):
             else:
                 copy_policy_file(os.path.join(src_dir, policy_file), dst_path)
 
-do_patch_append() {
+do_patch:append() {
     install_device_policy(d, "common")
-    if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
-        install_device_policy(d, d.getVar("BASEMACHINE"))
 }
 
 create_data_ubi_mounted_contexts() {
@@ -91,12 +98,12 @@ python update_modules_conf () {
 }
 do_compile[postfuncs] += "update_modules_conf"
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}/${datadir}/selinux/${POLICY_NAME}/*.pp
 }
 
-rebuild_policy_append() {
-	policy_version=31
+rebuild_policy:append() {
+	policy_version=33
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
 		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy

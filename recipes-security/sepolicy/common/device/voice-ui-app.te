@@ -174,7 +174,8 @@ corenet_tcp_bind_all_unreserved_ports(voice-ui-app_t)
 corenet_sendrecv_all_client_packets(voice-ui-app_t)
 corenet_tcp_connect_all_unreserved_ports(voice-ui-app_t)
 corenet_tcp_connect_http_port(voice-ui-app_t)
-corenet_tcp_sendrecv_all_ports(voice-ui-app_t)
+#todo: find replacment for this deprecated.
+#corenet_tcp_sendrecv_all_ports(voice-ui-app_t)
 corenet_tcp_bind_all_unreserved_ports(voice-ui-app_t)
 allow voice-ui-app_t node_t:tcp_socket node_bind;
 allow voice-ui-app_t self:tcp_socket { connect connected_stream_socket_perms };

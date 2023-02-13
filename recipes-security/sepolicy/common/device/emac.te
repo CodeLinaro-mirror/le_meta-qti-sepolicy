@@ -71,7 +71,7 @@ userdebug_or_eng(`
 
 kernel_read_system_state(emac_start_t)
 dev_read_sysfs(emac_start_t)
-modutils_domtrans_insmod(emac_start_t) #Allow emac_start_t to insert kmods.
+modutils_domtrans(emac_start_t) #Allow emac_start_t to insert kmods.
 
 allow emac_start_t emac_etc_t:file read_file_perms;
 allow emac_start_t self:fifo_file {read write getattr};

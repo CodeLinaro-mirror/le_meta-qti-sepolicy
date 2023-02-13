@@ -74,7 +74,10 @@ userdebug_or_eng(`
     mls_file_write_all_levels(unconfined_t)
     mls_file_read_all_levels(unconfined_t)
 
-    wlan_start_stop(unconfined_t)
+# todo: cleanup comented line. The line is giving error #"Conflicting type rules
+# (scontext=unconfined_t tcontext=wlan_initrc_exec_t tclass=process result=initrc_t), existing=wlan_initrc_t
+# Expanded from type rule (scontext=unconfined_t tcontext=init_script_file_type tclass=process result=initrc_t)"
+#    wlan_start_stop(unconfined_t)
 
     # Audio test app
     servicemanager_binder_use(unconfined_t)

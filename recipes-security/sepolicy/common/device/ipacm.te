@@ -73,6 +73,7 @@ gen_require(`
        type wlan_ezmesh_initrc_t;
        type wlan_initrc_t;
        type system_data_t;
+       type syslogd_var_run_t;
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -200,8 +201,8 @@ type ipa_lnx_stats_device_t;
 
 dev_node(ipa_wwan_device_t)
 dev_node(ipa_lnx_stats_device_t)
-files_pid_file(ipacm_var_run_t)
-files_pid_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, { sock_file file dir })
+files_runtime_file(ipacm_var_run_t)
+files_runtime_filetrans({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, { sock_file file dir })
 manage_sock_files_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, ipacm_var_run_t)
 manage_dirs_pattern({ ipacm_t ipacm_diag_t ipacm_perf_t ipa_lnx_agent_t}, ipacm_var_run_t, ipacm_var_run_t)
 

@@ -80,17 +80,17 @@ user_data_files_type(tvmapploader_data_t)
 manage_user_data_files(tvmapploader_t, tvmapploader_data_t)
 
 gen_require(`
-type socket_device_t;
-type sysfs_t;
-type tuicoreservice_dev_t;
-type vendor_dmabuf_system_heap_device_t;
-type vendor_vm_trusted_device_t;
-type vendor_vm_hlos_device_t;
-type vendor_vm_oem_device_t;
-type vendor_vm_self_device_t;
-type tvmapp_t;
-type mnt_t;
-type vendor_virtio_mem_device_t;
+    type socket_device_t;
+    type sysfs_t;
+    type tuicoreservice_dev_t;
+    type vendor_dmabuf_system_heap_device_t;
+    type vendor_vm_trusted_device_t;
+    type vendor_vm_hlos_device_t;
+    type vendor_vm_oem_device_t;
+    type vendor_vm_self_device_t;
+    type tvmapp_t;
+    type mnt_t;
+    type vendor_virtio_mem_device_t;
 attribute vendor_domain;
 ')
 

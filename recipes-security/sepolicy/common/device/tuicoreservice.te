@@ -86,21 +86,21 @@ init_vendor_domain(tuicoreservice_t, tuicoreservice_exec_t)
 device_manage_socket_file(tuicoreservice_t, tuicoreservice_sock_t)
 
 gen_require(`
-type dri_device_t;
-type default_t;
-type event_device_t;
-type ion_device_t;
-type mnt_t;
-type persist_t;
-type udev_t;
-type brightness_t;
-type vendor_dmabuf_system_heap_device_t;
-type vendor_dmabuf_tui_heap_device_t;
-type vendor_vm_trusted_device_t;
-type vendor_vm_hlos_device_t;
-type wlan_hsp_sysfs_t;
-type vendor_virtio_mem_device_t;
-type persist_display_t;
+    type dri_device_t;
+    type default_t;
+    type event_device_t;
+    type ion_device_t;
+    type mnt_t;
+    type persist_t;
+    type udev_t;
+    type brightness_t;
+    type vendor_dmabuf_system_heap_device_t;
+    type vendor_dmabuf_tui_heap_device_t;
+    type vendor_vm_trusted_device_t;
+    type vendor_vm_hlos_device_t;
+    type wlan_hsp_sysfs_t;
+    type vendor_virtio_mem_device_t;
+    type persist_display_t;
 ')
 
 #allow to connect to letzd

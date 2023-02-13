@@ -54,6 +54,7 @@ gen_require(`
     type sysctl_vm_t;
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
+    type kernel_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -285,7 +286,7 @@ gen_require(`
     type kmod_t;
 ')
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
-systemd_tmpfilesd_managed(socket_device_t, dir)
+systemd_tmpfilesd_managed(socket_device_t)
 
 #sepolicy for touch start le script
 type touch_script_t;
@@ -295,7 +296,7 @@ gen_require(`
 ')
 files_type(touch_script_exec_t)
 init_script_domain(touch_script_t, touch_script_exec_t)
-modutils_domtrans_insmod(touch_script_t)
+modutils_domtrans(touch_script_t)
 userdebug_or_eng(`
     dev_write_kmsg(touch_script_t)
     mls_file_write_all_levels(touch_script_t)
