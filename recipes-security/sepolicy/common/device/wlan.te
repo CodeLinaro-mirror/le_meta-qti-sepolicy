@@ -82,6 +82,7 @@ type initrc_t;
 type system_data_t;
 type fs_t;
 type wlan_hsp_sysfs_t;
+type tmpfs_t;
 ')
 
 userdebug_or_eng(`
@@ -104,6 +105,9 @@ manage_files_pattern(wlan_service_t, wlan_service_tmp_t, wlan_service_tmp_t)
 files_tmp_filetrans(wlan_service_t, wlan_service_tmp_t, { file lnk_file dir })
 dev_read_sysfs(wlan_service_t)
 kernel_rw_net_sysctls(wlan_service_t)
+
+manage_files_pattern(wlan_initrc_t, wlan_service_tmp_t, wlan_service_tmp_t)
+filetrans_pattern(wlan_initrc_t, tmpfs_t, wlan_service_tmp_t, { file dir })
 
 networkmanager_read_wifi_sysdata_files(kernel_t)
 allow kernel_t wifi_system_data_t:dir search_dir_perms;

@@ -54,6 +54,11 @@ gen_require(`
     type sysctl_vm_t;
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
+    type setprop_exec_t;
+    type sysfs_power_state_t;
+    type sysfs_usb_mode_t;
+    type init_t;
+    type setfiles_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -61,7 +66,8 @@ neverallow { vendor_domain -vendor_device_rw_exception } device_t:devfile_class_
 # No creation of unlabeled directories or files
 neverallow vendor_domain unlabeled_t:dir_file_class_set create;
 # Restricted permissions
-neverallow vendor_domain self:capability { mknod dac_override };
+#TODO: Restore mknod?
+neverallow vendor_domain self:capability { dac_override };
 neverallow vendor_domain self:process { execstack execheap };
 # Do not load kernel modules - request init to do this instead
 attribute vendor_kernel_load_exception;
@@ -84,6 +90,14 @@ type tftp_server_t;
 type tftp_server_exec_t;
 init_vendor_domain(tftp_server_t, tftp_server_exec_t)
 inittab_domtrans(tftp_server_t, tftp_server_exec_t)
+type dumgr_config_t;
+allow tftp_server_t dumgr_config_t:dir { search read };
+allow tftp_server_t dumgr_config_t:file { getattr open read};
+allow initrc_t dumgr_config_t:dir { relabelto relabelfrom getattr search open read };
+allow initrc_t dumgr_config_t:file { relabelto relabelfrom read_file_perms };
+allow init_t dumgr_config_t:dir search;
+allow setfiles_t dumgr_config_t:dir search;
+allow dumgr_config_t fs_t:filesystem associate;
 
 # /sys/power/wakelock
 dev_rw_sysfs(tftp_server_t)
@@ -181,6 +195,7 @@ allow post_boot_script_t sysctl_vm_t:dir search;
 allow post_boot_script_t sysctl_vm_t:file write_file_perms;
 allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
+allow post_boot_script_t setprop_exec_t:file { execute getattr };
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
@@ -188,6 +203,11 @@ allow post_boot_script_t security_t:filesystem { getattr };
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
+
+allow post_boot_script_t etc_t:file read_file_perms;
+allow post_boot_script_t sysfs_power_state_t:file { getattr_file_perms setattr_file_perms };
+allow post_boot_script_t sysfs_usb_mode_t:file { getattr_file_perms setattr_file_perms };
+allow post_boot_script_t self:capability chown;
 
 ### dev nodes ###
 
@@ -230,6 +250,9 @@ dev_node(smcinvoke_device_t);
 
 type qseecom_device_t;
 dev_node(qseecom_device_t);
+
+type smmu_proxy_device_t;
+dev_node(smmu_proxy_device_t);
 
 type mtd_device_t;
 dev_node(mtd_device_t);
