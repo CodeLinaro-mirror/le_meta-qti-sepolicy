@@ -79,7 +79,6 @@ gen_require(`
   type proc_net_t;
   type proc_t;
   type wlan_service_t;
-  type initrc_exec_t;
   type user_tmp_t;
 ')
 
@@ -208,8 +207,8 @@ manage_sock_files_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 rw_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 create_dirs_pattern(hostapd_cli_qcmap_t, hostapd_tmp_t, hostapd_tmp_t)
 allow hostapd_cli_qcmap_t self:capability kill;
-allow hostapd_cli_qcmap_t user_tmp_t:dir search;
-allow wlan_ezmesh_initrc_t hostapd_tmp_t:file { read open getattr };
+allow hostapd_cli_qcmap_t user_tmp_t:dir search_dir_perms;
+allow wlan_ezmesh_initrc_t hostapd_tmp_t:file read_file_perms;
 
 # Include /bin/sh in shell scripts
 corecmd_exec_shell(hostapd_cli_qcmap_t)
@@ -372,12 +371,9 @@ allow wlan_service_t proc_t:file read_file_perms;
 allow wlan_service_t var_run_t:file read_file_perms;
 allow wlan_service_t var_run_t:fifo_file { create unlink rw_fifo_file_perms };
 
-allow wlan_ezmesh_initrc_t etc_t:dir { write add_name };
 allow hostapd_t wlan_service_tmp_t:sock_file write;
-allow hostapd_t self:capability kill;
 allow hostapd_t self:tcp_socket { accept listen };
 allow hostapd_t unreserved_port_t:tcp_socket { name_bind name_connect };
-allow wlan_ezmesh_initrc_t etc_t:file { create read write open append getattr };
 allow hostapd_t node_t:tcp_socket node_bind;
 
 #Sigma-Dut invoked Ezmesh dependent permissions
@@ -387,6 +383,3 @@ allow wlan_initrc_t self:netlink_crypto_socket create_socket_perms;
 allow wlan_initrc_t qcmap_etc_data_t:file read_file_perms;
 allow wlan_initrc_t unreserved_port_t:tcp_socket name_bind;
 allow wlan_initrc_t self:packet_socket getopt;
-
-allow wlan_initrc_t initrc_exec_t:file { open read execute execute_no_trans };
-allow wlan_initrc_t etc_t:dir write;
