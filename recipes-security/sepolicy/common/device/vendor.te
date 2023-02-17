@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
@@ -275,6 +275,15 @@ dev_node(system_dmabuf_device_t);
 
 type vendor_dmabuf_qseecom_heap_device_t;
 dev_node(vendor_dmabuf_qseecom_heap_device_t);
+
+type vendor_dmabuf_ms1_heap_device_t;
+dev_node(vendor_dmabuf_ms1_heap_device_t);
+
+type vendor_dmabuf_ms2_heap_device_t;
+dev_node(vendor_dmabuf_ms2_heap_device_t);
+
+type vendor_dmabuf_ms3_heap_device_t;
+dev_node(vendor_dmabuf_ms3_heap_device_t);
 
 ### MEM_BUF_VM TYPES ###
 type vendor_vm_trusted_device_t;
