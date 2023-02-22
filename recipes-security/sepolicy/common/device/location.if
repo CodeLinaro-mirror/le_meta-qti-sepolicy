@@ -79,3 +79,61 @@ interface(`files_read_loc_etc_files',`
     read_files_pattern($1, etc_t, loc_etc_t)
     read_lnk_files_pattern($1, etc_t, loc_etc_t)
 ')
+
+########################################
+## <summary>
+##    Rules for accessing location boot kpi node.
+## </summary>
+## <desc>
+##    <p>
+##    Allow the specified domain to access location
+##    boot kpi node. Required only for userdebug or
+##    debug builds.
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Rules for accessing location boot kpi node.
+##    </summary>
+## </param>
+#
+interface(`location_access_loc_bootkpi',`
+    userdebug_or_eng(`
+        gen_require(`
+            type debugfs_t;
+            type boot_kpi_values_t;
+        ')
+        allow $1 debugfs_t:dir search;
+        allow $1 debugfs_t:file { write open getattr };
+        allow $1 boot_kpi_values_t:file { write open getattr };
+    ')
+')
+
+########################################
+## <summary>
+##    Generic rules for location clients.
+## </summary>
+## <desc>
+##    <p>
+##    Generic rules for location clients. Single
+##    macro to include to all location client
+##    related rules.
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Generic rules for location clients.
+##    </summary>
+## </param>
+#
+interface(`location_client_generic_rules',`
+    gen_require(`
+        type loc_hald_t, loc_socket_t, loc_data_t;
+    ')
+    location_read_loc_data_files($1);
+    files_read_loc_etc_files($1);
+    location_access_loc_bootkpi($1);
+    manage_sock_files_pattern($1, loc_socket_t, loc_socket_t)
+    dgram_send_pattern($1, loc_socket_t, loc_socket_t, loc_hald_t)
+    allow loc_hald_t $1:unix_dgram_socket sendto;
+')
