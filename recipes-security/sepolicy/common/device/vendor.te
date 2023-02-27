@@ -195,7 +195,7 @@ allow post_boot_script_t sysctl_vm_t:dir search;
 allow post_boot_script_t sysctl_vm_t:file write_file_perms;
 allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
-allow post_boot_script_t setprop_exec_t:file getattr;
+allow post_boot_script_t setprop_exec_t:file { execute getattr };
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
@@ -250,6 +250,9 @@ dev_node(smcinvoke_device_t);
 
 type qseecom_device_t;
 dev_node(qseecom_device_t);
+
+type smmu_proxy_device_t;
+dev_node(smmu_proxy_device_t);
 
 type mtd_device_t;
 dev_node(mtd_device_t);
