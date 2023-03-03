@@ -1,6 +1,9 @@
 # Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
+type gpt_checker_conf_file_t;
+files_type(gpt_checker_conf_file_t)
+
 gen_require(`
 	type dhcp_state_t;
 	type init_var_lib_t;
@@ -19,8 +22,11 @@ allow mount_copybind_t init_var_lib_t:dir getattr;
 allow mount_copybind_t semanage_store_t:dir getattr;
 allow mount_copybind_t system_dbusd_var_lib_t:dir getattr;
 allow mount_copybind_t var_lib_t:dir { getattr open read search };
-allow mount_copybind_t var_spool_t:dir { getattr search };
+allow mount_copybind_t var_spool_t:dir { getattr search read };
 allow mount_copybind_t var_t:dir { add_name create read write };
 #some code is tying to call bin/mksh(shell domain )which needs read /execute;
 allow mount_copybind_t shell_exec_t:file { execute map read };
 allow mount_t hwfde_conf_file_t:file read_file_perms;
+
+allow mount_t gpt_checker_conf_file_t:file { mounton getattr };
+allow mount_copybind_t gpt_checker_conf_file_t:file { getattr read open create };
