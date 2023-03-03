@@ -39,7 +39,7 @@ gen_require(`
        type ion_device_t;
        type qseecom_device_t;
        type proc_t;
-
+       type persist_t;
        class process setcap;
 ')
 
@@ -78,6 +78,9 @@ files_search_default(qseecomd_t)
 # allow qseecomd to read/write leproperties
 leprop_rw_props(qseecomd_t)
 
-# allow qseecomd to read/write to persist partition
+# allow SFS to read/write from /persist/data partition
 user_data_files_type(qseecomd_persist_t)
 manage_user_data_files(qseecomd_t, qseecomd_persist_t)
+
+# allow qseecomd to read from persist partition
+allow qseecomd_t persist_t:dir read;
