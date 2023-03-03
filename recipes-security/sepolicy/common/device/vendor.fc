@@ -29,6 +29,7 @@
 
 /usr/sbin/tftp_server     --    gen_context(system_u:object_r:tftp_server_exec_t,s0)
 /data/tombstones(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
+/data/vendor/pddump(/.*)?       gen_context(system_u:object_r:vendor_pddump_rfs_data_t,s0)
 
 ### misc properties ###
 

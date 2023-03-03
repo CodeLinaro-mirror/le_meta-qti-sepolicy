@@ -97,6 +97,9 @@ gen_require(`
     type usr_t;
     type syslogd_t;
     type syslogd_var_run_t;
+    type wlan_initrc_t;
+    type var_log_t;
+    type wakelock_sysfs_t;
 ')
 
 
@@ -105,6 +108,7 @@ mls_trusted_socket(systemd_tmpfiles_t)
 
 
 allow udev_t kernel_t:unix_dgram_socket sendto;
+allow wlan_initrc_t kernel_t:unix_dgram_socket sendto;
 allow tftp_server_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t etc_t:file relabelfrom;
@@ -112,3 +116,5 @@ allow systemd_tmpfiles_t system_dbusd_var_lib_t:dir create_dir_perms;
 allow systemd_tmpfiles_t usr_t:file read_file_perms;
 allow syslogd_t kernel_t:netlink_audit_socket rw_socket_perms;
 allow syslogd_t syslogd_var_run_t:sock_file unlink;
+allow systemd_tmpfiles_t var_log_t:file relabelfrom;
+allow systemd_tmpfiles_t wakelock_sysfs_t:file { relabelfrom setattr getattr };
