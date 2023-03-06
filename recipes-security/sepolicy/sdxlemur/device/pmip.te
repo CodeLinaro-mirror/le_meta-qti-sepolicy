@@ -1,0 +1,142 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(pmip, 1.0)
+type pmip_service_t;
+type pmip_service_exec_t;
+#type pmipd_init_exec_t;
+#type pmip_init_t;
+gen_require(`
+  type qcmap_tmp_t;
+  type qcmap_var_run_t;
+  type sysfs_t;
+  type dnsmasq_t;
+  type initrc_t;
+  type qcmap_cm_t;
+  type devlog_t;
+  type shell_exec_t;
+  type tmp_t;
+  type kmsg_device_t;
+  type proc_t;
+  type syslogd_t;
+  type unreserved_port_t;
+  type etc_t;
+  type proc_net_t;
+  type net_conf_t;
+  type qcmap_socket_device_t;
+  type qcmap_etc_data_t;
+  type node_t;
+  type sysctl_t;
+  type urandom_device_t;
+  type sysctl_net_t;
+  type dnsmasq_var_run_t;
+  type dnsmasq_tmp_t;
+  type dnsmasq_exec_t;
+  type socket_device_t;
+  type ifconfig_exec_t;
+  type dhcpd_port_t;
+  type qcmap_data_t;
+  type syslogd_var_run_t;
+  type init_var_run_t;
+  type var_run_t;
+  type dns_port_t;
+  class service { start status stop reload };
+')
+
+init_vendor_domain(pmip_service_t, pmip_service_exec_t)
+inittab_domtrans(pmip_service_t, pmip_service_exec_t)
+#init_script_domain(pmip_init_t, pmipd_init_exec_t)
+allow pmip_service_t devlog_t:sock_file write_sock_file_perms;
+#============= pmip_service_t ==============
+dnsmasq_domtrans(pmip_service_t)
+
+allow pmip_service_t devlog_t:sock_file write;
+allow pmip_service_t dnsmasq_exec_t:file { execute exec_file_perms getattr map open read };
+
+allow pmip_service_t kmsg_device_t:chr_file open;
+allow pmip_service_t node_t:udp_socket node_bind;
+allow pmip_service_t qcmap_cm_t:unix_dgram_socket sendto;
+
+allow pmip_service_t qcmap_etc_data_t:dir search;
+data_rw_system_data_files(pmip_service_t, qcmap_etc_data_t)
+
+allow pmip_service_t self:fifo_file read;
+allow pmip_service_t self:udp_socket { bind create setopt ioctl connect getattr read write };
+
+allow pmip_service_t shell_exec_t:file { execute exec_file_perms open read };
+
+allow pmip_service_t syslogd_t:unix_dgram_socket sendto;
+
+allow pmip_service_t unreserved_port_t:udp_socket name_bind;
+
+#!!!! This avc can be allowed using the boolean 'global_ssp'
+allow pmip_service_t urandom_device_t:chr_file { open read };
+
+allow pmip_service_t dhcpd_port_t:udp_socket name_bind;
+allow pmip_service_t dns_port_t:tcp_socket name_bind;
+allow pmip_service_t dns_port_t:udp_socket name_bind;
+allow pmip_service_t dnsmasq_t:process signal;
+allow pmip_service_t ifconfig_exec_t:file { exec_file_perms };
+
+allow pmip_service_t node_t:tcp_socket node_bind;
+
+allow pmip_service_t qcmap_var_run_t:dir { add_name remove_name search write };
+
+allow pmip_service_t self:fifo_file write;
+allow pmip_service_t self:netlink_route_socket { bind create getattr nlmsg_read read setopt write nlmsg_write};
+allow pmip_service_t self:process { getcap signal setpgid setcap };
+
+allow pmip_service_t self:tcp_socket { bind create listen ioctl setopt };
+
+allow pmip_service_t var_run_t:dir read;
+
+allow pmip_service_t net_conf_t:file { getattr open read };
+allow pmip_service_t proc_net_t:file { getattr open read };
+
+allow pmip_service_t qcmap_var_run_t:file { create setattr write append getattr open read unlink };
+
+allow pmip_service_t self:capability { chown setgid setuid net_raw kill net_bind_service net_admin};
+
+allow pmip_service_t self:fifo_file getattr;
+allow pmip_service_t self:packet_socket { create ioctl read setopt };
+allow pmip_service_t self:rawip_socket { getattr ioctl create read setopt getopt write };
+allow pmip_service_t pmip_service_exec_t:file exec_file_perms;
+
+allow pmip_service_t tmp_t:dir { getattr open read search };
+
+allow pmip_service_t proc_t:file read;
+
+allow pmip_service_t syslogd_var_run_t:dir search;
+allow pmip_service_t init_var_run_t:dir search;
+allow dnsmasq_t sysfs_t:file append;
+data_rw_system_data_files(pmip_service_t, qcmap_etc_data_t)
+allow pmip_service_t proc_t:file { open getattr };
+
+allow pmip_service_t sysctl_net_t:dir search;
+allow pmip_service_t sysctl_net_t:file { getattr open read };
+allow pmip_service_t sysctl_t:dir search;
+
+allow pmip_service_t kmsg_device_t:chr_file { write open getattr ioctl };
+allow pmip_service_t qcmap_socket_device_t:sock_file {create write };
+type pmip_socket_device_t;
+files_type(pmip_socket_device_t)
+dev_node(pmip_socket_device_t)
+device_manage_socket_file(pmip_service_t, pmip_socket_device_t)
+device_rw_socket_files(qcmap_cm_t, pmip_socket_device_t)
+allow pmip_service_t dnsmasq_t:process sigkill;
+allow systemd_tmpfiles_t qcmap_socket_device_t:file create;
+
+type pmip_var_run_t;
+files_pid_file(pmip_var_run_t)
+allow pmip_service_t pmip_var_run_t:file { create setattr write open getattr unlink append read };
+allow qcmap_cm_t pmip_var_run_t:file { getattr unlink };
+allow pmip_service_t pmip_var_run_t:dir { add_name search write remove_name };
+allow pmip_service_t self:packet_socket write;
+
+allow qcmap_cm_t pmip_var_run_t:dir { search remove_name };
+allow pmip_service_t etc_t:file { getattr open read };
+allow pmip_service_t qcmap_etc_data_t:file setattr;
+dontaudit pmip_service_t self:capability sys_module;
+
+
+
