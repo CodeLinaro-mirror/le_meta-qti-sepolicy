@@ -27,3 +27,10 @@
 
 allow qcmap_cm_t tmpfs_t:dir { search };
 auditallow qcmap_cm_t tmpfs_t:dir { search };
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+    ')
+
+    allow qcmap_cm_t debugfs_t:file {rw_file_perms};
+')
