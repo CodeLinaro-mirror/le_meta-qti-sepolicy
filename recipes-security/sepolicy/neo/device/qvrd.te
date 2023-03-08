@@ -66,6 +66,8 @@ gen_require(`
        type synx_device_t;
        type tmp_t;
        type fs_t;
+       type cache_t;
+       type cache_recovery_t;
 ')
 
 #read /data/misc/qvr
@@ -170,3 +172,8 @@ allow qvrd_t camera_data_t:dir list_dir_perms;
 allow qvrd_t tmp_t:file read_file_perms;
 # allow stat /data partition.
 allow qvrd_t fs_t:filesystem getattr;
+
+allow qvrd_t cache_t:filesystem getattr;
+allow qvrd_t cache_t:file read_file_perms;
+allow qvrd_t cache_t:dir search_dir_perms;
+allow qvrd_t cache_recovery_t:dir search_dir_perms;
