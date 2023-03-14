@@ -55,3 +55,17 @@ allow setfiles_t cache_recoveryupgrade_t:{ dir file } relabelto;
 
 type recovery_t;
 type recovery_exec_t;
+
+gen_require(`
+    type qvr_data_t;
+    type leprop_t;
+    type kernel_t;
+')
+#============= recovery_t ==============
+allow recovery_t fs_t:filesystem getattr;
+allow recovery_t kernel_t:system syslog_read;
+allow recovery_t leprop_t:unix_stream_socket {connectto};
+allow recovery_t self:capability2 syslog;
+allow recovery_t self:unix_stream_socket create_socket_perms;
+kernel_rw_vm_sysctls(recovery_t)
+allow recovery_t qvr_data_t:file {read_file_perms map};

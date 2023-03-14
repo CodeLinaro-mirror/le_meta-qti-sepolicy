@@ -177,3 +177,6 @@ allow qvrd_t cache_t:filesystem getattr;
 allow qvrd_t cache_t:file read_file_perms;
 allow qvrd_t cache_t:dir search_dir_perms;
 allow qvrd_t cache_recovery_t:dir search_dir_perms;
+
+allow init_t qvr_data_t:dir list_dir_perms;
+allow init_t qvr_data_t:file read_file_perms;
