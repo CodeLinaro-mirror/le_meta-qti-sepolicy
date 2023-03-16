@@ -26,10 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # systemd_modules_load
-type systemd_modules_load_t;
-type systemd_modules_load_exec_t;
-init_system_domain(systemd_modules_load_t, systemd_modules_load_exec_t)
-kernel_load_module(systemd_modules_load_t);
+
 
 gen_require(`
  type syslogd_var_run_t;
@@ -37,20 +34,14 @@ gen_require(`
  type sysctl_kernel_t;
  type modules_object_t;
  type sysctl_t;
- type init_var_run_t;
- type modules_conf_t;
  type proc_t;
  type init_t;
  type devlog_t;
  type syslogd_t;
  type etc_t;
- type modules_dep_t;
  type var_run_t;
- type init_var_lib_t;
- type sysfs_t;
  type kernel_t;
  type debugfs_t;
- type proc_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
@@ -69,10 +60,8 @@ mls_key_write_to_clearance(systemd_modules_load_t)
 modutils_read_module_objects(systemd_modules_load_t)
 allow systemd_modules_load_t modules_object_t:dir search;
 allow systemd_modules_load_t init_var_run_t:dir search;
-modutils_read_module_config(systemd_modules_load_t);
 allow systemd_modules_load_t proc_t:file read_file_perms;
 allow systemd_modules_load_t kernel_t:key manage_key_perms;
-allow systemd_modules_load_t proc_t:file read_file_perms;
 allow systemd_modules_load_t sysctl_t:dir search;
 allow systemd_modules_load_t init_t:dir search;
 allow systemd_modules_load_t init_t:file read_file_perms;
@@ -83,7 +72,6 @@ allow systemd_modules_load_t devlog_t:sock_file write;
 allow systemd_modules_load_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_modules_load_t etc_t:file read_file_perms;
 
-modutils_read_module_deps(systemd_modules_load_t);
 allow systemd_modules_load_t self:capability sys_module;
 allow systemd_modules_load_t var_run_t:dir { read_file_perms getattr search };
 allow systemd_modules_load_t debugfs_t:dir search;
