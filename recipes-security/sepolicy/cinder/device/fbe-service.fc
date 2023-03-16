@@ -10,3 +10,5 @@
 /usr/bin/lefbe_setpolicy            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
 /usr/bin/lefbe_mkdir            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
 /usr/bin/install_and_evict            --      gen_context(system_u:object_r:install_evict_t,s0)
+
+/etc/gpt_checker_properties.conf   --      gen_context(system_u:object_r:gpt_checker_conf_file_t,s0)

@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qwesd, 1.0)
@@ -37,6 +37,7 @@ type qwes_data_t;
 type qwes_config_etc_t;
 type qwes_mink_socket_t;
 
+files_type(qwes_mink_socket_t)
 files_type(qwes_config_etc_t)
 
 init_vendor_domain(qwesd_t, qwesd_exec_t)
@@ -50,6 +51,10 @@ gen_require(`
        type systemd_resolved_var_run_t;
        type cert_t;
        type socket_device_t;
+       type adbd_t;
+       type systemd_tmpfiles_t;
+       type unconfined_t;
+       attribute domain;
 ')
 
 # allow qwesd to read /etc/qwesd.rc config file
@@ -84,6 +89,7 @@ search_user_data_dir(qwesd_t);
 user_data_files_type(qwes_data_t)
 data_filetrans(qwesd_t, qwes_data_t, { file dir })
 manage_user_data_files(qwesd_t, qwes_data_t)
+neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t} qwes_data_t:file { write };
 
 # allow qwesd to read/write to /var/run/qwes_ipc minksocket file.
 files_pid_file(qwes_mink_socket_t)
@@ -91,8 +97,6 @@ files_pid_filetrans({ qwesd_t }, qwes_mink_socket_t, { sock_file file dir })
 manage_sock_files_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
 manage_dirs_pattern({ qwesd_t }, qwes_mink_socket_t, qwes_mink_socket_t)
 allow qwesd_t self:socket { create rw_socket_perms };
-allow qwesd_t socket_device_t:dir { write add_name };
-allow qwesd_t socket_device_t:sock_file { create setattr };
 
 # allow qwesd for self capability.
 allow qwesd_t self:capability { chown };
@@ -112,10 +116,40 @@ userdebug_or_eng(`
 # Rules ending for generic permissions for qwesd.
 ##################################################################
 
+# setup qwes_ipc socket
+type qwes_ipc_setup_t;
+type qwes_ipc_setup_exec_t;
+
+init_script_domain(qwes_ipc_setup_t, qwes_ipc_setup_exec_t);
+
+gen_require(`
+    type proc_t;
+    type kmsg_device_t;
+    type device_t;
+    type init_t;
+    type var_run_t;
+    type shell_exec_t;
+')
+
+#============= qwes_ipc_setup_t ==============
+dev_write_kmsg(qwes_ipc_setup_t)
+files_read_etc_files(qwes_ipc_setup_t)
+mls_file_write_all_levels(qwes_ipc_setup_t)
+allow qwes_ipc_setup_t qwes_mink_socket_t:dir { create_dir_perms setattr_dir_perms };
+allow qwes_ipc_setup_t socket_device_t:dir { add_entry_dir_perms setattr_dir_perms create };
+device_manage_socket_file({ qwesd_t qwes_ipc_setup_t }, qwes_mink_socket_t)
+kernel_read_system_state(qwes_ipc_setup_t)
+allow qwes_mink_socket_t device_t:filesystem associate;
+allow qwes_ipc_setup_t etc_t:file map;
+allow qwes_ipc_setup_t init_t:unix_stream_socket { read write ioctl };
+allow qwes_ipc_setup_t self:unix_stream_socket { create connect };
+allow qwes_ipc_setup_t shell_exec_t:file { read map execute };
+allow qwes_ipc_setup_t var_run_t:dir search;
+allow qwes_ipc_setup_t var_run_t:lnk_file read;
+
 #################################################################################
 # Rules starting for configuring network connection for sync.
 #################################################################################
-allow qwesd_t systemd_resolved_var_run_t:file { read open write };
 allow qwesd_t self:unix_stream_socket { accept listen };
 allow qwesd_t self:capability { fsetid };
 #################################################################################
