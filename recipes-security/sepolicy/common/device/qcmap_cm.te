@@ -469,6 +469,16 @@ allow qcmap_cm_t wlan_service_exec_t:service { start status };
 allow hostapd_cli_qcmap_t self: capability { setpcap setgid setuid };
 allow hostapd_cli_qcmap_t self: process { getcap setcap };
 
+#### WLAN STA Backhaul
+allow wpa_cli_t self: capability { setpcap setgid setuid };
+allow wpa_cli_t self: process { getcap setcap };
+
+##### QXDM logs for QCMAP STA interface
+userdebug_or_eng(`
+     rw_diag_dev(hostapd_cli_qcmap_t);
+     rw_diag_dev(wpa_cli_t);
+')
+
 ##### USB
 can_exec(qcmap_cm_t, adbd_initrc_exec_t)
 gen_require(`
