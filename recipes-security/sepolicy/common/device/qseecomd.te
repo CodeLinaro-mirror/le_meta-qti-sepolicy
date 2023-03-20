@@ -110,3 +110,12 @@ allow qseecomd_t storage_disk_device_t:blk_file { rw_blk_file_perms };
 allow qseecomd_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
 
 allow qseecomd_t self:process signull;
+
+# allow qseecomd to be restarted
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t qseecomd_exec_t:service { start status stop };
+')
