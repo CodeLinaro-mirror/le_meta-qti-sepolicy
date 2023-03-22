@@ -26,12 +26,14 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/qwesd               --         gen_context(system_u:object_r:qwesd_exec_t,s0)
 /data/qwes(/.*)?                        gen_context(system_u:object_r:qwes_data_t,s0)
 /data/qwes_test(/.*)?                   gen_context(system_u:object_r:qwes_data_t,s0)
 /etc/qwesd.rc                           gen_context(system_u:object_r:qwes_config_etc_t,s0)
-/dev/socket/qwes_ipc                    gen_context(system_u:object_r:qwes_mink_socket_t,s0)
+/dev/socket/qwes(/.*)?                  gen_context(system_u:object_r:qwes_mink_socket_t,s0)
+/dev/socket/qwes/qwes_ipc               gen_context(system_u:object_r:qwes_mink_socket_t,s0)
 /etc/initscripts/qwes_license_store  -- gen_context(system_u:object_r:qwes_license_store_setup_exec_t,s0)
+/etc/initscripts/create_qwes_ipc     -- gen_context(system_u:object_r:qwes_ipc_setup_exec_t,s0)
