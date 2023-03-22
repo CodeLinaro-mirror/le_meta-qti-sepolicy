@@ -381,5 +381,5 @@ allow wlan_initrc_t self:shm { create unix_read unix_write read write associate 
 allow wlan_initrc_t var_run_t:fifo_file { create unlink rw_fifo_file_perms };
 allow wlan_initrc_t self:netlink_crypto_socket create_socket_perms;
 allow wlan_initrc_t qcmap_etc_data_t:file read_file_perms;
-allow wlan_initrc_t unreserved_port_t:tcp_socket { name_bind name_connect };
+allow wlan_initrc_t unreserved_port_t:tcp_socket name_bind;
 allow wlan_initrc_t self:packet_socket getopt;
