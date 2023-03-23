@@ -58,3 +58,18 @@ kernel_read_system_state(trustedinputservice_t)
 allow trustedinputservice_t self:fifo_file rw_fifo_file_perms;
 allow trustedinputservice_t self:unix_stream_socket create_stream_socket_perms;
 dontaudit systemd_tmpfiles_t touch_input_device_t:file { getattr setattr relabelfrom };
+
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
+dev_rw_sysfs(trustedinputservice_t)
+
+# mink platform
+optional_policy(`
+    gen_require(`
+        type tvmmink_t;
+        type tvmmink_sock_t;
+    ')
+
+    allow trustedinputservice_t tvmmink_sock_t:sock_file write;
+    allow trustedinputservice_t tvmmink_t:unix_stream_socket connectto;
+    allow trustedinputservice_t tvmmink_t:fd use;
+')

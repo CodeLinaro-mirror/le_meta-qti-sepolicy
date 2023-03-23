@@ -9,6 +9,8 @@ attribute platform_container_domain;
 
 gen_require(`
     attribute platform_launcher_domain;
+    attribute platform_hub_domain;
+    type tvmmink_sock_t;
 ')
 
 getty_use_fds(platform_container_domain)
@@ -48,3 +50,7 @@ gen_require(`
     
 allow platform_container_domain container_mount_t:process { noatsecure rlimitinh siginh };
 allow platform_container_domain container_mount_t:process2 { nnp_transition nosuid_transition };
+
+allow platform_container_domain platform_hub_domain:fd { use };
+allow platform_container_domain platform_hub_domain:unix_stream_socket connectto;
+allow platform_container_domain tvmmink_sock_t:sock_file write;
