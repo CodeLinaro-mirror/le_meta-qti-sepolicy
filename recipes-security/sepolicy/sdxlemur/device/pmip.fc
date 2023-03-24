@@ -1,0 +1,7 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/sbin/pmip6d            gen_context(system_u:object_r:pmip_service_exec_t,s0)
+/etc/initscripts/pmip6d_exec    --    gen_context(system_u:object_r:pmip_service_exec_t,s0)
+/var/run/pmip(/.*)?                   gen_context(system_u:object_r:pmip_var_run_t,s0)
+/run/pmip                  gen_context(system_u:object_r:pmip_var_run_t,s0)

@@ -1,0 +1,9 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+ type pmip_service_t;
+')
+
+read_write_pmip_cm_socket_files(dnsmasq_t)
+allow dnsmasq_t pmip_service_t:packet_socket { read write };

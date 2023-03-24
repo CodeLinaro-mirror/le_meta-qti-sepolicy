@@ -1,0 +1,5 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+### MHI device ###
+/dev/mhi_pipe_16                -c gen_context(system_u:object_r:mhi_pipe_device_t,s0)
