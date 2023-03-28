@@ -65,6 +65,7 @@ userdebug_or_eng(`
       type kmsg_device_t;
       type socket_device_t;
       type  shell_exec_t;
+      type pmsg0_t;
    ')
    mls_file_write_all_levels(kmsg_device_t);
    mls_file_write_all_levels(pcie_diag_t);
@@ -72,8 +73,8 @@ userdebug_or_eng(`
    dev_rw_kmsg(pcie_diag_t)
    kernel_read_system_state(pcie_diag_t)
    allow pcie_diag_t self:fifo_file rw_fifo_file_perms;
-   allow pcie_diag_t diag_exec_t:file { execute read map open execute_no_trans };
+   allow pcie_diag_t diag_exec_t:file { getattr execute read map open execute_no_trans };
    allow pcie_diag_t socket_device_t:dir search;
-   allow pcie_diag_t shell_exec_t:file map;
-
+   allow pcie_diag_t shell_exec_t:file { getattr read execute map };
+   allow pcie_diag_t pmsg0_t:chr_file { open write };
 ')

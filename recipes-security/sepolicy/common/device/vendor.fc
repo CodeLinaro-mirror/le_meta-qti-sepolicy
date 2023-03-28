@@ -26,13 +26,14 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ### tftp server ###
 
 /usr/sbin/tftp_server     --    gen_context(system_u:object_r:tftp_server_exec_t,s0)
 /data/tombstones(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
+/etc/dumgr/config(/.*)?  gen_context(system_u:object_r:dumgr_config_t,s0)
 
 ### misc properties ###
 
@@ -74,6 +75,7 @@
 /dev/iio:device([0-9])+     -c   gen_context(system_u:object_r:iio_device,s0)
 /dev/ion               -c  gen_context(system_u:object_r:ion_device_t,s0)
 /dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
+/dev/qti-smmu-proxy     -c  gen_context(system_u:object_r:smmu_proxy_device_t,s0)
 /dev/qseecom            -c  gen_context(system_u:object_r:qseecom_device_t,s0)
 /dev/mtd[0-9]+          -c   gen_context(system_u:object_r:mtd_device_t,s0)
 /dev/adsprpc-smd            -c  gen_context(system_u:object_r:qdsp_device_t,s0)
@@ -84,6 +86,9 @@
 /dev/dma_heap/qcom,system -c   gen_context(system_u:object_r:vendor_dmabuf_system_heap_device_t,s0)
 /dev/dma_heap/system -c   gen_context(system_u:object_r:system_dmabuf_device_t,s0)
 /dev/dma_heap/qcom,qseecom -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
+/dev/dma_heap/qcom,ms1     -c   gen_context(system_u:object_r:vendor_dmabuf_ms1_heap_device_t,s0)
+/dev/dma_heap/qcom,ms2     -c   gen_context(system_u:object_r:vendor_dmabuf_ms2_heap_device_t,s0)
+/dev/dma_heap/qcom,ms3     -c   gen_context(system_u:object_r:vendor_dmabuf_ms3_heap_device_t,s0)
 
 ### MEM_BUF_VM devices ###
 /dev/mem_buf_vm/qcom,trusted_vm -c gen_context(system_u:object_r:vendor_vm_trusted_device_t,s0)

@@ -1,0 +1,22 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary>PMIP Interface</summary>
+
+########################################
+## <summary>
+##      Read and write sockets.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`read_write_pmip_cm_socket_files',`
+        gen_require(`
+                type pmip_service_t;
+        ')
+         allow $1 pmip_service_t:{  udp_socket rawip_socket } connected_stream_socket_perms;
+')
