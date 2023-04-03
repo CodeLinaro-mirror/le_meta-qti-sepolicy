@@ -25,6 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(location, 1.0)
 
 gen_require(`
@@ -179,6 +182,10 @@ userdebug_or_eng(`
 # boot kpi
 location_access_loc_bootkpi(loc_hald_t);
 location_access_loc_bootkpi(xtra_daemon_t);
+location_access_loc_bootkpi(loc_t);
+
+# Allow reading certificate file in /usr/share/ca-certificates
+allow loc_t usr_t:file read_file_perms;
 
 # Read /target node
 vendor_read_target(loc_hald_t)
