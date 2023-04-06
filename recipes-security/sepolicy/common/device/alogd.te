@@ -32,6 +32,10 @@ type alogd_exec_t;
 
 init_vendor_domain(alogd_t, alogd_exec_t)
 
+gen_require(`
+    type pmsg0_t;
+')
+
 allow alogd_t self:unix_dgram_socket { sendto create_socket_perms };
 allow alogd_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow alogd_t self:netlink_audit_socket create_netlink_socket_perms;
@@ -39,6 +43,7 @@ allow alogd_t self:process { signal setsched setcap };
 allow alogd_t self:capability audit_control;
 allow alogd_t self:fifo_file { read write };
 allow alogd_t alogd_exec_t:file { execute read };
+allow alogd_t pmsg0_t:chr_file write;
 
 # read and write kernel logs, /proc/kmsg level is S15
 mls_file_read_all_levels(alogd_t)
