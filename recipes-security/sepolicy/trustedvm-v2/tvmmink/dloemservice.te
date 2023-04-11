@@ -25,7 +25,6 @@ manage_user_data_files(dloemservice_t, tvmapploader_data_t)
 platform_container_domain_type(dloemservice_t, dloemservice_exec_t)
 
 # Downloadable TPs domain transition
-allow dloemservice_t tvmroot_tmpfs_t:file { entrypoint map read execute };
 allow dloemservice_t socket_device_t:dir search;
 
 # For tuiapp

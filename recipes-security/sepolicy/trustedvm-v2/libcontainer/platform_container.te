@@ -47,7 +47,7 @@ allow platform_launcher_domain platform_container_domain:process { rlimitinh sig
 gen_require(`
     type container_mount_t;
 ')
-    
+
 allow platform_container_domain container_mount_t:process { noatsecure rlimitinh siginh };
 allow platform_container_domain container_mount_t:process2 { nnp_transition nosuid_transition };
 

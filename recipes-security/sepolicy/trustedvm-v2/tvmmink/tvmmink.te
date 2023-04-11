@@ -34,8 +34,6 @@ type vendor_vm_hlos_device_t;
 type vendor_vm_oem_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_trusted_device_t;
-type trustedinputservice_exec_t;
-attribute platform_container_domain;
 ')
 
 allow tvmmink_t self:capability2 block_suspend;
