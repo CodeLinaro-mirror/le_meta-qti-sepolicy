@@ -34,6 +34,8 @@ type etc_t;
 type trustedinputservice_t;
 type trustedinputservice_exec_t;
 type dloemservice_t;
+type proc_t;
+attribute platform_container_domain;
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -64,9 +66,19 @@ allow tvmroot_sock_t device_t:filesystem associate;
 allow tvmroot_t self:process signal;
 allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no_trans relabelfrom };
 
+allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
+
+mls_file_read_all_levels(tvmroot_t)
+
+# minijail
+allow tvmroot_t self:capability { sys_admin };
+allow tvmroot_t self:capability2 block_suspend;
+allow tvmroot_t proc_t:dir mounton;
+allow tvmroot_t proc_t:file { read };
+
+logging_send_syslog_msg(tvmroot_t)
+
 # Downloadable TPs domain transition
 domtrans_pattern(tvmroot_t, tvmroot_tmpfs_t, dloemservice_t)
 allow tvmroot_t dloemservice_t:process2 nosuid_transition;
 
-# permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
-dev_rw_sysfs(tvmroot_t)

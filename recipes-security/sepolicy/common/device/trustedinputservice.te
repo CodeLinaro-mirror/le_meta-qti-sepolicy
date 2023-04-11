@@ -50,7 +50,7 @@ connect_to_tui_coresvc(trustedinputservice_t)
 #allow to connect to letzd
 connect_to_letzd(trustedinputservice_t)
 
-allow trustedinputservice_t socket_device_t:dir search;
+allow trustedinputservice_t socket_device_t:dir { search getattr };
 dev_read_input(trustedinputservice_t)
 allow trustedinputservice_t touch_input_device_t:file { read write open };
 allow trustedinputservice_t sysfs_t:dir read;
