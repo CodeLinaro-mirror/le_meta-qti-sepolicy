@@ -2,4 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/TVMMink      --      gen_context(system_u:object_r:tvmmink_exec_t,s0)
-/dev/socket/tvmd      -c      gen_context(system_u:object_r:tvmmink_sock_t,s0)
+/dev/socket/minkd      -c      gen_context(system_u:object_r:tvmmink_sock_t,s0)

@@ -17,12 +17,15 @@ device_manage_socket_file(tvmprelauncher_t, tvmprelauncher_sock_t)
 
 gen_require(`
 type device_t;
+type smcinvoke_device_t;
 type tvmmink_t;
 type tvmroot_t;
 type tvmroot_sock_t;
 ')
 
+allow tvmprelauncher_t self:process signal;
 allow tvmprelauncher_t self:unix_stream_socket { listen accept };
+allow tvmprelauncher_t smcinvoke_device_t:chr_file { read write open ioctl };
 allow tvmprelauncher_t tvmmink_t:fd use;
 allow tvmprelauncher_t tvmroot_t:unix_stream_socket { read write connectto };
 allow tvmprelauncher_t tvmroot_sock_t:sock_file write;
