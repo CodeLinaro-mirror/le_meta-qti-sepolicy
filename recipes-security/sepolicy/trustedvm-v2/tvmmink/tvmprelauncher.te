@@ -25,9 +25,17 @@ type tvmroot_sock_t;
 
 allow tvmprelauncher_t self:process signal;
 allow tvmprelauncher_t self:unix_stream_socket { listen accept };
-allow tvmprelauncher_t smcinvoke_device_t:chr_file { read write open ioctl };
+allow tvmprelauncher_t smcinvoke_device_t:chr_file { getattr read write open ioctl };
 allow tvmprelauncher_t tvmmink_t:fd use;
 allow tvmprelauncher_t tvmroot_t:unix_stream_socket { read write connectto };
 allow tvmprelauncher_t tvmroot_sock_t:sock_file write;
+platform_container_domain_type(tvmprelauncher_t, tvmprelauncher_exec_t)
 
 allow tvmprelauncher_sock_t device_t:filesystem associate;
+
+# /tmp/minijail.dev.xxx/smcinvoke
+type tvmprelauncher_tmpfs_t;
+files_tmpfs_file(tvmprelauncher_tmpfs_t)
+
+fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
+allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };
