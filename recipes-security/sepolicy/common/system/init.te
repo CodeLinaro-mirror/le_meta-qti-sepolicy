@@ -120,6 +120,7 @@ gen_require(`
     type sysdevice_sysfs_t;
     type brightness_t;
     type sysfs_vblank_t;
+    type snd_card_state_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
@@ -154,3 +155,5 @@ allow init_t qvr_data_t:file {manage_file_perms};
 # be simply ignore.
 #
 allow init_t initrc_t:process2 nnp_transition;
+
+allow initrc_t snd_card_state_t:file getattr;

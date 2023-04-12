@@ -88,6 +88,9 @@ type wlan_initrc_exec_t;
 type wlan_initrc_t;
 init_script_domain(wlan_initrc_t, wlan_initrc_exec_t)
 
+#todo: Remove below line
+permissive wlan_initrc_t;
+
 userdebug_or_eng(`
     mls_file_write_all_levels(wlan_initrc_t)
 ')

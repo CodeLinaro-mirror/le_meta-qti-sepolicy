@@ -72,6 +72,7 @@ gen_require(`
  type user_runtime_root_t;
  type cvp_device_t;
  type synx_device_t;
+ type unlabeled_t;
 ')
 
 #For hvx
@@ -203,3 +204,7 @@ gen_require(`
     type weston_runtime_t;
 ')
 manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
+
+#todo: /dev/binder label is coming as unlabeled_t.
+# Once binder label is corrected, the following will be changed to right binder label
+allow qmmf_server_t unlabeled_t:dir search;

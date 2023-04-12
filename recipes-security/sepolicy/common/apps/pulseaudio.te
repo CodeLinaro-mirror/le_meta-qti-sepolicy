@@ -55,7 +55,7 @@ allow pulseaudio_t self:unix_stream_socket { accept connectto listen };
 allow pulseaudio_t self:unix_dgram_socket sendto;
 allow pulseaudio_t self:tcp_socket { accept listen };
 allow pulseaudio_t self:netlink_kobject_uevent_socket create_socket_perms;
-
+allow pulseaudio_t self:qipcrtr_socket create_socket_perms;
 audio_hal_access(pulseaudio_t)
 
 non_audio_hal_access(pulseaudio_t)

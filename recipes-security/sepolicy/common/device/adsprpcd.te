@@ -61,6 +61,7 @@ gen_require(`
     type system_dir_t;
     type xdsp_device_t;
     type qdsp_device_t;
+    type system_dmabuf_device_t;
 ')
 
 allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -92,3 +93,5 @@ manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
 
 # Manage private files inside /data
 data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
+
+allow adsprpcd_t system_dmabuf_device_t:chr_file read;
