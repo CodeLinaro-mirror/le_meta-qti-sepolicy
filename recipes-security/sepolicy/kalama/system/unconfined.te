@@ -45,6 +45,7 @@ userdebug_or_eng(`
         type webserver_t;
         type weston_runtime_t;
         type camera_data_t;
+        type cpu_scaling_freq_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -67,6 +68,8 @@ userdebug_or_eng(`
     allow unconfined_t webserver_t:file getattr;
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
     allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t cpu_scaling_freq_t:file { getattr read open };
+    allow unconfined_t self:lockdown confidentiality;
 
     gen_require(`
         type recovery_exec_t;
