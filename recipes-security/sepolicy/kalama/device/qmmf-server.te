@@ -39,6 +39,43 @@ gen_require(`
 type qmmf_server_t;
 type qmmf_server_exec_t;
 
+#todo: remove this line
+permissive qmmf_server_t;
+
+gen_require(`
+ type audio-server-daemon_t;
+ type post_boot_script_t;
+ type wlan_initrc_t;
+ type audio_hal_etc_t;
+ type audio_hal_etc_acdb_t;
+ type audio_data_file_t;
+ type hal_rec_test_t;
+ type camera_data_t;
+ type vendor_camera_config_t;
+ type weston_t;
+')
+#todo remove below line
+permissive audio-server-daemon_t;
+
+#todo: remove this line
+permissive post_boot_script_t;
+
+#todo: Remove below line
+permissive wlan_initrc_t;
+
+#todo: remove below lines
+permissive audio_hal_etc_t;
+permissive audio_hal_etc_acdb_t;
+permissive audio_data_file_t;
+permissive hal_rec_test_t;
+
+#todo: remove below two lines
+permissive camera_data_t;
+permissive vendor_camera_config_t;
+
+#todo: Remove below line
+permissive weston_t;
+
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
 
