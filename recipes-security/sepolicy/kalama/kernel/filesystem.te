@@ -1,0 +1,16 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type zs_handle_sysfs_t;
+genfscon sysfs /kernel/slab/zs_handle gen_context(system_u:object_r:zs_handle_sysfs_t,s0)
+dev_associate_sysfs(zs_handle_sysfs_t)
+
+type zspage_sysfs_t;
+genfscon sysfs /kernel/slab/zspage gen_context(system_u:object_r:zspage_sysfs_t,s0)
+dev_associate_sysfs(zspage_sysfs_t)
+
+type cpu_core_ctl_sysfs_t;
+genfscon sysfs /devices/system/cpu/cpu0/core_ctl gen_context(system_u:object_r:cpu_core_ctl_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu3/core_ctl gen_context(system_u:object_r:cpu_core_ctl_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu7/core_ctl gen_context(system_u:object_r:cpu_core_ctl_sysfs_t,s0)
+dev_associate_sysfs(cpu_core_ctl_sysfs_t)
