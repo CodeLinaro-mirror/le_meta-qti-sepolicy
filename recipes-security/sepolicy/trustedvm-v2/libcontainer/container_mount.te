@@ -28,6 +28,7 @@ gen_require(`
 ')
 allow container_mount_t { platform_container_domain platform_launcher_domain }:fd use;
 allow container_mount_t { platform_container_domain platform_launcher_domain }:fifo_file read;
+allow container_mount_t self:fifo_file { read write };
 selinux_get_fs_mount(container_mount_t)
 seutil_read_config(container_mount_t)
 getty_use_fds(container_mount_t)
@@ -41,7 +42,6 @@ userdebug_or_eng(`
     allow container_mount_t mnt_t:dir { getattr mounton };
 ')
 allow container_mount_t mount_runtime_t:dir { read write search getattr };
-# TODO: Does this need updating if custom label used?
 allow container_mount_t tmpfs_t:dir { getattr search };
 allow container_mount_t tmpfs_t:filesystem { mount unmount getattr };
 # files_search_pids changed to files_search_runtime in later upstream versions

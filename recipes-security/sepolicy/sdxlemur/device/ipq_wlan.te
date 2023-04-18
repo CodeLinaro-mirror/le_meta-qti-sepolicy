@@ -190,6 +190,9 @@ allow wlan_initrc_t http_port_t:tcp_socket name_connect;
 ### EasyConnect permissions
 allow wlan_service_t wifi_usr_t:file read_file_perms;
 allow wlan_service_t wlan_service_exec_t:file execute_no_trans;
+allow wlan_service_t self:process signal;
+allow wlan_service_t NetworkManager_var_run_t:file rw_file_perms;
+allow hostapd_cli_qcmap_t NetworkManager_var_run_t:file rw_file_perms;
 
 ### EasyConnect - hostapd and hostapd_cli permissions
 gen_require(`
