@@ -116,6 +116,7 @@ dev_node(netmgrd_socket_device_t);
 allow qnetmgrd_t netmgrd_socket_device_t:dir { search write create read add_name };
 allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr unlink};
 filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_file dir })
+allow qnetmgrd_t data_t: file { create read write open };
 
 gen_require(`
     type default_t;
