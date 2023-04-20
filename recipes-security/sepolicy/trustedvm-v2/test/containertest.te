@@ -8,6 +8,9 @@ type launchertest_t;
 type launchertest_exec_t;
 platform_launcher_domain_type(launchertest_t, launchertest_exec_t)
 
+type launchertest_tmpfs_t;
+files_type(launchertest_tmpfs_t)
+
 # Trusted process equivalent
 type containertest_t;
 type containertest_exec_t;
@@ -41,22 +44,27 @@ userdebug_or_eng(`
     corecmd_exec_shell(launchertest_t)
     kernel_dontaudit_search_kernel_sysctl(launchertest_t)
 
-    # TODO: is this common? and can we transition everything to *_tmpfs_t instead?
-    allow launchertest_t tmpfs_t:chr_file { read write ioctl open create };
-    allow launchertest_t tmpfs_t:dir { write search create add_name };
-    allow launchertest_t tmpfs_t:lnk_file create;
+    type_transition launchertest_t tmpfs_t:file launchertest_tmpfs_t;
+    allow launchertest_t launchertest_tmpfs_t:chr_file manage_chr_file_perms;
+    allow launchertest_t launchertest_tmpfs_t:dir manage_dir_perms;
+    allow launchertest_t launchertest_tmpfs_t:lnk_file create;
     mls_file_read_all_levels(launchertest_t)
 
     # Memfd testing - copy elf contents to tmpfs and transition
-    allow launchertest_t tmpfs_t:file { write map };
-    domtrans_pattern(launchertest_t, tmpfs_t, containertest_t)
+    allow launchertest_t launchertest_tmpfs_t:file { mmap_exec_file_perms map write };
+    #neverallow { domain -launchertest_t -containertest_t } launchertest_tmpfs_t:file { write map read execute open execute_no_trans };
+    # TODO: Move to interface? if possible
+    domtrans_pattern(launchertest_t, launchertest_tmpfs_t, containertest_t)
+    allow containertest_t launchertest_tmpfs_t:file entrypoint;
 
     # Trusted process equivalent
 
     unconfined_domtrans_to(containertest_t, containertest_exec_t)
 
     allow containertest_t containertest_exec_t:file entrypoint;
-    can_exec(containertest_t containertest_exec_t)
+    can_exec(containertest_t, containertest_exec_t)
+    # TODO: Is this common? only saw this for one test
+    can_exec(containertest_t, launchertest_tmpfs_t)
 
     # /dev/dri
     dev_rw_dri(containertest_t)
