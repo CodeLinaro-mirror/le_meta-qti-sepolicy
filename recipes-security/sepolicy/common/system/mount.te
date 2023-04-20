@@ -91,7 +91,7 @@ fs_blk_getattr_tmpfs(mount_t)
 #todo: cleanup commented lines
 # TODO: Transition the login shells to unconfined_u:unconfined_r?
 #userdebug_or_eng('
-#    role system_r types unconfined_mount_t;
+role system_r types unconfined_mount_t;
 #')
 
 allow mount_t sdcard_t:filesystem relabelfrom;

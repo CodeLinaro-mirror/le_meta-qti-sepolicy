@@ -26,3 +26,5 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 files_map_etc_files(alsa_t)
+
+allow alsa_t user_home_t:dir search;

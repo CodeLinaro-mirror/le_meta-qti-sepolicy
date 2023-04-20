@@ -45,6 +45,7 @@ userdebug_or_eng(`
         type webserver_t;
         type weston_runtime_t;
         type camera_data_t;
+        type cpu_scaling_freq_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -67,9 +68,16 @@ userdebug_or_eng(`
     allow unconfined_t webserver_t:file getattr;
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
     allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t cpu_scaling_freq_t:file { getattr read open };
+    allow unconfined_t self:lockdown confidentiality;
 
     gen_require(`
         type recovery_exec_t;
+        type aud_dev_sysfs_t;
+        type snd_card_state_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
+    #For catf, which is internal test tool for audio
+    allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
+    allow unconfined_t snd_card_state_t:file { rw_file_perms };
 ')

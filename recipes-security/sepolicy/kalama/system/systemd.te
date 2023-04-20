@@ -42,9 +42,11 @@ gen_require(`
  type var_run_t;
  type kernel_t;
  type debugfs_t;
+ type tracefs_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
+allow systemd_logind_t kernel_t:unix_dgram_socket sendto;
 mls_file_read_all_levels(systemd_gpt_generator_t)
 mls_file_write_all_levels(systemd_gpt_generator_t)
 allow systemd_gpt_generator_t sysctl_kernel_t:dir search;
@@ -75,10 +77,12 @@ allow systemd_modules_load_t etc_t:file read_file_perms;
 allow systemd_modules_load_t self:capability sys_module;
 allow systemd_modules_load_t var_run_t:dir { read_file_perms getattr search };
 allow systemd_modules_load_t debugfs_t:dir search;
+allow systemd_modules_load_t tracefs_t:dir search;
 allow systemd_modules_load_t modules_object_t:system module_load;
 allow systemd_modules_load_t sysfs_t:file { open read };
 allow systemd_modules_load_t kernel_t:system module_request;
 allow systemd_modules_load_t systemd_modules_load_exec_t:file { execute read };
+allow systemd_modules_load_t self:lockdown confidentiality;
 
 #systemd_update_done
 
