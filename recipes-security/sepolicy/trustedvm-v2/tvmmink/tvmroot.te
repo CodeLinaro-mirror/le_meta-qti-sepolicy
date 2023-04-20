@@ -70,6 +70,16 @@ allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execu
 
 mls_file_read_all_levels(tvmroot_t)
 
+# Cryptsetup policies
+gen_require(`
+    type smcinvoke_device_t;
+')
+storage_getattr_fixed_disk_dev(tvmroot_t)
+allow tvmroot_t smcinvoke_device_t:chr_file { read write open ioctl };
+lvm_domtrans(tvmroot_t)
+corecmd_exec_shell(tvmroot_t)
+allow tvmroot_t self:fifo_file write_fifo_file_perms;
+
 # minijail
 allow tvmroot_t self:capability { sys_admin };
 allow tvmroot_t self:capability2 block_suspend;
