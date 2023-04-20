@@ -86,6 +86,7 @@ allow ipacm_t self:netlink_netfilter_socket create_socket_perms;
 allow ipacm_t self:udp_socket { create ioctl };
 allow ipacm_t self:fifo_file rw_fifo_file_perms;
 allow ipacm_t ipacm_var_run_t:file { create rw_file_perms };
+allow ipacm_t ipacm_var_run_t:file { open read write map };
 manage_files_pattern(ipacm_t, { tmp_t qcmap_tmp_t }, qcmap_tmp_t);
 files_tmp_filetrans(ipacm_t, qcmap_tmp_t, { dir }, "data");
 allow ipacm_t qcmap_tmp_t:dir { search };
