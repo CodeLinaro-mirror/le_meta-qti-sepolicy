@@ -1,0 +1,55 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(qtvmtest, 1.0)
+
+type embedallpritest_t;
+type embedallpritest_exec_t;
+type embeddeathtest_t;
+type embeddeathtest_exec_t;
+type embedcommontest_t;
+type embedcommontest_exec_t;
+type embedsparetest_t;
+type embedsparetest_exec_t;
+type embedstresstest_t;
+type embedstresstest_exec_t;
+type embedunloadtest_t;
+type embedunloadtest_exec_t;
+
+init_vendor_domain(embedallpritest_t, embedallpritest_exec_t)
+init_vendor_domain(embeddeathtest_t, embeddeathtest_exec_t)
+init_vendor_domain(embedcommontest_t, embedcommontest_exec_t)
+init_vendor_domain(embedsparetest_t, embedsparetest_exec_t)
+init_vendor_domain(embedstresstest_t, embedstresstest_exec_t)
+init_vendor_domain(embedunloadtest_t, embedunloadtest_exec_t)
+
+gen_require(`
+    type tvmmink_t;
+    type tvmmink_sock_t;
+    type socket_device_t;
+')
+
+allow embedallpritest_t socket_device_t:dir { search getattr };
+# configure to enable raise signal
+allow embedallpritest_t self:process signal;
+platform_container_domain_type(embedallpritest_t, embedallpritest_exec_t);
+
+allow embeddeathtest_t socket_device_t:dir { search getattr };
+allow embeddeathtest_t self:process signal;
+platform_container_domain_type(embeddeathtest_t, embeddeathtest_exec_t);
+
+allow embedcommontest_t socket_device_t:dir { search getattr };
+allow embedcommontest_t self:process signal;
+platform_container_domain_type(embedcommontest_t, embedcommontest_exec_t);
+
+allow embedsparetest_t socket_device_t:dir { search getattr };
+allow embedsparetest_t self:process signal;
+platform_container_domain_type(embedsparetest_t, embedsparetest_exec_t);
+
+allow embedstresstest_t socket_device_t:dir { search getattr };
+allow embedstresstest_t self:process signal;
+platform_container_domain_type(embedstresstest_t, embedstresstest_exec_t);
+
+allow embedunloadtest_t socket_device_t:dir { search getattr };
+allow embedunloadtest_t self:process signal;
+platform_container_domain_type(embedunloadtest_t, embedunloadtest_exec_t);
