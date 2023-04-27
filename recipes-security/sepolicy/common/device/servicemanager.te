@@ -45,4 +45,14 @@ dev_node(binder_device_t)
 
 allow servicemanager_t binder_device_t:chr_file map;
 allow servicemanager_t binder_device_t:dir search;
+
+## TODO:
+# temp solution to bypass avc denial issue
+# should set label for /dev/binderfs/binder correctly instead of unlabeled_t
+gen_require(`
+    type unlabeled_t;
+')
+allow servicemanager_t unlabeled_t:dir search;
+allow servicemanager_t unlabeled_t:chr_file mmap_rw_file_perms;
+
 rw_chr_files_pattern(servicemanager_t, binder_device_t, binder_device_t)
