@@ -40,9 +40,14 @@ userdebug_or_eng(`
     kernel_search_debugfs(servicemanager_t)
 ')
 
+gen_require(`
+type binderfs_t;
 type binder_device_t;
+')
+
 dev_node(binder_device_t)
 
+allow servicemanager_t binderfs_t:dir search;
 allow servicemanager_t binder_device_t:chr_file map;
 allow servicemanager_t binder_device_t:dir search;
 
