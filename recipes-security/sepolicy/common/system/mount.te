@@ -131,3 +131,11 @@ allow mount_t usb_var_lock_t:file { getattr unlink };
 
 allow mount_copybind_t semanage_store_t:dir { search getattr read open };
 allow mount_copybind_t semanage_read_lock_t:file { getattr read };
+
+gen_require(`
+type binderfs_t;
+type mount_t;
+')
+
+allow mount_t binderfs_t:dir { getattr mounton };
+allow mount_t binderfs_t:filesystem mount;
