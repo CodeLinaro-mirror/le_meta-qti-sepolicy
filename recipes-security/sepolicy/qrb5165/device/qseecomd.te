@@ -29,6 +29,9 @@ gen_require(`
        type sysfs_t;
 ')
 
+#todo: remove below line
+permissive qseecomd_t;
+
 allow qseecomd_t self:capability chown;
 allow qseecomd_t sysfs_t:file append;
 
