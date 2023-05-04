@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -74,11 +74,13 @@ userdebug_or_eng(`
 gen_require(`
       type default_t;
       type socket_device_t;
+      type shell_exec_t;
 ')
 
 allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
 allow qnetmgrd_t self:process { setcap getcap signal };
 dontaudit qnetmgrd_t default_t:dir { search };
+dontaudit qnetmgrd_t shell_exec_t:file { execute }; #seen only as part of reboot from terminal
 allow qnetmgrd_t self:{
     socket
     udp_socket
@@ -116,6 +118,7 @@ dev_node(netmgrd_socket_device_t);
 allow qnetmgrd_t netmgrd_socket_device_t:dir { search write create read add_name };
 allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr unlink};
 filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_file dir })
+allow qnetmgrd_t data_t: file { create read write open };
 
 gen_require(`
     type default_t;

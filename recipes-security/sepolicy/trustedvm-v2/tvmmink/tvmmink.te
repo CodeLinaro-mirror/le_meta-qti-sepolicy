@@ -11,57 +11,52 @@ policy_module(tvmmink, 1.0)
 type tvmmink_t;
 type tvmmink_exec_t;
 type tvmmink_sock_t;
-type tvmmink_tmpfs_t;
 
 init_vendor_domain(tvmmink_t, tvmmink_exec_t)
 device_manage_socket_file(tvmmink_t, tvmmink_sock_t)
 logging_send_syslog_msg(tvmmink_t)
-filetrans_pattern(tvmmink_t, tmpfs_t, tvmmink_tmpfs_t, file)
+
+attribute platform_hub_domain;
+platform_hub_domain_type(tvmmink_t)
 
 gen_require(`
 type device_t;
 type smcinvoke_device_t;
-type tmpfs_t;
-type tuicoreservice_t;
 type tuicoreservice_dev_t;
-type tuicoreservice_exec_t;
+type tvmprelauncher_t;
+type tvmprelauncher_sock_t;
+type tvmroot_t;
 type vendor_dmabuf_ms1_heap_device_t;
 type vendor_dmabuf_ms2_heap_device_t;
 type vendor_dmabuf_ms3_heap_device_t;
-type vendor_dmabuf_system_heap_device_t;
 type vendor_dmabuf_tui_heap_device_t;
-type vendor_virtio_mem_device_t;
 type vendor_vm_hlos_device_t;
 type vendor_vm_oem_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_trusted_device_t;
-attribute vendor_domain;
 ')
 
 allow tvmmink_t self:capability2 block_suspend;
-allow tvmmink_t self:process { signal signull sigkill };
-allow tvmmink_t self:qipcrtr_socket create_socket_perms;
-allow tvmmink_t self:socket { create rw_socket_perms };
-allow tvmmink_t self:unix_stream_socket { connectto sendto listen accept };
-allow tvmmink_t self:vsock_socket { create bind getattr read write };
+allow tvmmink_t self:process { signull signal };
+allow tvmmink_t self:qipcrtr_socket { create setopt getattr write read connect shutdown };
+allow tvmmink_t self:socket { create bind getattr read connect write };
+allow tvmmink_t self:vsock_socket create;
+allow tvmmink_t self:unix_stream_socket { accept listen };
 allow tvmmink_t smcinvoke_device_t:chr_file { read write open ioctl };
-allow tvmmink_t tuicoreservice_t:fd use;
-allow tvmmink_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
-allow tvmmink_t tuicoreservice_exec_t:file { open read getattr };
-allow tvmmink_t tvmmink_tmpfs_t:file { open write read getattr execute execute_no_trans map };
-allow tvmmink_t vendor_dmabuf_ms1_heap_device_t:chr_file read_chr_file_perms;
-allow tvmmink_t vendor_dmabuf_ms2_heap_device_t:chr_file read_chr_file_perms;
-allow tvmmink_t vendor_dmabuf_ms3_heap_device_t:chr_file read_chr_file_perms;
-allow tvmmink_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
-allow tvmmink_t vendor_dmabuf_tui_heap_device_t:chr_file read_chr_file_perms;
-allow tvmmink_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
+allow tvmmink_t tuicoreservice_dev_t:chr_file { open read ioctl };
+allow tvmmink_t tvmprelauncher_t:unix_stream_socket connectto;
+allow tvmmink_t tvmprelauncher_sock_t:sock_file write;
+allow tvmmink_t tvmroot_t:unix_stream_socket { read write };
 allow tvmmink_t vendor_vm_hlos_device_t:chr_file read_chr_file_perms;
 allow tvmmink_t vendor_vm_oem_device_t:chr_file read_chr_file_perms;
 allow tvmmink_t vendor_vm_self_device_t:chr_file read_chr_file_perms;
 allow tvmmink_t vendor_vm_trusted_device_t:chr_file read_chr_file_perms;
+allow tvmmink_t vendor_dmabuf_tui_heap_device_t:chr_file { read open ioctl };
+allow tvmmink_t vendor_dmabuf_ms1_heap_device_t:chr_file read_chr_file_perms;
+allow tvmmink_t vendor_dmabuf_ms2_heap_device_t:chr_file read_chr_file_perms;
+allow tvmmink_t vendor_dmabuf_ms3_heap_device_t:chr_file read_chr_file_perms;
+
 allow tvmmink_sock_t device_t:filesystem associate;
 
-neverallow { vendor_domain -tvmmink_t } tvmmink_tmpfs_t:file { open write read getattr execute execute_no_trans map };
-
-#permissions for /sys/power/wake_lock /sys/power/wake_unlock /sys/kernel/vm_set_status/app_status
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock
 dev_rw_sysfs(tvmmink_t)

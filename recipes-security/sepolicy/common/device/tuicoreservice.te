@@ -102,6 +102,8 @@ type wlan_hsp_sysfs_t;
 type kmsg_device_t;
 type vendor_virtio_mem_device_t;
 type persist_display_t;
+type tvmapploader_data_t;
+type touch_input_device_t;
 ')
 
 userdebug_or_eng(`
@@ -176,3 +178,6 @@ manage_user_data_files(tuicoreservice_t, persist_display_t);
 allow tuicoreservice_t persist_t:dir search;
 corecmd_exec_shell(tuicoreservice_t);
 corecmd_exec_bin(tuicoreservice_t);
+
+allow tuicoreservice_t tvmapploader_data_t:file { getattr read open };
+allow tuicoreservice_t touch_input_device_t:file { read open write };
