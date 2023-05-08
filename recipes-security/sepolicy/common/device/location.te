@@ -45,6 +45,7 @@ gen_require(`
     type netmgrd_socket_device_t;
     type usr_t;
     type init_var_run_t;
+    type kpi_values_sysfs_t;
 ')
 
 ########################################
@@ -319,6 +320,7 @@ allow xtra_daemon_t self:{ socket udp_socket } create_socket_perms;
 allow xtra_daemon_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
 allow xtra_daemon_t commplex_main_port_t:tcp_socket name_connect;
 allow xtra_daemon_t xen_port_t:tcp_socket name_connect;
+allow xtra_daemon_t kpi_values_sysfs_t:file write;
 # read build.prop
 leprop_read_props(xtra_daemon_t)
 ## this is for access to /run/resolv.conf
