@@ -53,7 +53,6 @@ dnsmasq_domtrans(pmip_service_t)
 allow pmip_service_t devlog_t:sock_file write;
 allow pmip_service_t dnsmasq_exec_t:file { execute exec_file_perms getattr map open read };
 
-allow pmip_service_t kmsg_device_t:chr_file open;
 allow pmip_service_t node_t:udp_socket node_bind;
 allow pmip_service_t qcmap_cm_t:unix_dgram_socket sendto;
 
@@ -116,7 +115,10 @@ allow pmip_service_t sysctl_net_t:dir search;
 allow pmip_service_t sysctl_net_t:file { getattr open read };
 allow pmip_service_t sysctl_t:dir search;
 
-allow pmip_service_t kmsg_device_t:chr_file { write open getattr ioctl };
+userdebug_or_eng(`
+    allow pmip_service_t kmsg_device_t:chr_file { write_file_perms };
+    mls_file_write_all_levels(pmip_service_t);
+')
 allow pmip_service_t qcmap_socket_device_t:sock_file {create write };
 type pmip_socket_device_t;
 files_type(pmip_socket_device_t)
