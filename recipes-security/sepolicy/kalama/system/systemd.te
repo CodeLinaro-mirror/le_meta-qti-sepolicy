@@ -83,6 +83,7 @@ allow systemd_modules_load_t sysfs_t:file { open read };
 allow systemd_modules_load_t kernel_t:system module_request;
 allow systemd_modules_load_t systemd_modules_load_exec_t:file { execute read };
 allow systemd_modules_load_t self:lockdown confidentiality;
+allow systemd_modules_load_t self:key write;
 
 #systemd_update_done
 
