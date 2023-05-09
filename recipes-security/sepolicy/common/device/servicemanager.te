@@ -48,6 +48,6 @@ type binder_device_t;
 dev_node(binder_device_t)
 
 allow servicemanager_t binderfs_t:dir search;
-allow servicemanager_t binder_device_t:chr_file map;
+allow servicemanager_t binder_device_t:chr_file mmap_rw_file_perms;
 allow servicemanager_t binder_device_t:dir search;
 rw_chr_files_pattern(servicemanager_t, binder_device_t, binder_device_t)
