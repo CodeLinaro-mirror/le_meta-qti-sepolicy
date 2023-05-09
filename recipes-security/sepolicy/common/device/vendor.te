@@ -291,7 +291,13 @@ userdebug_or_eng(`
 
 gen_require(`
     type kmod_t;
+    type ptmx_t;
+    type adbd_t;
 ')
+
+allow kmod_t adbd_t:unix_stream_socket rw_inherited_file_perms;
+allow kmod_t ptmx_t:chr_file rw_chr_file_perms;
+
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
 systemd_tmpfilesd_managed(socket_device_t)
 
