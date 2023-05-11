@@ -1,0 +1,37 @@
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(dsphal , 1.0)
+########################################
+#
+# Declarations
+#
+type dsphal_t;
+type dsphal_exec_t;
+
+gen_require(`
+    type unconfined_t;
+    type dsphal_t;
+    type dsphal_exec_t;
+    type binder_device_t;
+    type binderfs_t;
+    type debugfs_t;
+    type servicemanager_t;
+    type socket_device_t;
+    type pmsg_device_t;
+    type ptmx_t;
+    type qdsp_device_t;
+')
+init_vendor_domain(dsphal_t, dsphal_exec_t)
+allow dsphal_t binder_device_t:chr_file { ioctl map open read write };
+allow dsphal_t binderfs_t:dir search;
+userdebug_or_eng(`
+allow dsphal_t debugfs_t:dir search;
+')
+allow dsphal_t servicemanager_t:binder { call transfer };
+allow dsphal_t socket_device_t:dir search;
+allow dsphal_t pmsg_device_t:chr_file { open write };
+allow dsphal_t ptmx_t:chr_file { read write };
+allow dsphal_t qdsp_device_t:chr_file { open read write };
+allow dsphal_t self:binder call;
