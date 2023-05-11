@@ -1,0 +1,37 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(mplane-sysrepo-plugin, 1.0)
+gen_require(`
+ type tmpfs_t;
+ type unreserved_port_t;
+ type data_t;
+ type sysctl_t;
+ type proc_t;
+ type etc_t;
+ type fs_t;
+')
+
+type sysrepo-plugind_t;
+type sysrepo-plugind_exec_t;
+type sysrepo_shm_t;
+type sysrepo_data_t;
+init_vendor_domain(sysrepo-plugind_t, sysrepo-plugind_exec_t)
+
+allow sysrepo_data_t fs_t:filesystem associate;
+sr_data_access(sysrepo-plugind_t)
+
+allow sysrepo-plugind_t sysctl_t:dir { search };
+allow sysrepo-plugind_t proc_t:file { read open getattr };
+
+allow sysrepo-plugind_t tmpfs_t:file { read write open getattr map create unlink };
+allow sysrepo-plugind_t tmpfs_t:dir { search write add_name remove_name };
+
+allow sysrepo-plugind_t self:tcp_socket { create setopt connect name_connect write read shutdown };
+allow sysrepo-plugind_t unreserved_port_t:tcp_socket name_connect;
+allow sysrepo-plugind_t self:process { signal };
+
+# For /etc/passwd and /etc/nsswitch.conf
+files_read_etc_files(sysrepo-plugind_t)
+allow sysrepo-plugind_t etc_t:file { map };
+
