@@ -29,3 +29,5 @@
 /data/vendor/tzstorage(/.*)?            gen_context(system_u:object_r:qseecomd_data_t,s0)
 /persist/data(/.*)?                     gen_context(system_u:object_r:qseecomd_persist_t,s0)
 /dev/mmcblk0rpmb                -c      gen_context(system_u:object_r:qseecomd_rpmb_t,s0)
+/dev/bsg/0:0:0:49476            -c      gen_context(system_u:object_r:qseecomd_ufs_t,s0)
+/dev/bsg/ufs-bsg0               -c      gen_context(system_u:object_r:qseecomd_ufs_t,s0)
