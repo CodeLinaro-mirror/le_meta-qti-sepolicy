@@ -11,6 +11,8 @@ userdebug_or_eng(`
 		type hwfde_conf_file_t;
 		type install_evict_t;
 		type dumgr_config_t;
+		type sysfs_usb_mode_t;
+		type tuicoreservice_dev_t;
 	')
 
 allow unconfined_t cpu_scaling_freq_t:file { getattr open read };
@@ -20,4 +22,6 @@ allow unconfined_t hwfde_conf_file_t:file read_file_perms;
 allow unconfined_t install_evict_t:file exec_file_perms;
 allow unconfined_t dumgr_config_t:dir { search getattr read open };
 allow unconfined_t dumgr_config_t:file read_file_perms;
+allow unconfined_t sysfs_usb_mode_t:file { getattr read open write };
+allow unconfined_t tuicoreservice_dev_t:chr_file { ioctl open read };
 ')

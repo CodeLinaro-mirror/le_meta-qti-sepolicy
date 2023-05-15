@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(platform_launcher, 1.0)
@@ -40,3 +40,10 @@ allow platform_launcher_domain file_type:file getattr;
 # log to shell
 getty_use_fds(platform_launcher_domain)
 term_use_unallocated_ttys(platform_launcher_domain)
+
+# setexecfilecon and getexeccon permissions
+selinux_compute_create_context(platform_launcher_domain)
+selinux_getattr_fs(platform_launcher_domain)
+allow platform_launcher_domain self:process setexec;
+allow platform_launcher_domain self:fifo_file read;
+
