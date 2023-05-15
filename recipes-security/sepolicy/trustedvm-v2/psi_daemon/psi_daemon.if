@@ -3,13 +3,6 @@
 
 ######################################
 ## <summary>
-##      tvmmink interface
+##      psi_daemon
 ## </summary>
 #
-
-interface(`platform_hub_domain_type',`
-    gen_require(`
-        attribute platform_hub_domain;
-    ')
-    typeattribute $1 platform_hub_domain;
-')

@@ -1,0 +1,32 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> ru_mplane_app </summary>
+
+######################################
+## <summary>
+##      Sysrepo data access
+## </summary>
+## <desc>
+##      Allow access to sysrepo shared memory and repository
+## </desc>
+## <param name="domain">
+##  <summary>
+##      Domain allowed access
+##  </summary>
+## </param>
+interface(`sr_data_access',`
+    gen_require(`
+       type sysrepo_shm_t;
+       type sysrepo_data_t;
+       type data_t;
+    ')
+
+    allow $1 sysrepo_shm_t:dir { map setattr add_name create };
+    allow $1 sysrepo_data_t:dir { write add_name search create open remove_name read getattr };
+    allow $1 sysrepo_data_t:file { map setattr unlink read open getattr create write lock };
+    allow $1 sysrepo_data_t:fifo_file { open read create write unlink };
+    # When domain creates a folder called "sysrepo" in a target context
+    # of data_t, assign label sysrepo_data_t to it
+    filetrans_pattern($1, data_t, sysrepo_data_t, dir, "sysrepo")
+')

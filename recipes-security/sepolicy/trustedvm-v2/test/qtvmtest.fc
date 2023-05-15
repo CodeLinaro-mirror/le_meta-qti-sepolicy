@@ -1,0 +1,9 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/EmbeddedAllPrivilegeTestService          gen_context(system_u:object_r:embedallpritest_exec_t,s0)
+/usr/bin/EmbeddedNormalDeathTestService          gen_context(system_u:object_r:embeddeathtest_exec_t,s0)
+/usr/bin/EmbeddedCommonTestService          gen_context(system_u:object_r:embedcommontest_exec_t,s0)
+/usr/bin/EmbeddedSpareTestService          gen_context(system_u:object_r:embedsparetest_exec_t,s0)
+/usr/bin/EmbeddedStressTestService          gen_context(system_u:object_r:embedstresstest_exec_t,s0)
+/usr/bin/EmbeddedMissingNeverUnload          gen_context(system_u:object_r:embedunloadtest_exec_t,s0)
