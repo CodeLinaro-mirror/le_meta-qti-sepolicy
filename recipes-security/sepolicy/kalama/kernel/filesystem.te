@@ -14,3 +14,7 @@ genfscon sysfs /devices/system/cpu/cpu0/core_ctl gen_context(system_u:object_r:c
 genfscon sysfs /devices/system/cpu/cpu3/core_ctl gen_context(system_u:object_r:cpu_core_ctl_sysfs_t,s0)
 genfscon sysfs /devices/system/cpu/cpu7/core_ctl gen_context(system_u:object_r:cpu_core_ctl_sysfs_t,s0)
 dev_associate_sysfs(cpu_core_ctl_sysfs_t)
+
+type dev_pmsg0_t;
+genfscon sysfs /dev/pmsg0 gen_context(system_u:object_r:device_t,s0)
+dev_associate_sysfs(dev_pmsg0_t)
