@@ -35,3 +35,5 @@
 
 # qmmf config files
 /system/etc/qmmf(/.*)?             gen_context(system_u:object_r:qmmf_config_file_t,s0)
+
+/dev/dri(/.*)?                     gen_context(system_u:object_r:dev_dri_t,s0)
