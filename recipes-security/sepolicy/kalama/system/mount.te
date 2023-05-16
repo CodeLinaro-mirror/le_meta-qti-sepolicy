@@ -46,3 +46,6 @@ permissive unconfined_mount_t;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
+
+allow mount_t alsa_etc_t:lnk_file { getattr read };
+allow mount_t self:capability { fsetid dac_read_search fowner };

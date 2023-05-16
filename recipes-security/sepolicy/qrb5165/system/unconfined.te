@@ -54,6 +54,8 @@ userdebug_or_eng(`
     dev_read_kmsg(unconfined_t)
     kernel_mounton_message_if(unconfined_t)
     allow unconfined_t self:binder { call transfer };
+    # TODO: cleanup required for audio HAL usecase
+    allow unconfined_t self:lockdown { confidentiality };
     allow unconfined_t auditd_etc_t:dir { getattr read search };
     allow unconfined_t auditd_etc_t:file getattr;
     allow unconfined_t data_t:chr_file getattr;

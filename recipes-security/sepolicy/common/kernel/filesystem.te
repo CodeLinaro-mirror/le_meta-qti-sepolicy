@@ -64,6 +64,16 @@ fs_noxattr_type(functionfs_t)
 files_mountpoint(functionfs_t)
 genfscon functionfs / gen_context(system_u:object_r:functionfs_t,s0)
 
+type binder_device_t;
+type hwbinder_device_t;
+type vndbinder_device_t;
+type binderfs_t;
+
+genfscon binder /binder system_u:object_r:binder_device_t:s0
+genfscon binder /hwbinder system_u:object_r:hwbinder_device_t:s0
+genfscon binder /vndbinder system_u:object_r:vndbinder_device_t:s0
+genfscon binder / system_u:object_r:binderfs_t:s0
+
 files_mountpoint(configfs_t)
 files_mountpoint(trace_marker_t)
 genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0

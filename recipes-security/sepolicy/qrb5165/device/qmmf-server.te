@@ -39,6 +39,12 @@ gen_require(`
 type qmmf_server_t;
 type qmmf_server_exec_t;
 
+#todo: remove below line
+permissive servicemanager_t;
+
+#todo: remove this line
+permissive qmmf_server_t;
+
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
 
