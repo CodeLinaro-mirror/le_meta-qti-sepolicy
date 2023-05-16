@@ -69,3 +69,12 @@ allow usb_t leprop_t:unix_stream_socket connectto;
 allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 allow usb_t dev_pmsg0_t:chr_file { write_chr_file_perms };
 allow usb_t functionfs_t:dir getattr;
+
+userdebug_or_eng(`
+    gen_require(`
+        type adbd_t;
+    ')
+
+    allow adbd_t self:lockdown confidentiality;
+')
+
