@@ -81,7 +81,8 @@ allow perf_hal_t pmsg_device_t:chr_file write_chr_file_perms;
 
 allow perf_hal_t pmqos_device_t:chr_file write_chr_file_perms;
 
-allow perf_hal_t cpu_core_ctl_sysfs_t:dir search;
+allow perf_hal_t cpu_core_ctl_sysfs_t:dir list_dir_perms;
+allow perf_hal_t cpu_core_ctl_sysfs_t:file rw_file_perms;
 
 #perf_hal socket
 type perf_hal_socket_t;
