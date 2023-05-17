@@ -31,6 +31,7 @@ gen_require(`
  type system_dbusd_var_lib_t;
  type default_t;
  type system_dmabuf_device_t;
+ type sysctl_vm_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
@@ -41,6 +42,7 @@ allow pulseaudio_t kernel_t:unix_dgram_socket sendto;
 allow pulseaudio_t self:qipcrtr_socket { connected_socket_perms };
 allow pulseaudio_t system_dmabuf_device_t:chr_file { read_chr_file_perms };
 allow pulseaudio_t self:qipcrtr_socket create;
+allow pulseaudio_t sysctl_vm_t:dir search;
 
 mls_socket_write_all_levels(pulseaudio_t)
 mls_socket_read_all_levels(pulseaudio_t)
