@@ -1,0 +1,41 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(tvmprelauncher, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type tvmprelauncher_t;
+type tvmprelauncher_exec_t;
+type tvmprelauncher_sock_t;
+
+init_vendor_domain(tvmprelauncher_t, tvmprelauncher_exec_t)
+device_manage_socket_file(tvmprelauncher_t, tvmprelauncher_sock_t)
+
+gen_require(`
+type device_t;
+type smcinvoke_device_t;
+type tvmmink_t;
+type tvmroot_t;
+type tvmroot_sock_t;
+')
+
+allow tvmprelauncher_t self:process signal;
+allow tvmprelauncher_t self:unix_stream_socket { listen accept };
+allow tvmprelauncher_t smcinvoke_device_t:chr_file { getattr read write open ioctl };
+allow tvmprelauncher_t tvmmink_t:fd use;
+allow tvmprelauncher_t tvmroot_t:unix_stream_socket { read write connectto };
+allow tvmprelauncher_t tvmroot_sock_t:sock_file write;
+platform_container_domain_type(tvmprelauncher_t, tvmprelauncher_exec_t)
+
+allow tvmprelauncher_sock_t device_t:filesystem associate;
+
+# /tmp/minijail.dev.xxx/smcinvoke
+type tvmprelauncher_tmpfs_t;
+files_tmpfs_file(tvmprelauncher_tmpfs_t)
+
+fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
+allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };

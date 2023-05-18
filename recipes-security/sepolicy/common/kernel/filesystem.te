@@ -176,12 +176,3 @@ dev_associate_sysfs(sysfs_power_state_t)
 type sysfs_usb_mode_t;
 genfscon sysfs /devices/platform/soc/a600000.ssusb/mode gen_context(system_u:object_r:sysfs_usb_mode_t,s0)
 dev_associate_sysfs(sysfs_usb_mode_t)
-
-type procfs_meminfo_t;
-genfscon sysfs /proc/meminfo gen_context(system_u:object_r:procfs_meminfo_t,s0)
-
-type procfs_zoneinfo_t;
-genfscon sysfs /proc/zoneinfo gen_context(system_u:object_r:procfs_zoneinfo_t,s0)
-
-type procfs_pressure_mem_t;
-genfscon sysfs /proc/pressure/memory gen_context(system_u:object_r:procfs_pressure_mem_t,s0)
