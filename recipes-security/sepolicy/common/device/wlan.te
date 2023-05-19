@@ -87,6 +87,8 @@ type devlog_t;
 type syslogd_t;
 type sysctl_net_t;
 type wifi_data_t;
+type syslogd_runtime_t;
+type init_runtime_t;
 ')
 
 userdebug_or_eng(`
@@ -125,3 +127,5 @@ allow wlan_initrc_t devlog_t:sock_file write_sock_file_perms;
 allow wlan_initrc_t syslogd_t:unix_dgram_socket sendto;
 allow wlan_initrc_t wifi_data_t:sock_file { unlink create };
 allow wlan_initrc_t sysctl_net_t:file getattr;
+allow wlan_initrc_t syslogd_runtime_t:dir search;
+allow wlan_initrc_t init_runtime_t:dir search;
