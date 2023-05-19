@@ -31,3 +31,6 @@
 
 ### synx_device ###
 /dev/synx_device           -c  gen_context(system_u:object_r:synx_device_t,s0)
+
+### misc file ###
+/etc/video_system_specs.json   -- gen_context(system_u:object_r:video_system_specs_t,s0)

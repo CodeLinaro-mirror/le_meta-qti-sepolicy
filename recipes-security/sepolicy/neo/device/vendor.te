@@ -31,4 +31,5 @@ dev_node(ashmem_devices_t);
 type synx_device_t;
 dev_node(synx_device_t);
 
-
+type video_system_specs_t;
+files_type(video_system_specs_t)

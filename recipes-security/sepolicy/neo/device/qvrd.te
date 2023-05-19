@@ -68,6 +68,7 @@ gen_require(`
        type fs_t;
        type cache_t;
        type cache_recovery_t;
+       type video_system_specs_t;
 ')
 
 #read /data/misc/qvr
@@ -187,3 +188,7 @@ allow init_t qvr_data_t:file read_file_perms;
 allow qvrd_t qvr_data_t:dir manage_dir_perms;
 allow qvrd_t sysctl_t:dir search_dir_perms;
 allow qvrd_t sysctl_vm_t:dir search_dir_perms;
+
+#allow read panel type
+allow qvrd_t video_system_specs_t:file read_file_perms;
+

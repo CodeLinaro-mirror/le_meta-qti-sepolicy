@@ -28,3 +28,5 @@
 /usr/bin/diag-router       --      gen_context(system_u:object_r:diag-router_exec_t,s0)
 
 /dev/mhi_pipe_4            -c 	   gen_context(system_u:object_r:mhi_pipe_4_t,s0)
+
+/dev/mhi_...._........_pipe_4  -c  gen_context(system_u:object_r:mhi_pipe_4_t,s0)
