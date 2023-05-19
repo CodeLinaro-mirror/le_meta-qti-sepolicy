@@ -37,6 +37,10 @@ gen_require(`
     type system_dbusd_var_lib_t;
     type var_lib_t;
     type var_t;
+    type net_conf_t;
+    type overlay_t;
+    type binderfs_t;
+    type wifi_data_t;
 ')
 
 #for overlayfs
@@ -49,3 +53,11 @@ dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir
 
 allow mount_t alsa_etc_t:lnk_file { getattr read };
 allow mount_t self:capability { fsetid dac_read_search fowner };
+allow mount_t data_t:fifo_file { create_fifo_file_perms read setattr };
+allow mount_t data_t:sock_file { create_sock_file_perms unlink };
+allow mount_t net_conf_t:lnk_file read_lnk_file_perms;
+allow mount_t overlay_t:chr_file { unlink };
+allow mount_t system_dbusd_var_lib_t:lnk_file { create_lnk_file_perms read };
+allow mount_t binderfs_t:filesystem { mount };
+allow mount_t var_t:chr_file { unlink };
+allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
