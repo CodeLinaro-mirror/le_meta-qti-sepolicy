@@ -4,9 +4,7 @@
 policy_module(psi_daemon, 1.0)
 
 gen_require(`
-    type procfs_meminfo_t;
-    type procfs_zoneinfo_t;
-    type procfs_pressure_mem_t;
+    type proc_t;
 ')
 
 type psi_daemon_t;
@@ -15,6 +13,4 @@ type psi_daemon_exec_t;
 init_vendor_domain(psi_daemon_t, psi_daemon_exec_t)
 
 # allow read/write for kernel procfs files
-allow psi_daemon_t procfs_meminfo_t:file { read write open };
-allow psi_daemon_t procfs_zoneinfo_t:file { read write open };
-allow psi_daemon_t procfs_pressure_mem_t:file { read write open };
+allow psi_daemon_t proc_t:file { read write open };
