@@ -38,6 +38,7 @@ type vendor_vm_trusted_device_t;
 type smmu_proxy_device_t;
 ')
 
+allow tvmmink_t self:fifo_file write;
 allow tvmmink_t self:capability2 block_suspend;
 allow tvmmink_t self:process { signull signal };
 allow tvmmink_t self:qipcrtr_socket { create setopt getattr write read connect shutdown };
