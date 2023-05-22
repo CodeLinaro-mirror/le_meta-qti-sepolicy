@@ -41,6 +41,7 @@ type vendor_vm_trusted_device_t;
 type vendor_vm_hlos_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_oem_device_t;
+type smmu_proxy_device_t;
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -107,3 +108,5 @@ allow tvmroot_t vendor_vm_hlos_device_t:chr_file { getattr read_chr_file_perms }
 allow tvmroot_t vendor_vm_self_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmroot_t vendor_vm_trusted_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
+
+allow tvmroot_t smmu_proxy_device_t:chr_file getattr;
