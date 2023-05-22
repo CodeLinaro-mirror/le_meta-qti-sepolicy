@@ -40,29 +40,11 @@ type qmmf_server_t;
 type qmmf_server_exec_t;
 
 gen_require(`
- type post_boot_script_t;
- type wlan_initrc_t;
- type camera_data_t;
- type vendor_camera_config_t;
  type weston_t;
- type servicemanager_t;
 ')
-
-#todo: remove this line
-permissive post_boot_script_t;
-
-#todo: Remove below line
-permissive wlan_initrc_t;
-
-#todo: remove below two lines
-permissive camera_data_t;
-permissive vendor_camera_config_t;
 
 #todo: Remove below line
 permissive weston_t;
-
-#todo: remove below line
-permissive servicemanager_t;
 
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
@@ -254,6 +236,7 @@ allow qmmf_server_t binderfs_t:dir search;
 
 gen_require(`
     type weston_runtime_t;
+    type servicemanager_t;
 ')
 manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
 
