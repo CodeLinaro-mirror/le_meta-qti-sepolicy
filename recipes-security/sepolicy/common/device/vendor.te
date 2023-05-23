@@ -258,6 +258,9 @@ dev_node(vendor_dmabuf_system_heap_device_t);
 type system_dmabuf_device_t;
 dev_node(system_dmabuf_device_t);
 
+type system_uncached_dmabuf_device_t;
+dev_node(system_uncached_dmabuf_device_t);
+
 type vendor_dmabuf_qseecom_heap_device_t;
 dev_node(vendor_dmabuf_qseecom_heap_device_t);
 
