@@ -69,6 +69,7 @@ allow tvmroot_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
 allow tvmroot_sock_t device_t:filesystem associate;
 
 allow tvmroot_t self:process signal;
+allow tvmroot_t platform_container_domain:process sigkill;
 allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no_trans relabelfrom };
 
 allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
