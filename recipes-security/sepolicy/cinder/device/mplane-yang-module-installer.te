@@ -1,0 +1,61 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(mplane-yang-module-installer, 1.0)
+gen_require(`
+ type tmpfs_t;
+ type unreserved_port_t;
+ type data_t;
+ type tmp_t;
+ type usr_t;
+')
+
+# Defined for init-system
+type mplane-yang-module-installer_t;
+type mplane-yang-module-installer_exec_t;
+type sysrepoctl_t;
+type sysrepoctl_exec_t;
+type mplane-yang-module-installer_log_t;
+
+
+# Means this binary will be started from startup-script, not from shell
+init_vendor_domain(mplane-yang-module-installer_t, mplane-yang-module-installer_exec_t)
+init_vendor_domain(sysrepoctl_t, sysrepoctl_exec_t)
+
+type netopeer-setup_t;
+type netopeersetup_exec_t;
+init_script_domain(netopeer-setup_t, netopeersetup_exec_t)
+allow mplane-yang-module-installer_t netopeersetup_exec_t:file { open read getattr execute execute_no_trans ioctl  };
+
+# Allow read access to /etc/passwd file for chown command.
+files_read_etc_files(mplane-yang-module-installer_t)
+allow mplane-yang-module-installer_t etc_t:file { map };
+
+type mplane-yang-module-installer_var_log_t;
+logging_write_generic_logs(mplane-yang-module-installer_t)
+logging_log_filetrans(mplane-yang-module-installer_t, mplane-yang-module-installer_var_log_t, file)
+allow mplane-yang-module-installer_t mplane-yang-module-installer_var_log_t:file rw_file_perms;
+
+allow mplane-yang-module-installer_t sysrepoctl_exec_t:file { execute read getattr open execute_no_trans map};
+
+corecmd_exec_shell(mplane-yang-module-installer_t)
+
+allow mplane-yang-module-installer_t self:tcp_socket { create ioctl read write setopt connect name_connect shutdown };
+allow mplane-yang-module-installer_t unreserved_port_t:tcp_socket name_connect;
+
+allow mplane-yang-module-installer_t self:fifo_file { create read getattr write };
+
+allow mplane-yang-module-installer_t self:process { signal };
+
+allow mplane-yang-module-installer_t tmpfs_t:dir { write add_name search create remove_name };
+allow mplane-yang-module-installer_t tmpfs_t:file { create read write open getattr map setattr };
+
+sr_data_access(mplane-yang-module-installer_t)
+
+# For sysrepocfg genkey
+allow mplane-yang-module-installer_t tmp_t:dir { search write add_name };
+allow mplane-yang-module-installer_t tmp_t:file { read open getattr map write create };
+
+allow mplane-yang-module-installer_t usr_t:dir { search getattr open read };
+allow mplane-yang-module-installer_t usr_t:file { getattr map getattr unlink read open };
+
