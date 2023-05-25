@@ -31,6 +31,7 @@ type vendor_virtio_mem_device_t;
 type tuicoreservice_t;
 type tuicoreservice_exec_t;
 type etc_t;
+type trustedcameracbservice_t;
 type trustedinputservice_t;
 type trustedinputservice_exec_t;
 type dloemservice_t;
@@ -62,6 +63,7 @@ type_transition tvmroot_t tmpfs_t:file tvmroot_tmpfs_t;
 
 allow tvmroot_t etc_t:file { read map getattr open };
 allow tvmroot_t self:unix_stream_socket { listen accept };
+allow tvmroot_t trustedcameracbservice_t:unix_stream_socket { read write };
 allow tvmroot_t tuicoreservice_dev_t:chr_file { getattr read_chr_file_perms };
 allow tvmroot_t tvmmink_t:fd use;
 allow tvmroot_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
