@@ -27,3 +27,10 @@
 
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
+
+gen_require(`
+    type cpu_sysfs_t;
+')
+
+allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t cpu_sysfs_t:file { create write_file_perms };

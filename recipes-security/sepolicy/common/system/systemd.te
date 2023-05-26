@@ -105,6 +105,7 @@ gen_require(`
     type usr_t;
     type syslogd_t;
     type syslogd_var_run_t;
+    type cpu_sysfs_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -113,6 +114,8 @@ mls_trusted_socket(systemd_tmpfiles_t)
 allow udev_t kernel_t:unix_dgram_socket sendto;
 allow udev_t configfs_t:dir list_dir_perms;
 allow udev_t configfs_t:file { getattr setattr };
+allow udev_t cpu_sysfs_t:dir { search getattr };
+allow udev_t cpu_sysfs_t:file { read_file_perms };
 allow tftp_server_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t etc_t:file relabelfrom;

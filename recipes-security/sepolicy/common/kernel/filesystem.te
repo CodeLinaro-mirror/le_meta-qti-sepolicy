@@ -158,6 +158,12 @@ type sysfs_cpu_present;
 genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:sysfs_cpu_present,s0)
 dev_associate_sysfs(sysfs_cpu_present)
 
+type cpu_sysfs_t;
+genfscon sysfs /devices/system/cpu/cpu4/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu7/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/virtual/workqueue gen_context(system_u:object_r:cpu_sysfs_t,s0)
+dev_associate_sysfs(cpu_sysfs_t)
+
 type sysfs_cpu_capacity;
 genfscon sysfs /devices/system/cpu/cpu0/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
 genfscon sysfs /devices/system/cpu/cpu1/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)

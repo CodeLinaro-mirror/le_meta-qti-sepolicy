@@ -103,6 +103,9 @@ gen_require(`
  attribute domain_can_read_systemdata;
 ')
 
+allow weston_t sysfs_cpu_capacity:file { read_file_perms };
+allow weston_t sysfs_cpu_present:file { read_file_perms };
+
 #For weston-terminal
 allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
