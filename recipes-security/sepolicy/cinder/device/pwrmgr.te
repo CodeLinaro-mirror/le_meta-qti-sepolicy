@@ -1,0 +1,58 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear 
+
+policy_module(pwrmgr, 1.0)
+
+type pwrmgr_t;
+type pwrmgr_exec_t;
+
+init_vendor_domain(pwrmgr_t, pwrmgr_exec_t)
+
+gen_require(`
+    type default_t;
+    type socket_device_t;
+    type thermal-engine_t;
+    type thermal_sock_t;
+    type initrc_t;
+    type alogd_t;
+    type pmsg0_t;
+    type proc_t;
+    type sysfs_t;
+    type var_log_t;
+    type init_var_run_t;
+    type system_dbusd_var_run_t;
+    type unconfined_t;
+	class dbus send_msg;
+    class service { start status stop reload };
+')
+
+userdebug_or_eng(`
+     allow unconfined_t pwrmgr_exec_t:service { start stop status };
+')
+
+allow pwrmgr_t pwrmgr_t:fifo_file { read open write };
+allow pwrmgr_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
+allow pwrmgr_t var_log_t:file { read write open getattr };
+
+allow alogd_t pmsg0_t:chr_file open;
+allow pwrmgr_t init_var_run_t:dir search;
+allow pwrmgr_t proc_t:file { read open getattr };              #/proc/filesystem
+allow pwrmgr_t system_dbusd_var_run_t:dir search;
+allow pwrmgr_t self:socket create_socket_perms;
+allow pwrmgr_t self:qipcrtr_socket create_socket_perms;
+allow pwrmgr_t socket_device_t:dir search_dir_perms;
+allow pwrmgr_t thermal-engine_t:unix_stream_socket connectto;
+allow pwrmgr_t thermal_sock_t:sock_file write;
+allow initrc_t unconfined_t:dbus send_msg;
+dontaudit pwrmgr_t default_t:dir search;
+
+#Manage Dbus sockets
+ifdef(`init_systemd',`
+    init_dbus_chat(pwrmgr_t)
+    dbus_system_domain(pwrmgr_t, pwrmgr_exec_t)
+    unconfined_dbus_chat(pwrmgr_t)
+    allow pwrmgr_t initrc_t:dbus send_msg;
+    dbus_system_bus_client(pwrmgr_t)
+    allow pwrmgr_t self:dbus send_msg;
+')
+
