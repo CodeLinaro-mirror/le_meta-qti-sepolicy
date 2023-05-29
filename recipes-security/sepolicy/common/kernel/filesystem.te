@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -84,6 +84,15 @@ type brightness_t;
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/max_brightness gen_context(system_u:object_r:brightness_t,s0)
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness     gen_context(system_u:object_r:brightness_t,s0)
 dev_associate_sysfs(brightness_t)
+
+type panel_pixel_shift_t;
+genfscon sysfs /kernel/rtimd/rtimd_eye    gen_context(system_u:object_r:panel_pixel_shift_t,s0)
+dev_associate_sysfs(panel_pixel_shift_t)
+
+type panel_illumination_t;
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0028   gen_context(system_u:object_r:panel_illumination_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0029   gen_context(system_u:object_r:panel_illumination_t,s0)
+dev_associate_sysfs(panel_illumination_t)
 
 type gpumodel_t;
 genfscon sysfs /devices/platform/soc/3d00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/gpu_model gen_context(system_u:object_r:gpumodel_t,s0)

@@ -1,4 +1,4 @@
-#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
 #modification, are permitted (subject to the limitations in the
@@ -69,6 +69,11 @@ gen_require(`
        type cache_t;
        type cache_recovery_t;
        type video_system_specs_t;
+       type brightness_t;
+       type panel_illumination_t;
+       type panel_pixel_shift_t;
+       type tuicoreservice_dev_t;
+       type tuicoreservice_data_t;
 ')
 
 #read /data/misc/qvr
@@ -91,6 +96,23 @@ allow qvrd_t self:qipcrtr_socket {create_socket_perms};
 allow qvrd_t vendor_camera_config_t:dir search_dir_perms;
 allow qvrd_t vendor_camera_config_t:file read_file_perms;
 allow qvrd_t sysfs_t:{ lnk_file dir file } read_file_perms;
+
+allow qvrd_t brightness_t:file { rw_file_perms };
+allow qvrd_t tuicoreservice_dev_t:chr_file { read_chr_file_perms };
+manage_user_data_files(qvrd_t, tuicoreservice_data_t)
+
+#access panel shift sysfs nodes
+allow qvrd_t panel_pixel_shift_t:file { rw_file_perms };
+allow qvrd_t panel_pixel_shift_t:dir search_dir_perms;
+
+#access panel illumination sysfs nodes
+allow qvrd_t panel_illumination_t:file { rw_file_perms };
+allow qvrd_t panel_illumination_t:dir search_dir_perms;
+
+#access dpu_data_config_t config file
+type dpu_data_config_t;
+user_data_files_type(dpu_data_config_t)
+
 
 #qvr socket
 type qvrd_socket_t;
