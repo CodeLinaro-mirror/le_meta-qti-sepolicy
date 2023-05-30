@@ -96,6 +96,7 @@ gen_require(`
  type adsprpcd_t;
  type xdsp_device_t;
  type binderfs_t;
+ type initrc_t;
 ')
 
 #For hvx
@@ -233,6 +234,7 @@ allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_pe
 allow qmmf_server_t adsprpcd_t:dir watch;
 allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
+allow qmmf_server_t initrc_t:binder call;
 
 gen_require(`
     type weston_runtime_t;
