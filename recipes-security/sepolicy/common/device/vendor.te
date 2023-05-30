@@ -59,6 +59,8 @@ gen_require(`
     type sysfs_usb_mode_t;
     type init_t;
     type setfiles_t;
+    type debugfs_t;
+    type sys_runtime_suspend_time_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -208,6 +210,12 @@ allow post_boot_script_t etc_t:file read_file_perms;
 allow post_boot_script_t sysfs_power_state_t:file { getattr_file_perms setattr_file_perms };
 allow post_boot_script_t sysfs_usb_mode_t:file { getattr_file_perms setattr_file_perms };
 allow post_boot_script_t self:capability chown;
+
+userdebug_or_eng(`
+allow post_boot_script_t debugfs_t:dir search;
+')
+allow post_boot_script_t kmsg_device_t:chr_file write;
+allow post_boot_script_t sys_runtime_suspend_time_t:dir write;
 
 ### dev nodes ###
 
