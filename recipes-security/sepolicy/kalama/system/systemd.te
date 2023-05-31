@@ -43,6 +43,9 @@ gen_require(`
  type kernel_t;
  type debugfs_t;
  type tracefs_t;
+ type udev_t;
+ type net_conf_t;
+ type sdcard_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
@@ -83,6 +86,7 @@ allow systemd_modules_load_t sysfs_t:file { open read };
 allow systemd_modules_load_t kernel_t:system module_request;
 allow systemd_modules_load_t systemd_modules_load_exec_t:file { execute read };
 allow systemd_modules_load_t self:lockdown confidentiality;
+allow systemd_modules_load_t self:key write;
 
 #systemd_update_done
 
@@ -102,3 +106,5 @@ allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
+allow udev_t net_conf_t:lnk_file read;
+allow udev_t sdcard_t:dir getattr;

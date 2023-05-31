@@ -145,4 +145,15 @@ userdebug_or_eng(`
         type proc_kmsg_t;
     ')
     allow unconfined_t proc_kmsg_t:file read_file_perms;
+
+    gen_require(`
+	type unconfined_t;
+	type binderfs_t;
+	type hwbinder_device_t;
+	type vndbinder_device_t;
+    ')
+
+    allow unconfined_t binderfs_t:dir { getattr open read search };
+    allow unconfined_t hwbinder_device_t:chr_file getattr;
+    allow unconfined_t vndbinder_device_t:chr_file getattr;
 ')

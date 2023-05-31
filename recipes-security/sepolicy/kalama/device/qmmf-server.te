@@ -48,6 +48,7 @@ gen_require(`
  type camera_data_t;
  type vendor_camera_config_t;
  type weston_t;
+ type servicemanager_t;
 ')
 
 #todo: remove this line
@@ -62,6 +63,9 @@ permissive vendor_camera_config_t;
 
 #todo: Remove below line
 permissive weston_t;
+
+#todo: remove below line
+permissive servicemanager_t;
 
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
@@ -97,6 +101,12 @@ gen_require(`
  type cvp_device_t;
  type synx_device_t;
  type unlabeled_t;
+ type gpumodel_t;
+ type perf_hal_socket_t;
+ type perf_hal_t;
+ type system_dmabuf_device_t;
+ type unlabeled_t;
+ type vendor_dmabuf_system_heap_device_t;
 ')
 
 #For hvx
@@ -134,6 +144,7 @@ leprop_rw_props(qmmf_server_t)
 allow qmmf_server_t self:unix_dgram_socket create_socket_perms;
 allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
 allow qmmf_server_t self:unix_stream_socket create_stream_socket_perms;
+allow qmmf_server_t self:process getsched;
 
 # Allow search /run/
 gen_require(`
@@ -224,6 +235,13 @@ allow qmmf_server_t tmpfs_t:dir search;
 allow qmmf_server_t initrc_var_run_t:dir search;
 allow qmmf_server_t syslogd_var_run_t:dir search;
 allow qmmf_server_t user_runtime_root_t:dir search;
+allow qmmf_server_t gpumodel_t:file read_file_perms;
+allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
+allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
+allow qmmf_server_t self:process getsched;
+allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+
 gen_require(`
     type weston_runtime_t;
 ')
@@ -232,3 +250,5 @@ manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
 #todo: /dev/binder label is coming as unlabeled_t.
 # Once binder label is corrected, the following will be changed to right binder label
 allow qmmf_server_t unlabeled_t:dir search;
+allow qmmf_server_t unlabeled_t:chr_file ioctl;
+allow servicemanager_t unlabeled_t:chr_file ioctl;

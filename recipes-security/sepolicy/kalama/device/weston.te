@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(weston, 1.0)
 
 ########################################
@@ -87,6 +91,15 @@ gen_require(`
  type leprop_system_data_t;
  type proc_t;
  type user_home_dir_t;
+ type brightness_t;
+ type device_t;
+ type vendor_dmabuf_system_heap_device_t;
+ type perf_hal_socket_t;
+ type perf_hal_t;
+ type sysfs_cpu_capacity;
+ type sysfs_cpu_present;
+ type tuicoreservice_vendor_t;
+ type gpumodel_t;
  attribute domain_can_read_systemdata;
 ')
 
@@ -160,7 +173,7 @@ allow weston_t tmp_t:file { create append open getattr };
 allow weston_t user_runtime_root_t:dir { search_dir_perms write_file_perms add_name remove_name };
 allow weston_t user_runtime_root_t:file { create append open getattr read_file_perms write_file_perms unlink map };
 allow weston_t user_runtime_root_t:sock_file { create unlink write };
-allow weston_t user_tmpfs_t:file { read write map };
+allow weston_t user_tmpfs_t:file getattr;
 allow weston_t etc_t:file { map read_file_perms };
 allow weston_t firmware_t:dir search_dir_perms;
 allow weston_t gpu_device_t:chr_file map;
@@ -177,7 +190,7 @@ allow weston_t initrc_var_run_t:sock_file { create write };
 allow weston_t self:process signal;
 allow weston_t self:unix_stream_socket create_stream_socket_perms;
 allow weston_t fonts_cache_t:dir { search_dir_perms setattr write add_name remove_name };
-allow weston_t fonts_cache_t:file { getattr map open read write create link rename unlink };
+allow weston_t fonts_cache_t:file { map manage_file_perms };
 allow weston_t fonts_t:dir { search_dir_perms read };
 allow weston_t fonts_t:file { getattr map open read };
 allow weston_t locale_t:dir search_dir_perms;
@@ -186,14 +199,13 @@ allow weston_t etc_t:lnk_file read_file_perms;
 allow weston_t fs_t:filesystem getattr;
 allow weston_t adsprpcd_t:dir getattr;
 allow weston_t boot_t:dir getattr;
-allow weston_t default_t:dir getattr;
+allow weston_t default_t:dir search_dir_perms;
 allow weston_t default_t:lnk_file getattr;
 allow weston_t devpts_t:chr_file open;
 allow weston_t devpts_t:filesystem getattr;
 allow weston_t home_root_t:dir getattr;
 allow weston_t leprop_system_data_t:file getattr;
 allow weston_t lost_found_t:dir getattr;
-allow weston_t mnt_t:dir getattr;
 allow weston_t persist_t:dir getattr;
 allow weston_t ptmx_t:chr_file { ioctl open read write };
 allow weston_t self:fifo_file read;
@@ -217,3 +229,17 @@ filetrans_pattern(weston_t, user_runtime_root_t, weston_runtime_t, { dir file so
 filetrans_pattern(weston_t, initrc_var_run_t, weston_runtime_t, { dir file sock_file })
 allow weston_t proc_t:file { read open getattr }; #/proc/cpuinfo
 fs_associate_tmpfs(weston_runtime_t)
+
+mls_file_read_all_levels(weston_t);
+allow weston_t brightness_t:file rw_file_perms;
+allow weston_t device_t:dir search;
+allow weston_t mnt_t:dir search_dir_perms;
+allow weston_t self:lockdown confidentiality;
+allow weston_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow weston_t perf_hal_socket_t:sock_file write;
+allow weston_t perf_hal_t:unix_stream_socket connectto;
+allow weston_t sysfs_cpu_capacity:file read_file_perms;
+allow weston_t sysfs_cpu_present:file read_file_perms;
+allow weston_t tuicoreservice_vendor_t:file read_file_perms;
+allow weston_t gpumodel_t:file read_file_perms;
+allow weston_t self:capability dac_read_search;

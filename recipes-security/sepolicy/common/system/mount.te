@@ -99,3 +99,11 @@ manage_files_pattern(mount_t, mount_runtime_t, mount_runtime_t)
 allow mount_copybind_t self:fifo_file rw_fifo_file_perms;
 allow mount_t init_var_run_t:file getattr;
 allow mount_copybind_t self:capability kill;
+
+gen_require(`
+type binderfs_t;
+type mount_t;
+')
+
+allow mount_t binderfs_t:dir { getattr mounton };
+allow mount_t binderfs_t:filesystem mount;

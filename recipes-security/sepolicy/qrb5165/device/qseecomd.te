@@ -29,6 +29,9 @@ gen_require(`
        type sysfs_t;
 ')
 
+#todo: remove below line
+permissive qseecomd_t;
+
 allow qseecomd_t self:capability chown;
 allow qseecomd_t sysfs_t:file append;
 
@@ -43,3 +46,6 @@ mls_file_read_all_levels(qseecomd_t)
 mls_file_write_all_levels(qseecomd_t)
 
 allow qseecomd_t self:capability2 block_suspend;
+
+# allow qseecomd read/write access to /dev/mmcblk0rpmb
+allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
