@@ -90,6 +90,7 @@ gen_require(`
  type xdsp_device_t;
  type binderfs_t;
  type initrc_t;
+ type kernel_t;
 ')
 
 #For hvx
@@ -228,6 +229,7 @@ allow qmmf_server_t adsprpcd_t:dir watch;
 allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
 allow qmmf_server_t initrc_t:binder call;
+allow qmmf_server_t kernel_t:unix_dgram_socket sendto;
 
 gen_require(`
     type weston_runtime_t;
