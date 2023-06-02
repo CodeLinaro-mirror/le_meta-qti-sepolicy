@@ -69,3 +69,4 @@
 /usr/sbin/cnss_diag -- gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 /usr/sbin/cnss_daemon -- gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 /data/wlan_logs(/.*)? gen_context(system_u:object_r:wifi_data_t,s0)
+/data/vendor/wifi(/.*)? gen_context(system_u:object_r:wifi_data_t,s0)

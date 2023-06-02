@@ -30,3 +30,4 @@
 /dev/socket/logd        gen_context(system_u:object_r:alogd_sock_t,s0)
 /dev/socket/logdr       gen_context(system_u:object_r:alogd_sock_t,s0)
 /dev/socket/logdw       gen_context(system_u:object_r:alogd_sock_t,s0)
+/dev/pmsg0              gen_context(system_u:object_r:pmsg_device_t,s0)

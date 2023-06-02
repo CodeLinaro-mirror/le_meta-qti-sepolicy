@@ -1,0 +1,5 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# read and watch permissions to cdsprpcd
+allow cdsprpcd_t adsprpcd_t:dir { read watch };

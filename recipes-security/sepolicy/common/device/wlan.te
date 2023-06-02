@@ -83,6 +83,12 @@ type system_data_t;
 type fs_t;
 type wlan_hsp_sysfs_t;
 type kernel_t;
+type devlog_t;
+type syslogd_t;
+type sysctl_net_t;
+type wifi_data_t;
+type syslogd_runtime_t;
+type init_runtime_t;
 ')
 
 userdebug_or_eng(`
@@ -115,3 +121,11 @@ allow wlan_initrc_t fs_t:filesystem getattr;
 allow wlan_initrc_t default_t:dir search_dir_perms;
 allow wlan_initrc_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
 allow wlan_initrc_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+
+allow wlan_initrc_t self:qipcrtr_socket create_socket_perms;
+allow wlan_initrc_t devlog_t:sock_file write_sock_file_perms;
+allow wlan_initrc_t syslogd_t:unix_dgram_socket sendto;
+allow wlan_initrc_t wifi_data_t:sock_file { unlink create };
+allow wlan_initrc_t sysctl_net_t:file getattr;
+allow wlan_initrc_t syslogd_runtime_t:dir search;
+allow wlan_initrc_t init_runtime_t:dir search;

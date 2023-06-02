@@ -59,6 +59,11 @@ device_manage_socket_file(alogd_t, alogd_sock_t, "logd")
 device_manage_socket_file(alogd_t, alogd_sock_t, "logdr")
 device_manage_socket_file(alogd_t, alogd_sock_t, "logdw")
 
+type pmsg_device_t;
+dev_node(pmsg_device_t);
+allow alogd_t pmsg_device_t:chr_file write_chr_file_perms;
+
+
 leprop_rw_props(alogd_t)
 
 # Needed to display /proc/## info in logcat
