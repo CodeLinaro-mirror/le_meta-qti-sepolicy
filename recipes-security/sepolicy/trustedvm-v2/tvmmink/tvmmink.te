@@ -36,6 +36,7 @@ type vendor_vm_oem_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_trusted_device_t;
 type smmu_proxy_device_t;
+type touch_input_device_t;
 ')
 
 allow tvmmink_t self:fifo_file write;
@@ -72,3 +73,5 @@ fs_tmpfs_filetrans(tvmmink_t, tvmmink_tmpfs_t, file)
 allow tvmmink_t tvmmink_tmpfs_t:file { manage_file_perms mounton };
 
 allow tvmmink_t smmu_proxy_device_t:chr_file { open read write ioctl getattr };
+
+allow tvmmink_t touch_input_device_t:file { read write open };
