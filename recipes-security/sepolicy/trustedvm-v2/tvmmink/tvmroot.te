@@ -25,6 +25,7 @@ type tmpfs_t;
 type tuicoreservice_dev_t;
 type tvmmink_t;
 type tvmmink_exec_t;
+type tvmmink_sock_t;
 type tvmprelauncher_t;
 type tvmprelauncher_exec_t;
 type vendor_virtio_mem_device_t;
@@ -113,3 +114,4 @@ allow tvmroot_t vendor_vm_trusted_device_t:chr_file { getattr read_chr_file_perm
 allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
 
 allow tvmroot_t smmu_proxy_device_t:chr_file getattr;
+allow tvmroot_t tvmmink_sock_t:sock_file getattr;
