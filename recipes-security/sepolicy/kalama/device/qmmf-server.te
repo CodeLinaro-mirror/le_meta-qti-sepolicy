@@ -247,3 +247,4 @@ manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
 allow qmmf_server_t unlabeled_t:dir search;
 allow qmmf_server_t unlabeled_t:chr_file ioctl;
 allow servicemanager_t unlabeled_t:chr_file ioctl;
+allow initrc_t qmmf_data_file_t:dir search;

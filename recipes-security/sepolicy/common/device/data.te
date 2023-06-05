@@ -57,6 +57,11 @@ allow initrc_t qvr_data_t:dir manage_dir_perms;
 allow initrc_t qvr_data_t:file manage_file_perms;
 allow setfiles_t qvr_data_t:dir relabelto;
 
+type gst_data_t;
+user_data_files_type(gst_data_t);
+allow initrc_t gst_data_t:file manage_file_perms;
+allow initrc_t gst_data_t:dir manage_dir_perms;
+
 #To support coredump in userdebug variant
 type coredump_data_t;
 user_data_files_type(coredump_data_t)
@@ -76,12 +81,12 @@ neverallow ~{
     domain_can_write_userdata
     mount_t
     init_t
-} { user_data -coredump_data_t -sxr_data_t -qvr_data_t }:file read_file_perms;
+} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -gst_data_t }:file read_file_perms;
 neverallow ~{
     domain_can_write_userdata
     mount_t
     init_t
-} { user_data -coredump_data_t -sxr_data_t -qvr_data_t }:file { create setattr write append rename link unlink };
+} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -gst_data_t }:file { create setattr write append rename link unlink };
 
 attribute system_data;
 attribute domain_can_read_systemdata;
