@@ -42,9 +42,6 @@ type weston_socket_device_t;
 type weston_usr_t;
 type weston_runtime_t;
 
-#todo: remove this line
-permissive weston_t;
-
 init_vendor_domain(weston_t, weston_exec_t)
 
 #domain Transition from unconfined_t to weston_t when executing from adb shell
