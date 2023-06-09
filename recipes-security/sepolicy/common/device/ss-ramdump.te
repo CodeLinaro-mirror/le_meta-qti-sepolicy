@@ -76,6 +76,7 @@ gen_require(`
     type event_device_t;
     type vendor_qdmastatsd_ramdump_device_t;
     type thermal-engine_t;
+    type sysfs_devcoredump_t;
 ')
 
 type ramdump_md_ipa_fws_device_t;
@@ -95,6 +96,8 @@ type ss-ramdump_data_t;
 allow ss-ramdump_t self:capability { kill net_admin };
 allow ss-ramdump_t self:netlink_kobject_uevent_socket { read bind create setopt };
 allow ss-ramdump_t thermal-engine_t:file { write };
+allow ss-ramdump_t sysfs_devcoredump_t:file { rw_file_perms };
+allow ss-ramdump_t sysfs_devcoredump_t:dir { read_file_perms setattr search };
 userdebug_or_eng(`
     user_data_files_type(ss-ramdump_data_t)
     data_filetrans(ss-ramdump_t, ss-ramdump_data_t, { file dir })
