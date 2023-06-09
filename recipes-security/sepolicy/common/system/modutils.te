@@ -89,3 +89,8 @@ dontaudit kmod_t kmsg_device_t:chr_file write;
 dontaudit kmod_t self:capability kill;
 dontaudit kmod_t tty_device_t:chr_file { getattr ioctl };
 allow kmod_t tty_device_t:chr_file { read write };
+
+type kerneltests_modules_data_t;
+allow kmod_t kerneltests_modules_data_t:file { read_file_perms map };
+allow kmod_t kerneltests_modules_data_t:dir { search };
+allow kmod_t kerneltests_modules_data_t:system { module_load };
