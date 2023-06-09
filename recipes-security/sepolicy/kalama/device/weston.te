@@ -250,4 +250,4 @@ allow weston_t self:capability dac_read_search;
 allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
 allow udev_t dev_dri_t:dir create_dir_perms;
 allow initrc_t weston_runtime_t:file { setattr getattr };
-allow initrc_t weston_runtime_t:sock_file { setattr getattr };
+allow initrc_t weston_runtime_t:sock_file { setattr getattr write };
