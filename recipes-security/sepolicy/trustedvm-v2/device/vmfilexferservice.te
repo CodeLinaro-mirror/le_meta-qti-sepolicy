@@ -4,8 +4,10 @@
 gen_require(`
   type socket_device_t;
   type tvmroot_t;
+  type tvmmink_sock_t;
 ')
 
+allow vmfilexferservice_t tvmmink_sock_t:sock_file getattr;
 allow vmfilexferservice_t socket_device_t:dir { search getattr };
 allow vmfilexferservice_t self:process { setsched signal };
 # /tmp/minijail.dev.xxx/membuf
