@@ -133,6 +133,7 @@ gen_require(`
     type initrc_var_run_t;
     type udev_var_run_t;
     type init_t;
+    type initrc_runtime_t;
 ')
 logging_send_syslog_msg(dhcpc_t)
 allow dhcpc_t systemd_resolved_var_run_t:file { open write };
@@ -145,6 +146,9 @@ allow dhcpc_t initrc_var_run_t:file { setattr };
 allow dhcpc_t self:netlink_kobject_uevent_socket create_socket_perms;
 allow dhcpc_t udev_var_run_t:file { rw_file_perms setattr };
 allow dhcpc_t init_t:system { status };
+allow dhcpc_t initrc_runtime_t:dir { rw_dir_perms create };
+allow dhcpc_t initrc_runtime_t:file { create_file_perms unlink };
+allow dhcpc_t initrc_runtime_t:sock_file { create_sock_file_perms setattr };
 #TODO properly con_mode node
 dev_rw_sysfs(wlan_initrc_t)
 gen_require(`

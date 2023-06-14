@@ -258,6 +258,9 @@ dev_node(vendor_dmabuf_system_heap_device_t);
 type system_dmabuf_device_t;
 dev_node(system_dmabuf_device_t);
 
+type system_uncached_dmabuf_device_t;
+dev_node(system_uncached_dmabuf_device_t);
+
 type vendor_dmabuf_qseecom_heap_device_t;
 dev_node(vendor_dmabuf_qseecom_heap_device_t);
 
@@ -291,7 +294,13 @@ userdebug_or_eng(`
 
 gen_require(`
     type kmod_t;
+    type ptmx_t;
+    type adbd_t;
 ')
+
+allow kmod_t adbd_t:unix_stream_socket rw_inherited_file_perms;
+allow kmod_t ptmx_t:chr_file rw_chr_file_perms;
+
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
 systemd_tmpfilesd_managed(socket_device_t)
 

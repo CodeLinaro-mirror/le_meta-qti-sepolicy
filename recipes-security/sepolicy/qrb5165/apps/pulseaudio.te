@@ -30,9 +30,18 @@ gen_require(`
  type etc_t;
  type system_dbusd_var_lib_t;
  type default_t;
+ type system_dmabuf_device_t;
+ type system_uncached_dmabuf_device_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
 allow pulseaudio_t etc_t:file map;
 allow pulseaudio_t system_dbusd_var_lib_t:lnk_file read;
 allow pulseaudio_t default_t:dir search;
+allow pulseaudio_t kernel_t:unix_dgram_socket sendto;
+allow pulseaudio_t self:qipcrtr_socket { connected_socket_perms };
+allow pulseaudio_t system_dmabuf_device_t:chr_file { read_chr_file_perms };
+allow pulseaudio_t system_uncached_dmabuf_device_t:chr_file { read_chr_file_perms };
+
+mls_socket_write_all_levels(pulseaudio_t)
+mls_socket_read_all_levels(pulseaudio_t)

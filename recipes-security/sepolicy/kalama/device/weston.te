@@ -100,6 +100,10 @@ gen_require(`
  type sysfs_cpu_present;
  type tuicoreservice_vendor_t;
  type gpumodel_t;
+ type pmsg_device_t;
+ type initrc_t;
+ type udev_t;
+ type dev_dri_t;
  attribute domain_can_read_systemdata;
 ')
 
@@ -173,7 +177,7 @@ allow weston_t tmp_t:file { create append open getattr };
 allow weston_t user_runtime_root_t:dir { search_dir_perms write_file_perms add_name remove_name };
 allow weston_t user_runtime_root_t:file { create append open getattr read_file_perms write_file_perms unlink map };
 allow weston_t user_runtime_root_t:sock_file { create unlink write };
-allow weston_t user_tmpfs_t:file getattr;
+allow weston_t user_tmpfs_t:file mmap_rw_inherited_file_perms;
 allow weston_t etc_t:file { map read_file_perms };
 allow weston_t firmware_t:dir search_dir_perms;
 allow weston_t gpu_device_t:chr_file map;
@@ -243,3 +247,7 @@ allow weston_t sysfs_cpu_present:file read_file_perms;
 allow weston_t tuicoreservice_vendor_t:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
 allow weston_t self:capability dac_read_search;
+allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
+allow udev_t dev_dri_t:dir create_dir_perms;
+allow initrc_t weston_runtime_t:file { setattr getattr };
+allow initrc_t weston_runtime_t:sock_file { setattr getattr write };

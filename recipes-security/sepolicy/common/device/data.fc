@@ -33,3 +33,6 @@
 
 #To support coredump in userdebug variant only
 /data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)
+
+/overlay/data/gst(/.*)?         gen_context(system_u:object_r:gst_data_t,s0)
+/data/gst(/.*)?                 gen_context(system_u:object_r:gst_data_t,s0)

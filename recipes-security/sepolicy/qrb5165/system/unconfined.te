@@ -45,6 +45,7 @@ userdebug_or_eng(`
         type webserver_t;
         type weston_runtime_t;
         type camera_data_t;
+        type sysfs_cpu_capacity;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -54,8 +55,6 @@ userdebug_or_eng(`
     dev_read_kmsg(unconfined_t)
     kernel_mounton_message_if(unconfined_t)
     allow unconfined_t self:binder { call transfer };
-    # TODO: cleanup required for audio HAL usecase
-    allow unconfined_t self:lockdown { confidentiality };
     allow unconfined_t auditd_etc_t:dir { getattr read search };
     allow unconfined_t auditd_etc_t:file getattr;
     allow unconfined_t data_t:chr_file getattr;
@@ -69,9 +68,15 @@ userdebug_or_eng(`
     allow unconfined_t webserver_t:file getattr;
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
     allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t self:lockdown { confidentiality };
 
+    allow unconfined_t sysfs_cpu_capacity:file { getattr };
     gen_require(`
         type recovery_exec_t;
+        type aud_dev_sysfs_t;
+        type snd_card_state_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
+    allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
+    allow unconfined_t snd_card_state_t:file { rw_file_perms };
 ')

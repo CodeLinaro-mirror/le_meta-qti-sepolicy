@@ -27,22 +27,4 @@
 
 files_map_etc_files(alsa_t)
 
-gen_require(`
-  type st_hal_test_t;
-  type st_hal_test_exec_t;
-  type audio_hal_etc_t;
-  type audio_hal_etc_acdb_t;
-  type audio_data_file_t;
-  type pulseaudio_t;
-  type pulseaudio_exec_t;
-')
-
-#TODO remove below line
-permissive alsa_t;
-permissive st_hal_test_t;
-permissive st_hal_test_exec_t;
-permissive audio_hal_etc_t;
-permissive audio_hal_etc_acdb_t;
-permissive audio_data_file_t;
-permissive pulseaudio_t;
-permissive pulseaudio_exec_t;
+allow alsa_t user_home_t:dir search;

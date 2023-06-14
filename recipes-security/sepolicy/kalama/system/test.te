@@ -1,0 +1,15 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(test, 1.0)
+
+gen_require(`
+    type kernel_tests_t;
+    type kmod_t;
+')
+
+userdebug_or_eng(`
+    allow kmod_t kernel_tests_t:file { exec_file_perms };
+    allow kmod_t kernel_tests_t:system module_load;
+')
+

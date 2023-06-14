@@ -24,6 +24,8 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 
 #### workaround for FOTA /usr/bin/recovery
@@ -48,6 +50,11 @@ userdebug_or_eng(`
         type cpu_scaling_freq_t;
         type cpu_core_ctl_sysfs_t;
         type sysfs_panel0_backlight_bl_power_t;
+        type sysfs_cpu_capacity;
+        type sysfs_cpu_present;
+        type binderfs_t;
+        type qseecomd_exec_t;
+        class service { status start stop };
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -76,6 +83,7 @@ userdebug_or_eng(`
     allow unconfined_t weston_runtime_t:file { getattr setattr };
     allow unconfined_t cpu_scaling_freq_t:file { getattr read open };
     allow unconfined_t self:lockdown confidentiality;
+    allow unconfined_t binderfs_t:filesystem getattr;
 
     gen_require(`
         type recovery_exec_t;
@@ -86,4 +94,8 @@ userdebug_or_eng(`
     #For catf, which is internal test tool for audio
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
     allow unconfined_t snd_card_state_t:file { rw_file_perms };
+    allow unconfined_t cpu_scaling_freq_t:file write_file_perms;
+    allow unconfined_t sysfs_cpu_capacity:file { read_file_perms };
+    allow unconfined_t sysfs_cpu_present:file { read_file_perms };
+    allow unconfined_t qseecomd_exec_t:service { status start stop };
 ')

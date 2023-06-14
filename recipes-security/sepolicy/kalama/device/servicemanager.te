@@ -28,9 +28,11 @@
 userdebug_or_eng(`
     gen_require(`
         type unconfined_t;
+        type initrc_t;
     ')
 
     servicemanager_binder_call(servicemanager_t, unconfined_t)
+    servicemanager_binder_call(servicemanager_t, initrc_t)
 ')
 
 gen_require(`

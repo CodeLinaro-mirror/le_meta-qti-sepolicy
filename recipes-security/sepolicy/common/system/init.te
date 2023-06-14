@@ -121,13 +121,14 @@ gen_require(`
     type brightness_t;
     type sysfs_vblank_t;
     type snd_card_state_t;
+    type gst_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -sxr_data_t -qvr_data_t }:file rw_file_perms;
+neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -gst_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 
@@ -163,9 +164,13 @@ gen_require(`
     type hwbinder_device_t;
     type binder_device_t;
     type vndbinder_device_t;
+    type gpumodel_t;
+    type servicemanager_t;
 ')
 
 allow initrc_t binderfs_t:dir { getattr search };
 allow initrc_t hwbinder_device_t:chr_file { getattr setattr };
 allow initrc_t vndbinder_device_t:chr_file { getattr setattr };
 allow initrc_t binder_device_t:chr_file { getattr setattr };
+allow initrc_t gpumodel_t:file { getattr open read };
+allow initrc_t servicemanager_t:binder call;
