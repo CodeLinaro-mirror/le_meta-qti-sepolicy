@@ -1,0 +1,113 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(tvmroot, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type tvmroot_t;
+type tvmroot_exec_t;
+type tvmroot_sock_t;
+
+init_vendor_domain(tvmroot_t, tvmroot_exec_t)
+device_manage_socket_file(tvmroot_t, tvmroot_sock_t)
+domtrans_pattern(tvmroot_t, tvmmink_exec_t, tvmmink_t)
+domtrans_pattern(tvmroot_t, tvmprelauncher_exec_t, tvmprelauncher_t)
+
+platform_launcher_domain_type(tvmroot_t, tvmroot_exec_t)
+
+gen_require(`
+type device_t;
+type tmpfs_t;
+type tuicoreservice_dev_t;
+type tvmmink_t;
+type tvmmink_exec_t;
+type tvmprelauncher_t;
+type tvmprelauncher_exec_t;
+type vendor_virtio_mem_device_t;
+type tuicoreservice_t;
+type tuicoreservice_exec_t;
+type etc_t;
+type trustedinputservice_t;
+type trustedinputservice_exec_t;
+type dloemservice_t;
+type proc_t;
+attribute platform_container_domain;
+type smcinvoke_device_t;
+type vendor_vm_trusted_device_t;
+type vendor_vm_hlos_device_t;
+type vendor_vm_self_device_t;
+type vendor_vm_oem_device_t;
+type smmu_proxy_device_t;
+')
+
+platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
+platform_container_domain_type(trustedinputservice_t, trustedinputservice_exec_t)
+
+userdebug_or_eng(`
+gen_require(`
+        type unconfined_t;
+        class service { start stop status };
+')
+    # systemctl start/stop/status tvmroot
+    allow unconfined_t tvmroot_exec_t:service { status start stop };
+')
+
+type tvmroot_tmpfs_t;
+files_type(tvmroot_tmpfs_t)
+
+type_transition tvmroot_t tmpfs_t:file tvmroot_tmpfs_t;
+
+allow tvmroot_t etc_t:file { read map getattr open };
+allow tvmroot_t self:unix_stream_socket { listen accept };
+allow tvmroot_t tuicoreservice_dev_t:chr_file { getattr read_chr_file_perms };
+allow tvmroot_t tvmmink_t:fd use;
+allow tvmroot_t vendor_virtio_mem_device_t:chr_file read_chr_file_perms;
+
+allow tvmroot_sock_t device_t:filesystem associate;
+
+allow tvmroot_t self:process signal;
+allow tvmroot_t platform_container_domain:process sigkill;
+allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no_trans relabelfrom };
+
+allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
+
+mls_file_read_all_levels(tvmroot_t)
+
+# Cryptsetup policies
+gen_require(`
+    type smcinvoke_device_t;
+')
+storage_getattr_fixed_disk_dev(tvmroot_t)
+allow tvmroot_t smcinvoke_device_t:chr_file { read write open ioctl };
+lvm_domtrans(tvmroot_t)
+corecmd_exec_shell(tvmroot_t)
+allow tvmroot_t self:fifo_file write_fifo_file_perms;
+
+# minijail
+allow tvmroot_t self:capability { sys_admin };
+allow tvmroot_t self:capability2 block_suspend;
+allow tvmroot_t proc_t:dir mounton;
+allow tvmroot_t proc_t:file { read };
+
+logging_send_syslog_msg(tvmroot_t)
+
+gen_require(`
+    type tmp_t;
+')
+allow tvmroot_t tmp_t:dir search;
+
+# Downloadable TPs domain transition
+domtrans_pattern(tvmroot_t, tvmroot_tmpfs_t, dloemservice_t)
+allow tvmroot_t dloemservice_t:process2 nosuid_transition;
+
+allow tvmroot_t smcinvoke_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmroot_t vendor_vm_hlos_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmroot_t vendor_vm_self_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmroot_t vendor_vm_trusted_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
+
+allow tvmroot_t smmu_proxy_device_t:chr_file getattr;

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ## <summary> libcontainer interface </summary>
@@ -24,6 +24,8 @@ interface(`platform_container_domain_type',`
         role system_r;
         type mount_exec_t;
         type container_mount_t;
+        attribute platform_hub_domain;
+        attribute platform_launcher_domain;
     ')
 
     typeattribute $1 platform_container_domain;
@@ -42,4 +44,8 @@ interface(`platform_container_domain_type',`
     # TODO: Can we dynamically create a custom mount type here?
     domtrans_pattern($1, mount_exec_t, container_mount_t)
     allow $1 mount_exec_t:file entrypoint;
+
+    allow platform_hub_domain $2:file { read open getattr };
+    allow platform_launcher_domain $1:process2 nosuid_transition;
+    domtrans_pattern(platform_launcher_domain, $2, $1)
 ')
