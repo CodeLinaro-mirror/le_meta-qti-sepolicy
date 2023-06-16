@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qnetcfgmgr, 1.0)
@@ -81,7 +81,6 @@ gen_require(`
   type NetworkManager_t;
   type NetworkManager_exec_t;
   type sysctl_net_t;
-  type initrc_var_run_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -144,8 +143,6 @@ allow qnetcfgmgr_t tftp_server_t:dir { search getattr read };
 allow qnetcfgmgr_t tftp_server_t:file { read open };
 allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
-allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create };
-allow qnetcfgmgr_t initrc_var_run_t:file { create read write open };
 
 allow ifconfig_t qnetcfgmgr_rt_table_t:file { read getattr open write };
 allow ifconfig_t qnetcfgmgr_t:netlink_route_socket { read write };
