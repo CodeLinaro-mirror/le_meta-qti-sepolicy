@@ -61,6 +61,7 @@ allow systemd_modules_load_t kernel_t:unix_dgram_socket sendto;
 allow systemd_modules_load_t tracefs_t:dir search_dir_perms;
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
 mls_file_read_all_levels(systemd_gpt_generator_t)
+mls_file_read_all_levels(systemd_logind_t)
 mls_file_write_all_levels(systemd_gpt_generator_t)
 allow systemd_gpt_generator_t sysctl_kernel_t:dir search;
 allow systemd_gpt_generator_t sysctl_kernel_t:file { read getattr open ioctl };
