@@ -1,0 +1,51 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(faultmgr, 1.0)
+
+type faultmgr_t;
+type faultmgr_exec_t;
+
+init_vendor_domain(faultmgr_t, faultmgr_exec_t)
+
+gen_require(`
+    type default_t;
+    type socket_device_t;
+    type thermal-engine_t;
+    type thermal_sock_t;
+    type syslogd_var_run_t;
+    type initrc_t;
+    type alogd_t;
+    type pmsg0_t;
+    type proc_t;
+    type init_var_run_t;
+    type system_dbusd_var_run_t;
+    type unconfined_t;
+	class dbus send_msg;
+    class service { start status stop reload };
+')
+
+allow alogd_t pmsg0_t:chr_file open;
+allow faultmgr_t init_var_run_t:dir search;
+allow faultmgr_t syslogd_var_run_t:dir search;
+allow faultmgr_t proc_t:file { read open };
+allow faultmgr_t system_dbusd_var_run_t:dir search;
+allow faultmgr_t self:socket create_socket_perms;
+allow faultmgr_t self:qipcrtr_socket create_socket_perms;
+allow faultmgr_t socket_device_t:dir search_dir_perms;
+allow faultmgr_t thermal-engine_t:unix_stream_socket connectto;
+allow faultmgr_t thermal_sock_t:sock_file write;
+allow initrc_t unconfined_t:dbus send_msg;
+dontaudit faultmgr_t default_t:dir search;
+
+#Manage Dbus sockets
+ifdef(`init_systemd',`
+    init_dbus_chat(faultmgr_t)
+    dbus_system_domain(faultmgr_t, faultmgr_exec_t)
+    unconfined_dbus_chat(faultmgr_t)
+    allow faultmgr_t initrc_t:dbus send_msg;
+    dbus_system_bus_client(faultmgr_t)
+    allow faultmgr_t self:dbus send_msg;
+')
+
