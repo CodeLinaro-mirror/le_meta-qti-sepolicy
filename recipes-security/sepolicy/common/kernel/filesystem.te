@@ -176,3 +176,6 @@ dev_associate_sysfs(sysfs_power_state_t)
 type sysfs_usb_mode_t;
 genfscon sysfs /devices/platform/soc/a600000.ssusb/mode gen_context(system_u:object_r:sysfs_usb_mode_t,s0)
 dev_associate_sysfs(sysfs_usb_mode_t)
+
+type sys_runtime_suspend_time_t;
+genfscon sysfs  /sys/devices/virtual/workqueue/power/runtime_suspended_time gen_context(system_u:object_r:sys_runtime_suspend_time_t,s0)
