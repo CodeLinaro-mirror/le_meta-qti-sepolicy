@@ -19,6 +19,11 @@ gen_require(`
     type alogd_t;
     type pmsg0_t;
     type proc_t;
+    type sysfs_t;
+    type devlog_t;
+    type syslogd_t;
+    type bin_t;
+    type var_log_t;
     type init_var_run_t;
     type system_dbusd_var_run_t;
     type unconfined_t;
@@ -26,10 +31,24 @@ gen_require(`
     class service { start status stop reload };
 ')
 
+userdebug_or_eng(`
+     allow unconfined_t faultmgr_exec_t:service { start stop status };
+     allow faultmgr_t bin_t:service { start status stop reload};
+')
+
+# self
+allow faultmgr_t self:unix_dgram_socket create_socket_perms;
+allow faultmgr_t self:fifo_file rw_fifo_file_perms;
+allow faultmgr_t self:unix_stream_socket create_stream_socket_perms;
+
+allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
+allow faultmgr_t devlog_t:sock_file write;
+allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
+allow faultmgr_t var_log_t:file { read write open getattr };
 allow alogd_t pmsg0_t:chr_file open;
 allow faultmgr_t init_var_run_t:dir search;
 allow faultmgr_t syslogd_var_run_t:dir search;
-allow faultmgr_t proc_t:file { read open };
+allow faultmgr_t proc_t:file { read open getattr};           #/proc/filesystem
 allow faultmgr_t system_dbusd_var_run_t:dir search;
 allow faultmgr_t self:socket create_socket_perms;
 allow faultmgr_t self:qipcrtr_socket create_socket_perms;
