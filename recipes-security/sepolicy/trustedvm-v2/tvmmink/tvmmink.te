@@ -35,6 +35,7 @@ type vendor_vm_hlos_device_t;
 type vendor_vm_oem_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_trusted_device_t;
+type smmu_proxy_device_t;
 ')
 
 allow tvmmink_t self:capability2 block_suspend;
@@ -68,3 +69,5 @@ files_tmpfs_file(tvmmink_tmpfs_t)
 
 fs_tmpfs_filetrans(tvmmink_t, tvmmink_tmpfs_t, file)
 allow tvmmink_t tvmmink_tmpfs_t:file { manage_file_perms mounton };
+
+allow tvmmink_t smmu_proxy_device_t:chr_file { open read write ioctl getattr };
