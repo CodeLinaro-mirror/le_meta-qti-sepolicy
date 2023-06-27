@@ -1,0 +1,6 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/yang_module_installer -- gen_context(system_u:object_r:mplane-yang-module-installer_exec_t,s0)
+/usr/share/mplane/setup\.sh    -- gen_context(system_u:object_r:netopeersetup_exec_t,s0)
+/usr/bin/sysrepoctl   --   gen_context(system_u:object_r:sysrepoctl_exec_t,s0)

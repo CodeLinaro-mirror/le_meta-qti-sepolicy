@@ -1,0 +1,30 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(dsp_service, 1.0)
+type dsp_service_t;
+type dsp_service_exec_t;
+type dsp_service_tmpfs_t;
+init_vendor_domain(dsp_service_t, dsp_service_exec_t)
+platform_container_domain_type(dsp_service_t, dsp_service_exec_t)
+
+gen_require(`
+    type xdsp_device_t;
+    type debugfs_t;
+    type tmpfs_t;
+    type socket_device_t;
+    type tvmroot_t;
+')
+
+userdebug_or_eng(`
+    allow dsp_service_t debugfs_t:dir search;
+')
+
+files_tmpfs_file(dsp_service_tmpfs_t)
+fs_tmpfs_filetrans(dsp_service_t, dsp_service_tmpfs_t, file)
+
+allow dsp_service_t dsp_service_tmpfs_t:file { write setattr read create open mounton };
+allow dsp_service_t xdsp_device_t:chr_file { read getattr open ioctl };
+allow dsp_service_t self:process signal;
+allow dsp_service_t socket_device_t:dir search;
+allow tvmroot_t xdsp_device_t:chr_file getattr;
