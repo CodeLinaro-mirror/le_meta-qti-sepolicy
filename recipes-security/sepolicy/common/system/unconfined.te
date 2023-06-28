@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -127,8 +127,10 @@ userdebug_or_eng(`
     allow unconfined_t sysfs_vblank_t:file read_file_perms;
     gen_require(`
       type brightness_t;
+      type power_control_t;
     ')
     allow unconfined_t brightness_t:file read_file_perms;
+    allow unconfined_t power_control_t:file read_file_perms;
 
     #Run wifi commands
     gen_require(`

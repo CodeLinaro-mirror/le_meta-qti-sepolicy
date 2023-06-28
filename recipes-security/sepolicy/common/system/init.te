@@ -119,6 +119,7 @@ gen_require(`
     type qvr_data_t;
     type sysdevice_sysfs_t;
     type brightness_t;
+    type power_control_t;
     type sysfs_vblank_t;
     type snd_card_state_t;
 ')
@@ -135,6 +136,8 @@ allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 # change ownership of brightness nodes after display kernel module loading.
 allow initrc_t brightness_t:file rw_file_perms;
 allow initrc_t brightness_t:file { setattr };
+allow initrc_t power_control_t:file rw_file_perms;
+allow initrc_t power_control_t:file { setattr };
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 
 #allowing init process to access overlay
