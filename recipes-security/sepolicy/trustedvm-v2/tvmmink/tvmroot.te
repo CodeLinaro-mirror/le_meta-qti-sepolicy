@@ -89,6 +89,7 @@ allow tvmroot_t smcinvoke_device_t:chr_file { read write open ioctl };
 lvm_domtrans(tvmroot_t)
 corecmd_exec_shell(tvmroot_t)
 allow tvmroot_t self:fifo_file write_fifo_file_perms;
+allow tvmroot_t self:capability setpcap;
 
 # minijail
 allow tvmroot_t self:capability { sys_admin };
