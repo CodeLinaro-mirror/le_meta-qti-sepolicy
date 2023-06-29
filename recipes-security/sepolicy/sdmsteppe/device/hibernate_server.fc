@@ -32,3 +32,5 @@
 
 /usr/bin/hibernate         --   gen_context(system_u:object_r:hibernate_server_exec_t,s0)
 /dev/power_state           -c   gen_context(system_u:object_r:vendor_power_state_dev_t,s0)
+/dev/socket/hibernate      -s   gen_context(system_u:object_r:hibernate_socket_t,s0)
+/usr/bin/hibernateutility  --   gen_context(system_u:object_r:hibernate_utility_exec_t,s0)

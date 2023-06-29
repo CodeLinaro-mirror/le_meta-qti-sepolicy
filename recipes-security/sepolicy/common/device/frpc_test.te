@@ -28,6 +28,7 @@ userdebug_or_eng(`
         type shell_exec_t;
         type proc_t;
         type adbd_t;
+        type usr_t;
     ')
     init_vendor_domain(frpc_test_t, frpc_root_exec_t)
     init_vendor_domain(dsp_test_t, dsp_tests_data_t)
@@ -50,6 +51,9 @@ userdebug_or_eng(`
     allow frpc_test_t firmware_t:file { open read };
     allow frpc_test_t lib_t:dir { add_name remove_name write };
     allow frpc_test_t lib_t:file { append create unlink write };
+    # /usr/lib64/ purpose SDK tests
+    allow frpc_test_t usr_t:dir { add_name remove_name write };
+    allow frpc_test_t usr_t:file { append create unlink write };
     allow frpc_test_t self:fifo_file { getattr read write };
     allow frpc_test_t shell_exec_t:file { execute execute_no_trans open read };
     allow frpc_test_t proc_t:file { read open getattr};
