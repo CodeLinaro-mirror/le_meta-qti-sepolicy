@@ -4,6 +4,7 @@
 policy_module(mplane-sysrepo-plugin, 1.0)
 gen_require(`
  type tmpfs_t;
+ type tmp_t;
  type unreserved_port_t;
  type data_t;
  type sysctl_t;
@@ -27,9 +28,14 @@ allow sysrepo-plugind_t proc_t:file { read open getattr };
 allow sysrepo-plugind_t tmpfs_t:file { read write open getattr map create unlink };
 allow sysrepo-plugind_t tmpfs_t:dir { search write add_name remove_name };
 
-allow sysrepo-plugind_t self:tcp_socket { create setopt connect name_connect write read shutdown };
+allow sysrepo-plugind_t tmp_t:dir { search write add_name };
+allow sysrepo-plugind_t tmp_t:file { create write open };
+
+allow sysrepo-plugind_t self:tcp_socket { getattr create setopt connect name_connect write read shutdown };
 allow sysrepo-plugind_t unreserved_port_t:tcp_socket name_connect;
 allow sysrepo-plugind_t self:process { signal };
+
+allow sysrepo-plugind_t self:fifo_file { write read };
 
 # For /etc/passwd and /etc/nsswitch.conf
 files_read_etc_files(sysrepo-plugind_t)
