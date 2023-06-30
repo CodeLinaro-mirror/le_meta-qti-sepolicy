@@ -10,9 +10,7 @@ policy_module(fbe-service, 1.0)
 
 type fbe_service_t;
 type fbe_service_exec_t;
-type hwfde_conf_file_t;
 type install_evict_t;
-type hwfde_service_t;
 type fbe_secure_data_t;
 
 init_daemon_domain(fbe_service_t, fbe_service_exec_t)
@@ -66,7 +64,6 @@ allow fbe_service_t fbe_secure_data_t:file rw_file_perms;
 allow fbe_service_t fbe_service_t:key { search };
 allow fbe_service_t smcinvoke_device_t:chr_file rw_chr_file_perms;
 allow fbe_service_t socket_device_t:dir search_dir_perms;
-allow fbe_service_t hwfde_conf_file_t:file read_file_perms;
 allow fbe_service_t fbe_secure_data_t:file { create };
 allow fbe_service_t firmware_t:dir search_dir_perms;
 allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
