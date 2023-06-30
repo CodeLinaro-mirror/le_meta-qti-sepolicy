@@ -25,12 +25,18 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 #### workaround for FOTA /usr/bin/recovery
 
 userdebug_or_eng(`
     gen_require(`
         type qmmf_server_t;
+        type fbe_secure_data_t;
+        type hwfde_conf_file_t;
+        type install_evict_t;
     ')
 
     servicemanager_binder_call(unconfined_t, qmmf_server_t)
@@ -70,6 +76,10 @@ userdebug_or_eng(`
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
     allow unconfined_t weston_runtime_t:file { getattr setattr };
     allow unconfined_t self:lockdown { confidentiality };
+    allow unconfined_t fbe_secure_data_t:dir search_dir_perms;
+    allow unconfined_t fbe_secure_data_t:file read_file_perms;
+    allow unconfined_t hwfde_conf_file_t:file read_file_perms;
+    allow unconfined_t install_evict_t:file exec_file_perms;
 
     allow unconfined_t sysfs_cpu_capacity:file { getattr };
     gen_require(`
