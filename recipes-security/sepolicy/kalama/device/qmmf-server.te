@@ -39,13 +39,6 @@ gen_require(`
 type qmmf_server_t;
 type qmmf_server_exec_t;
 
-gen_require(`
- type weston_t;
-')
-
-#todo: Remove below line
-permissive weston_t;
-
 init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
 servicemanager_binder_use(qmmf_server_t)
 
@@ -96,6 +89,8 @@ gen_require(`
  type adsprpcd_t;
  type xdsp_device_t;
  type binderfs_t;
+ type initrc_t;
+ type kernel_t;
 ')
 
 #For hvx
@@ -233,6 +228,8 @@ allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_pe
 allow qmmf_server_t adsprpcd_t:dir watch;
 allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
+allow qmmf_server_t initrc_t:binder call;
+allow qmmf_server_t kernel_t:unix_dgram_socket sendto;
 
 gen_require(`
     type weston_runtime_t;
@@ -245,3 +242,5 @@ manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
 allow qmmf_server_t unlabeled_t:dir search;
 allow qmmf_server_t unlabeled_t:chr_file ioctl;
 allow servicemanager_t unlabeled_t:chr_file ioctl;
+allow initrc_t qmmf_data_file_t:dir search;
+allow initrc_t qmmf_server_t:binder { call transfer };

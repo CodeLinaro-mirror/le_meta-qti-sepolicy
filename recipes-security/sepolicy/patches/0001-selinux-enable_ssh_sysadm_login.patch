@@ -1,0 +1,26 @@
+From 5e6f997b3841336fe86e9aeda05004471538925b Mon Sep 17 00:00:00 2001
+From: chenghen <quic_chenghen@quicinc.com>
+Date: Fri, 26 May 2023 17:15:13 +0800
+Subject: [PATCH] selinux: enable_ssh_sysadm_login
+
+Signed-off-by: chenghen <quic_chenghen@quicinc.com>
+---
+ policy/modules/services/ssh.te | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/policy/modules/services/ssh.te b/policy/modules/services/ssh.te
+index 49ccc7f15..e312b14e8 100644
+--- a/policy/modules/services/ssh.te
++++ b/policy/modules/services/ssh.te
+@@ -17,7 +17,7 @@ gen_tunable(allow_ssh_keysign, false)
+ ## Allow ssh logins as sysadm_r:sysadm_t
+ ## </p>
+ ## </desc>
+-gen_tunable(ssh_sysadm_login, false)
++gen_tunable(ssh_sysadm_login, true)
+ 
+ ## <desc>
+ ## <p>
+-- 
+2.17.1
+

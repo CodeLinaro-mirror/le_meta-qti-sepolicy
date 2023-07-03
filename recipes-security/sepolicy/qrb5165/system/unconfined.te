@@ -45,6 +45,7 @@ userdebug_or_eng(`
         type webserver_t;
         type weston_runtime_t;
         type camera_data_t;
+        type sysfs_cpu_capacity;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -69,6 +70,7 @@ userdebug_or_eng(`
     allow unconfined_t weston_runtime_t:file { getattr setattr };
     allow unconfined_t self:lockdown { confidentiality };
 
+    allow unconfined_t sysfs_cpu_capacity:file { getattr };
     gen_require(`
         type recovery_exec_t;
         type aud_dev_sysfs_t;

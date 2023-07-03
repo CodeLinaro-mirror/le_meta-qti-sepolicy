@@ -50,7 +50,7 @@ gen_require(`
        type vendor_dmabuf_qseecom_heap_device_t;
 ')
 
-allow qseecomd_t self:process setcap;
+allow qseecomd_t self:process {getsched setcap};
 
 #allow qseecomd_t ion_device_t:chr_file read;
 rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);

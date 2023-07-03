@@ -148,6 +148,7 @@ dev_associate_sysfs(sysfs_vblank_t)
 
 type wlan_hsp_sysfs_t;
 genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-qca6390 gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-qca-converged gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
 dev_associate_sysfs(wlan_hsp_sysfs_t)
 
 type sysfs_panel0_backlight_bl_power_t;
@@ -157,6 +158,11 @@ dev_associate_sysfs(sysfs_panel0_backlight_bl_power_t)
 type sysfs_cpu_present;
 genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:sysfs_cpu_present,s0)
 dev_associate_sysfs(sysfs_cpu_present)
+
+type cpu_sysfs_t;
+genfscon sysfs /devices/system/cpu/cpu4/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/virtual/workqueue gen_context(system_u:object_r:cpu_sysfs_t,s0)
+dev_associate_sysfs(cpu_sysfs_t)
 
 type sysfs_cpu_capacity;
 genfscon sysfs /devices/system/cpu/cpu0/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
@@ -188,3 +194,7 @@ genfscon sysfs /devices/platform/soc/1d90000.ufsice/fde_partitions/userdata/decr
 genfscon sysfs /devices/platform/soc/7c8000.sdcc1ice/fde_partitions/userdata/encr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
 genfscon sysfs /devices/platform/soc/7c8000.sdcc1ice/fde_partitions/userdata/decr_bypass gen_context(system_u:object_r:hwfde_icepath_sysfs_t,s0)
 dev_associate_sysfs(hwfde_icepath_sysfs_t)
+
+type sysfs_devcoredump_t;
+genfscon sysfs /devices/virtual/devcoredump            gen_context(system_u:object_r:sysfs_devcoredump_t,s0)
+dev_associate_sysfs(sysfs_devcoredump_t)
