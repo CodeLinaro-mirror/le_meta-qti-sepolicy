@@ -53,3 +53,4 @@ dev_write_kmsg(sfs_config_initrc_t)
 ')
 
 dontaudit sfs_config_initrc_t data_t:dir setattr;
+dontaudit sfs_config_initrc_t self:capability { fsetid };
