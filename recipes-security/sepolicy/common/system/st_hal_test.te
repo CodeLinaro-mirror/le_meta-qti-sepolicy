@@ -30,6 +30,10 @@ policy_module(st_hal_test, 1.0)
 gen_require(`
         type tracefs_t;
         type trace_marker_t;
+        type system_uncached_dmabuf_device_t;
+        type audio_data_file_t;
+        type adbd_t;
+        type ptmx_t;
 ')
 
 type st_hal_test_t;
@@ -47,6 +51,15 @@ allow st_hal_test_t self:process { signal setsched };
 device_search_sockets(st_hal_test_t)
 corecmd_exec_shell(st_hal_test_t)
 allow st_hal_test_t sound_device_t:chr_file map;
+
+userdebug_or_eng(`
+        kernel_read_debugfs(st_hal_test_t)
+        allow st_hal_test_t system_uncached_dmabuf_device_t:chr_file { read_chr_file_perms };
+        allow st_hal_test_t self:lockdown { confidentiality };
+        allow st_hal_test_t audio_data_file_t:dir search;
+        allow st_hal_test_t adbd_t:unix_stream_socket rw_socket_perms;
+        allow st_hal_test_t ptmx_t:chr_file { ioctl rw_chr_file_perms };
+')
 
 allow st_hal_test_t sysfs_t:file write; #/sys/power/wake_lock
 allow st_hal_test_t self:capability2 block_suspend;
