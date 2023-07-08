@@ -41,3 +41,11 @@ dev_node(synx_device_t);
 
 type video_system_specs_t;
 files_type(video_system_specs_t)
+
+### DMA HEAP Types ###
+type vendor_dmabuf_lsr_heap_device_t;
+dev_node(vendor_dmabuf_lsr_heap_device_t)
+
+### MEM_BUF_VM devices ###
+type vendor_vm_cpbitstream_device_t;
+dev_node(vendor_vm_cpbitstream_device_t)

@@ -4,6 +4,14 @@
 gen_require(`
     type dev_dri_t;
     type udev_t;
+    type vendor_dmabuf_system_heap_device_t;
+    type vendor_dmabuf_lsr_heap_device_t;
+    type vendor_vm_cpbitstream_device_t;
+    type tuicoreservice_dev_t;
+    type system_dmabuf_device_t;
+    type cvp_device_t;
+    type synx_device_t;
+    type gpu_device_t;
 ')
 
 allow splitxr_service_t dev_dri_t:dir search_dir_perms;
@@ -12,3 +20,17 @@ mls_file_read_all_levels(splitxr_service_t)
 
 allow udev_t dev_dri_t:dir { create add_name remove_name write search_dir_perms };
 allow udev_t dev_dri_t:lnk_file { create relabelto rw_lnk_file_perms };
+
+#Allow access to DMA Heap types
+allow splitxr_service_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow splitxr_service_t vendor_dmabuf_lsr_heap_device_t:chr_file read_chr_file_perms;
+allow splitxr_service_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+
+#Allow access to MEM_BUF_VM devices
+allow splitxr_service_t vendor_vm_cpbitstream_device_t:chr_file read_chr_file_perms;
+allow splitxr_service_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+
+#Allow access to /dev nodes
+allow splitxr_service_t cvp_device_t:chr_file rw_chr_file_perms;
+allow splitxr_service_t synx_device_t:chr_file rw_chr_file_perms;
+allow splitxr_service_t gpu_device_t:chr_file { map rw_chr_file_perms };
