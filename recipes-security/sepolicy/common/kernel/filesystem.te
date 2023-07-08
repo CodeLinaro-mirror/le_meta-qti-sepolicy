@@ -87,6 +87,10 @@ genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-back
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness     gen_context(system_u:object_r:brightness_t,s0)
 dev_associate_sysfs(brightness_t)
 
+type power_control_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/power/control gen_context(system_u:object_r:power_control_t,s0)
+dev_associate_sysfs(power_control_t)
+
 type gpumodel_t;
 genfscon sysfs /devices/platform/soc/3d00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/gpu_model gen_context(system_u:object_r:gpumodel_t,s0)
 dev_associate_sysfs(gpumodel_t)
