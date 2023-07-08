@@ -103,6 +103,7 @@ allow wlan_service_t self:netlink_socket create_socket_perms;
 allow wlan_service_t self:{socket qipcrtr_socket} create_socket_perms;
 allow initrc_t system_data_t:lnk_file { read };
 allow initrc_t system_data_t:dir { search };
+allow initrc_t wifi_data_t:dir { list_dir_perms };
 search_dirs_pattern(wlan_service_t, socket_device_t, socket_device_t)
 search_dirs_pattern(wlan_service_t, default_t, default_t)
 userdom_manage_user_tmp_files(wlan_service_t)
