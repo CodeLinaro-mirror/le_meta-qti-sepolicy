@@ -49,3 +49,6 @@ dev_node(vendor_dmabuf_lsr_heap_device_t)
 ### MEM_BUF_VM devices ###
 type vendor_vm_cpbitstream_device_t;
 dev_node(vendor_vm_cpbitstream_device_t)
+
+type qglconfig_data_t;
+files_type(qglconfig_data_t)

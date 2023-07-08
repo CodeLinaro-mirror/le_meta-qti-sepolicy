@@ -62,6 +62,7 @@ gen_require(`
     type cpu_present_sysfs_t;
     type cpu_capacity_sysfs_t;
     type sysfs_t;
+    type qglconfig_data_t;
 ')
 
 allow splitxr_viewer_t event_device_t:chr_file rw_chr_file_perms;
@@ -90,5 +91,7 @@ allow splitxr_viewer_t cpu_present_sysfs_t:file read_file_perms;
 allow splitxr_viewer_t cpu_capacity_sysfs_t:file read_file_perms;
 #Allow read access to /sys/class/kgsl/kgsl-3d0 lnk_file
 allow splitxr_viewer_t sysfs_t:lnk_file read_lnk_file_perms;
+
+allow splitxr_viewer_t qglconfig_data_t:file read_file_perms;
 
 allow initrc_t qvrd_socket_t:sock_file write;
