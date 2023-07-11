@@ -3,6 +3,8 @@
 
 gen_require(`
     type qvrd_t;
+    type qvr_data_t;
 ')
 
 allow NetworkManager_t qvrd_t:unix_dgram_socket sendto;
+allow NetworkManager_t qvr_data_t:sock_file write_sock_file_perms;
