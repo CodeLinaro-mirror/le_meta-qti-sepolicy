@@ -77,6 +77,11 @@ gen_require(`
     type sysctl_vm_t;
     type sysctl_vm_overcommit_t;
     type sdcard_t;
+    type mnt_t;
+    type tmpfs_t;
+    type var_lib_t;
+    type system_dbusd_var_lib_t;
+    type panel_illumination_t;
 ')
 
 allow splitxr_viewer_t event_device_t:chr_file rw_chr_file_perms;
@@ -150,5 +155,12 @@ allow splitxr_viewer_t sdcard_t:dir search_dir_perms;
 allow splitxr_viewer_t sysctl_t:dir search_dir_perms;
 allow splitxr_viewer_t sysctl_vm_t:dir search_dir_perms;
 allow splitxr_viewer_t sysctl_vm_overcommit_t:file read_file_perms;
+
+allow splitxr_viewer_t mnt_t:dir search_dir_perms;
+allow splitxr_viewer_t tmpfs_t:dir { open read getattr };
+allow splitxr_viewer_t tmpfs_t:file { map rw_file_perms };
+allow splitxr_viewer_t var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t system_dbusd_var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t panel_illumination_t:file read_file_perms;
 
 allow initrc_t qvrd_socket_t:sock_file write;

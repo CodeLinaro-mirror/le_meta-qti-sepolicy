@@ -77,6 +77,8 @@ gen_require(`
        type NetworkManager_var_run_t;
        type NetworkManager_t;
        type proc_net_t;
+       type sysctl_vm_overcommit_t;
+       type mount_t;
        type vendor_vm_cpbitstream_device_t;
        type video_name_sysfs_t;
 ')
@@ -224,6 +226,10 @@ allow qvrd_t NetworkManager_var_run_t:dir search_dir_perms;
 allow qvrd_t NetworkManager_var_run_t:sock_file write;
 allow qvrd_t NetworkManager_t:unix_dgram_socket sendto;
 allow qvrd_t proc_net_t:file read_file_perms;
+allow qvrd_t sysctl_vm_overcommit_t:file read_file_perms;
+allow qvrd_t qvr_data_t:sock_file manage_sock_file_perms;
+
+allow mount_t qvr_data_t:sock_file manage_sock_file_perms;
 
 #access to MEM_BUF_VM devices
 allow qvrd_t vendor_vm_cpbitstream_device_t:chr_file read_chr_file_perms;

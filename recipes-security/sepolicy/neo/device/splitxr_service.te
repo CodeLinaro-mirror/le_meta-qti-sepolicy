@@ -75,5 +75,8 @@ allow splitxr_service_t sysctl_t:dir search_dir_perms;
 allow splitxr_service_t sysctl_vm_t:dir search_dir_perms;
 allow splitxr_service_t sysctl_vm_overcommit_t:file read_file_perms;
 
+allow splitxr_service_t self:capability sys_nice;
+allow splitxr_service_t self:process { setsched signal };
+
 # access display configuration
 manage_user_data_files(splitxr_service_t, tuicoreservice_data_t)
