@@ -1,0 +1,8 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type qvrd_t;
+')
+
+allow NetworkManager_t qvrd_t:unix_dgram_socket sendto;
