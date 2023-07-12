@@ -27,7 +27,7 @@
 
 #  Changes from Qualcomm Innovation Center are provided under the following license:
 #
-#  Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#  Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted (subject to the limitations in the
@@ -118,8 +118,8 @@ userdebug_or_eng(`
         type panel_pixel_shift_t;
     ')
 
-    allow unconfined_t panel_illumination_t:dir { search_dir_perms read };
-    allow unconfined_t panel_illumination_t:file read_file_perms;
-    allow unconfined_t panel_pixel_shift_t:dir { search_dir_perms read };
-    allow unconfined_t panel_pixel_shift_t:file read_file_perms;
+    allow unconfined_t panel_illumination_t:dir { search_dir_perms read write};
+    allow unconfined_t panel_illumination_t:file rw_file_perms;
+    allow unconfined_t panel_pixel_shift_t:dir { search_dir_perms read write};
+    allow unconfined_t panel_pixel_shift_t:file rw_file_perms;
 ')
