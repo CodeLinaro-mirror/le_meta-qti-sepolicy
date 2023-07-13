@@ -1,0 +1,34 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(trustedcameracbservice, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type trustedcameracbservice_t;
+type trustedcameracbservice_exec_t;
+
+init_vendor_domain(trustedcameracbservice_t, trustedcameracbservice_exec_t)
+
+gen_require(`
+type smmu_proxy_device_t;
+type socket_device_t;
+type tvmmink_sock_t;
+')
+
+allow trustedcameracbservice_t self:process { signal };
+
+type trustedcameracbservice_tmpfs_t;
+files_tmpfs_file(trustedcameracbservice_tmpfs_t)
+
+fs_tmpfs_filetrans(trustedcameracbservice_t, trustedcameracbservice_tmpfs_t, file)
+allow trustedcameracbservice_t trustedcameracbservice_tmpfs_t:file { manage_file_perms mounton };
+
+allow trustedcameracbservice_t smmu_proxy_device_t:chr_file read_chr_file_perms;
+allow trustedcameracbservice_t socket_device_t:dir { search getattr };
+allow trustedcameracbservice_t tvmmink_sock_t:sock_file getattr;
+platform_container_domain_type(trustedcameracbservice_t, trustedcameracbservice_exec_t);
+
