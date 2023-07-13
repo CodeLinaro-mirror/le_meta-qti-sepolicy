@@ -89,6 +89,12 @@ userdebug_or_eng(`
         type recovery_exec_t;
         type aud_dev_sysfs_t;
         type snd_card_state_t;
+        type dev_dri_t;
+        type perf_hal_socket_t;
+        type touch_input_device_t;
+        type tuicoreservice_dev_t;
+        type zs_handle_sysfs_t;
+        type zspage_sysfs_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     #For catf, which is internal test tool for audio
@@ -98,4 +104,13 @@ userdebug_or_eng(`
     allow unconfined_t sysfs_cpu_capacity:file { read_file_perms };
     allow unconfined_t sysfs_cpu_present:file { read_file_perms };
     allow unconfined_t qseecomd_exec_t:service { status start stop };
+
+    allow unconfined_t binderfs_t:file getattr;
+    allow unconfined_t dev_dri_t:dir getattr;
+    allow unconfined_t perf_hal_socket_t:sock_file getattr;
+    allow unconfined_t touch_input_device_t:file getattr;
+    allow unconfined_t tuicoreservice_dev_t:chr_file getattr;
+    allow unconfined_t zs_handle_sysfs_t:dir getattr;
+    allow unconfined_t zspage_sysfs_t:dir getattr;
+
 ')
