@@ -19,3 +19,7 @@ allow vmfilexferservice_t vmfilexferservice_tmpfs_t:file { manage_file_perms mou
 logging_send_syslog_msg(vmfilexferservice_t)
 platform_container_domain_type(vmfilexferservice_t, vmfilexferservice_exec_t);
 dontaudit vmfilexferservice_t tvmroot_t:unix_stream_socket { read write };
+
+#permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(vmfilexferservice_t)
+allow vmfilexferservice_t self:capability2 block_suspend;

@@ -5,6 +5,7 @@ policy_module(psi_daemon, 1.0)
 
 gen_require(`
     type proc_t;
+    type sysfs_t;
     type vendor_virtio_mem_device_t;
 ')
 
@@ -15,6 +16,9 @@ init_vendor_domain(psi_daemon_t, psi_daemon_exec_t)
 
 # allow read/write for kernel procfs files
 allow psi_daemon_t proc_t:file { read write open };
+
+# allow read/write for kernel sysfs files
+allow psi_daemon_t sysfs_t:file { read write open };
 
 allow psi_daemon_t vendor_virtio_mem_device_t:chr_file rw_file_perms;
 
