@@ -128,9 +128,11 @@ userdebug_or_eng(`
     gen_require(`
       type brightness_t;
       type power_control_t;
+      type encryption_control_t;
     ')
     allow unconfined_t brightness_t:file read_file_perms;
     allow unconfined_t power_control_t:file read_file_perms;
+    allow unconfined_t encryption_control_t:file read_file_perms;
 
     #Run wifi commands
     gen_require(`

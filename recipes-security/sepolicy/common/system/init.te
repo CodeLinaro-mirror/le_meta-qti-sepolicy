@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -120,6 +120,7 @@ gen_require(`
     type sysdevice_sysfs_t;
     type brightness_t;
     type power_control_t;
+    type encryption_control_t;
     type sysfs_vblank_t;
     type snd_card_state_t;
     type gst_data_t;
@@ -139,6 +140,8 @@ allow initrc_t brightness_t:file rw_file_perms;
 allow initrc_t brightness_t:file { setattr };
 allow initrc_t power_control_t:file rw_file_perms;
 allow initrc_t power_control_t:file { setattr };
+allow initrc_t encryption_control_t:file rw_file_perms;
+allow initrc_t encryption_control_t:file { setattr };
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 
 #allowing init process to access overlay
