@@ -17,6 +17,13 @@ gen_require(`
     type video_name_sysfs_t;
     type panel_illumination_t;
     type panel_pixel_shift_t;
+    type system_dbusd_t;
+    type system_dbusd_var_run_t;
+    type video_system_specs_t;
+    type proc_t;
+    type sysctl_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
 ')
 
 allow splitxr_service_t dev_dri_t:dir search_dir_perms;
@@ -54,3 +61,15 @@ allow splitxr_service_t panel_pixel_shift_t:file rw_file_perms;
 
 allow udev_t panel_illumination_t:dir search_dir_perms;
 allow udev_t panel_illumination_t:file read_file_perms;
+
+allow splitxr_service_t system_dbusd_t:unix_stream_socket connectto;
+allow splitxr_service_t system_dbusd_var_run_t:dir search_dir_perms;
+allow splitxr_service_t system_dbusd_var_run_t:sock_file write_sock_file_perms;
+
+allow splitxr_service_t video_system_specs_t:file read_file_perms;
+allow splitxr_service_t proc_t:file read_file_perms;
+allow splitxr_service_t self:fifo_file rw_fifo_file_perms;
+
+allow splitxr_service_t sysctl_t:dir search_dir_perms;
+allow splitxr_service_t sysctl_vm_t:dir search_dir_perms;
+allow splitxr_service_t sysctl_vm_overcommit_t:file read_file_perms;
