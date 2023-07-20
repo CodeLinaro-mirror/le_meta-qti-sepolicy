@@ -107,6 +107,8 @@ gen_require(`
     type syslogd_var_run_t;
     type cpu_sysfs_t;
     type sysfs_devcoredump_t;
+    type power_control_t;
+    type encryption_control_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -119,6 +121,8 @@ allow udev_t cpu_sysfs_t:dir { search getattr };
 allow udev_t cpu_sysfs_t:file { read_file_perms };
 allow udev_t sysfs_devcoredump_t:file { read_file_perms setattr };
 allow udev_t sysfs_devcoredump_t:dir { read_file_perms setattr search };
+allow udev_t power_control_t:file { getattr setattr };
+allow udev_t encryption_control_t:file { getattr setattr };
 allow tftp_server_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t kernel_t:unix_dgram_socket sendto;
 allow systemd_tmpfiles_t etc_t:file relabelfrom;
