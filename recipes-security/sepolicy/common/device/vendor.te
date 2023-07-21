@@ -61,6 +61,7 @@ gen_require(`
     type setfiles_t;
     type debugfs_t;
     type sys_runtime_suspend_time_t;
+    type kmsg_device_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;

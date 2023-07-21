@@ -1,0 +1,48 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(csmhost, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type csm_data_t;
+type csm_initrc_t;
+type csm_initrc_exec_t;
+
+gen_require(`
+    type fs_t;
+    type etc_t;
+    type init_var_run_t;
+    type tmpfs_t;
+    type unconfined_t;
+    type var_log_t;
+    type var_run_t;
+')
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow unconfined_t csm_data_t:dir { getattr open read search };
+    allow unconfined_t csm_data_t:file { getattr open read unlink };
+')
+
+init_vendor_domain(csm_initrc_t, csm_initrc_exec_t)
+manage_user_data_files(csm_initrc_t, csm_data_t)
+data_filetrans(csm_initrc_t, csm_data_t, file)
+mls_file_read_all_levels(csm_initrc_t)
+corecmd_exec_shell(csm_initrc_t)
+kernel_read_system_state(csm_initrc_t)
+systemd_read_journal_files(csm_initrc_t)
+allow csm_data_t fs_t:filesystem associate;
+allow csm_initrc_t etc_t:file { getattr map open read };
+allow csm_initrc_t init_var_run_t:dir search;
+allow csm_initrc_t self:unix_stream_socket { connect create };
+allow csm_initrc_t tmpfs_t:filesystem getattr;
+allow csm_initrc_t var_log_t:dir search;
+allow csm_initrc_t var_log_t:lnk_file read;
+allow csm_initrc_t var_run_t:dir search;
+allow csm_initrc_t var_run_t:lnk_file read;
