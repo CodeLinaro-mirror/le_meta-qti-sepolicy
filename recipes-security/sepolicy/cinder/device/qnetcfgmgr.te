@@ -83,6 +83,9 @@ gen_require(`
   type sysctl_net_t;
   type initrc_var_run_t;
   type dhcpc_t;
+  type ping_exec_t;
+  type time_daemon_t;
+  type initrc_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -150,6 +153,19 @@ allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
+
+allow qnetcfgmgr_t self:process { setcap};
+allow qnetcfgmgr_t self:icmp_socket { create setopt write read ioctl getopt };
+allow qnetcfgmgr_t self:udp_socket { setopt connect getattr };
+allow qnetcfgmgr_t ping_exec_t:file { getattr execute read open map execute_no_trans };
+allow qnetcfgmgr_t kernel_t:dir { search open };
+allow qnetcfgmgr_t kernel_t:file { read };
+allow qnetcfgmgr_t initrc_t:file { read open };
+allow qnetcfgmgr_t initrc_t:dir { search };
+allow qnetcfgmgr_t time_daemon_t:dir { search };
+allow qnetcfgmgr_t time_daemon_t:file { read open };
+allow qnetcfgmgr_t system_dbusd_t:dir { search };
+allow qnetcfgmgr_t system_dbusd_t:file { read open};
 
 allow ifconfig_t qnetcfgmgr_rt_table_t:file { read getattr open write };
 allow ifconfig_t qnetcfgmgr_t:netlink_route_socket { read write };
