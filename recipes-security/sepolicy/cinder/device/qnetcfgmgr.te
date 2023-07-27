@@ -82,6 +82,7 @@ gen_require(`
   type NetworkManager_exec_t;
   type sysctl_net_t;
   type initrc_var_run_t;
+  type dhcpc_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -144,8 +145,11 @@ allow qnetcfgmgr_t tftp_server_t:dir { search getattr read };
 allow qnetcfgmgr_t tftp_server_t:file { read open };
 allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
-allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create };
-allow qnetcfgmgr_t initrc_var_run_t:file { create read write open };
+allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name };
+allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+allow dhcpc_t initrc_var_run_t:dir { search write add_name };
+allow dhcpc_t initrc_var_run_t:file { map create };
+allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
 
 allow ifconfig_t qnetcfgmgr_rt_table_t:file { read getattr open write };
 allow ifconfig_t qnetcfgmgr_t:netlink_route_socket { read write };

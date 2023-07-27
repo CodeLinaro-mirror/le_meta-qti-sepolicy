@@ -119,3 +119,5 @@ userdebug_or_eng(`
     ')
     allow unconfined_t qseecomd_exec_t:service { start status stop };
 ')
+
+allow qseecomd_t self:process signal;

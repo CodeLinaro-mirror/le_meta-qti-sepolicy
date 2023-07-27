@@ -47,3 +47,6 @@
 
 /usr/sbin/wpa_supplicant-2.10   --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
 /usr/sbin/hostapd-2.10          --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
+
+/usr/sbin/mka_supplicant    --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
+/usr/sbin/mka_authenticator --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
