@@ -4,10 +4,12 @@
 gen_require(`
   type mnt_t;
   type socket_device_t;
+  type tvmmink_sock_t;
 ')
 
 dontaudit demuratnservice_t mnt_t:dir search;
 allow demuratnservice_t socket_device_t:dir getattr;
+allow demuratnservice_t tvmmink_sock_t:sock_file getattr;
 # /tmp/minijail.dev.xxx/membuf
 type demuratnservice_tmpfs_t;
 files_tmpfs_file(demuratnservice_tmpfs_t)

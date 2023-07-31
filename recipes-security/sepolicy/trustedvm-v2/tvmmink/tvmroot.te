@@ -25,6 +25,7 @@ type tmpfs_t;
 type tuicoreservice_dev_t;
 type tvmmink_t;
 type tvmmink_exec_t;
+type tvmmink_sock_t;
 type tvmprelauncher_t;
 type tvmprelauncher_exec_t;
 type vendor_virtio_mem_device_t;
@@ -86,6 +87,7 @@ allow tvmroot_t smcinvoke_device_t:chr_file { read write open ioctl };
 lvm_domtrans(tvmroot_t)
 corecmd_exec_shell(tvmroot_t)
 allow tvmroot_t self:fifo_file write_fifo_file_perms;
+allow tvmroot_t self:capability setpcap;
 
 # minijail
 allow tvmroot_t self:capability { sys_admin };
@@ -111,3 +113,15 @@ allow tvmroot_t vendor_vm_trusted_device_t:chr_file { getattr read_chr_file_perm
 allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
 
 allow tvmroot_t smmu_proxy_device_t:chr_file getattr;
+allow tvmroot_t tvmmink_sock_t:sock_file getattr;
+
+# Check for dependencies (/persist, etc...)
+optional_policy(`
+    gen_require(`
+        type persist_t;
+        type persist_display_t;
+    ')
+    allow tvmroot_t persist_t:dir search;
+    # EACCES is enough to confirm file existance, no need for more permissions
+    dontaudit tvmroot_t persist_display_t:dir getattr;
+')
