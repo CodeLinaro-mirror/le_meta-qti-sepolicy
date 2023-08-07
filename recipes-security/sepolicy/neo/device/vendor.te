@@ -24,11 +24,31 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+#
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
 
+type dev_dri_t;
+dev_node(dev_dri_t);
+
 type synx_device_t;
 dev_node(synx_device_t);
 
+type video_system_specs_t;
+files_type(video_system_specs_t)
 
+### DMA HEAP Types ###
+type vendor_dmabuf_lsr_heap_device_t;
+dev_node(vendor_dmabuf_lsr_heap_device_t)
+
+### MEM_BUF_VM devices ###
+type vendor_vm_cpbitstream_device_t;
+dev_node(vendor_vm_cpbitstream_device_t)
+
+type qglconfig_data_t;
+files_type(qglconfig_data_t)

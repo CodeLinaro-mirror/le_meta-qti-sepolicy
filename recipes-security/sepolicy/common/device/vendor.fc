@@ -42,7 +42,7 @@
 /data/persist/rfs/msm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 /kernel-tests(/.*)?                gen_context(system_u:object_r:kernel_tests_t,s0)
 /kernel-tests/modules/lib/modules(/.*)?  gen_context(system_u:object_r:modules_object_t,s0)
-
+/data/kernel-tests(/.*)?                gen_context(system_u:object_r:vendor_data_kernel_tests_t,s0)
 ### misc files ###
 
 /target -- gen_context(system_u:object_r:target_etc_t,s0)

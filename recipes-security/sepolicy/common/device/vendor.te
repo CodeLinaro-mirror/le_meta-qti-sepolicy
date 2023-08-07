@@ -153,7 +153,8 @@ type adsp_persist_t;
 user_data_files_type(adsp_persist_t)
 type kernel_tests_t;
 files_type(kernel_tests_t)
-
+type vendor_data_kernel_tests_t;
+files_type(vendor_data_kernel_tests_t)
 ### misc files ###
 
 type target_etc_t;
@@ -306,6 +307,9 @@ gen_require(`
 userdebug_or_eng(`
     allow kmod_t kernel_tests_t:dir search;
     allow post_boot_script_t init_qti_debug_t:file exec_file_perms;
+    allow kmod_t vendor_data_kernel_tests_t:dir search;
+    allow kmod_t vendor_data_kernel_tests_t:file mmap_read_file_perms;
+    allow kmod_t vendor_data_kernel_tests_t:system module_load;
 ')
 
 gen_require(`

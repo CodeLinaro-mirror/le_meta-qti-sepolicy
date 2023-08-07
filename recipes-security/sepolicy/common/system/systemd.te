@@ -60,6 +60,7 @@ ifdef(`init_systemd',`
     #  this from mls range constraints.
     mls_file_relabel(systemd_tmpfiles_t)
     mls_file_read_all_levels(systemd_tmpfiles_t)
+    mls_file_read_all_levels(systemd_logind_t)
     mls_file_write_all_levels(systemd_tmpfiles_t)
     mls_file_upgrade(systemd_tmpfiles_t)
     mls_file_downgrade(systemd_tmpfiles_t)

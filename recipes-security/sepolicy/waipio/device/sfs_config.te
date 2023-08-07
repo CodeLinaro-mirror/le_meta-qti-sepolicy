@@ -24,10 +24,15 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+#
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/usr/bin/qseecomd               --      gen_context(system_u:object_r:qseecomd_exec_t,s0)
-/data/vendor/tzstorage(/.*)?            gen_context(system_u:object_r:qseecomd_data_t,s0)
-/persist/data(/.*)?                     gen_context(system_u:object_r:qseecomd_persist_t,s0)
-/dev/mmcblk0rpmb                -c      gen_context(system_u:object_r:qseecomd_rpmb_t,s0)
-/dev/bsg/0:0:0:49476            -c      gen_context(system_u:object_r:qseecomd_ufs_t,s0)
-/dev/bsg/ufs-bsg0               -c      gen_context(system_u:object_r:qseecomd_ufs_t,s0)
+gen_require(`
+  type init_t;
+')
+
+allow sfs_config_initrc_t init_t:unix_stream_socket { read write };
+allow sfs_config_initrc_t self:capability fsetid;

@@ -46,6 +46,8 @@ gen_require(`
     type leprop_t;
     type pmsg_device_t;
     type functionfs_t;
+    type usb_t;
+    class file execute_no_trans;
 ')
 allow usb_t cgroup_t:filesystem getattr;
 
@@ -63,6 +65,8 @@ allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
 # /sbin/start_usb exec restorecon and setprop command
 allow usb_t setfiles_exec_t:file { read map getattr open execute };
 allow usb_t setprop_exec_t:file { read map getattr open execute };
+#execute_no_trans is not allowed, as it allows a domain to execute a file without a domain transition.
+dontaudit usb_t setprop_exec_t:file execute_no_trans;
 
 allow usb_t tmp_t:dir { write remove_name search add_name };
 allow usb_t tmp_t:file { write create unlink open getattr };
