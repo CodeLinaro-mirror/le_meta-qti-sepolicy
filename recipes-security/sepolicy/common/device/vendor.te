@@ -197,6 +197,7 @@ allow post_boot_script_t sysctl_t:file { rw_file_perms };
 
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
+allow post_boot_script_t sysfs_vblank_t:dir read_file_perms;
 
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
