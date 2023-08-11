@@ -1,8 +1,0 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-## msdc.te - Rules for msdc specific to sdxlemur target
-
-# for /proc/sys/net/ipv4/conf/all/rp_filter
-kernel_rw_net_sysctls(msdc_t);
-

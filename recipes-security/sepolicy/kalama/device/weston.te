@@ -48,8 +48,10 @@ init_vendor_domain(weston_t, weston_exec_t)
 userdebug_or_eng(`
     gen_require(`
         type unconfined_t;
+        role unconfined_r;
     ')
     domtrans_pattern(unconfined_t, weston_exec_t, weston_t)
+    role unconfined_r types weston_t;
 ')
 
 gen_require(`
@@ -151,6 +153,7 @@ allow weston_t self:process setsched;
 
 # Weston needs to access buffer fd passed from qmmf-server.
 allow weston_t qmmf_server_t:fd use;
+allow weston_t self:fd use;
 
 #Manage Files under /usr/share/weston
 files_type(weston_usr_t);

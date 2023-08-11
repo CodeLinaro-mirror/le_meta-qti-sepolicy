@@ -30,5 +30,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/hwfde_service            --      gen_context(system_u:object_r:hwfde_service_exec_t,s0)
-/etc/conf/media-encryption.conf   --      gen_context(system_u:object_r:hwfde_conf_file_t,s0)
 /dev/sde26                        -b      gen_context(system_u:object_r:hwfde_footer_blk_t,s0)

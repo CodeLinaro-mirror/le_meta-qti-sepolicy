@@ -33,6 +33,7 @@
 
 /usr/sbin/tftp_server     --    gen_context(system_u:object_r:tftp_server_exec_t,s0)
 /data/tombstones(/.*)?       gen_context(system_u:object_r:tombstone_data_t,s0)
+/data/vendor/pddump(/.*)?       gen_context(system_u:object_r:vendor_pddump_rfs_data_t,s0)
 
 ### misc properties ###
 
@@ -45,6 +46,7 @@
 /data/persist/rfs/msm/adsp(/.*)?   gen_context(system_u:object_r:adsp_persist_t,s0)
 /kernel-tests(/.*)?                gen_context(system_u:object_r:kernel_tests_t,s0)
 /kernel-tests/modules/lib/modules(/.*)?  gen_context(system_u:object_r:modules_object_t,s0)
+/data/kernel-tests/modules/lib/modules(/.*)? gen_context(system_u:object_r:kerneltests_modules_data_t,s0)
 
 ### misc files ###
 

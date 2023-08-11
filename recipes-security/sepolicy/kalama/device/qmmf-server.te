@@ -204,6 +204,7 @@ userdebug_or_eng(`
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t unconfined_t:fd use;
 ')
 
 manage_qmmf_data_files(qmmf_server_t)

@@ -33,6 +33,8 @@ type qseecomd_data_t;
 type qseecomd_persist_t;
 type qseecomd_rpmb_t;
 dev_node(qseecomd_rpmb_t);
+type qseecomd_ufs_t;
+dev_node(qseecomd_ufs_t);
 
 init_vendor_domain(qseecomd_t, qseecomd_exec_t)
 logging_send_syslog_msg(qseecomd_t)
@@ -50,7 +52,7 @@ gen_require(`
        type vendor_dmabuf_qseecom_heap_device_t;
 ')
 
-allow qseecomd_t self:process setcap;
+allow qseecomd_t self:process {getsched setcap};
 
 #allow qseecomd_t ion_device_t:chr_file read;
 rw_chr_files_pattern(qseecomd_t, device_t, ion_device_t);
@@ -97,6 +99,7 @@ files_read_etc_files(qseecomd_t)
 
 # allow qseecomd read/write access to /dev/mmcblk0rpmb
 allow qseecomd_t qseecomd_rpmb_t:chr_file {rw_chr_file_perms};
+allow qseecomd_t qseecomd_ufs_t:chr_file {rw_chr_file_perms};
 dontaudit qseecomd_t persist_t:dir read;
 dontaudit qseecomd_t sysfs_t:file { append };
 mls_file_write_all_levels(qseecomd_t);
