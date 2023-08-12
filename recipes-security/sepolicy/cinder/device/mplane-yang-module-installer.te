@@ -40,7 +40,7 @@ allow mplane-yang-module-installer_t sysrepoctl_exec_t:file { execute read getat
 
 corecmd_exec_shell(mplane-yang-module-installer_t)
 
-allow mplane-yang-module-installer_t self:tcp_socket { create ioctl read write setopt connect name_connect shutdown };
+allow mplane-yang-module-installer_t self:tcp_socket { getattr create ioctl read write setopt connect name_connect shutdown };
 allow mplane-yang-module-installer_t unreserved_port_t:tcp_socket name_connect;
 
 allow mplane-yang-module-installer_t self:fifo_file { create read getattr write };
