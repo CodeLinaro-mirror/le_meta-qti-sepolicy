@@ -182,15 +182,3 @@ dev_associate_sysfs(sysfs_usb_mode_t)
 
 type sys_runtime_suspend_time_t;
 genfscon sysfs  /sys/devices/virtual/workqueue/power/runtime_suspended_time gen_context(system_u:object_r:sys_runtime_suspend_time_t,s0)
-
-type cpu_scaling_freq_sys_t;
-genfscon sysfs /devices/system/cpu/cpufreq/policy0        gen_context(system_u:object_r:cpu_scaling_freq_sys_t,s0)
-dev_associate_sysfs(cpu_scaling_freq_sys_t)
-
-type cpu_parameters_sys_t;
-genfscon sysfs /devices/system/cpu/qcom_lpm/parameters        gen_context(system_u:object_r:cpu_parameters_sys_t,s0)
-dev_associate_sysfs(cpu_parameters_sys_t)
-
-type mmc_host_sys_t;
-genfscon sysfs /devices/platform/soc/8804000.sdhci/mmc_host/mmc0/mmc0:0001/block/mmcblk0/queue.*        gen_context(system_u:object_r:mmc_host_sys_t,s0)
-dev_associate_sysfs(mmc_host_sys_t)
