@@ -63,6 +63,25 @@ gen_require(`
     type cpu_capacity_sysfs_t;
     type sysfs_t;
     type qglconfig_data_t;
+    type splitxr_service_t;
+    type pulseaudio_t;
+    type pulseaudio_var_run_t;
+    type user_runtime_root_t;
+    type sxr_data_t;
+    type home_root_t;
+    type urandom_device_t;
+    type user_home_dir_t;
+    type proc_t;
+    type firmware_t;
+    type sysctl_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+    type sdcard_t;
+    type mnt_t;
+    type tmpfs_t;
+    type var_lib_t;
+    type system_dbusd_var_lib_t;
+    type panel_illumination_t;
 ')
 
 allow splitxr_viewer_t event_device_t:chr_file rw_chr_file_perms;
@@ -93,5 +112,55 @@ allow splitxr_viewer_t cpu_capacity_sysfs_t:file read_file_perms;
 allow splitxr_viewer_t sysfs_t:lnk_file read_lnk_file_perms;
 
 allow splitxr_viewer_t qglconfig_data_t:file read_file_perms;
+
+# Bind splitxr-viewer to UDP sockets of afs processes
+corenet_udp_bind_afs_fs_port(splitxr_viewer_t)
+corenet_udp_bind_afs_pt_port(splitxr_viewer_t)
+corenet_udp_bind_afs_ka_port(splitxr_viewer_t)
+
+# Bind splitxr-viewer to UDP sockets to generic nodes
+corenet_udp_bind_generic_node(splitxr_viewer_t)
+# To bind splitxr-viewer to TCP sockets to generic nodes
+corenet_tcp_bind_generic_node(splitxr_viewer_t)
+
+# Bind UDP sockets to all ports > 1024
+corenet_udp_bind_all_unreserved_ports(splitxr_viewer_t)
+# Bind TCP sockets to all ports > 1024
+corenet_tcp_bind_all_unreserved_ports(splitxr_viewer_t)
+
+allow splitxr_viewer_t self:fifo_file rw_fifo_file_perms;
+allow splitxr_viewer_t self:netlink_route_socket create_netlink_socket_perms;
+allow splitxr_viewer_t self:udp_socket create_socket_perms;
+allow splitxr_viewer_t self:tcp_socket { create_socket_perms listen accept };
+
+allow splitxr_viewer_t splitxr_service_t:fd use;
+allow splitxr_viewer_t splitxr_service_t:unix_dgram_socket { read write };
+allow splitxr_viewer_t splitxr_service_t:unix_stream_socket { read write connectto };
+
+allow splitxr_viewer_t pulseaudio_t:unix_stream_socket connectto;
+allow splitxr_viewer_t pulseaudio_var_run_t:dir search_dir_perms;
+allow splitxr_viewer_t pulseaudio_var_run_t:sock_file write_sock_file_perms;
+
+allow splitxr_viewer_t sxr_data_t:dir { search_dir_perms rw_dir_perms };
+allow splitxr_viewer_t sxr_data_t:file { create rw_file_perms };
+
+allow splitxr_viewer_t user_runtime_root_t:dir search_dir_perms;
+allow splitxr_viewer_t home_root_t:dir search_dir_perms;
+allow splitxr_viewer_t urandom_device_t:chr_file read_chr_file_perms;
+allow splitxr_viewer_t user_home_dir_t:dir search_dir_perms;
+allow splitxr_viewer_t proc_t:file read_file_perms;
+allow splitxr_viewer_t firmware_t:dir search_dir_perms;
+allow splitxr_viewer_t sdcard_t:dir search_dir_perms;
+
+allow splitxr_viewer_t sysctl_t:dir search_dir_perms;
+allow splitxr_viewer_t sysctl_vm_t:dir search_dir_perms;
+allow splitxr_viewer_t sysctl_vm_overcommit_t:file read_file_perms;
+
+allow splitxr_viewer_t mnt_t:dir search_dir_perms;
+allow splitxr_viewer_t tmpfs_t:dir { open read getattr };
+allow splitxr_viewer_t tmpfs_t:file { map rw_file_perms };
+allow splitxr_viewer_t var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t system_dbusd_var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t panel_illumination_t:file read_file_perms;
 
 allow initrc_t qvrd_socket_t:sock_file write;
