@@ -114,6 +114,12 @@ userdebug_or_eng(`
     # Run iperf from shell
     allow unconfined_t data_t:file map;
 
+    #Cat gpu soc from shell
+    gen_require(`
+        type soc0_gpu_sysfs_t;
+    ')
+    allow unconfined_t soc0_gpu_sysfs_t:file read_file_perms;
+
     #Run df -h
     gen_require(`
         type usb_dev_t;
