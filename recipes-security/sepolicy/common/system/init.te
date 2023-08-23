@@ -154,3 +154,16 @@ allow init_t qvr_data_t:file {manage_file_perms};
 # be simply ignore.
 #
 allow init_t initrc_t:process2 nnp_transition;
+
+gen_require(`
+    type initrc_t;
+    type binderfs_t;
+    type hwbinder_device_t;
+    type binder_device_t;
+    type vndbinder_device_t;
+')
+
+allow initrc_t binderfs_t:dir { getattr search };
+allow initrc_t hwbinder_device_t:chr_file { getattr setattr };
+allow initrc_t vndbinder_device_t:chr_file { getattr setattr };
+allow initrc_t binder_device_t:chr_file { getattr setattr };
