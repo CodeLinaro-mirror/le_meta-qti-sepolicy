@@ -152,9 +152,11 @@ userdebug_or_eng(`
 	type binderfs_t;
 	type hwbinder_device_t;
 	type vndbinder_device_t;
+        type servicemanager_exec_t;
     ')
 
     allow unconfined_t binderfs_t:dir { getattr open read search };
     allow unconfined_t hwbinder_device_t:chr_file getattr;
     allow unconfined_t vndbinder_device_t:chr_file getattr;
+    allow unconfined_t servicemanager_exec_t:service { start stop status enable disable reload };
 ')
