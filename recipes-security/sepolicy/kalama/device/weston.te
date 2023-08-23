@@ -222,6 +222,7 @@ allow weston_t shell_exec_t:file { execute execute_no_trans open read };
 allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
+allow weston_t data_t:file read_file_perms;
 
 # Allow weston search /run for wayland socket
 gen_require(`
