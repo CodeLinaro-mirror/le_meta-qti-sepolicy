@@ -35,6 +35,8 @@ type qnetcfgmgr_exec_t;
 
 type qnetcfgmgr_macsec_t;
 type qnetcfgmgr_macsec_exec_t;
+type qnetcfgmgr_cfm_t;
+type qnetcfgmgr_cfm_exec_t;
 
 type qnetcfgmgr_dig_exec_t;
 type qnetcfgmgr_dig_t;
@@ -50,6 +52,7 @@ type qnetcfgmgr_chip_t;
 
 init_vendor_domain(qnetcfgmgr_t, qnetcfgmgr_exec_t)
 init_script_domain(qnetcfgmgr_macsec_t, qnetcfgmgr_macsec_exec_t)
+init_script_domain(qnetcfgmgr_cfm_t, qnetcfgmgr_cfm_exec_t)
 
 userdebug_or_eng(`
   dev_write_kmsg(qnetcfgmgr_t);
@@ -127,7 +130,6 @@ system_data_files_type(qnetcfgmgr_rt_table_t);
 
 allow qnetcfgmgr_rt_table_t fs_t:filesystem associate;
 
-allow qnetcfgmgr_t proc_net_t:file read;
 read_lnk_files_pattern(qnetcfgmgr_t, proc_net_t, qnetcfgmgr_t)
 read_files_pattern(qnetcfgmgr_t, proc_net_t, qnetcfgmgr_t);
 
@@ -148,8 +150,9 @@ allow qnetcfgmgr_t tftp_server_t:dir { search getattr read };
 allow qnetcfgmgr_t tftp_server_t:file { read open };
 allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
-allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name };
+allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
 allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
@@ -172,6 +175,22 @@ allow ifconfig_t qnetcfgmgr_t:netlink_route_socket { read write };
 
 dontaudit qnetcfgmgr_t domain:file getattr;
 dontaudit qnetcfgmgr_t domain:dir getattr;
+
+#Ethernet CFM rules
+data_rw_system_data_files(qnetcfgmgr_cfm_t, qnetcfgmgr_etc_data_t)
+allow qnetcfgmgr_t qnetcfgmgr_cfm_exec_t:file { read open getattr };
+allow qnetcfgmgr_t proc_net_t:file {open read getattr};
+allow qnetcfgmgr_t proc_net_t:dir {search open read};
+allow NetworkManager_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
+allow NetworkManager_t initrc_var_run_t:sock_file { create read write open unlink getattr setattr};
+allow qnetcfgmgr_t self:packet_socket { read write ioctl bind getopt setopt map  create};
+allow qnetcfgmgr_t self:capability net_raw;
+allow qnetcfgmgr_t initrc_t:file {open read };
+allow qnetcfgmgr_t initrc_t:dir search;
+allow qnetcfgmgr_t time_daemon_t:dir search;
+allow qnetcfgmgr_t time_daemon_t:file {open read };
+allow qnetcfgmgr_t kernel_t:file { read open};
+allow qnetcfgmgr_t kernel_t:dir search;
 
 # QNet_Config_Manager conf files
 type qcm_etc_t;
