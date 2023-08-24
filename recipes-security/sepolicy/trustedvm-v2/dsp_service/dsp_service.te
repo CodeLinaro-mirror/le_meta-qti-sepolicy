@@ -23,7 +23,7 @@ userdebug_or_eng(`
 files_tmpfs_file(dsp_service_tmpfs_t)
 fs_tmpfs_filetrans(dsp_service_t, dsp_service_tmpfs_t, file)
 
-allow dsp_service_t dsp_service_tmpfs_t:file { write setattr read create open mounton };
+allow dsp_service_t dsp_service_tmpfs_t:file { write setattr read create open mounton getattr};
 allow dsp_service_t xdsp_device_t:chr_file { read getattr open ioctl };
 allow dsp_service_t self:process signal;
 allow dsp_service_t socket_device_t:dir search;
