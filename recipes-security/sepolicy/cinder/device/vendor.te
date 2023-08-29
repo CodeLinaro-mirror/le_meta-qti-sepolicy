@@ -11,6 +11,7 @@ gen_require(`
     type initrc_t;
     type unconfined_t;
     class dbus send_msg;
+    type leprop_system_data_t;
 
 ')
 #set scheduling parameters for a kernel domain task.
@@ -24,3 +25,4 @@ type mhi_pipe_device_t;
 dev_node(mhi_pipe_device_t);
 
 allow initrc_t unconfined_t:dbus send_msg;
+dontaudit initrc_t leprop_system_data_t:file getattr;
