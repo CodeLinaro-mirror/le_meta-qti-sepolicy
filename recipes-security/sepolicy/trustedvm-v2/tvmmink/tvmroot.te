@@ -93,7 +93,7 @@ allow tvmroot_t self:fifo_file write_fifo_file_perms;
 allow tvmroot_t self:capability setpcap;
 
 # minijail
-allow tvmroot_t self:capability { sys_admin };
+allow tvmroot_t self:capability { sys_admin kill };
 allow tvmroot_t self:capability2 block_suspend;
 allow tvmroot_t proc_t:dir mounton;
 allow tvmroot_t proc_t:file { read };
