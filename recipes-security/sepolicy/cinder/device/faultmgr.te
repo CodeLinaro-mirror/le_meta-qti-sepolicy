@@ -6,6 +6,7 @@ policy_module(faultmgr, 1.0)
 
 type faultmgr_t;
 type faultmgr_exec_t;
+type faultmgr_conf_t;
 
 init_vendor_domain(faultmgr_t, faultmgr_exec_t)
 
@@ -23,6 +24,7 @@ gen_require(`
     type devlog_t;
     type syslogd_t;
     type bin_t;
+    type etc_t;
     type var_log_t;
     type init_var_run_t;
     type system_dbusd_var_run_t;
@@ -40,7 +42,8 @@ userdebug_or_eng(`
 allow faultmgr_t self:unix_dgram_socket create_socket_perms;
 allow faultmgr_t self:fifo_file rw_fifo_file_perms;
 allow faultmgr_t self:unix_stream_socket create_stream_socket_perms;
-
+allow faultmgr_t etc_t:file { read open };                  #/etc/
+allow faultmgr_t faultmgr_conf_t:file {read write open getattr};          #/etc/fault_manager/public/
 allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
 allow faultmgr_t devlog_t:sock_file write;
 allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
