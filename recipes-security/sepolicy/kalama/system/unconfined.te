@@ -24,9 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Changes from Qualcomm Innovation Center are provided under the following license:
 # Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
-
 
 #### workaround for FOTA /usr/bin/recovery
 
@@ -54,7 +55,11 @@ userdebug_or_eng(`
         type sysfs_cpu_present;
         type binderfs_t;
         type qseecomd_exec_t;
+        type pulseaudio_t;
         class service { status start stop };
+        type fbe_secure_data_t;
+        type hwfde_conf_file_t;
+        type install_evict_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -84,6 +89,11 @@ userdebug_or_eng(`
     allow unconfined_t cpu_scaling_freq_t:file { getattr read open };
     allow unconfined_t self:lockdown confidentiality;
     allow unconfined_t binderfs_t:filesystem getattr;
+    allow unconfined_t fbe_secure_data_t:dir search_dir_perms;
+    allow unconfined_t fbe_secure_data_t:file read_file_perms;
+    allow unconfined_t hwfde_conf_file_t:file read_file_perms;
+    allow unconfined_t install_evict_t:file exec_file_perms;
+    allow unconfined_t pulseaudio_t:binder { call transfer };
 
     gen_require(`
         type recovery_exec_t;

@@ -112,7 +112,8 @@ gen_require(`
 #For weston-terminal
 allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
-allow weston_t user_home_dir_t:dir search;
+allow weston_t user_home_dir_t:dir add_entry_dir_perms;
+allow weston_t user_home_dir_t:file { create mmap_rw_file_perms };
 allow weston_t weston_exec_t:file execute_no_trans;
 type weston_pty_t;
 term_create_pty(weston_t, weston_pty_t)
@@ -150,6 +151,7 @@ allow weston_t weston_socket_device_t:file manage_file_perms;
 allow weston_t weston_socket_device_t:sock_file manage_sock_file_perms;
 
 allow weston_t self:process setsched;
+allow weston_t self:process { execmem getsched };
 
 # Weston needs to access buffer fd passed from qmmf-server.
 allow weston_t qmmf_server_t:fd use;
@@ -222,6 +224,7 @@ allow weston_t shell_exec_t:file { execute execute_no_trans open read };
 allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
+allow weston_t data_t:file read_file_perms;
 
 # Allow weston search /run for wayland socket
 gen_require(`
