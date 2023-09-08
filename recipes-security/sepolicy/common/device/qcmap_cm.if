@@ -61,7 +61,7 @@ interface(`read_write_qcmap_cm_socket_files',`
         gen_require(`
                 type qcmap_cm_t;
         ')
-         allow $1 qcmap_cm_t:{ netlink_route_socket udp_socket packet_socket rawip_socket netlink_socket } connected_stream_socket_perms;
+         allow $1 qcmap_cm_t:{ netlink_route_socket udp_socket packet_socket rawip_socket netlink_socket unix_stream_socket} connected_stream_socket_perms;
 ')
 
 ########################################
