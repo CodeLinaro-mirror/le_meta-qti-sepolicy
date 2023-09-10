@@ -121,6 +121,11 @@ filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_
 allow qnetmgrd_t data_t: file { create read write open };
 
 gen_require(`
+  type sysdevice_sysfs_t;
+')
+allow qnetmgrd_t sysdevice_sysfs_t:file { open read };
+
+gen_require(`
     type default_t;
     type initrc_var_run_t;
     type iptables_t;
