@@ -78,6 +78,9 @@ allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no
 
 allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
 
+# TODO : It will be deleted when minijail supports setting oom adj value.
+write_files_pattern(tvmroot_t, platform_container_domain, platform_container_domain)
+
 mls_file_read_all_levels(tvmroot_t)
 
 # Cryptsetup policies
@@ -92,7 +95,7 @@ allow tvmroot_t self:fifo_file write_fifo_file_perms;
 allow tvmroot_t self:capability setpcap;
 
 # minijail
-allow tvmroot_t self:capability { sys_admin };
+allow tvmroot_t self:capability { sys_admin kill };
 allow tvmroot_t self:capability2 block_suspend;
 allow tvmroot_t proc_t:dir mounton;
 allow tvmroot_t proc_t:file { read };
