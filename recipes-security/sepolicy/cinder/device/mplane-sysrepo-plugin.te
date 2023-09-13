@@ -8,6 +8,8 @@ gen_require(`
  type unreserved_port_t;
  type data_t;
  type sysctl_t;
+ type mplane_app_t;
+ type socket_device_t;
  type proc_t;
  type etc_t;
  type fs_t;
@@ -41,3 +43,7 @@ allow sysrepo-plugind_t self:fifo_file { write read };
 files_read_etc_files(sysrepo-plugind_t)
 allow sysrepo-plugind_t etc_t:file { map };
 
+allow sysrepo-plugind_t mplane_app_t:dir { add_name getattr open read search write };
+allow sysrepo-plugind_t mplane_app_t:fifo_file { create open read write };
+allow sysrepo-plugind_t mplane_app_t:file { create getattr lock map open read write };
+allow sysrepo-plugind_t socket_device_t:dir { search };
