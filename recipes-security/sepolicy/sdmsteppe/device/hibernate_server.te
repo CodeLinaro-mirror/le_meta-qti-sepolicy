@@ -36,7 +36,9 @@ type hibernate_server_t;
 type hibernate_server_exec_t;
 type hibernate_utility_exec_t;
 type vendor_power_state_dev_t;
+type hibernate_swap_device_t;
 dev_node(vendor_power_state_dev_t);
+dev_node(hibernate_swap_device_t);
 dev_rw_sysfs(hibernate_server_t);
 
 init_vendor_domain(hibernate_server_t, hibernate_server_exec_t);
@@ -53,6 +55,7 @@ device_search_sockets(hibernate_server_t);
 gen_require(`
     type sysctl_t;
     type sysctl_vm_t;
+    type removable_device_t;
 ')
 
 allow hibernate_server_t self:socket create;
@@ -60,7 +63,6 @@ allow hibernate_server_t self:socket rw_socket_perms;
 allow hibernate_server_t hibernate_socket_t:dir manage_dir_perms;
 allow hibernate_server_t hibernate_socket_t:file manage_file_perms;
 allow hibernate_server_t hibernate_socket_t:sock_file manage_sock_file_perms;
-
 allow hibernate_socket_t device_t:filesystem associate;
 
 userdebug_or_eng(`
@@ -107,4 +109,10 @@ ifdef(`init_systemd', `
     allow hibernate_server_t sysctl_t:dir search;
     allow hibernate_server_t sysctl_vm_t:dir search;
     allow hibernate_server_t sysctl_vm_t:file write_file_perms;
+
+    # swap space access
+    allow hibernate_server_t removable_device_t:blk_file { getattr open read write };
+    allow hibernate_server_t hibernate_swap_device_t:blk_file { getattr open read write };
+    allow hibernate_server_t hibernate_swap_device_t:lnk_file { relabelto read write };
+    allow hibernate_server_t self:capability sys_admin;
 ')
