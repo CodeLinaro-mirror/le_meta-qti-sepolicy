@@ -34,6 +34,7 @@
 
 # Script files
 /etc/data/macsec_eth01\.sh       		-- gen_context(system_u:object_r:qnetcfgmgr_macsec_exec_t,s0)
+/etc/data/ethernetcfm\.sh       		-- gen_context(system_u:object_r:qnetcfgmgr_cfm_exec_t,s0)
 
 # /etc/data Files
 /etc/data/qnetmgr_cfg_qdu\.xml       		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
