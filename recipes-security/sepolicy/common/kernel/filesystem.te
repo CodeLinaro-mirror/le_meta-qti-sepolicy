@@ -64,6 +64,16 @@ fs_noxattr_type(functionfs_t)
 files_mountpoint(functionfs_t)
 genfscon functionfs / gen_context(system_u:object_r:functionfs_t,s0)
 
+type binder_device_t;
+type hwbinder_device_t;
+type vndbinder_device_t;
+type binderfs_t;
+
+genfscon binder /binder system_u:object_r:binder_device_t:s0
+genfscon binder /hwbinder system_u:object_r:hwbinder_device_t:s0
+genfscon binder /vndbinder system_u:object_r:vndbinder_device_t:s0
+genfscon binder / system_u:object_r:binderfs_t:s0
+
 files_mountpoint(configfs_t)
 files_mountpoint(trace_marker_t)
 genfscon tracefs /trace_marker system_u:object_r:trace_marker_t:s0
@@ -159,6 +169,9 @@ genfscon sysfs /devices/system/cpu/cpu5/cpu_capacity gen_context(system_u:object
 genfscon sysfs /devices/system/cpu/cpu6/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
 genfscon sysfs /devices/system/cpu/cpu7/cpu_capacity gen_context(system_u:object_r:sysfs_cpu_capacity,s0)
 dev_associate_sysfs(sysfs_cpu_capacity)
+
+type sysfs_devcd_data_t;
+genfscon sysfs /devices/virtual/devcoredump/devcd1/data gen_context(system_u:object_r:sysfs_devcd_data_t,s0)
 
 type cpu_scaling_freq_t;
 genfscon sysfs /devices/system/cpu/cpufreq/policy0/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
