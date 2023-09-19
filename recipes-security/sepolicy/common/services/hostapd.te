@@ -81,6 +81,7 @@ gen_require(`
  type system_data_t;
  type unreserved_port_t;
  type node_t;
+ type cert_t;
 ')
 type hostapd_tmp_t;
 allow hostapd_cli_qcmap_t qcmap_socket_device_t:sock_file write;
@@ -92,6 +93,8 @@ dev_read_urand(hostapd_cli_qcmap_t)
 allow hostapd_t wpa_cli_t:unix_dgram_socket { sendto };
 allow hostapd_t NetworkManager_tmp_t:sock_file { write };
 allow hostapd_t NetworkManager_tmp_t:file rw_file_perms;
+allow hostapd_t cert_t:dir { read open search };
+allow hostapd_t cert_t:file { getattr open read };
 files_tmp_file(hostapd_tmp_t);
 files_tmp_filetrans(hostapd_t, hostapd_tmp_t, { file dir })
 manage_files_pattern(hostapd_t, hostapd_tmp_t, hostapd_tmp_t)
