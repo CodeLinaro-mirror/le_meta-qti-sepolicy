@@ -86,6 +86,14 @@ gen_require(`
        type pulseaudio_t;
        type audio_data_file_t;
        type nlp_data_t;
+       type user_runtime_root_t;
+       type home_root_t;
+       type user_home_dir_t;
+       type var_lib_t;
+       type etc_t;
+       type tmpfs_t;
+       type system_dbusd_var_run_t;
+       type system_dbusd_t;
 ')
 
 #read /data/misc/qvr
@@ -255,3 +263,12 @@ allow qvrd_t audio_data_file_t:dir search_dir_perms;
 allow qvrd_t audio_data_file_t:file read_file_perms;
 allow qvrd_t nlp_data_t:dir search_dir_perms;
 allow qvrd_t nlp_data_t:file read_file_perms;
+
+allow qvrd_t { user_runtime_root_t home_root_t user_home_dir_t var_lib_t }:dir search_dir_perms;
+allow qvrd_t etc_t:file read_file_perms;
+allow qvrd_t tmpfs_t:dir read_file_perms;
+allow qvrd_t tmpfs_t:file { map rw_file_perms };
+
+allow qvrd_t system_dbusd_var_run_t:dir search_dir_perms;
+allow qvrd_t system_dbusd_var_run_t:sock_file write_sock_file_perms;
+allow qvrd_t system_dbusd_t:unix_stream_socket connectto;
