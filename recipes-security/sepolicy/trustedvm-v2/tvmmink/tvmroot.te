@@ -128,3 +128,9 @@ optional_policy(`
     # EACCES is enough to confirm file existance, no need for more permissions
     dontaudit tvmroot_t persist_display_t:dir getattr;
 ')
+
+# Only prelauncher can access the socket for root
+gen_require(`
+    type tvmprelauncher_t;
+')
+neverallow { domain -tvmroot_t -tvmprelauncher_t } tvmroot_sock_t:sock_file rw_sock_file_perms;
