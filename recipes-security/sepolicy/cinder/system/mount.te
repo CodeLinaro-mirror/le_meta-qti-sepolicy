@@ -29,4 +29,4 @@ allow mount_copybind_t shell_exec_t:file { execute map read };
 allow mount_t hwfde_conf_file_t:file read_file_perms;
 
 allow mount_t gpt_checker_conf_file_t:file { mounton getattr };
-allow mount_copybind_t gpt_checker_conf_file_t:file { getattr read open create };
+allow mount_copybind_t gpt_checker_conf_file_t:file { getattr read open create write };

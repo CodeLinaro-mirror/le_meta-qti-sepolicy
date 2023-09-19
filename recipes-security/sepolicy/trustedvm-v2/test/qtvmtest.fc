@@ -7,3 +7,4 @@
 /usr/bin/EmbeddedSpareTestService          gen_context(system_u:object_r:embedsparetest_exec_t,s0)
 /usr/bin/EmbeddedStressTestService          gen_context(system_u:object_r:embedstresstest_exec_t,s0)
 /usr/bin/EmbeddedMissingNeverUnload          gen_context(system_u:object_r:embedunloadtest_exec_t,s0)
+/usr/bin/smcinvoke_qtvm_app          gen_context(system_u:object_r:embedsmcinvoke_qtvm_t_exec_t,s0)
