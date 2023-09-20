@@ -75,8 +75,6 @@ userdebug_or_eng(`
 
 gen_require(`
     type default_t;
-    type qti_ppp_socket_device_t;
-    type dataqti_ppp_t;
     type ipa_fw_device_t;
     type configfs_t;
 ')
@@ -130,7 +128,6 @@ type qtether_socket_device_t;
 files_type(qtether_socket_device_t)
 dev_node(qtether_socket_device_t)
 device_manage_socket_file(qtether_t, qtether_socket_device_t)
-device_rw_socket_files(qtether_t, qti_ppp_socket_device_t)
 
 allow qtether_t self:netlink_kobject_uevent_socket create_socket_perms;
 
@@ -140,7 +137,6 @@ files_pid_file(qtether_var_run_t)
 allow qtether_t qtether_var_run_t:sock_file { create write };
 qcmap_manage_var_run_data_files(qtether_t)
 files_pid_filetrans(qtether_t, qtether_var_run_t, { file sock_file dir })
-allow qtether_t dataqti_ppp_t:unix_dgram_socket { sendto };
 
 #dont audit setuid and setgid
 dontaudit qtether_t self: capability {setuid setgid};
