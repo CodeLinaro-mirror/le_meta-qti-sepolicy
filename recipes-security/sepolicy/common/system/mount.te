@@ -109,3 +109,11 @@ allow mount_copybind_t self:capability kill;
 
 # needed for /etc/pass
 allow mount_t   etc_t:file map;
+
+gen_require(`
+type binderfs_t;
+type mount_t;
+')
+
+allow mount_t binderfs_t:dir { getattr mounton };
+allow mount_t binderfs_t:filesystem mount;
