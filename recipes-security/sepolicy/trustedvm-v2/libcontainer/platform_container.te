@@ -54,3 +54,12 @@ allow platform_container_domain container_mount_t:process2 { nnp_transition nosu
 allow platform_container_domain platform_hub_domain:fd { use };
 allow platform_container_domain platform_hub_domain:unix_stream_socket connectto;
 allow platform_container_domain tvmmink_sock_t:sock_file write;
+
+userdebug_or_eng(`
+    gen_require(`
+        type kmsg_device_t;
+        type dloemservice_t;
+    ')
+    dev_write_kmsg({ platform_container_domain -dloemservice_t });
+    dontaudit platform_container_domain kmsg_device_t:chr_file getattr;
+')
