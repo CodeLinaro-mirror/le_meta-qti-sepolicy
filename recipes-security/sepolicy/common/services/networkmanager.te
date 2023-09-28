@@ -67,6 +67,19 @@ type wifi_system_data_t;
 system_data_files_type(wifi_system_data_t)
 manage_system_data_files(NetworkManager_t, wifi_system_data_t)
 
+#macsec
+type mka_supplicant_conf_t;
+type mka_supplicant_exec_t;
+type mka_supplicant_t;
+type mka_authenticator_conf_t;
+type mka_authenticator_exec_t;
+type mka_authenticator_t;
+
+files_type(mka_supplicant_conf_t);
+fs_associate(mka_supplicant_conf_t);
+files_type(mka_authenticator_conf_t);
+fs_associate(mka_authenticator_conf_t);
+
 # this rules are for wpa_supplicant which run in NetworkManger context
 rw_shared_memory_dev(NetworkManager_t)
 userdebug_or_eng(`
