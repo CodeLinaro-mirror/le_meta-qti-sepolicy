@@ -39,3 +39,9 @@ files_tmpfs_file(tvmprelauncher_tmpfs_t)
 
 fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
 allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };
+
+# Only mink can access the socket for prelauncher
+gen_require(`
+    type tvmmink_t;
+')
+neverallow { domain -tvmprelauncher_t -tvmmink_t } tvmprelauncher_sock_t:sock_file rw_sock_file_perms;
