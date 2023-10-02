@@ -9,7 +9,7 @@ init_vendor_domain(dsp_service_t, dsp_service_exec_t)
 platform_container_domain_type(dsp_service_t, dsp_service_exec_t)
 
 gen_require(`
-    type xdsp_device_t;
+    type xdsp_device_t;
     type debugfs_t;
     type tmpfs_t;
     type socket_device_t;
