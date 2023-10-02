@@ -1,7 +1,5 @@
 require refpolicy-qti-common.inc
 
-PURGE_POLICY_MODULES:append = " dsp_service"
-
 SRC_URI += " \
     file://vm/ \
 "
