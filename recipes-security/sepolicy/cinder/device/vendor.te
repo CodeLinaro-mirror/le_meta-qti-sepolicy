@@ -15,7 +15,8 @@ gen_require(`
 
 ')
 #set scheduling parameters for a kernel domain task.
-allow mount_t  kernel_t:process {setsched } ;
+#allow mount_t  kernel_t:process {setsched } ;
+dontaudit mount_t  kernel_t:process {setsched};
 
 # set access to mhi pipes in post-boot-script
 allow post_boot_script_t mhi_pipe_device_t:chr_file { getattr open read write };
