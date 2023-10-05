@@ -52,3 +52,9 @@ dev_node(vendor_vm_cpbitstream_device_t)
 
 type qglconfig_data_t;
 files_type(qglconfig_data_t)
+
+type voice_data_t;
+files_type(voice_data_t)
+
+type nlp_data_t;
+user_data_files_type(nlp_data_t)
