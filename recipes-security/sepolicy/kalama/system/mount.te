@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 gen_require(`
     attribute file_type;
     attribute user_data;
@@ -32,6 +36,7 @@ gen_require(`
     type mount_copybind_t;
     type unconfined_mount_t;
     type mount_t;
+    type hwfde_conf_file_t;
     type alsa_etc_t;
     type data_t;
     type system_dbusd_var_lib_t;
@@ -41,12 +46,14 @@ gen_require(`
     type overlay_t;
     type binderfs_t;
     type wifi_data_t;
+    type systemd_unit_t;
 ')
 
 #for overlayfs
 permissive mount_t;
 permissive mount_copybind_t;
 permissive unconfined_mount_t;
+allow mount_t hwfde_conf_file_t:file read_file_perms;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
@@ -61,3 +68,4 @@ allow mount_t system_dbusd_var_lib_t:lnk_file { create_lnk_file_perms read };
 allow mount_t binderfs_t:filesystem { mount };
 allow mount_t var_t:chr_file { unlink };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
+allow mount_t systemd_unit_t:lnk_file getattr;

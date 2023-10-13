@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
@@ -58,6 +58,8 @@ gen_require(`
     type cpu_scaling_freq_t;
     type setprop_exec_t;
     type sysctl_t;
+    type debugfs_t;
+    type soc0_gpu_sysfs_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -65,7 +67,7 @@ neverallow { vendor_domain -vendor_device_rw_exception } device_t:devfile_class_
 # No creation of unlabeled directories or files
 neverallow vendor_domain unlabeled_t:dir_file_class_set create;
 # Restricted permissions
-neverallow vendor_domain self:capability { mknod dac_override };
+neverallow vendor_domain self:capability { dac_override };
 neverallow vendor_domain self:process { execstack execheap };
 # Do not load kernel modules - request init to do this instead
 attribute vendor_kernel_load_exception;
@@ -202,6 +204,13 @@ allow post_boot_script_t sysfs_vblank_t:dir read_file_perms;
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
+userdebug_or_eng(`
+    allow post_boot_script_t debugfs_t:dir add_entry_dir_perms;
+    allow post_boot_script_t debugfs_t:file rw_file_perms;
+')
+
+allow post_boot_script_t soc0_gpu_sysfs_t:file read_file_perms;
+allow post_boot_script_t self:lockdown integrity;
 
 ### dev nodes ###
 
@@ -245,6 +254,9 @@ dev_node(smcinvoke_device_t);
 type qseecom_device_t;
 dev_node(qseecom_device_t);
 
+type smmu_proxy_device_t;
+dev_node(smmu_proxy_device_t);
+
 type mtd_device_t;
 dev_node(mtd_device_t);
 
@@ -269,6 +281,15 @@ dev_node(system_uncached_dmabuf_device_t);
 
 type vendor_dmabuf_qseecom_heap_device_t;
 dev_node(vendor_dmabuf_qseecom_heap_device_t);
+
+type vendor_dmabuf_ms1_heap_device_t;
+dev_node(vendor_dmabuf_ms1_heap_device_t);
+
+type vendor_dmabuf_ms2_heap_device_t;
+dev_node(vendor_dmabuf_ms2_heap_device_t);
+
+type vendor_dmabuf_ms3_heap_device_t;
+dev_node(vendor_dmabuf_ms3_heap_device_t);
 
 ### MEM_BUF_VM TYPES ###
 type vendor_vm_trusted_device_t;
