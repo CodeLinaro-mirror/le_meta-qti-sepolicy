@@ -27,6 +27,7 @@ gen_require(`
     type tuicoreservice_data_t;
     type qvrd_t;
     class dbus { acquire_svc send_msg };
+    type xrcommservice_t;
 ')
 
 allow splitxr_service_t dev_dri_t:dir search_dir_perms;
@@ -85,3 +86,6 @@ allow splitxr_service_t self:process { setsched signal };
 
 # access display configuration
 manage_user_data_files(splitxr_service_t, tuicoreservice_data_t)
+
+connect_to_xrcommserviced(splitxr_service_t);
+

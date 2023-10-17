@@ -84,6 +84,7 @@ gen_require(`
     type panel_illumination_t;
     type image_variant_sysfs_t;
     type sysdevice_sysfs_t;
+    type xrcommservice_t;
 ')
 
 allow splitxr_viewer_t event_device_t:chr_file rw_chr_file_perms;
@@ -177,3 +178,5 @@ allow splitxr_viewer_t image_variant_sysfs_t:file read_file_perms;
 
 # permission to read /sys/devices/soc0/platform_subtype_id
 allow splitxr_viewer_t sysdevice_sysfs_t:file read_file_perms;
+
+connect_to_xrcommserviced(splitxr_viewer_t);

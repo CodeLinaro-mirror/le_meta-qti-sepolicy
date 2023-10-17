@@ -99,6 +99,7 @@ gen_require(`
        type dsmd_t;
        type dsmd_sock_t;
        type splitxr_service_t;
+       type xrcommservice_t;
        class dbus { acquire_svc send_msg};
 ')
 
@@ -256,6 +257,8 @@ allow mount_t qvr_data_t:sock_file manage_sock_file_perms;
 
 #access to MEM_BUF_VM devices
 allow qvrd_t vendor_vm_cpbitstream_device_t:chr_file read_chr_file_perms;
+
+connect_to_xrcommserviced(qvrd_t);
 
 #access to sysfs nodes
 allow qvrd_t video_name_sysfs_t:file read_file_perms;
