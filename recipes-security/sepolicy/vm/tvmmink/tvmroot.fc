@@ -1,0 +1,5 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/TVMRoot     --      gen_context(system_u:object_r:tvmroot_exec_t,s0)
+/dev/socket/root     -c      gen_context(system_u:object_r:tvmroot_sock_t,s0)
