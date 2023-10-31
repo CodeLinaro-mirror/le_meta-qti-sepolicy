@@ -1,0 +1,5 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# SW Management service executables
+/usr/bin/sw_mgt_svc   --      gen_context(system_u:object_r:swmgr_exec_t,s0)
