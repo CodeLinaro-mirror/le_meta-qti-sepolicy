@@ -44,3 +44,4 @@ allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
 allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
 allow post_boot_script_t cpu_core_ctl_sysfs_t:file { rw_file_perms create };
 allow post_boot_script_t cpu_core_ctl_sysfs_t:dir { add_entry_dir_perms };
+files_read_etc_files(post_boot_script_t)
