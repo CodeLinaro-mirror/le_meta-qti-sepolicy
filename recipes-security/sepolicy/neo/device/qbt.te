@@ -1,0 +1,90 @@
+# Copyright (c) 2018,2020 The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+files_read_config_files(btapp_t);
+
+gen_require(`
+  type system_dbusd_var_run_t;
+  type system_dbusd_t;
+  type pmsg_device_t;
+  type socket_device_t;
+  type leprop_sock_t;
+  type leprop_t;
+  type syslogd_var_run_t;
+  type data_t;
+  type bluetooth_conf_t;
+  type pulseaudio_t;
+  type device_t;
+  type unreserved_port_t;
+  type firmware_t;
+  type node_t;
+  type mount_t;
+  type pulseaudio_var_run_t;
+')
+
+type bt_device_t;
+dev_node(bt_device_t);
+rw_chr_files_pattern(btapp_t, device_t, bt_device_t);
+
+type ttyHS0_device_t;
+dev_node(ttyHS0_device_t);
+allow btapp_t ttyHS0_device_t:chr_file manage_chr_file_perms; #/dev/ttyHS0
+
+read_files_pattern(btapp_t, firmware_t, firmware_t);
+manage_sock_files_pattern(btapp_t, socket_device_t, socket_device_t);
+manage_sock_files_pattern(btapp_t, data_t, data_t);
+rw_sock_files_pattern(btapp_t, pulseaudio_var_run_t, pulseaudio_var_run_t);
+kernel_read_system_state(btapp_t);
+leprop_rw_props(btapp_t);
+corenet_tcp_bind_all_unreserved_ports(btapp_t);
+corenet_tcp_bind_generic_node(btapp_t);
+
+allow btapp_t self:tcp_socket create_stream_socket_perms;
+allow btapp_t self:unix_stream_socket { accept listen };
+
+allow btapp_t system_dbusd_var_run_t:dir search; #/run/dbus
+allow btapp_t system_dbusd_var_run_t:sock_file write;
+allow btapp_t system_dbusd_t:unix_stream_socket connectto;
+
+allow btapp_t bluetooth_conf_t:file rw_file_perms;
+allow btapp_t pulseaudio_t:unix_stream_socket { connectto sendto };
+
+## for DBus
+ifdef(`init_systemd', `
+    dbus_connect_system_bus(btapp_t)
+    dbus_send_system_bus(btapp_t)
+')
+
+allow btapp_t bt_data_t:sock_file {create unlink write };
+data_filetrans(btapp_t, bt_data_t, { file dir })
+manage_user_data_files(btapp_t, bt_data_t)
+allow mount_t bt_data_t:sock_file manage_sock_file_perms;
+allow btapp_t bluetooth_conf_t:sock_file {create unlink write };
