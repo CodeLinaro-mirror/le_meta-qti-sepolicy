@@ -89,6 +89,7 @@ allow hostapd_cli_qcmap_t var_run_t:sock_file { create write unlink };
 allow hostapd_cli_qcmap_t var_run_t:dir { write add_name remove_name };
 allow hostapd_cli_qcmap_t hostapd_var_run_t:dir search;
 allow hostapd_cli_qcmap_t socket_device_t:dir search;
+dontaudit hostapd_cli_qcmap_t self:capability { dac_override };
 dev_read_urand(hostapd_cli_qcmap_t)
 allow hostapd_t wpa_cli_t:unix_dgram_socket { sendto };
 allow hostapd_t NetworkManager_tmp_t:sock_file { write };
