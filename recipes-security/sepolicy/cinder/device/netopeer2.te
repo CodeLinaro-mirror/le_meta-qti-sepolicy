@@ -23,6 +23,8 @@ gen_require(`
  type urandom_device_t;
  type home_root_t;
  type user_home_dir_t;
+ type mplane_app_t;
+ type socket_device_t;
  type user_home_t;
 ')
 
@@ -59,3 +61,9 @@ allow netopeer2_t home_root_t:dir { search };
 allow netopeer2_t user_home_dir_t:dir { search };
 allow netopeer2_t user_home_t:dir { search };
 allow netopeer2_t user_home_t:file { read open getattr };
+
+
+allow netopeer2_t mplane_app_t:dir { add_name write getattr open read search};
+allow netopeer2_t mplane_app_t:fifo_file { create open read write };
+allow netopeer2_t mplane_app_t:file { create lock map open getattr read write };
+allow netopeer2_t socket_device_t:dir search;
