@@ -168,8 +168,26 @@ genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:sysfs_c
 dev_associate_sysfs(sysfs_cpu_present)
 
 type cpu_sysfs_t;
+genfscon sysfs /devices/system/cpu/cpu0/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu3/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
 genfscon sysfs /devices/system/cpu/cpu4/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu7/core_ctl gen_context(system_u:object_r:cpu_sysfs_t,s0)
 genfscon sysfs /devices/virtual/workqueue gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy0  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy4  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy7  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy0/walt  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy4/walt  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy7/walt  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/DDR  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/DDR/hw_min_freq  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/DDRQOS  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/DDRQOS/hw_min_freq  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/L3  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/L3/hw_min_freq  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/LLCC  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/LLCC/hw_min_freq  gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/bus_dcvs/memlat_settings  gen_context(system_u:object_r:cpu_sysfs_t,s0)
 dev_associate_sysfs(cpu_sysfs_t)
 
 type sysfs_cpu_capacity;
