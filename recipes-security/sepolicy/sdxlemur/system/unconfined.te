@@ -27,7 +27,7 @@
 
 #  Changes from Qualcomm Innovation Center are provided under the following license:
 #
-#  Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#  Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted (subject to the limitations in the
@@ -67,6 +67,9 @@ userdebug_or_eng(`
         type policy_config_t;
         type proc_kmsg_t;
         type rebootd_pipe_t;
+        type initrc_t;
+        type aud_dev_sysfs_t;
+        type agm_server_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -80,6 +83,9 @@ userdebug_or_eng(`
     allow unconfined_t policy_config_t:file getattr_file_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
+    allow unconfined_t initrc_t:binder { call transfer };
+    allow unconfined_t agm_server_t:binder { call transfer };
+    allow unconfined_t aud_dev_sysfs_t:file {open write };
 
     gen_require(`
         type recovery_exec_t;
