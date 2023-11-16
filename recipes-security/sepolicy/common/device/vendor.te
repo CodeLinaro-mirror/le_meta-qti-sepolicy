@@ -151,7 +151,7 @@ files_read_etc_files(tftp_server_t)
 ### misc properties ###
 
 type mpss_persist_t;
-user_data_files_type(mpss_persist_t)
+allow mpss_persist_t fs_t:filesystem associate;
 type adsp_persist_t;
 user_data_files_type(adsp_persist_t)
 type kernel_tests_t;
