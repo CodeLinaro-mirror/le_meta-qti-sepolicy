@@ -1,0 +1,13 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+       type unconfined_t;
+       type initrc_t;
+       type socket_device_t;
+    ')
+    allow servicemanager_t unconfined_t:binder { call transfer };
+    allow servicemanager_t initrc_t:binder { call transfer };
+    allow servicemanager_t socket_device_t:dir { search getattr };
+')
