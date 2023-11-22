@@ -113,7 +113,7 @@ userdebug_or_eng(`
     allow unconfined_t qwesd_exec_t:service { start status stop };
 ')
 
-allow qwesd_t self:capability2 block_suspend;
+allow qwesd_t self:capability2 { block_suspend wake_alarm };
 dev_rw_sysfs(qwesd_t)
 #################################################################
 # Rules ending for generic permissions for qwesd.

@@ -1,11 +1,11 @@
 #Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-
 policy_module(faultmgr, 1.0)
 
 type faultmgr_t;
 type faultmgr_exec_t;
+type faultmgr_conf_t;
 
 init_vendor_domain(faultmgr_t, faultmgr_exec_t)
 
@@ -23,10 +23,12 @@ gen_require(`
     type devlog_t;
     type syslogd_t;
     type bin_t;
+    type etc_t;
     type var_log_t;
     type init_var_run_t;
     type system_dbusd_var_run_t;
     type unconfined_t;
+    type pwrmgr_t;
 	class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -40,7 +42,9 @@ userdebug_or_eng(`
 allow faultmgr_t self:unix_dgram_socket create_socket_perms;
 allow faultmgr_t self:fifo_file rw_fifo_file_perms;
 allow faultmgr_t self:unix_stream_socket create_stream_socket_perms;
-
+allow faultmgr_t self:process signal;
+allow faultmgr_t etc_t:file { read open };                  #/etc/
+allow faultmgr_t faultmgr_conf_t:file {read write open getattr};          #/etc/fault_manager/public/
 allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
 allow faultmgr_t devlog_t:sock_file write;
 allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
@@ -56,6 +60,7 @@ allow faultmgr_t socket_device_t:dir search_dir_perms;
 allow faultmgr_t thermal-engine_t:unix_stream_socket connectto;
 allow faultmgr_t thermal_sock_t:sock_file write;
 allow initrc_t unconfined_t:dbus send_msg;
+allow faultmgr_t pwrmgr_t:dbus send_msg;
 dontaudit faultmgr_t default_t:dir search;
 
 #Manage Dbus sockets
@@ -67,4 +72,3 @@ ifdef(`init_systemd',`
     dbus_system_bus_client(faultmgr_t)
     allow faultmgr_t self:dbus send_msg;
 ')
-
