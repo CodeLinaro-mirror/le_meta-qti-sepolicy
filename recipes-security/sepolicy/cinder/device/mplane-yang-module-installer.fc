@@ -4,3 +4,4 @@
 /usr/bin/yang_module_installer -- gen_context(system_u:object_r:mplane-yang-module-installer_exec_t,s0)
 /usr/share/mplane/setup\.sh    -- gen_context(system_u:object_r:netopeersetup_exec_t,s0)
 /usr/bin/sysrepoctl   --   gen_context(system_u:object_r:sysrepoctl_exec_t,s0)
+/data/mplane(/.*)?         gen_context(system_u:object_r:mplane_app_t,s0)

@@ -1,0 +1,63 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(stmfd, 1.0)
+
+type stmfd_t;
+type stmfd_exec_t;
+
+init_vendor_domain(stmfd_t, stmfd_exec_t)
+
+gen_require(`
+    type default_t;
+    type sysfs_t;
+    type shell_exec_t;
+    type socket_device_t;
+    type proc_net_t;
+')
+
+userdebug_or_eng(`
+    rw_diag_dev(stmfd_t)
+
+    # Systemd and fifo file
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t stmfd_exec_t:service { status start stop};
+    dev_write_kmsg(stmfd_t)
+')
+
+logging_send_syslog_msg(stmfd_t)
+dev_read_sysfs(stmfd_t);
+
+# Allow execute permission
+# Due to usage of fork()
+allow stmfd_t stmfd_exec_t:file { execute_no_trans };
+
+# Socket permissions
+allow stmfd_t self:netlink_socket { read bind create };
+allow stmfd_t self:netlink_generic_socket { create read bind write getattr setopt };
+allow stmfd_t self:tipc_socket { create read bind write getattr setopt };
+allow stmfd_t self:netlink_route_socket { create read bind write getattr setopt nlmsg_read nlmsg_write };
+allow stmfd_t self:unix_stream_socket { read write create connect listen };
+allow stmfd_t self:udp_socket { create ioctl };
+allow stmfd_t self:packet_socket { create bind map read setopt write };
+
+type stmfd_socket_device_t;
+files_type(stmfd_socket_device_t);
+dev_node(stmfd_socket_device_t);
+device_manage_socket_file(stmfd_t, stmfd_socket_device_t);
+device_rw_socket_files(stmfd_t, stmfd_socket_device_t);
+
+# Process Capabilities
+allow stmfd_t self:capability { net_admin net_raw };
+allow stmfd_t self:process { signal };
+allow stmfd_t self:process signal;
+allow stmfd_t proc_net_t:file read;
+allow stmfd_t self:fifo_file { create open read getattr write };;
+
+# Create temp files in /var/run/data
+files_rw_qcmap_etc_data_files(stmfd_t)
+qcmap_manage_var_run_data_files(stmfd_t)
