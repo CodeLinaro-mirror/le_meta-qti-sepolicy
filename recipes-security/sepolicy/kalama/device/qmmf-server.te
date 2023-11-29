@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(qmmf-server, 1.0)
 
 gen_require(`
@@ -91,6 +95,8 @@ gen_require(`
  type binderfs_t;
  type initrc_t;
  type kernel_t;
+ type fs_t;
+ type rfsa_adsp_lib_t;
 ')
 
 #For hvx
@@ -231,6 +237,9 @@ allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
 allow qmmf_server_t initrc_t:binder call;
 allow qmmf_server_t kernel_t:unix_dgram_socket sendto;
+allow qmmf_server_t fs_t:filesystem getattr;
+allow qmmf_server_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+allow qmmf_server_t rfsa_adsp_lib_t:file read_file_perms;
 
 gen_require(`
     type weston_runtime_t;
@@ -245,3 +254,4 @@ allow qmmf_server_t unlabeled_t:chr_file ioctl;
 allow servicemanager_t unlabeled_t:chr_file ioctl;
 allow initrc_t qmmf_data_file_t:dir search;
 allow initrc_t qmmf_server_t:binder { call transfer };
+allow initrc_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
