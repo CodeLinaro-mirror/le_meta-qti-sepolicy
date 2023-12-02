@@ -226,6 +226,9 @@ allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write s
 ')
 allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
 
+#QNCM IP2MACv6
+allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
+
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
 allow qnetcfgmgr_t self:process { sigkill };
