@@ -110,4 +110,5 @@ userdebug_or_eng(`
     dev_read_sysfs(ss-ramdump_t)
     logging_send_syslog_msg(ss-ramdump_t)
     allow ss-ramdump_t sysfs_devcd_data_t:file rw_file_perms;
+    allow ss-ramdump_t sysfs_devcd_data_t:dir search;
 ')

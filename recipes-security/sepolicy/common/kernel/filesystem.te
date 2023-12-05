@@ -171,7 +171,8 @@ genfscon sysfs /devices/system/cpu/cpu7/cpu_capacity gen_context(system_u:object
 dev_associate_sysfs(sysfs_cpu_capacity)
 
 type sysfs_devcd_data_t;
-genfscon sysfs /devices/virtual/devcoredump/devcd1/data gen_context(system_u:object_r:sysfs_devcd_data_t,s0)
+genfscon sysfs /devices/virtual/devcoredump gen_context(system_u:object_r:sysfs_devcd_data_t,s0)
+dev_associate_sysfs(sysfs_devcd_data_t);
 
 type cpu_scaling_freq_t;
 genfscon sysfs /devices/system/cpu/cpufreq/policy0/scaling_min_freq        gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
