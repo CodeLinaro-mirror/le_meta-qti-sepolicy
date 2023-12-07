@@ -25,6 +25,8 @@ gen_require(`
     type sysctl_vm_t;
     type sysctl_vm_overcommit_t;
     type tuicoreservice_data_t;
+    type qvrd_t;
+    class dbus { acquire_svc send_msg };
 ')
 
 allow splitxr_service_t dev_dri_t:dir search_dir_perms;
@@ -66,6 +68,9 @@ allow udev_t panel_illumination_t:file read_file_perms;
 allow splitxr_service_t system_dbusd_t:unix_stream_socket connectto;
 allow splitxr_service_t system_dbusd_var_run_t:dir search_dir_perms;
 allow splitxr_service_t system_dbusd_var_run_t:sock_file write_sock_file_perms;
+#Allow splitxr to control brightness on neo through dbus
+allow splitxr_service_t system_dbusd_t:dbus { acquire_svc send_msg };
+allow splitxr_service_t qvrd_t:dbus send_msg;
 
 allow splitxr_service_t video_system_specs_t:file read_file_perms;
 allow splitxr_service_t proc_t:file read_file_perms;
