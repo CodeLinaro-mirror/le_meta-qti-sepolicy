@@ -1,0 +1,26 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+        type initrc_t;
+        type servicemanager_t;
+        type binder_device_t;
+        type binderfs_t;
+        type unconfined_t;
+        type agm_server_t;
+    ')
+    allow hal_rec_test_t initrc_t:binder { call transfer };
+    allow hal_rec_test_t servicemanager_t:binder { call transfer };
+    allow hal_rec_test_t binder_device_t:chr_file { open read write ioctl map };
+    allow hal_rec_test_t binderfs_t:dir { getattr search };
+    allow hal_rec_test_t unconfined_t:binder { call transfer };
+    allow hal_rec_test_t agm_server_t:binder { call transfer };
+
+    allow hal_play_test_t initrc_t:binder { call transfer };
+    allow hal_play_test_t servicemanager_t:binder { call transfer };
+    allow hal_play_test_t binder_device_t:chr_file { open read write ioctl map };
+    allow hal_play_test_t binderfs_t:dir { getattr search };
+    allow hal_play_test_t unconfined_t:binder { call transfer };
+    allow hal_play_test_t agm_server_t:binder { call transfer };
+')

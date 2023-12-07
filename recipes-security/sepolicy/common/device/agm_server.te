@@ -80,6 +80,7 @@ dontaudit agm_server_t { socket_device_t default_t }:dir search_dir_perms;
 allow agm_server_t self:fifo_file rw_fifo_file_perms;
 allow agm_server_t sound_device_t:chr_file rw_chr_file_perms;
 dev_read_sysfs(agm_server_t)
+audio_data_files_access(agm_server_t)
 allow agm_server_t audio_hal_etc_t:file read_file_perms;
 allow agm_server_t audio_hal_etc_acdb_t:dir list_dir_perms;
 allow agm_server_t audio_hal_etc_acdb_t:file read_file_perms;

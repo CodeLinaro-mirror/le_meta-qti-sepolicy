@@ -84,6 +84,7 @@ gen_require(`
    type sysfs_t;
    type firmware_t;
    type qseecom_device_t;
+   type sysdevice_sysfs_t;
 ')
 
 rw_chr_files_pattern(splitxr_viewer_t, device_t, qseecom_device_t);
@@ -126,7 +127,7 @@ allow splitxr_viewer_t qvrd_t:unix_stream_socket connectto;
 allow splitxr_viewer_t splitxr_service_t:unix_stream_socket connectto;
 allow splitxr_viewer_t user_runtime_root_t:sock_file write;
 allow splitxr_viewer_t weston_t:unix_stream_socket connectto;
-allow splitxr_viewer_t sysfs_t:lnk_file read;
+allow splitxr_viewer_t sysfs_t:{ lnk_file dir file } read_file_perms;
 allow splitxr_viewer_t sysfs_panel0_backlight_bl_power_t:file read_file_perms;
 allow splitxr_viewer_t sysfs_cpu_present:file read_file_perms;
 allow splitxr_viewer_t sysfs_cpu_capacity:file read_file_perms;
@@ -144,3 +145,6 @@ allow splitxr_viewer_t unreserved_port_t:tcp_socket name_bind;
 allow initrc_t qvrd_socket_t:sock_file write;
 allow weston_t splitxr_viewer_t:fd use;
 allow qvrd_t splitxr_viewer_t:process setsched;
+
+# permission to read /sys/devices/soc0/platform_subtype_id
+allow splitxr_viewer_t sysdevice_sysfs_t:file read_file_perms;
