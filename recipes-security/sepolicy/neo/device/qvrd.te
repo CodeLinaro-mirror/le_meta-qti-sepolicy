@@ -95,6 +95,8 @@ gen_require(`
        type system_dbusd_var_run_t;
        type system_dbusd_t;
        type user_tmp_t;
+       type splitxr_service_t;
+       class dbus { acquire_svc send_msg};
 ')
 
 #read /data/misc/qvr
@@ -274,6 +276,9 @@ allow qvrd_t tmpfs_t:file { map rw_file_perms };
 allow qvrd_t system_dbusd_var_run_t:dir search_dir_perms;
 allow qvrd_t system_dbusd_var_run_t:sock_file write_sock_file_perms;
 allow qvrd_t system_dbusd_t:unix_stream_socket connectto;
+allow qvrd_t system_dbusd_t:dbus { acquire_svc send_msg };
+
+allow qvrd_t splitxr_service_t:dbus send_msg;
 
 #============= qvrd_t ==============
 allow qvrd_t tmp_t:dir search;
