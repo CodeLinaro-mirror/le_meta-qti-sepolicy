@@ -13,6 +13,7 @@ gen_require(`
  type fs_t;
  type mpss_persist_t;
  type rfs_persist_t;
+ type unconfined_t;
 ')
 type mplane_app_t;
 
@@ -77,3 +78,8 @@ manage_user_data_files(initrc_t, mpss_persist_t)
 allow initrc_t mpss_persist_t:dir { getattr open read search add_name write search };
 allow initrc_t rfs_persist_t:dir { getattr open read search add_name write search };
 allow initrc_t mpss_persist_t:file { create getattr lock open read write map setattr unlink };
+
+userdebug_or_eng(`
+    allow unconfined_t mpss_persist_t:file { getattr read open };
+    allow unconfined_t mpss_persist_t:dir { getattr read open search };
+ ')
