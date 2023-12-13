@@ -1,0 +1,20 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type panel_illumination_t;
+    type panel_pixel_shift_t;
+    type tuicoreservice_data_t;
+    type video_name_sysfs_t;
+    type brightness_t;
+')
+
+allow initrc_t panel_illumination_t:dir search_dir_perms;
+allow initrc_t panel_illumination_t:file { open setattr getattr rw_file_perms };
+allow initrc_t panel_pixel_shift_t:dir search_dir_perms;
+allow initrc_t panel_pixel_shift_t:file { getattr setattr };
+allow initrc_t video_name_sysfs_t:file read_file_perms;
+allow initrc_t brightness_t:file { open setattr getattr rw_file_perms };
+
+# access display configuration
+manage_user_data_files(initrc_t, tuicoreservice_data_t)
