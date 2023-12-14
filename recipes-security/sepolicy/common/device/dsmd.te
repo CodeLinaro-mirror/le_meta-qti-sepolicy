@@ -1,0 +1,33 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(dsmd, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type dsmd_t;
+type dsmd_exec_t;
+gen_require(`
+  type init_t;
+  type bin_t;
+  type tmp_t;
+  type etc_t;
+  type event_device_t;
+  type tmpfs_t;
+')
+
+
+
+# systemctl allows
+init_vendor_domain(dsmd_t, dsmd_exec_t)
+
+allow dsmd_t tmp_t:dir { add_entry_dir_perms remove_name };
+allow dsmd_t tmp_t:sock_file manage_sock_file_perms;
+allow dsmd_t dsmd_t:unix_stream_socket { listen accept };
+allow dsmd_t etc_t:file read_file_perms;
+allow dsmd_t event_device_t:chr_file read_chr_file_perms;
+allow dsmd_t tmpfs_t:dir { add_entry_dir_perms remove_name };
+allow dsmd_t dsmd_t:process signal;
