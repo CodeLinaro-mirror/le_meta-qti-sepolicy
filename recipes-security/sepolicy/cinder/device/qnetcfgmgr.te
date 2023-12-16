@@ -49,6 +49,7 @@ type qnetcfgmgr_var_t;
 type qnetcfgmgr_rt_table_t;
 type qnetcfgmgr_ipv6_net_t;
 type qnetcfgmgr_chip_t;
+type qnetcfgmgr_run_qncm_t;
 
 init_vendor_domain(qnetcfgmgr_t, qnetcfgmgr_exec_t)
 init_script_domain(qnetcfgmgr_macsec_t, qnetcfgmgr_macsec_exec_t)
@@ -91,6 +92,7 @@ gen_require(`
   type initrc_t;
   type qcmap_etc_data_t;
   type unconfined_t;
+  type dnsmasq_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -158,6 +160,11 @@ allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
 
+# Permissions added for DNSmasq to support hosting RU local management port
+allow dnsmasq_t initrc_var_run_t:dir { search write add_name };
+allow dnsmasq_t initrc_var_run_t:file { create read open };
+allow dnsmasq_t qnetcfgmgr_run_qncm_t:file { append write };
+
 allow qnetcfgmgr_t self:process { setcap};
 allow qnetcfgmgr_t self:icmp_socket { create setopt write read ioctl getopt };
 allow qnetcfgmgr_t self:udp_socket { setopt connect getattr };
@@ -218,6 +225,9 @@ userdebug_or_eng('
 allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write setattr };
 ')
 allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
+
+#QNCM IP2MACv6
+allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
