@@ -22,6 +22,7 @@ gen_require(`
     type init_var_run_t;
     type system_dbusd_var_run_t;
     type unconfined_t;
+    type faultmgr_t;
 	class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -33,6 +34,7 @@ userdebug_or_eng(`
 allow pwrmgr_t pwrmgr_t:fifo_file { read open write };
 allow pwrmgr_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
 allow pwrmgr_t var_log_t:file { read write open getattr };
+allow pwrmgr_t self:process signal;
 
 allow alogd_t pmsg0_t:chr_file open;
 allow pwrmgr_t init_var_run_t:dir search;
@@ -44,6 +46,7 @@ allow pwrmgr_t socket_device_t:dir search_dir_perms;
 allow pwrmgr_t thermal-engine_t:unix_stream_socket connectto;
 allow pwrmgr_t thermal_sock_t:sock_file write;
 allow initrc_t unconfined_t:dbus send_msg;
+allow pwrmgr_t faultmgr_t:dbus send_msg; 
 dontaudit pwrmgr_t default_t:dir search;
 
 #Manage Dbus sockets
@@ -55,4 +58,3 @@ ifdef(`init_systemd',`
     dbus_system_bus_client(pwrmgr_t)
     allow pwrmgr_t self:dbus send_msg;
 ')
-

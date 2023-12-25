@@ -49,6 +49,7 @@ type qnetcfgmgr_var_t;
 type qnetcfgmgr_rt_table_t;
 type qnetcfgmgr_ipv6_net_t;
 type qnetcfgmgr_chip_t;
+type qnetcfgmgr_run_qncm_t;
 
 init_vendor_domain(qnetcfgmgr_t, qnetcfgmgr_exec_t)
 init_script_domain(qnetcfgmgr_macsec_t, qnetcfgmgr_macsec_exec_t)
@@ -89,6 +90,10 @@ gen_require(`
   type ping_exec_t;
   type time_daemon_t;
   type initrc_t;
+  type qcmap_etc_data_t;
+  type unconfined_t;
+  type dnsmasq_t;
+  type qnetcfgmgr_dig_exec_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -126,7 +131,7 @@ device_rw_socket_files(qnetcfgmgr_t, qnetcfgmgr_socket_device_t)
 allow qnetcfgmgr_t self:socket { rw_socket_perms create };
 allow qnetcfgmgr_t self:unix_dgram_socket { sendto };
 
-system_data_files_type(qnetcfgmgr_rt_table_t);
+#system_data_files_type(qnetcfgmgr_rt_table_t);
 
 allow qnetcfgmgr_rt_table_t fs_t:filesystem associate;
 
@@ -136,7 +141,6 @@ read_files_pattern(qnetcfgmgr_t, proc_net_t, qnetcfgmgr_t);
 read_lnk_files_pattern(qnetcfgmgr_t, proc_t, qnetcfgmgr_t)
 read_files_pattern(qnetcfgmgr_t, proc_t, qnetcfgmgr_t)
 
-allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file getattr;
 allow qnetcfgmgr_t qrtr_ns_t:dir { getattr search };
 allow qnetcfgmgr_t qrtr_ns_t:file { read open };
 allow qnetcfgmgr_t self:fifo_file ioctl;
@@ -156,6 +160,11 @@ allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
+
+# Permissions added for DNSmasq to support hosting RU local management port
+allow dnsmasq_t initrc_var_run_t:dir { search write add_name };
+allow dnsmasq_t initrc_var_run_t:file { create read open };
+allow dnsmasq_t qnetcfgmgr_run_qncm_t:file { append write };
 
 allow qnetcfgmgr_t self:process { setcap};
 allow qnetcfgmgr_t self:icmp_socket { create setopt write read ioctl getopt };
@@ -202,6 +211,24 @@ corecmd_exec_shell(qnetcfgmgr_t)
 allow qnetcfgmgr_t sysctl_t:dir search;
 allow qnetcfgmgr_t sysctl_net_t:dir search;
 allow qnetcfgmgr_t sysctl_net_t:file { write open };
+
+#QNCM rt_tables
+allow initrc_t qcmap_etc_data_t:dir search;
+allow initrc_t qnetcfgmgr_rt_table_t:file getattr;
+allow mount_copybind_t qnetcfgmgr_rt_table_t:file { getattr read };
+allow setfiles_t qnetcfgmgr_rt_table_t:file getattr;
+allow mount_copybind_t qnetcfgmgr_rt_table_t:file open;
+allow mount_t qnetcfgmgr_rt_table_t:file getattr;
+allow mount_t qnetcfgmgr_rt_table_t:file mounton;
+allow mount_copybind_t qnetcfgmgr_rt_table_t:file create;
+allow initrc_t qnetcfgmgr_rt_table_t:file setattr;
+userdebug_or_eng('
+allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write setattr };
+')
+allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
+allow unconfined_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map execute_no_trans };
+#QNCM IP2MACv6
+allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;

@@ -1,0 +1,16 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type binderfs_t;
+    type initrc_t;
+    type servicemanager_t;
+    type socket_device_t;
+    type binder_device_t;
+')
+
+allow agm_server_t initrc_t:binder { call transfer };
+allow agm_server_t servicemanager_t:binder { call transfer };
+allow agm_server_t binder_device_t:chr_file { rw_chr_file_perms map };
+allow agm_server_t socket_device_t:dir search_dir_perms;
+allow agm_server_t binderfs_t:dir search_dir_perms;

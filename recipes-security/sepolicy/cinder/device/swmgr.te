@@ -1,0 +1,82 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(swmgr, 1.0)
+
+type swmgr_t;
+type swmgr_exec_t;
+
+init_vendor_domain(swmgr_t, swmgr_exec_t)
+domtrans_pattern(swmgr_t, recovery_exec_t, recovery_t)
+
+gen_require(`
+    type recovery_t;
+    type recovery_exec_t;
+    type adbd_t;
+    type bin_t;
+    type etc_t;
+    type fs_t;
+    type proc_t;
+    type init_t;
+    type initrc_t;
+    type var_log_t;
+    type unconfined_t;
+    type mplane_app_t;
+    type pmsg0_t;
+    type socket_device_t;
+    type csm_initrc_t;
+    type removable_device_t;
+    type init_var_run_t;
+    type syslogd_var_run_t;
+    type sysctl_kernel_t;
+    type kmsg_device_t;
+    type syslogd_t;
+    type devlog_t;
+    type cache_t;
+    type manifest_t;
+    class service { start status stop reload };
+')
+
+kernel_read_ring_buffer(swmgr_t)
+kernel_read_ring_buffer(recovery_t)
+
+allow swmgr_t self:qipcrtr_socket create_socket_perms;
+
+allow initrc_t mplane_app_t:file { map read_file_perms};
+
+allow csm_initrc_t init_t:file read_file_perms;
+allow csm_initrc_t init_var_run_t:file open;
+allow csm_initrc_t sysctl_kernel_t:dir search_dir_perms;
+allow csm_initrc_t sysctl_kernel_t:file read_file_perms;
+
+allow swmgr_t etc_t:file read_file_perms;
+allow swmgr_t proc_t:file read_file_perms;
+allow swmgr_t pmsg0_t:chr_file { create rw_file_perms };
+allow swmgr_t socket_device_t:dir search_dir_perms;
+allow swmgr_t var_log_t:file rw_file_perms;
+allow swmgr_t removable_device_t:blk_file rw_blk_file_perms;
+allow swmgr_t mplane_app_t:dir search_dir_perms;
+allow swmgr_t mplane_app_t:file { rw_file_perms map };
+allow swmgr_t kmsg_device_t:chr_file rw_chr_file_perms;
+allow swmgr_t init_var_run_t:dir search_dir_perms;
+allow swmgr_t syslogd_var_run_t:dir search_dir_perms;
+allow swmgr_t syslogd_t:unix_dgram_socket sendto;
+allow swmgr_t devlog_t:sock_file write_sock_file_perms;
+allow swmgr_t cache_t:dir search_dir_perms;
+allow swmgr_t cache_t:file read_file_perms;
+allow swmgr_t manifest_t:dir search_dir_perms;
+allow swmgr_t manifest_t:file read_file_perms;
+ 
+allow recovery_t mplane_app_t:dir search_dir_perms;
+allow recovery_t mplane_app_t:file { rw_file_perms map };
+allow recovery_t fs_t:filesystem getattr;
+
+allow adbd_t mplane_app_t:dir { add_name getattr search write };
+allow adbd_t mplane_app_t:file { create setattr rw_file_perms };
+
+userdebug_or_eng(`
+		allow unconfined_t mplane_app_t:dir { add_name search_dir_perms write };
+		allow unconfined_t mplane_app_t:file { create rw_file_perms };
+		allow unconfined_t swmgr_exec_t:service { start status stop };
+		allow unconfined_t bin_t:service { start status stop };
+')
