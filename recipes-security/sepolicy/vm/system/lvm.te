@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -39,3 +39,12 @@ mls_key_write_all_levels(lvm_t)
 storage_create_fixed_disk_dev(lvm_t)
 mls_file_write_all_levels(lvm_t)
 mls_file_upgrade(lvm_t)
+
+optional_policy(`
+    gen_require(`
+        type tvmroot_t;
+        type var_run_t;
+    ')
+    allow lvm_t tvmroot_t:unix_stream_socket { read write };
+    allow lvm_t var_run_t:dir create;
+')

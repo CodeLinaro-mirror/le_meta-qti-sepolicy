@@ -1,0 +1,19 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type qwesd_t;
+    type qwes_mink_socket_t;
+')
+
+### location hal daemon
+#Qwes operations
+stream_connect_pattern(loc_hald_t,qwes_mink_socket_t,qwes_mink_socket_t,qwesd_t);
+
+### xtwifi_agent
+#Qwes operations
+stream_connect_pattern(xtwifi_agent_t,qwes_mink_socket_t,qwes_mink_socket_t,qwesd_t);
+
+### xtwifi_client
+#Qwes operations
+stream_connect_pattern(xtwifi_client_t,qwes_mink_socket_t,qwes_mink_socket_t,qwesd_t);

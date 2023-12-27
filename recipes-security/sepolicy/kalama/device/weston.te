@@ -107,6 +107,9 @@ gen_require(`
  type udev_t;
  type dev_dri_t;
  attribute domain_can_read_systemdata;
+ type servicemanager_t;
+ type binderfs_t;
+ type binder_device_t;
 ')
 
 #For weston-terminal
@@ -152,6 +155,12 @@ allow weston_t weston_socket_device_t:sock_file manage_sock_file_perms;
 
 allow weston_t self:process setsched;
 allow weston_t self:process { execmem getsched };
+
+#manage binder call
+servicemanager_binder_use(weston_t)
+servicemanager_binder_call(weston_t servicemanager_t)
+allow weston_t binderfs_t:dir search;
+allow weston_t binder_device_t:chr_file { map };
 
 # Weston needs to access buffer fd passed from qmmf-server.
 allow weston_t qmmf_server_t:fd use;

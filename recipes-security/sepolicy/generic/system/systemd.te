@@ -42,9 +42,14 @@ gen_require(`
  type etc_t;
  type var_run_t;
  type kernel_t;
+ type udev_t;
 ')
 
 #systemd_update_done
+
+# TODO: Remove this temporary below line
+permissive udev_t;
+
 
 allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t sysctl_kernel_t:dir search;

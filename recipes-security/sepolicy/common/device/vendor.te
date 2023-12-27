@@ -351,3 +351,9 @@ kernel_read_system_state(touch_script_t);
 allow touch_script_t self:capability { chown };
 allow touch_script_t touch_input_device_t:file { getattr setattr };
 corecmd_exec_shell(touch_script_t)
+
+gen_require(`
+    type cpu_sysfs_t;
+')
+allow post_boot_script_t cpu_sysfs_t:dir { rw_file_perms search add_name };
+allow post_boot_script_t cpu_sysfs_t:file { read create write_file_perms };
