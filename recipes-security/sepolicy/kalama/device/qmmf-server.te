@@ -134,7 +134,9 @@ leprop_rw_props(qmmf_server_t)
 allow qmmf_server_t self:unix_dgram_socket create_socket_perms;
 allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
 allow qmmf_server_t self:unix_stream_socket create_stream_socket_perms;
-allow qmmf_server_t self:process getsched;
+allow qmmf_server_t self:process {getsched setsched};
+allow qmmf_server_t self:lockdown confidentiality;
+
 
 # Allow search /run/
 gen_require(`
@@ -217,7 +219,7 @@ manage_qmmf_data_files(qmmf_server_t)
 manage_camera_files_data(qmmf_server_t)
 device_search_sockets(qmmf_server_t)
 allow qmmf_server_t binder_device_t:chr_file { read write map };
-allow qmmf_server_t self:capability dac_override;
+allow qmmf_server_t self:capability {dac_override dac_read_search };
 allow qmmf_server_t gpu_device_t:chr_file map;
 allow qmmf_server_t self:qipcrtr_socket { create getattr read setopt write };
 allow qmmf_server_t sysfs_t:lnk_file read;
