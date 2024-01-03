@@ -1,0 +1,79 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(ab-updater, 1.0)
+
+type ab_updater_t;
+type ab_updater_exec_t;
+type ab_updater_conf_t;
+
+init_vendor_domain(ab_updater_t, ab_updater_exec_t)
+
+gen_require(`
+    type proc_t;
+    type unreserved_port_t;
+    type node_t;
+    type tmpfs_t;
+    type cgroup_t;
+    type init_t;
+    type system_dbusd_var_run_t;
+    type system_dbusd_t;
+    type bin_t;
+    type adbd_initrc_exec_t;
+    type usb_exec_t;
+    type systemd_unit_t;
+    type post_boot_script_exec_t;
+    type mount_copybind_t;
+    type mount_t;
+    type unconfined_t;
+    type proc_t;
+    type removable_device_t;
+    type fs_t;
+    type setfiles_t;
+    class service { start status stop reload };
+')
+
+userdebug_or_eng(`
+     allow unconfined_t ab_updater_exec_t:service { start stop status };
+     allow ab_updater_t bin_t:service { start status stop reload};
+')
+
+# self rules
+allow ab_updater_t self:tcp_socket { create bind read name_bind node_bind listen accept };
+allow ab_updater_t self:capability { sys_boot };
+allow ab_updater_t unreserved_port_t:tcp_socket { name_bind };
+allow ab_updater_t node_t:tcp_socket { node_bind };
+allow ab_updater_t tmpfs_t:filesystem { getattr };
+allow ab_updater_t cgroup_t:filesystem { getattr };
+allow ab_updater_t init_t:dir { search read open getattr ioctl };
+allow ab_updater_t init_t:file { open read getattr ioctl };
+allow ab_updater_t system_dbusd_var_run_t:dir { search };
+allow ab_updater_t system_dbusd_var_run_t:sock_file { write };
+allow ab_updater_t system_dbusd_t:unix_stream_socket { connectto };
+allow ab_updater_t ab_updater_conf_t:file { read write open getattr };
+allow ab_updater_t proc_t:file { read getattr open };
+allow ab_updater_t removable_device_t:blk_file { read open write };
+
+allow mount_copybind_t ab_updater_conf_t:file { getattr read open create write setattr };
+allow mount_t ab_updater_conf_t:file { getattr mounton };
+allow unconfined_t ab_updater_conf_t:file { getattr read open write };
+allow ab_updater_conf_t fs_t:filesystem { associate };
+allow fs_t ab_updater_conf_t:filesystem { associate };
+allow setfiles_t ab_updater_conf_t:file { getattr };
+
+# allow rules to check the status of other service
+allow { ab_updater_t } file_type:{ service } { status };
+
+#Manage Dbus sockets
+ifdef(`init_systemd',`
+    gen_require(`
+       type systemd_logind_var_run_t;
+       type system_dbusd_var_run_t;
+    ')
+    dbus_system_bus_client(ab_updater_t)
+    init_dbus_chat(ab_updater_t)
+    allow ab_updater_t self:dbus send_msg;
+    rw_sock_files_pattern(ab_updater_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
+')
+logging_send_syslog_msg(ab_updater_t)

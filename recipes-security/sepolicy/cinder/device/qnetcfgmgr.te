@@ -93,6 +93,7 @@ gen_require(`
   type qcmap_etc_data_t;
   type unconfined_t;
   type dnsmasq_t;
+  type qnetcfgmgr_dig_exec_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -225,7 +226,7 @@ userdebug_or_eng('
 allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write setattr };
 ')
 allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
-
+allow unconfined_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map execute_no_trans };
 #QNCM IP2MACv6
 allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
 
