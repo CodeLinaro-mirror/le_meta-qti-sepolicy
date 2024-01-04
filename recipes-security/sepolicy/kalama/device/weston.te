@@ -110,6 +110,10 @@ gen_require(`
  type servicemanager_t;
  type binderfs_t;
  type binder_device_t;
+ type init_runtime_t;
+ type syslogd_runtime_t;
+ type devlog_t;
+ type syslogd_t;
 ')
 
 #For weston-terminal
@@ -182,6 +186,9 @@ userdebug_or_eng(`
     allow weston_t trace_marker_t:file { write open };
     allow weston_t tracefs_t:dir search;
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
+    allow weston_t syslogd_runtime_t:dir search;
+    allow weston_t devlog_t:sock_file write;
+    allow weston_t syslogd_t:unix_dgram_socket sendto;
 ')
 
 manage_qmmf_data_files(weston_t)
@@ -219,6 +226,7 @@ allow weston_t adsprpcd_t:dir getattr;
 allow weston_t boot_t:dir getattr;
 allow weston_t default_t:dir search_dir_perms;
 allow weston_t default_t:lnk_file getattr;
+allow weston_t default_t:file { read_file_perms };
 allow weston_t devpts_t:chr_file open;
 allow weston_t devpts_t:filesystem getattr;
 allow weston_t home_root_t:dir getattr;
@@ -234,6 +242,7 @@ allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
 allow weston_t data_t:file read_file_perms;
+allow weston_t init_runtime_t:dir search;
 
 # Allow weston search /run for wayland socket
 gen_require(`
@@ -263,6 +272,5 @@ allow weston_t tuicoreservice_vendor_t:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
 allow weston_t self:capability dac_read_search;
 allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
-allow udev_t dev_dri_t:dir create_dir_perms;
 allow initrc_t weston_runtime_t:file { setattr getattr };
 allow initrc_t weston_runtime_t:sock_file { setattr getattr write };
