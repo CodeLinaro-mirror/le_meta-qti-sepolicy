@@ -58,3 +58,10 @@ files_type(voice_data_t)
 
 type nlp_data_t;
 user_data_files_type(nlp_data_t)
+
+userdebug_or_eng(`
+    type init_qti_debug_t;
+    files_type(init_qti_debug_t)
+    init_script_domain(post_boot_script_t, init_qti_debug_t)
+    allow post_boot_script_t init_qti_debug_t:file exec_file_perms;
+')

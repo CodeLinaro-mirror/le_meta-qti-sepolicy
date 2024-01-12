@@ -48,8 +48,10 @@ gen_require(`
     type functionfs_t;
 ')
 allow usb_t cgroup_t:filesystem getattr;
-allow usb_t debugfs_t:dir search;
-allow usb_t debugfs_t:filesystem getattr;
+userdebug_or_eng(`
+    allow usb_t debugfs_t:dir search;
+    allow usb_t debugfs_t:filesystem getattr;
+')
 allow usb_t event_device_t:chr_file getattr;
 allow usb_t fs_t:filesystem getattr;
 allow usb_t port_bridge_usb_device_t:chr_file { relabelfrom relabelto getattr };
@@ -57,8 +59,8 @@ allow usb_t self:capability fowner;
 allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
 
 # /sbin/start_usb exec restorecon and setprop command
-allow usb_t setfiles_exec_t:file { read map getattr open execute execute_no_trans };
-allow usb_t setprop_exec_t:file { read map getattr open execute execute_no_trans };
+allow usb_t setfiles_exec_t:file { mmap_read_file_perms };
+allow usb_t setprop_exec_t:file { mmap_read_file_perms };
 
 allow usb_t tmp_t:dir { write remove_name search add_name };
 allow usb_t tmp_t:file { write create unlink open getattr };

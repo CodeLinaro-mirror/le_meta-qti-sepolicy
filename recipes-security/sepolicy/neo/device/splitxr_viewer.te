@@ -58,9 +58,9 @@ gen_require(`
     type gpu_device_t;
     type dev_dri_t;
     type gpumodel_t;
-    type bl_power_sysfs_t;
-    type cpu_present_sysfs_t;
-    type cpu_capacity_sysfs_t;
+    type sysfs_panel0_backlight_bl_power_t;
+    type sysfs_cpu_present;
+    type sysfs_cpu_capacity;
     type sysfs_t;
     type qglconfig_data_t;
     type splitxr_service_t;
@@ -107,9 +107,9 @@ mls_file_read_all_levels(splitxr_viewer_t)
 
 #Allow access to sysfs nodes
 allow splitxr_viewer_t gpumodel_t:file read_file_perms;
-allow splitxr_viewer_t bl_power_sysfs_t:file read_file_perms;
-allow splitxr_viewer_t cpu_present_sysfs_t:file read_file_perms;
-allow splitxr_viewer_t cpu_capacity_sysfs_t:file read_file_perms;
+allow splitxr_viewer_t sysfs_panel0_backlight_bl_power_t:file read_file_perms;
+allow splitxr_viewer_t sysfs_cpu_present:file read_file_perms;
+allow splitxr_viewer_t sysfs_cpu_capacity:file read_file_perms;
 #Allow read access to /sys/class/kgsl/kgsl-3d0 lnk_file
 allow splitxr_viewer_t sysfs_t:lnk_file read_lnk_file_perms;
 
