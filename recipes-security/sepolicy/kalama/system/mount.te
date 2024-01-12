@@ -47,6 +47,7 @@ gen_require(`
     type binderfs_t;
     type wifi_data_t;
     type systemd_unit_t;
+    type weston_runtime_t;
 ')
 
 #for overlayfs
@@ -69,3 +70,5 @@ allow mount_t binderfs_t:filesystem { mount };
 allow mount_t var_t:chr_file { unlink };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow mount_t systemd_unit_t:lnk_file getattr;
+allow mount_t weston_runtime_t:dir search;
+allow mount_t weston_runtime_t:file read_file_perms;

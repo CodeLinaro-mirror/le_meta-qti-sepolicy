@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/qdcmss       --      gen_context(system_u:object_r:qdcm_exec_t,s0)
+/dev/socket/qdcmsocket -s     gen_context(system_u:object_r:qdcm_socket_device_t,s0)
