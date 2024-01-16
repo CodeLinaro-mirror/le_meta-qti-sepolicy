@@ -1,0 +1,13 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(manifest, 1.0)
+
+type manifest_t;
+files_mountpoint(manifest_t)
+
+gen_require(`
+    type mount_t;
+')
+
+allow mount_t manifest_t:filesystem relabelfrom;

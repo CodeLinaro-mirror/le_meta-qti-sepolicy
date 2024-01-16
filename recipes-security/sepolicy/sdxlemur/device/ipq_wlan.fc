@@ -34,6 +34,7 @@
 /etc/config/wireless			gen_context(system_u:object_r:wifi_system_data_t,s0)
 /etc/config/default_wifi_configs(/.*)?	gen_context(system_u:object_r:wifi_system_data_t,s0)
 /systemrw/ipq(/.*)?			gen_context(system_u:object_r:wifi_system_data_t,s0)
+/systemrw/wlan/config(/.*)?		gen_context(system_u:object_r:wifi_system_data_t,s0)
 /systemrw/wlan/bin(/.*)?		gen_context(system_u:object_r:wlan_service_exec_t,s0)
 /data/vendor/ipq(/.*)?			gen_context(system_u:object_r:wifi_data_t,s0)
 /data/vendor/wifi(/.*)?			gen_context(system_u:object_r:wifi_data_t,s0)
