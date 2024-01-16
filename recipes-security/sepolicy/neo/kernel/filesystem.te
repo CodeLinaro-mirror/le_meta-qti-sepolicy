@@ -1,0 +1,26 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type bl_power_sysfs_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/bl_power gen_context(system_u:object_r:bl_power_sysfs_t,s0)
+dev_associate_sysfs(bl_power_sysfs_t)
+
+type cpu_present_sysfs_t;
+genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:cpu_present_sysfs_t,s0)
+dev_associate_sysfs(cpu_present_sysfs_t)
+
+#Access video4linux video nodes for encode and decode through video driver
+type video_name_sysfs_t;
+genfscon sysfs /devices/platform/soc/soc:qcom,cam-req-mgr/video4linux/video0/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/soc:qcom,cam-sync/video4linux/video1/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/aa00000.qcom,vidc/video4linux/video32/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/aa00000.qcom,vidc/video4linux/video33/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
+dev_associate_sysfs(video_name_sysfs_t)
+
+#Access to set correct perf level for running splitxr use case
+type cpu_capacity_sysfs_t;
+genfscon sysfs /devices/system/cpu/cpu0/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu1/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu2/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpu3/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
+dev_associate_sysfs(cpu_capacity_sysfs_t)

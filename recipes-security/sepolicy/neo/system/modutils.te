@@ -25,9 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/weston       --      gen_context(system_u:object_r:weston_exec_t,s0)
-/usr/bin/weston-.*    --      gen_context(system_u:object_r:weston_exec_t,s0)
-/dev/socket/weston(/.*)?      gen_context(system_u:object_r:weston_socket_device_t,s0)
-/run/user/root/wayland.*      gen_context(system_u:object_r:weston_runtime_t,s0)
-/data/vendor/display(/.*)?    gen_context(system_u:object_r:weston_runtime_t,s0)
-/usr/share/weston(/.*)?       gen_context(system_u:object_r:weston_usr_t,s0)
+gen_require(`
+    type nsfs_t;
+    type adbd_t;
+')
+mls_key_write_to_clearance(kmod_t)
+allow kmod_t nsfs_t:file read_file_perms;
+allow kmod_t adbd_t:unix_stream_socket { read write getattr };

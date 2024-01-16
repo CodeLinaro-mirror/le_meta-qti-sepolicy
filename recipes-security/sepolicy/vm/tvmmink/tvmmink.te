@@ -37,6 +37,7 @@ type vendor_vm_self_device_t;
 type vendor_vm_trusted_device_t;
 type smmu_proxy_device_t;
 type touch_input_device_t;
+type socket_device_t;
 ')
 
 allow tvmmink_t self:fifo_file write;
@@ -59,6 +60,7 @@ allow tvmmink_t vendor_dmabuf_tui_heap_device_t:chr_file { getattr read open ioc
 allow tvmmink_t vendor_dmabuf_ms1_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t vendor_dmabuf_ms2_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t vendor_dmabuf_ms3_heap_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmmink_t socket_device_t:dir { watch };
 
 allow tvmmink_sock_t device_t:filesystem associate;
 

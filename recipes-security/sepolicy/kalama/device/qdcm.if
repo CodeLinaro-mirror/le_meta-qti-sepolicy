@@ -1,17 +1,10 @@
 # Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
+## <summary>qdcm daemon</summary>
 
 ########################################
-#
-# Declarations
-#
-
-
-gen_require(`
-    type cpu_sysfs_t;
-')
-
-allow perf_hal_t cpu_sysfs_t:dir list_dir_perms;
-allow perf_hal_t cpu_sysfs_t:file rw_file_perms;
+## <summary>
+##      All permissions for qdcm service.
+## </summary>
 

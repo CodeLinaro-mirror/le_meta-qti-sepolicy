@@ -173,4 +173,16 @@ userdebug_or_eng(`
     allow unconfined_t self:lockdown { integrity };
     allow unconfined_t kerneltests_modules_data_t:dir { read_file_perms search };
     allow unconfined_t kerneltests_modules_data_t:file { read_file_perms };
+
+    gen_require(`
+	type cpu_scaling_freq_t;
+	type cpu_sysfs_t;
+	type sysfs_cpu_present;
+    ')
+
+    allow unconfined_t cpu_scaling_freq_t:file { getattr write_file_perms };
+    allow unconfined_t cpu_sysfs_t:dir { rw_dir_perms search };
+    allow unconfined_t cpu_sysfs_t:file read_file_perms;
+    allow unconfined_t sysfs_cpu_present:file { getattr };
+
 ')

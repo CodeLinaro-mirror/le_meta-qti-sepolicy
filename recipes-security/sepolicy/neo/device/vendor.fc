@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,10 +24,31 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+#
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/usr/bin/weston       --      gen_context(system_u:object_r:weston_exec_t,s0)
-/usr/bin/weston-.*    --      gen_context(system_u:object_r:weston_exec_t,s0)
-/dev/socket/weston(/.*)?      gen_context(system_u:object_r:weston_socket_device_t,s0)
-/run/user/root/wayland.*      gen_context(system_u:object_r:weston_runtime_t,s0)
-/data/vendor/display(/.*)?    gen_context(system_u:object_r:weston_runtime_t,s0)
-/usr/share/weston(/.*)?       gen_context(system_u:object_r:weston_usr_t,s0)
+# dev node
+/dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
+/etc/init.qti.debug.sh  -- gen_context(system_u:object_r:init_qti_debug_t,s0)
+
+/dev/dri(/.*)?    gen_context(system_u:object_r:dev_dri_t,s0)
+
+### synx_device ###
+/dev/synx_device           -c  gen_context(system_u:object_r:synx_device_t,s0)
+
+### DMA HEAP Types ###
+/dev/dma_heap/qcom,lsr_.*  -c gen_context(system_u:object_r:vendor_dmabuf_lsr_heap_device_t,s0)
+
+### MEM_BUF_VM devices ###
+/dev/mem_buf_vm/qcom,cp_bitstream -c gen_context(system_u:object_r:vendor_vm_cpbitstream_device_t,s0)
+
+### misc file ###
+/etc/video_system_specs.json   -- gen_context(system_u:object_r:video_system_specs_t,s0)
+/etc/qgl_config.txt            -- gen_context(system_u:object_r:qglconfig_data_t,s0)
+
+### voice config ###
+/etc/voiceui_conf.xml        -- gen_context(system_u:object_r:voice_data_t,s0)
+/etc/asr_nlp_files(/.*)?        gen_context(system_u:object_r:nlp_data_t,s0)

@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,9 +25,12 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/bin/weston       --      gen_context(system_u:object_r:weston_exec_t,s0)
-/usr/bin/weston-.*    --      gen_context(system_u:object_r:weston_exec_t,s0)
-/dev/socket/weston(/.*)?      gen_context(system_u:object_r:weston_socket_device_t,s0)
-/run/user/root/wayland.*      gen_context(system_u:object_r:weston_runtime_t,s0)
-/data/vendor/display(/.*)?    gen_context(system_u:object_r:weston_runtime_t,s0)
-/usr/share/weston(/.*)?       gen_context(system_u:object_r:weston_usr_t,s0)
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+
+    servicemanager_binder_call(servicemanager_t, unconfined_t)
+')
+
+allow servicemanager_t self:unix_dgram_socket { write create connect };

@@ -1,0 +1,22 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+#policy_module(pulseaudio, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+gen_require(`
+        type socket_device_t;
+')
+
+allow pulseaudio_t socket_device_t:sock_file write;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow pulseaudio_t unconfined_t:unix_stream_socket connectto;
+')
