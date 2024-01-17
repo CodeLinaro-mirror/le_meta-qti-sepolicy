@@ -51,7 +51,7 @@ allow splitxr_service_t synx_device_t:chr_file rw_chr_file_perms;
 allow splitxr_service_t gpu_device_t:chr_file { map rw_chr_file_perms };
 
 #Allow access to sysfs nodes
-allow splitxr_service_t brightness_t:file read_file_perms;
+allow splitxr_service_t brightness_t:file rw_file_perms;
 allow splitxr_service_t image_variant_sysfs_t:dir search_dir_perms;
 allow splitxr_service_t image_variant_sysfs_t:file read_file_perms;
 allow splitxr_service_t video_name_sysfs_t:file read_file_perms;
