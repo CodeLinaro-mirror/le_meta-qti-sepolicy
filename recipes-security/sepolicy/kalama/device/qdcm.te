@@ -53,4 +53,4 @@ allow qdcm_t sysctl_vm_t:dir search;
 allow qdcm_t sysctl_vm_overcommit_t:file read_file_perms;
 allow qdcm_t ptmx_t:chr_file rw_chr_file_perms;
 allow qdcm_t weston_runtime_t:dir search;
-allow qdcm_t weston_runtime_t:file read_file_perms;
+allow qdcm_t weston_runtime_t:file { rw_file_perms };
