@@ -1,0 +1,6 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    /usr/bin/qsap_sanity          --      gen_context(system_u:object_r:qsap_sanity_exec_t,s0)
+')

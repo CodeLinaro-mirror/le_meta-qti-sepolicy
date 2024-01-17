@@ -1,0 +1,32 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    policy_module(qsap_sanity, 1.0)
+
+    ########################################
+    #
+    # Declarations
+    #
+
+    type qsap_sanity_t;
+    type qsap_sanity_exec_t;
+    init_vendor_domain(qsap_sanity_t, qsap_sanity_exec_t)
+
+    gen_require(`
+     type etc_t;
+    ')
+    qesdk_bdk_access(qsap_sanity_t)
+
+    gen_require(`
+        type unconfined_t;
+        class service {start stop status};
+    ')
+    #systemctl start/stop/status qsap_sanity
+    allow unconfined_t qsap_sanity_exec_t:service { status start stop };
+
+    leprop_rw_props(qsap_sanity_t);
+    logging_send_syslog_msg(qsap_sanity_t)
+
+    allow qsap_sanity_t etc_t:file { read open };
+')
