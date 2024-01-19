@@ -133,6 +133,19 @@ userdebug_or_eng(`
         type debugfs_t;
         type tracefs_t;
         type trace_marker_t;
+        type adsprpcd_t;
+        type binder_device_t;
+        type binderfs_t;
+        type cvp_device_t;
+        type etc_runtime_t;
+        type fs_t;
+        type image_variant_sysfs_t;
+        type perf_hal_socket_t;
+        type perf_hal_t;
+        type pmsg_device_t;
+        type synx_device_t;
+        type system_dmabuf_device_t;
+        type vendor_dmabuf_system_heap_device_t;
     ')
 
     rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
@@ -143,6 +156,22 @@ userdebug_or_eng(`
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t adsprpcd_t:dir { getattr search };
+    allow qmmf_server_t binder_device_t:chr_file map;
+    allow qmmf_server_t binderfs_t:dir search;
+    allow qmmf_server_t cvp_device_t:chr_file { ioctl open read write };
+    allow qmmf_server_t etc_runtime_t:file { getattr open read };
+    allow qmmf_server_t fs_t:filesystem getattr;
+    allow qmmf_server_t image_variant_sysfs_t:dir search;
+    allow qmmf_server_t image_variant_sysfs_t:file { open read };
+    allow qmmf_server_t perf_hal_socket_t:sock_file write;
+    allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
+    allow qmmf_server_t pmsg_device_t:chr_file { open write };
+    allow qmmf_server_t self:process setsched;
+    allow qmmf_server_t self:qipcrtr_socket { create getattr read setopt write };
+    allow qmmf_server_t synx_device_t:chr_file { ioctl open read write };
+    allow qmmf_server_t system_dmabuf_device_t:chr_file { open read };
+    allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file { ioctl open read write };
 ')
 
 manage_qmmf_data_files(qmmf_server_t)
