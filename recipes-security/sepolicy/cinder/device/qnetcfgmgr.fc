@@ -45,11 +45,12 @@
 /etc/data/dhcp/* 				 		  -- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
 
 # Files
-/var/run/dhclient*\.pid\.*				-- gen_context(system_u:object_r:qnetcfgmgr_var_t,s0)
-/var/run/data/rt_tables\.tmp				-- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
-/etc/data/iproute2/rt_tables			-- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
-/proc/sys/net/ipv6/conf/				-- gen_context(system_u:object_r:qnetcfgmgr_ipv6_net_t,s0)
-/sys/devices/soc0/chip_id				 --  gen_context(system_u:object_r:qnetcfgmgr_chip_t,s0)
+/var/run/dhclient*\.pid\.*                              -- gen_context(system_u:object_r:qnetcfgmgr_var_t,s0)
+/var/run/data/rt_tables\.tmp                            -- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
+/etc/data/iproute2/rt_tables                            -- gen_context(system_u:object_r:qnetcfgmgr_rt_table_t,s0)
+/proc/sys/net/ipv6/conf/                                -- gen_context(system_u:object_r:qnetcfgmgr_ipv6_net_t,s0)
+/sys/devices/soc0/chip_id                               -- gen_context(system_u:object_r:qnetcfgmgr_chip_t,s0)
+/run/qncm(/.*)?                                            gen_context(system_u:object_r:qnetcfgmgr_run_qncm_t,s0)
 
 # Tools
 /usr/bin/dig							-- gen_context(system_u:object_r:qnetcfgmgr_dig_exec_t,s0)
