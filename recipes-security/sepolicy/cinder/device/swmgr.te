@@ -32,6 +32,8 @@ gen_require(`
     type kmsg_device_t;
     type syslogd_t;
     type devlog_t;
+    type cache_t;
+    type manifest_t;
     class service { start status stop reload };
 ')
 
@@ -60,14 +62,17 @@ allow swmgr_t init_var_run_t:dir search_dir_perms;
 allow swmgr_t syslogd_var_run_t:dir search_dir_perms;
 allow swmgr_t syslogd_t:unix_dgram_socket sendto;
 allow swmgr_t devlog_t:sock_file write_sock_file_perms;
-
+allow swmgr_t cache_t:dir search_dir_perms;
+allow swmgr_t cache_t:file read_file_perms;
+allow swmgr_t manifest_t:dir search_dir_perms;
+allow swmgr_t manifest_t:file read_file_perms;
+ 
 allow recovery_t mplane_app_t:dir search_dir_perms;
 allow recovery_t mplane_app_t:file { rw_file_perms map };
 allow recovery_t fs_t:filesystem getattr;
 
 allow adbd_t mplane_app_t:dir { add_name getattr search write };
 allow adbd_t mplane_app_t:file { create setattr rw_file_perms };
-
 
 userdebug_or_eng(`
 		allow unconfined_t mplane_app_t:dir { add_name search_dir_perms write };
