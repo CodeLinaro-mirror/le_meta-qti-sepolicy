@@ -233,7 +233,7 @@ allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
 allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
 allow qmmf_server_t self:process getsched;
 allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
-allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file { read_chr_file_perms write };
 allow qmmf_server_t adsprpcd_t:dir watch;
 allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
