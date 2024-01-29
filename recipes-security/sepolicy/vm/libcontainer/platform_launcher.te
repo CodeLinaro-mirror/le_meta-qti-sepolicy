@@ -47,3 +47,7 @@ selinux_getattr_fs(platform_launcher_domain)
 allow platform_launcher_domain self:process setexec;
 allow platform_launcher_domain self:fifo_file read;
 
+userdebug_or_eng(`
+    dev_write_kmsg(platform_launcher_domain)
+')
+
