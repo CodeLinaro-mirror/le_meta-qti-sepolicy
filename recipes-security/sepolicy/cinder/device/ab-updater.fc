@@ -1,0 +1,7 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+# ab updater executables and conf file
+/usr/sbin/ab-updater                -- gen_context(system_u:object_r:ab_updater_exec_t,s0)
+/etc/ab_set_success_condition.json  -- gen_context(system_u:object_r:ab_updater_conf_t,s0)

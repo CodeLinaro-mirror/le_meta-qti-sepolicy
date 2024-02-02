@@ -43,6 +43,10 @@ userdebug_or_eng(`
 gen_require(`
     type pmip_service_exec_t;
     type pmip_service_t;
+    type user_tmp_t;
+    type wifi_usr_t;
+    type wifi_system_data_t;
+    type wlan_service_exec_t;
 ')
 
 ifdef(`init_systemd',`
@@ -54,3 +58,16 @@ allow qcmap_cm_t socket_device_t:sock_file write;
 read_lnk_files_pattern(qcmap_cm_t, proc_t, pmip_service_t)
 read_files_pattern(qcmap_cm_t, proc_t, pmip_service_t)
 device_rw_socket_files(qcmap_cm_t, socket_device_t)
+
+#Ezmesh: exec /usr/share/libubox/jshn.sh
+allow qcmap_cm_t wifi_usr_t:file { read open };
+
+#Ezmesh: cp 5g_wireless in system data
+allow qcmap_cm_t wifi_system_data_t:lnk_file { read };
+
+#Ezmesh: exec start_qca_wifi
+allow qcmap_cm_t wlan_service_exec_t:file exec_file_perms;
+
+#Ezmesh: read /var/run/state
+allow qcmap_cm_t user_tmp_t:dir { search };
+allow qcmap_cm_t user_tmp_t:file { lock };
