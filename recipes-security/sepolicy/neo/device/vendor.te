@@ -27,7 +27,7 @@
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type ashmem_devices_t;
@@ -45,6 +45,9 @@ files_type(video_system_specs_t)
 ### DMA HEAP Types ###
 type vendor_dmabuf_lsr_heap_device_t;
 dev_node(vendor_dmabuf_lsr_heap_device_t)
+
+type vendor_dmabuf_audioml_heap_device_t;
+dev_node(vendor_dmabuf_audioml_heap_device_t);
 
 ### MEM_BUF_VM devices ###
 type vendor_vm_cpbitstream_device_t;
