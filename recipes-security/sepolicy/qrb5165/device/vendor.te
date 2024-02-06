@@ -34,7 +34,17 @@ dev_node(ashmem_devices_t);
 
 gen_require(`
     type cpu_sysfs_t;
+    type storage_disk_device_t;
+    type queue_sysfs_t;
+    type image_variant_sysfs_t;
+    type power_sysfs_t;
 ')
 
 allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
 allow post_boot_script_t cpu_sysfs_t:file { create write_file_perms };
+allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
+allow post_boot_script_t queue_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t queue_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
+allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t power_sysfs_t:file write_file_perms;
