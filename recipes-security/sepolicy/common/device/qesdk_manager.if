@@ -1,0 +1,30 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+## <summary>qesdk-manager-service daemon</summary>
+
+interface(`qesdk_adk_access',`
+    gen_require(`
+        type qesdk_manager_t;
+        type qesdk_adk_socket_t;
+        type socket_device_t;
+    ')
+
+    allow $1 qesdk_manager_t:unix_stream_socket connectto;
+    allow $1 qesdk_adk_socket_t:sock_file write;
+    allow $1 socket_device_t:dir { search };
+')
+
+interface(`qesdk_bdk_access',`
+    gen_require(`
+        type qesdk_manager_t;
+        type qesdk_bdk_socket_t;
+        type socket_device_t;
+    ')
+
+    allow $1 qesdk_manager_t:unix_stream_socket connectto;
+    allow $1 qesdk_bdk_socket_t:sock_file write;
+    allow $1 socket_device_t:dir { search };
+')
+
