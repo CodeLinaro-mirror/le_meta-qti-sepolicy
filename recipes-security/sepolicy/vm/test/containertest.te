@@ -90,4 +90,7 @@ userdebug_or_eng(`
     # Memfd testing
     can_exec(containertest_t, tmpfs_t)
     allow containertest_t tmpfs_t:file { entrypoint map };
+
+    # Redirect to /dev/kmsg
+    mls_file_write_all_levels(launchertest_t)
 ')  # userdebug_or_eng
