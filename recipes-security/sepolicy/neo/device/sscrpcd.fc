@@ -29,57 +29,5 @@
 # Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(adsprpcd , 1.0)
-
-########################################
-#
-# Declarations
-#
-
-type adsprpcd_t;
-files_mountpoint(adsprpcd_t);
-
-type adsprpcd_exec_t;
-files_type(adsprpcd_exec_t);
-
-init_daemon_domain(adsprpcd_t, adsprpcd_exec_t)
-
-gen_require(`
-    type debugfs_t;
-    type sound_device_t;
-    type ion_device_t;
-    type sysfs_t;
-    type persist_t;
-    type system_dir_t;
-    type xdsp_device_t;
-    type qdsp_device_t;
-    type system_dmabuf_device_t;
-')
-
-allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
-userdebug_or_eng(`
-    allow adsprpcd_t debugfs_t:dir search_dir_perms;
-')
-allow adsprpcd_t sysfs_t:file rw_file_perms;
-allow adsprpcd_t persist_t:dir search_dir_perms;
-allow adsprpcd_t system_dir_t:dir { search open read getattr};
-allow adsprpcd_t system_dir_t:file read_file_perms;
-
-#allow adsprpcd_audiopd.service to access /proc/sys/vm/overcommit_memory
-kernel_read_vm_overcommit_sysctl(adsprpcd_t)
-
-rw_chr_files_pattern(adsprpcd_t, device_t, sound_device_t);
-
-files_search_mnt(adsprpcd_t)
-files_search_default(adsprpcd_t)
-device_search_sockets(adsprpcd_t)
-
-#allow adsprpcd_t to acces /dev/ion
-read_chr_files_pattern(adsprpcd_t, device_t, ion_device_t);
-#allow adsprpcd_t to acces /dev/adsprpcd-smd-secure
-rw_chr_files_pattern(adsprpcd_t, device_t, xdsp_device_t);
-#allow adsprpcd_t to acces /dev/adsprpcd-smd
-rw_chr_files_pattern(adsprpcd_t, device_t, qdsp_device_t);
-
-#allow adsprpcd_t to access /dev/dma_heap/system
-allow adsprpcd_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+/usr/bin/sscrpcd                       gen_context(system_u:object_r:sscrpcd_exec_t,s0)
+/data/persist/sensors(/.*)?            gen_context(system_u:object_r:sensors_persist_data_t,s0)
