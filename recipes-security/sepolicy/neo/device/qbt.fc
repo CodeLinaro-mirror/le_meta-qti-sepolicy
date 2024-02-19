@@ -30,3 +30,5 @@
 
 /dev/btpower                         -c      gen_context(system_u:object_r:bt_device_t,s0)
 /dev/ttyHS0                          -c      gen_context(system_u:object_r:ttyHS0_device_t,s0)
+/dev/socket/ble_gap_socket           -s      gen_context(system_u:object_r:bt_app_sock_t,s0)
+/dev/socket/ble_wbds_socket          -s      gen_context(system_u:object_r:bt_app_sock_t,s0)
