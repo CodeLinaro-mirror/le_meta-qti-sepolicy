@@ -58,7 +58,11 @@
 #  IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 #  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+#
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 userdebug_or_eng(`
     gen_require(`
@@ -78,6 +82,8 @@ userdebug_or_eng(`
         type hwfde_conf_file_t;
         type install_evict_t;
         type proc_sched_t;
+        type snd_card_state_t;
+        type aud_dev_sysfs_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -94,6 +100,7 @@ userdebug_or_eng(`
     allow unconfined_t proc_sched_t:file rw_file_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
+    allow unconfined_t snd_card_state_t:file rw_file_perms;
 
     gen_require(`
         type recovery_exec_t;

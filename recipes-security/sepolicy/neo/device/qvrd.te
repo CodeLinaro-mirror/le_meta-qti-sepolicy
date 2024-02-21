@@ -159,7 +159,7 @@ rw_chr_files_pattern(qvrd_t, device_t, synx_device_t);
 leprop_rw_props(qvrd_t);
 
 allow qvrd_t sound_device_t:chr_file rw_chr_file_perms;
-allow qvrd_t debugfs_t:dir search_dir_perms;
+
 
 allow qvrd_t adsprpcd_t:dir list_dir_perms;
 allow qvrd_t adsprpcd_t:file read_file_perms;
@@ -171,10 +171,11 @@ userdebug_or_eng(`
     allow unconfined_t qvr_data_t:file map;
     allow qvrd_t unconfined_t:process setsched;
     allow qvrd_t unconfined_t:unix_stream_socket connectto;
+    allow qvrd_t debugfs_t:dir search_dir_perms;
+    allow qvrd_t default_t:dir search_dir_perms;
 ')
 
 allow qvrd_t urandom_device_t:chr_file read_chr_file_perms;
-allow qvrd_t default_t:dir search_dir_perms;
 
 #access ver_info
 allow qvrd_t firmware_t:dir search_dir_perms;
