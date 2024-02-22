@@ -152,6 +152,7 @@ userdebug_or_eng(`
     ')
 
     allow unconfined_t binderfs_t:dir { getattr open read search };
+    allow unconfined_t binderfs_t:filesystem getattr;
     allow unconfined_t hwbinder_device_t:chr_file getattr;
     allow unconfined_t vndbinder_device_t:chr_file getattr;
 ')
