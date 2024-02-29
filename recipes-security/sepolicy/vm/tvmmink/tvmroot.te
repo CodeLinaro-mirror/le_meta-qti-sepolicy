@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmroot, 1.0)
@@ -80,6 +80,7 @@ allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execu
 write_files_pattern(tvmroot_t, platform_container_domain, platform_container_domain)
 
 mls_file_read_all_levels(tvmroot_t)
+mls_file_write_all_levels(tvmroot_t)
 
 # Cryptsetup policies
 gen_require(`
