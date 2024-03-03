@@ -57,6 +57,10 @@ type ttyHS0_device_t;
 dev_node(ttyHS0_device_t);
 allow btapp_t ttyHS0_device_t:chr_file manage_chr_file_perms; #/dev/ttyHS0
 
+type bt_app_sock_t;
+dev_node(bt_app_sock_t);
+manage_sock_files_pattern(btapp_t, bt_app_sock_t, bt_app_sock_t);
+
 read_files_pattern(btapp_t, firmware_t, firmware_t);
 manage_sock_files_pattern(btapp_t, socket_device_t, socket_device_t);
 manage_sock_files_pattern(btapp_t, data_t, data_t);
