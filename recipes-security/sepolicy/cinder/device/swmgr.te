@@ -34,6 +34,7 @@ gen_require(`
     type devlog_t;
     type cache_t;
     type manifest_t;
+    type unreserved_port_t;
     class service { start status stop reload };
 ')
 
@@ -49,6 +50,8 @@ allow csm_initrc_t init_var_run_t:file open;
 allow csm_initrc_t sysctl_kernel_t:dir search_dir_perms;
 allow csm_initrc_t sysctl_kernel_t:file read_file_perms;
 
+allow swmgr_t self:tcp_socket { read write create connect getattr setopt name_connect getopt };
+allow swmgr_t unreserved_port_t:tcp_socket { name_bind name_connect }; 
 allow swmgr_t etc_t:file read_file_perms;
 allow swmgr_t proc_t:file read_file_perms;
 allow swmgr_t pmsg0_t:chr_file { create rw_file_perms };
@@ -66,7 +69,7 @@ allow swmgr_t cache_t:dir search_dir_perms;
 allow swmgr_t cache_t:file read_file_perms;
 allow swmgr_t manifest_t:dir search_dir_perms;
 allow swmgr_t manifest_t:file read_file_perms;
- 
+
 allow recovery_t mplane_app_t:dir search_dir_perms;
 allow recovery_t mplane_app_t:file { rw_file_perms map };
 allow recovery_t fs_t:filesystem getattr;
