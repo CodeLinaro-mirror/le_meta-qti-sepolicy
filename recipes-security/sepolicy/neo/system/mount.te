@@ -73,7 +73,6 @@ gen_require(`
 
 permissive mount_t;
 permissive mount_copybind_t;
-permissive unconfined_mount_t;
 allow mount_t hwfde_conf_file_t:file read_file_perms;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
 dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
@@ -86,4 +85,3 @@ allow mount_t lib_t:filesystem relabelfrom;
 allow mount_t overlay_t:chr_file { create link rename unlink };
 allow mount_t var_t:chr_file unlink;
 allow mount_t data_t:sock_file { create unlink };
-allow unconfined_mount_t kernel_t:process setsched; #will be removing this line in futare

@@ -61,7 +61,6 @@ manage_qmmf_data_files(ipc_webserver_t)
 #self
 allow ipc_webserver_t self:process getsched;
 allow ipc_webserver_t self:fifo_file { write read getattr };
-allow ipc_webserver_t self:capability net_raw;
 allow ipc_webserver_t self:socket { create getattr read write };
 allow ipc_webserver_t self:unix_dgram_socket { create_socket_perms };
 allow ipc_webserver_t self:tcp_socket { create_socket_perms listen accept node_bind name_bind };
