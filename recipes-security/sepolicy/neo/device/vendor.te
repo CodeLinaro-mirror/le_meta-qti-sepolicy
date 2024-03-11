@@ -62,6 +62,20 @@ files_type(voice_data_t)
 type nlp_data_t;
 user_data_files_type(nlp_data_t)
 
+gen_require(`
+    type proc_sched_t;
+    type removable_device_t;
+    type image_variant_sysfs_t;
+')
+
+allow post_boot_script_t image_variant_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t image_variant_sysfs_t:file manage_file_perms;
+#allow post_boot_script_t image_version_sysfs_t:dir add_entry_dir_perms;
+#allow post_boot_script_t image_version_sysfs_t:file manage_file_perms;
+allow post_boot_script_t removable_device_t:blk_file getattr;
+allow post_boot_script_t proc_sched_t:file rw_file_perms;
+allow post_boot_script_t proc_sched_t:dir search_dir_perms;
+
 userdebug_or_eng(`
     type init_qti_debug_t;
     files_type(init_qti_debug_t)
