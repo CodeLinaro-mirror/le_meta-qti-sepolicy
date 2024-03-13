@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qtvmtest, 1.0)
@@ -37,26 +37,68 @@ allow embedallpritest_t socket_device_t:dir { search getattr };
 allow embedallpritest_t self:process signal;
 platform_container_domain_type(embedallpritest_t, embedallpritest_exec_t);
 
+# redirect log to /dev/msg
+type embedallpritest_tmpfs_t;
+files_tmpfs_file(embedallpritest_tmpfs_t)
+fs_tmpfs_filetrans(embedallpritest_t, embedallpritest_tmpfs_t, file)
+allow embedallpritest_t embedallpritest_tmpfs_t:file { manage_file_perms mounton };
+
 allow embeddeathtest_t socket_device_t:dir { search getattr };
 allow embeddeathtest_t self:process signal;
 platform_container_domain_type(embeddeathtest_t, embeddeathtest_exec_t);
+
+# redirect log to /dev/msg
+type embeddeathtest_tmpfs_t;
+files_tmpfs_file(embeddeathtest_tmpfs_t)
+fs_tmpfs_filetrans(embeddeathtest_t, embeddeathtest_tmpfs_t, file)
+allow embeddeathtest_t embeddeathtest_tmpfs_t:file { manage_file_perms mounton };
 
 allow embedcommontest_t socket_device_t:dir { search getattr };
 allow embedcommontest_t self:process signal;
 platform_container_domain_type(embedcommontest_t, embedcommontest_exec_t);
 
+# redirect log to /dev/msg
+type embedcommontest_tmpfs_t;
+files_tmpfs_file(embedcommontest_tmpfs_t)
+fs_tmpfs_filetrans(embedcommontest_t, embedcommontest_tmpfs_t, file)
+allow embedcommontest_t embedcommontest_tmpfs_t:file { manage_file_perms mounton };
+
 allow embedsparetest_t socket_device_t:dir { search getattr };
 allow embedsparetest_t self:process signal;
 platform_container_domain_type(embedsparetest_t, embedsparetest_exec_t);
+
+# redirect log to /dev/msg
+type embedsparetest_tmpfs_t;
+files_tmpfs_file(embedsparetest_tmpfs_t)
+fs_tmpfs_filetrans(embedsparetest_t, embedsparetest_tmpfs_t, file)
+allow embedsparetest_t embedsparetest_tmpfs_t:file { manage_file_perms mounton };
 
 allow embedstresstest_t socket_device_t:dir { search getattr };
 allow embedstresstest_t self:process signal;
 platform_container_domain_type(embedstresstest_t, embedstresstest_exec_t);
 
+# redirect log to /dev/msg
+type embedstresstest_tmpfs_t;
+files_tmpfs_file(embedstresstest_tmpfs_t)
+fs_tmpfs_filetrans(embedstresstest_t, embedstresstest_tmpfs_t, file)
+allow embedstresstest_t embedstresstest_tmpfs_t:file { manage_file_perms mounton };
+
 allow embedunloadtest_t socket_device_t:dir { search getattr };
 allow embedunloadtest_t self:process signal;
 platform_container_domain_type(embedunloadtest_t, embedunloadtest_exec_t);
 
+# redirect log to /dev/msg
+type embedunloadtest_tmpfs_t;
+files_tmpfs_file(embedunloadtest_tmpfs_t)
+fs_tmpfs_filetrans(embedunloadtest_t, embedunloadtest_tmpfs_t, file)
+allow embedunloadtest_t embedunloadtest_tmpfs_t:file { manage_file_perms mounton };
+
 allow embedsmcinvoke_qtvm_t socket_device_t:dir { search getattr };
 allow embedsmcinvoke_qtvm_t self:process signal;
 platform_container_domain_type(embedsmcinvoke_qtvm_t, embedsmcinvoke_qtvm_t_exec_t);
+
+# redirect log to /dev/msg
+type embedsmcinvoke_qtvm_tmpfs_t;
+files_tmpfs_file(embedsmcinvoke_qtvm_tmpfs_t)
+fs_tmpfs_filetrans(embedsmcinvoke_qtvm_t, embedsmcinvoke_qtvm_tmpfs_t, file)
+allow embedsmcinvoke_qtvm_t embedsmcinvoke_qtvm_tmpfs_t:file { manage_file_perms mounton };
