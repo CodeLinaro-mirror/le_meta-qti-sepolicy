@@ -25,13 +25,6 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# systemd_modules_load
-type systemd_modules_load_t;
-type systemd_modules_load_exec_t;
-init_system_domain(systemd_modules_load_t, systemd_modules_load_exec_t)
-kernel_load_module(systemd_modules_load_t);
-
-
 gen_require(`
  type syslogd_var_run_t;
  type kmsg_device_t;

@@ -1,14 +1,6 @@
 # Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-type bl_power_sysfs_t;
-genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/backlight/panel0-backlight/bl_power gen_context(system_u:object_r:bl_power_sysfs_t,s0)
-dev_associate_sysfs(bl_power_sysfs_t)
-
-type cpu_present_sysfs_t;
-genfscon sysfs /devices/system/cpu/present gen_context(system_u:object_r:cpu_present_sysfs_t,s0)
-dev_associate_sysfs(cpu_present_sysfs_t)
-
 #Access video4linux video nodes for encode and decode through video driver
 type video_name_sysfs_t;
 genfscon sysfs /devices/platform/soc/soc:qcom,cam-req-mgr/video4linux/video0/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
@@ -17,10 +9,21 @@ genfscon sysfs /devices/platform/soc/aa00000.qcom,vidc/video4linux/video32/name 
 genfscon sysfs /devices/platform/soc/aa00000.qcom,vidc/video4linux/video33/name gen_context(system_u:object_r:video_name_sysfs_t,s0)
 dev_associate_sysfs(video_name_sysfs_t)
 
-#Access to set correct perf level for running splitxr use case
-type cpu_capacity_sysfs_t;
-genfscon sysfs /devices/system/cpu/cpu0/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
-genfscon sysfs /devices/system/cpu/cpu1/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
-genfscon sysfs /devices/system/cpu/cpu2/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
-genfscon sysfs /devices/system/cpu/cpu3/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
-dev_associate_sysfs(cpu_capacity_sysfs_t)
+
+type panel_illumination_t;
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0028   gen_context(system_u:object_r:panel_illumination_t,s0)
+genfscon sysfs /devices/platform/soc/990000.i2c/i2c-0/0-0029   gen_context(system_u:object_r:panel_illumination_t,s0)
+dev_associate_sysfs(panel_illumination_t)
+
+type panel_pixel_shift_t;
+genfscon sysfs /kernel/rtimd/rtimd_eye    gen_context(system_u:object_r:panel_pixel_shift_t,s0)
+dev_associate_sysfs(panel_pixel_shift_t)
+
+
+type image_variant_sysfs_t;
+genfscon sysfs /devices/soc0 gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+dev_associate_sysfs(image_variant_sysfs_t)
+
+
+type proc_sched_t;
+genfscon proc /sys/walt/ gen_context(system_u:object_r:proc_sched_t,s0)
