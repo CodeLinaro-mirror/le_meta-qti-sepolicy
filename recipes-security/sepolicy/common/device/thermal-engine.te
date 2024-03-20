@@ -41,6 +41,7 @@ logging_send_syslog_msg(thermal-engine_t)
 gen_require(`
     type default_t;
     type syslogd_var_run_t;
+    type cpu_sysfs_t;
 ')
 
 # Manage socket files inside /dev/socket
@@ -66,6 +67,7 @@ allow thermal-engine_t self:unix_stream_socket create_stream_socket_perms;
 allow thermal-engine_t syslogd_var_run_t:dir search;
 allow thermal-engine_t self:qipcrtr_socket { write read create getattr setopt };
 allow thermal-engine_t self:netlink_generic_socket create_socket_perms;
+allow thermal-engine_t cpu_sysfs_t:dir search;
 
 userdebug_or_eng(`
     rw_diag_dev(thermal-engine_t)
