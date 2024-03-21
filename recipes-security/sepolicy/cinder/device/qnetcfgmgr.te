@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qnetcfgmgr, 1.0)
@@ -95,6 +95,11 @@ gen_require(`
   type dnsmasq_t;
   type qnetcfgmgr_dig_exec_t;
   type dumgr_config_t;
+  type net_conf_t;
+  type home_root_t;
+  type cert_t;
+  type user_home_dir_t;
+  type node_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -146,9 +151,9 @@ read_files_pattern(qnetcfgmgr_t, proc_t, qnetcfgmgr_t)
 allow qnetcfgmgr_t qrtr_ns_t:dir { getattr search };
 allow qnetcfgmgr_t qrtr_ns_t:file { read open };
 allow qnetcfgmgr_t self:fifo_file ioctl;
-allow qnetcfgmgr_t self:netlink_route_socket nlmsg_read;
+allow qnetcfgmgr_t self:netlink_route_socket { nlmsg_read nlmsg_write};
 allow qnetcfgmgr_t self:qipcrtr_socket { write create getattr read };
-allow qnetcfgmgr_t self:tcp_socket { create ioctl read write };
+allow qnetcfgmgr_t self:tcp_socket { getattr create ioctl read write };
 allow qnetcfgmgr_t self:udp_socket { create ioctl read write };
 allow qnetcfgmgr_t syslogd_t:dir { getattr search };
 allow qnetcfgmgr_t syslogd_t:file { read open write };
@@ -170,7 +175,7 @@ allow dnsmasq_t qnetcfgmgr_run_qncm_t:file { append write };
 
 allow qnetcfgmgr_t self:process { setcap};
 allow qnetcfgmgr_t self:icmp_socket { create setopt write read ioctl getopt };
-allow qnetcfgmgr_t self:udp_socket { setopt connect getattr };
+allow qnetcfgmgr_t self:udp_socket { setopt connect getattr bind getopt };
 allow qnetcfgmgr_t ping_exec_t:file { getattr execute read open map execute_no_trans };
 allow qnetcfgmgr_t kernel_t:dir { search open };
 allow qnetcfgmgr_t kernel_t:file { read };
@@ -228,7 +233,18 @@ userdebug_or_eng('
 allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write setattr };
 ')
 allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
+
+#QNCM DNS support
+userdebug_or_eng('
 allow unconfined_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map execute_no_trans };
+)
+allow qnetcfgmgr_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map  };
+allow qnetcfgmgr_t net_conf_t:file { getattr read open };
+allow qnetcfgmgr_t cert_t:dir search;
+allow qnetcfgmgr_t cert_t:file {getattr open read };
+allow qnetcfgmgr_t home_root_t:dir search;
+allow qnetcfgmgr_t user_home_dir_t:dir search;
+allow qnetcfgmgr_t node_t:udp_socket { node_bind };
 #QNCM IP2MACv6
 allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
 
