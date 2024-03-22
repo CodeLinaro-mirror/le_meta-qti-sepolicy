@@ -70,5 +70,5 @@ allow mount_t binderfs_t:filesystem { mount };
 allow mount_t var_t:chr_file { unlink };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow mount_t systemd_unit_t:lnk_file getattr;
-allow mount_t weston_runtime_t:dir search;
-allow mount_t weston_runtime_t:file read_file_perms;
+allow mount_t weston_runtime_t:dir { manage_dir_perms reparent };
+allow mount_t weston_runtime_t:file { rw_file_perms create };

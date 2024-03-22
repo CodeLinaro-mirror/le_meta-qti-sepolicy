@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(dloemservice, 1.0)
@@ -36,3 +36,9 @@ dev_rw_sysfs(dloemservice_t)
 
 # Enable backtrace handler
 allow dloemservice_t self:process signal;
+
+type dloemservice_tmpfs_t;
+files_tmpfs_file(dloemservice_tmpfs_t)
+
+fs_tmpfs_filetrans(dloemservice_t, dloemservice_tmpfs_t, file)
+allow dloemservice_t dloemservice_tmpfs_t:file { manage_file_perms mounton };
