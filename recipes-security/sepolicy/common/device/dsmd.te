@@ -19,15 +19,18 @@ gen_require(`
   type tmpfs_t;
 ')
 
-
+type dsmd_sock_t;
+fs_associate_tmpfs(dsmd_sock_t)
+files_tmp_filetrans(dsmd_t, dsmd_sock_t, { sock_file })
 
 # systemctl allows
 init_vendor_domain(dsmd_t, dsmd_exec_t)
 
-allow dsmd_t tmp_t:dir { add_entry_dir_perms remove_name };
-allow dsmd_t tmp_t:sock_file manage_sock_file_perms;
+allow dsmd_t tmp_t:dir { add_entry_dir_perms remove_name create };
+allow dsmd_t dsmd_sock_t:sock_file manage_sock_file_perms;
 allow dsmd_t dsmd_t:unix_stream_socket { listen accept };
 allow dsmd_t etc_t:file read_file_perms;
 allow dsmd_t event_device_t:chr_file read_chr_file_perms;
-allow dsmd_t tmpfs_t:dir { add_entry_dir_perms remove_name };
+allow dsmd_sock_t tmpfs_t:dir { add_entry_dir_perms remove_name };
+allow dsmd_t dsmd_sock_t:dir { add_entry_dir_perms remove_name create };
 allow dsmd_t dsmd_t:process signal;
