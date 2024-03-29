@@ -26,5 +26,8 @@ interface(`qesdk_bdk_access',`
     allow $1 qesdk_manager_t:unix_stream_socket connectto;
     allow $1 qesdk_bdk_socket_t:sock_file write;
     allow $1 socket_device_t:dir { search };
+    userdebug_or_eng(`
+        qesdk_one_access($1);
+    ')
 ')
 
