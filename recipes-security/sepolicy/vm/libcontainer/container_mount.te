@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(container_mount, 1.0)
@@ -47,3 +47,8 @@ allow container_mount_t tmpfs_t:filesystem { mount unmount getattr };
 # files_search_pids changed to files_search_runtime in later upstream versions
 files_search_pids(container_mount_t)
 allow container_mount_t self:capability sys_admin;
+
+# mounting in user namespaces. Only needed for test code at the moment
+userdebug_or_eng(`
+    allow container_mount_t self:cap_userns sys_admin;
+')
