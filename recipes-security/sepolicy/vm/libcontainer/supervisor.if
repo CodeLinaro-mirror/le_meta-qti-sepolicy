@@ -1,0 +1,28 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> libcontainer supervisor interface </summary>
+
+########################################
+## <summary>
+##      Communicate with libcontainer socket
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Type allowed to connect
+##      </summary>
+## </param>
+#
+interface(`supervisor_connect',`
+    gen_require(`
+        type supervisor_t;
+        type supervisor_sock_t;
+        type socket_device_t;
+    ')
+
+    allow $1 socket_device_t:dir search;
+    allow $1 supervisor_sock_t:sock_file { write open };
+    allow $1 supervisor_t:unix_stream_socket connectto;
+')
+
+
