@@ -1,0 +1,24 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> diag_extension </summary>
+
+
+
+#######################################
+## <summary>
+##      manage the files in /tmp/mdlog.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`mplane_tmp_data_files',`
+        gen_require(`
+            type mplane_app_tmp_t;
+        ')
+        manage_dirs_pattern($1, tmp_t, mplane_app_tmp_t)
+        manage_files_pattern($1, tmp_t, mplane_app_tmp_t)
+')
