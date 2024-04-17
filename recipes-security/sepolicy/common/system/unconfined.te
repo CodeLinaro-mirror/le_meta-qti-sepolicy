@@ -155,4 +155,8 @@ userdebug_or_eng(`
     allow unconfined_t binderfs_t:filesystem getattr;
     allow unconfined_t hwbinder_device_t:chr_file getattr;
     allow unconfined_t vndbinder_device_t:chr_file getattr;
+
+    # For test app to access qesdk
+    qesdk_adk_access(unconfined_t)
+    logging_send_syslog_msg(unconfined_t)
 ')

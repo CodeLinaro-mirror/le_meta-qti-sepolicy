@@ -78,6 +78,7 @@ userdebug_or_eng(`
         type hwfde_conf_file_t;
         type install_evict_t;
         type proc_sched_t;
+        type dsmd_sock_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -94,6 +95,7 @@ userdebug_or_eng(`
     allow unconfined_t proc_sched_t:file rw_file_perms;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
+    allow unconfined_t dsmd_sock_t:sock_file manage_sock_file_perms;
 
     gen_require(`
         type recovery_exec_t;
