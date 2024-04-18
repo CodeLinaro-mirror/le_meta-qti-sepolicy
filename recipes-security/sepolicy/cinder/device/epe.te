@@ -1,0 +1,43 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear 
+
+policy_module(epe, 1.0)
+
+type epe_t;
+type epe_exec_t;
+
+init_vendor_domain(epe_t, epe_exec_t)
+
+gen_require(`
+    type default_t;
+    type socket_device_t;
+    type thermal-engine_t;
+    type thermal_sock_t;
+    type initrc_t;
+    type alogd_t;
+    type pmsg0_t;
+    type proc_t;
+    type sysfs_t;
+    type var_log_t;
+    type init_var_run_t;
+    type unconfined_t;
+    class service { start status stop reload };
+')
+
+userdebug_or_eng(`
+     allow unconfined_t epe_exec_t:service { start stop status };
+')
+
+allow epe_t epe_t:fifo_file { read open write };
+allow epe_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
+allow epe_t var_log_t:file { read write open getattr };
+
+allow alogd_t pmsg0_t:chr_file open;
+allow epe_t init_var_run_t:dir search;
+allow epe_t proc_t:file { read open getattr };              #/proc/filesystem
+allow epe_t self:socket create_socket_perms;
+allow epe_t self:qipcrtr_socket create_socket_perms;
+allow epe_t socket_device_t:dir search_dir_perms;
+allow epe_t thermal-engine_t:unix_stream_socket connectto;
+allow epe_t thermal_sock_t:sock_file write;
+dontaudit epe_t default_t:dir search;
