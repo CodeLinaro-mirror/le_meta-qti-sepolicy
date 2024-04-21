@@ -1,0 +1,44 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(crash-collect, 1.0)
+type crash_collect_t;
+type crash_collect_exec_t;
+type log_time_stamp_t;
+type ramdump_data_t;
+
+init_vendor_domain(crash_collect_t,crash_collect_exec_t)
+logging_send_syslog_msg(crash_collect_t)
+
+gen_require(`
+    type unconfined_t;
+    type sysfs_t;
+    type mnt_t;
+    type sdcard_t;
+    type unreserved_port_t;
+    type shell_exec_t;
+    type sysfs_t;
+    type etc_t;
+    type locale_t;
+    type data_t;
+')
+
+allow unconfined_t log_time_stamp_t:file { write read append create getattr };
+allow crash_collect_t log_time_stamp_t:file { open read append getattr };
+allow crash_collect_t crash_collect_t:tcp_socket { create connect write };
+allow crash_collect_t unreserved_port_t:tcp_socket { name_connect };
+allow crash_collect_t shell_exec_t:file { open read execute execute_no_trans };
+allow crash_collect_t sysfs_t:file { open read };
+allow crash_collect_t mnt_t:dir { search };
+allow crash_collect_t sdcard_t:dir { search };
+allow crash_collect_t etc_t:lnk_file { read };
+allow crash_collect_t locale_t:dir { search };
+allow crash_collect_t locale_t:file { open read getattr };
+allow crash_collect_t data_t:dir { read };
+
+
+search_user_data_dir(crash_collect_t);
+user_data_files_type(ramdump_data_t)
+data_filetrans(crash_collect_t, ramdump_data_t, { file dir })
+manage_user_data_files(crash_collect_t, ramdump_data_t)
