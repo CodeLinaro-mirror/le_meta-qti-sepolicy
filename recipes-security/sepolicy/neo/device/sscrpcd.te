@@ -40,11 +40,7 @@ type sscrpcd_t;
 type sscrpcd_exec_t;
 files_type(sscrpcd_exec_t);
 
-type sensors_persist_data_t;
-files_type(sensors_persist_data_t)
-
-init_daemon_domain(sscrpcd_t, sscrpcd_exec_t)
-files_mountpoint(sensors_persist_data_t)
+init_vendor_domain(sscrpcd_t, sscrpcd_exec_t)
 
 allow sscrpcd_t self:capability chown;
 
@@ -54,10 +50,11 @@ gen_require(`
     type xdsp_device_t;
     type unconfined_t;
     type sysdevice_sysfs_t;
-	type system_dmabuf_device_t;
-	type image_variant_sysfs_t;
-	type lib_t;
-	type adsprpcd_t;
+    type system_dmabuf_device_t;
+    type image_variant_sysfs_t;
+    type lib_t;
+    type adsprpcd_t;
+    type sensors_persist_data_t;
 ')
 
 #allow sscrpcd_t to acces /dev/adsprpcd-smd-secure
@@ -82,9 +79,9 @@ userdebug_or_eng(`
 
 dev_rw_sysfs(sscrpcd_t)
 allow sscrpcd_t persist_t:dir search_dir_perms;
-allow sscrpcd_t system_dir_t:dir { search open read getattr};
+allow sscrpcd_t system_dir_t:dir list_dir_perms;
 allow sscrpcd_t system_dir_t:file read_file_perms;
-allow sscrpcd_t sysdevice_sysfs_t:file { read open getattr };
+allow sscrpcd_t sysdevice_sysfs_t:file read_file_perms;
 
 files_search_mnt(sscrpcd_t)
 files_search_default(sscrpcd_t)

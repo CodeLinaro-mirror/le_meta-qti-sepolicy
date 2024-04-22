@@ -53,6 +53,10 @@ type qmmf_config_file_t;
 allow qmmf_server_t system_dir_t:dir search_dir_perms;
 read_files_pattern(qmmf_server_t, qmmf_config_file_t, qmmf_config_file_t)
 
+type dev_hdmi_bdg_irq_handler_t;
+dev_node(dev_hdmi_bdg_irq_handler_t);
+allow qmmf_server_t dev_hdmi_bdg_irq_handler_t:chr_file read_chr_file_perms;
+
 type dev_dri_t;
 dev_node(dev_dri_t);
 allow qmmf_server_t dev_dri_t:dir search;
