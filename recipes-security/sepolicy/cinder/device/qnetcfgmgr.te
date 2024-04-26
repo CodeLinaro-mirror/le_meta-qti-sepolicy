@@ -151,7 +151,7 @@ read_files_pattern(qnetcfgmgr_t, proc_t, qnetcfgmgr_t)
 allow qnetcfgmgr_t qrtr_ns_t:dir { getattr search };
 allow qnetcfgmgr_t qrtr_ns_t:file { read open };
 allow qnetcfgmgr_t self:fifo_file ioctl;
-allow qnetcfgmgr_t self:netlink_route_socket nlmsg_read;
+allow qnetcfgmgr_t self:netlink_route_socket { nlmsg_read nlmsg_write};
 allow qnetcfgmgr_t self:qipcrtr_socket { write create getattr read };
 allow qnetcfgmgr_t self:tcp_socket { getattr create ioctl read write };
 allow qnetcfgmgr_t self:udp_socket { create ioctl read write };

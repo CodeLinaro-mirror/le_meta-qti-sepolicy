@@ -1,0 +1,8 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+# crashcollect executables and log file
+/usr/sbin/crashcollect          gen_context(system_u:object_r:crash_collect_exec_t,s0)
+/data/logTimeStamp        -- gen_context(system_u:object_r:log_time_stamp_t,s0)
+/data/ramdump(/.*)?          gen_context(system_u:object_r:ramdump_data_t,s0)
