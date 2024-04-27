@@ -41,8 +41,25 @@ files_mountpoint(adsprpcd_t);
 
 type adsprpcd_exec_t;
 files_type(adsprpcd_exec_t);
+type sensors_qti_exec_t;
+files_type(sensors_qti_exec_t);
+
+type sensors_persist_data_t;
+type sensors_vendor_data_t;
+files_type(sensors_persist_data_t)
+files_type(sensors_vendor_data_t)
 
 init_daemon_domain(adsprpcd_t, adsprpcd_exec_t)
+
+files_mountpoint(sensors_persist_data_t)
+files_mountpoint(sensors_vendor_data_t)
+
+# sensor initscript
+type sensors_initrc_exec_t;
+type sensors_initrc_t;
+init_script_domain(sensors_initrc_t, sensors_initrc_exec_t)
+unconfined_domain(sensors_initrc_t)
+allow sensors_initrc_t data_t:dir search;
 
 gen_require(`
     type debugfs_t;
@@ -64,6 +81,7 @@ allow adsprpcd_t sysfs_t:file rw_file_perms;
 allow adsprpcd_t persist_t:dir search_dir_perms;
 allow adsprpcd_t system_dir_t:dir { search open read getattr};
 allow adsprpcd_t system_dir_t:file read_file_perms;
+allow sensors_qti_exec_t sensors_vendor_data_t:file watch;
 
 #allow adsprpcd_audiopd.service to access /proc/sys/vm/overcommit_memory
 kernel_read_vm_overcommit_sysctl(adsprpcd_t)
@@ -83,3 +101,9 @@ rw_chr_files_pattern(adsprpcd_t, device_t, qdsp_device_t);
 
 #allow adsprpcd_t to access /dev/dma_heap/system
 allow adsprpcd_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+
+manage_system_data_files(adsprpcd_t, sensors_persist_data_t)
+manage_system_data_files(sensors_qti_exec_t, sensors_vendor_data_t)
+
+# Manage private files inside /data
+data_filetrans(adsprpcd_t, sensors_persist_data_t, { file dir })
