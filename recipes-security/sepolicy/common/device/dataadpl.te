@@ -57,7 +57,7 @@ allow dataadpl_t self:fifo_file { write read getattr };
 corecmd_exec_shell(dataadpl_t)
 dev_write_kmsg(dataadpl_t)
 
-allow dataadpl_t system_data_t:dir { read };
+allow dataadpl_t system_data_t:dir { read watch };
 data_rw_system_data_files(dataadpl_t, qcmap_etc_data_t)
 kernel_read_system_state(dataadpl_t)
 
