@@ -18,6 +18,8 @@ gen_require(`
     type pmsg0_t;
     type proc_t;
     type sysfs_t;
+    type sysctl_t;
+    type sysctl_vm_t;
     type var_log_t;
     type init_var_run_t;
     type unconfined_t;
@@ -29,7 +31,11 @@ userdebug_or_eng(`
 ')
 
 allow epe_t epe_t:fifo_file { read open write };
-allow epe_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
+allow epe_t sysfs_t:lnk_file read;                          #/sys/class/hwmon/hwmon0/
+allow epe_t sysfs_t:dir read;
+allow epe_t sysctl_t:dir search;
+allow epe_t sysctl_vm_t:dir search;
+allow epe_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
 allow epe_t var_log_t:file { read write open getattr };
 
 allow alogd_t pmsg0_t:chr_file open;
