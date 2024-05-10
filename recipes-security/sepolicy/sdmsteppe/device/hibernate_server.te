@@ -50,6 +50,12 @@ files_type(hibernate_socket_t);
 dev_node(hibernate_socket_t);
 device_manage_socket_file(hibernate_server_t, hibernate_socket_t, "hibernate");
 
+# Notif Socket management
+type hibernate_notif_socket_t;
+files_type(hibernate_notif_socket_t);
+dev_node(hibernate_notif_socket_t);
+device_manage_socket_file(hibernate_server_t, hibernate_notif_socket_t, "hibernate_notif");
+
 device_search_sockets(hibernate_server_t);
 
 gen_require(`
@@ -64,6 +70,11 @@ allow hibernate_server_t hibernate_socket_t:dir manage_dir_perms;
 allow hibernate_server_t hibernate_socket_t:file manage_file_perms;
 allow hibernate_server_t hibernate_socket_t:sock_file manage_sock_file_perms;
 allow hibernate_socket_t device_t:filesystem associate;
+
+allow hibernate_server_t hibernate_notif_socket_t:dir manage_dir_perms;
+allow hibernate_server_t hibernate_notif_socket_t:file manage_file_perms;
+allow hibernate_server_t hibernate_notif_socket_t:sock_file manage_sock_file_perms;
+allow hibernate_notif_socket_t device_t:filesystem associate;
 
 userdebug_or_eng(`
     gen_require(`

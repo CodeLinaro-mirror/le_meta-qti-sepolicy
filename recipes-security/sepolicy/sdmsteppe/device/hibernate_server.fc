@@ -35,3 +35,4 @@
 /dev/socket/hibernate              -s   gen_context(system_u:object_r:hibernate_socket_t,s0)
 /usr/bin/hibernateutility          --   gen_context(system_u:object_r:hibernate_utility_exec_t,s0)
 /dev/disk/by-partlabel/swap        --   gen_context(system_u:object_r:hibernate_swap_device_t,s0)
+/dev/socket/hibernate_notif        -s   gen_context(system_u:object_r:hibernate_notif_socket_t,s0)
