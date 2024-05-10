@@ -73,6 +73,7 @@
 /dev/diag             -c    gen_context(system_u:object_r:diag_device_t,s0)
 #/dev/log              -s     gen_context(system_u:object_r:logd_socket_t,s0)
 /dev/ubi.*             -c    gen_context(system_u:object_r:ubi_device_t,mls_systemhigh)
+/dev/ubiblock.*        -b    gen_context(system_u:object_r:ubiblock_device_t,mls_systemhigh)
 /dev/iio:device([0-9])+     -c   gen_context(system_u:object_r:iio_device,s0)
 /dev/ion               -c  gen_context(system_u:object_r:ion_device_t,s0)
 /dev/smcinvoke          -c  gen_context(system_u:object_r:smcinvoke_device_t,s0)
