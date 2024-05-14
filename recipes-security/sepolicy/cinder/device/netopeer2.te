@@ -26,6 +26,7 @@ gen_require(`
  type mplane_app_t;
  type socket_device_t;
  type user_home_t;
+ type sysdevice_sysfs_t;
 ')
 
 sr_data_access(netopeer2_t)
@@ -67,3 +68,5 @@ allow netopeer2_t mplane_app_t:dir { add_name write getattr open read search};
 allow netopeer2_t mplane_app_t:fifo_file { create open read write };
 allow netopeer2_t mplane_app_t:file { create lock map open getattr read write };
 allow netopeer2_t socket_device_t:dir search;
+
+allow netopeer2_t sysdevice_sysfs_t:file { read open getattr };
