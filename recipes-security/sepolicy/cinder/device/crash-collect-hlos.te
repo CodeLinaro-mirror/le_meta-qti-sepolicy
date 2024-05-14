@@ -1,0 +1,46 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(crash-collect-hlos, 1.0)
+
+type crash_collect_hlos_t;
+type crash_collect_hlos_exec_t;
+type cc_conf_t;
+type rawdump_data_t;
+
+init_vendor_domain(crash_collect_hlos_t,crash_collect_hlos_exec_t)
+
+gen_require(`
+    type unconfined_t;
+    type fs_t;
+    type ssh_port_t;
+    type mount_copybind_t;
+    type mount_t;
+    type setfiles_t;
+    type removable_device_t;
+    type home_root_t;
+    type user_home_dir_t;
+    type user_home_t;
+    class service { start status stop reload };
+')
+
+allow unconfined_t cc_conf_t:file { getattr open write read };
+allow unconfined_t rawdump_data_t:dir { write read open add_name remove_name search getattr };
+allow rawdump_data_t fs_t:filesystem { associate };
+allow unconfined_t rawdump_data_t:file { create read write getattr open unlink };
+
+allow crash_collect_hlos_t crash_collect_hlos_t:tcp_socket { create connect write read };
+allow crash_collect_hlos_t ssh_port_t:tcp_socket { name_connect };
+
+allow mount_copybind_t cc_conf_t:file { getattr };
+allow mount_t cc_conf_t:file { getattr mounton };
+allow setfiles_t cc_conf_t:file { getattr };
+allow crash_collect_hlos_t cc_conf_t:file { read open };
+allow crash_collect_hlos_t removable_device_t:blk_file { open read };
+allow crash_collect_hlos_t rawdump_data_t:dir { search write add_name };
+allow crash_collect_hlos_t rawdump_data_t:file { create read write open };
+allow crash_collect_hlos_t home_root_t:dir { search };
+allow crash_collect_hlos_t user_home_dir_t:dir { search };
+allow crash_collect_hlos_t user_home_t:dir { search };
+allow crash_collect_hlos_t user_home_t:file { read open getattr };
