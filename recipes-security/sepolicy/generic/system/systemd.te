@@ -47,10 +47,6 @@ gen_require(`
 
 #systemd_update_done
 
-# TODO: Remove this temporary below line
-permissive udev_t;
-
-
 allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t sysctl_kernel_t:dir search;
 allow systemd_update_done_t sysctl_kernel_t:file { getattr ioctl open read };
