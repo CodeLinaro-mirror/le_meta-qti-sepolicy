@@ -1,4 +1,4 @@
-# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,18 +24,9 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/usr/bin/qmmf-server       --      gen_context(system_u:object_r:qmmf_server_exec_t,s0)
-
-# qmmf data files
-/data/misc/qmmf(/.*)?              gen_context(system_u:object_r:qmmf_data_file_t,s0)
-/data/misc/vam(/.*)?               gen_context(system_u:object_r:qmmf_data_file_t,s0)
-/data/misc/display(/.*)?           gen_context(system_u:object_r:qmmf_data_file_t,s0)
-/mnt/sdcard/data/misc/qmmf(/.*)?   gen_context(system_u:object_r:qmmf_data_file_t,s0)
-
-# qmmf config files
-/system/etc/qmmf(/.*)?             gen_context(system_u:object_r:qmmf_config_file_t,s0)
-
-/dev/dri(/.*)?                     gen_context(system_u:object_r:dev_dri_t,s0)
-
-/dev/hdmi_bdg_irq_handler          gen_context(system_u:object_r:dev_hdmi_bdg_irq_handler_t,s0)
+## <summary>SSCRPCD</summary>

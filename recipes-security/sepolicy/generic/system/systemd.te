@@ -43,14 +43,12 @@ gen_require(`
  type var_run_t;
  type kernel_t;
  type udev_t;
+ type lib_t;
 ')
 
 #systemd_update_done
 
-# TODO: Remove this temporary below line
-permissive udev_t;
-
-
+allow udev_t lib_t:system module_load;
 allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t sysctl_kernel_t:dir search;
 allow systemd_update_done_t sysctl_kernel_t:file { getattr ioctl open read };
