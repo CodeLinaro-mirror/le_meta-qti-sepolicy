@@ -235,6 +235,9 @@ dev_node(smd_device_t);
 type ubi_device_t;
 dev_node(ubi_device_t);
 
+type ubiblock_device_t;
+dev_node(ubiblock_device_t);
+
 type socket_device_t;
 files_type(socket_device_t);
 dev_node(socket_device_t);
