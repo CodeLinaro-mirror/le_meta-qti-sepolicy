@@ -17,7 +17,9 @@
 interface(`manifest_mount_dir',`
     gen_require(`
         type manifest_t;
+        type manifestb_t;
     ')
 
     allow $1 manifest_t:dir { mounton getattr };
+    #allow $1 manifestb_t:dir { mounton getattr };
 ')
