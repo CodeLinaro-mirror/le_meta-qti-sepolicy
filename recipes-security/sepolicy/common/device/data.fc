@@ -30,6 +30,7 @@
 /systemrw(/.*)?                 gen_context(system_u:object_r:system_data_t,s0)
 /data/misc/sxr(/.*)?            gen_context(system_u:object_r:sxr_data_t,s0)
 /data/misc/qvr(/.*)?            gen_context(system_u:object_r:qvr_data_t,s0)
+/data/cache(/.*)?               gen_context(system_u:object_r:cache_recovery_t,s0)
 
 #To support coredump in userdebug variant only
 /data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)
