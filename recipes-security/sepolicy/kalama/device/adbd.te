@@ -73,8 +73,11 @@ allow usb_t functionfs_t:dir getattr;
 userdebug_or_eng(`
     gen_require(`
         type adbd_t;
+        type rfsa_adsp_lib_t;
     ')
 
     allow adbd_t self:lockdown confidentiality;
+    allow adbd_t rfsa_adsp_lib_t:dir rw_dir_perms;
+    allow adbd_t rfsa_adsp_lib_t:file manage_file_perms;
 ')
 

@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(platform_launcher, 1.0)
@@ -50,4 +50,10 @@ allow platform_launcher_domain self:fifo_file read;
 userdebug_or_eng(`
     dev_write_kmsg(platform_launcher_domain)
 ')
+
+# user namespace initialization
+#  setuid/gid in host namespace needed to write uidmap/gidmap
+allow platform_launcher_domain self:capability { setuid setgid };
+supervisor_connect(platform_launcher_domain)
+allow platform_launcher_domain self:cap_userns { sys_admin setuid setgid kill };
 
