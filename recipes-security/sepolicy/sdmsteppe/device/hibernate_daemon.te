@@ -1,0 +1,63 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(hibernate_daemon, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type hibernate_daemon_t;
+type hibernate_daemon_exec_t;
+type hibernate_restore_sh_t;
+
+gen_require(`
+     type socket_device_t;
+     type init_var_run_t;
+     type hibernate_notif_socket_t;
+     type hibernate_server_t;
+     type syslogd_var_run_t;
+     type shell_exec_t;
+     type proc_t;
+     type init_t;
+     type init_var_run_t;
+     type sysctl_t;
+     type sysctl_kernel_t;
+     type system_dbusd_var_run_t;
+     type system_dbusd_t;
+     type devlog_t;
+     type syslogd_t;
+     type qseecomd_exec_t;
+     class dbus { send_msg };
+     class service { start status stop };
+   ')
+
+init_vendor_domain(hibernate_daemon_t, hibernate_daemon_exec_t)
+
+allow hibernate_daemon_t socket_device_t:dir search_dir_perms;
+allow hibernate_daemon_t hibernate_notif_socket_t:dir search_dir_perms;
+allow hibernate_daemon_t hibernate_notif_socket_t:sock_file manage_sock_file_perms;
+allow hibernate_daemon_t hibernate_server_t:unix_stream_socket { connectto listen accept };
+allow hibernate_daemon_t hibernate_restore_sh_t:file exec_file_perms;
+allow hibernate_daemon_t shell_exec_t:file exec_file_perms;
+allow hibernate_daemon_t qseecomd_exec_t:service { status start stop };
+allow hibernate_daemon_t proc_t:file mmap_read_file_perms;
+allow hibernate_daemon_t proc_t:dir list_dir_perms;
+allow hibernate_daemon_t init_t:dir search_dir_perms;
+allow hibernate_daemon_t init_t:file mmap_read_file_perms;
+allow hibernate_daemon_t init_t:lnk_file { read };
+allow hibernate_daemon_t init_t:dbus send_msg;
+allow hibernate_daemon_t init_var_run_t:dir getattr_dir_perms;
+allow hibernate_daemon_t init_var_run_t:dir search_dir_perms;
+allow hibernate_daemon_t sysctl_t:dir search_dir_perms;
+allow hibernate_daemon_t sysctl_kernel_t:dir search_dir_perms;
+allow hibernate_daemon_t sysctl_kernel_t:file mmap_read_file_perms;
+allow hibernate_daemon_t syslogd_var_run_t:dir search_dir_perms;
+allow hibernate_daemon_t system_dbusd_var_run_t:dir search_dir_perms;
+allow hibernate_daemon_t system_dbusd_var_run_t:sock_file write;
+allow hibernate_daemon_t system_dbusd_t:unix_stream_socket connectto;
+allow hibernate_daemon_t system_dbusd_t:dbus send_msg;
+allow hibernate_daemon_t self:fifo_file rw_inherited_file_perms;
+allow hibernate_daemon_t devlog_t:sock_file write_sock_file_perms;
+allow hibernate_daemon_t syslogd_t:unix_dgram_socket sendto;
