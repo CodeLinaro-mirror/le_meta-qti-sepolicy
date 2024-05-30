@@ -84,6 +84,9 @@ userdebug_or_eng(`
         type proc_sched_t;
         type snd_card_state_t;
         type aud_dev_sysfs_t;
+        type cpu_scaling_freq_t;
+        type sysfs_cpu_capacity;
+        type cpu_sysfs_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -101,6 +104,11 @@ userdebug_or_eng(`
     allow unconfined_t rebootd_pipe_t:fifo_file getattr_fifo_file_perms;
     allow unconfined_t usb_dev_t:dir list_dir_perms;
     allow unconfined_t snd_card_state_t:file rw_file_perms;
+
+    # cpu_scaling_min/max can be set from user shell in testing
+    allow unconfined_t cpu_scaling_freq_t:file read_file_perms;
+    allow unconfined_t sysfs_cpu_capacity:file read_file_perms;
+    allow unconfined_t cpu_sysfs_t:file rw_file_perms;
 
     gen_require(`
         type recovery_exec_t;

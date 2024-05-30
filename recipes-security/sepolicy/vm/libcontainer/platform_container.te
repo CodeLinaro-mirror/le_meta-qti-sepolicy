@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022,2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(platform_container, 1.0)
@@ -22,9 +22,11 @@ kernel_read_kernel_sysctls(platform_container_domain)
 
 # /dev namespacing. These policies include the 10 or so base nodes.
 #  Specific bind-mounted nodes should be handled at a type level.
-# TODO: Why are platform_container_domain types requesting these capabilities?
 allow platform_container_domain self:capability { sys_admin mknod chown setgid setuid setpcap };
-allow platform_container_domain self:process { getcap setcap };
+auditallow platform_container_domain self:capability sys_admin;
+allow platform_container_domain self:cap_userns { sys_admin setuid setgid setpcap };
+# signal: tgkill (likely from mink preload)
+allow platform_container_domain self:process { getcap setcap signal };
 
 # TODO: Transition these away from default tmp_t/tmpfs_t/device_t labels?
 gen_require(`
