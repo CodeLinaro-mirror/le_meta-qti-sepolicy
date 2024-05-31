@@ -68,6 +68,7 @@ allow thermal-engine_t syslogd_var_run_t:dir search;
 allow thermal-engine_t self:qipcrtr_socket { write read create getattr setopt };
 allow thermal-engine_t self:netlink_generic_socket create_socket_perms;
 allow thermal-engine_t cpu_sysfs_t:dir search;
+allow thermal-engine_t cpu_sysfs_t:file { read write_file_perms };
 
 userdebug_or_eng(`
     rw_diag_dev(thermal-engine_t)
