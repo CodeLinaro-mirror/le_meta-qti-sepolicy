@@ -2,4 +2,4 @@
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /manifest(/.*)?           gen_context(system_u:object_r:manifest_t,s0)
-/manifest_b(/.*)?         gen_context(system_u:object_r:manifestb_t,s0)
+/manifest_b(/.*)?         gen_context(system_u:object_r:manifest_t,s0)
