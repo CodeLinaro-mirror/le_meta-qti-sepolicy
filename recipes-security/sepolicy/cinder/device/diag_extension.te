@@ -1,0 +1,27 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(diag_extension, 1.0)
+gen_require(`
+ type tmpfs_t;
+ type tmp_t;
+ type initrc_t;
+ type initrc_tmp_t;
+ type socket_device_t;
+ type mplane_app_t;
+ type diag_t;
+')
+type mplane_app_tmp_t;
+
+files_tmp_file(mplane_app_tmp_t)
+
+userdebug_or_eng(`
+    files_tmp_filetrans(diag_t, mplane_app_tmp_t, { file dir })
+
+    mplane_tmp_data_files(diag_t);
+    allow diag_t mplane_app_t:dir { search getattr open read };
+    allow diag_t mplane_app_t:file { getattr open read write };
+    allow diag_t initrc_t:tcp_socket { read write };
+    allow diag_t initrc_t:unix_stream_socket { read write };
+    allow diag_t socket_device_t:dir { search };
+')
