@@ -114,13 +114,17 @@ gen_require(`
  type syslogd_runtime_t;
  type devlog_t;
  type syslogd_t;
+ type unreserved_port_t;
+ type node_t;
+ type user_home_dir_t;
 ')
 
 #For weston-terminal
 allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
-allow weston_t user_home_dir_t:dir add_entry_dir_perms;
-allow weston_t user_home_dir_t:file { create mmap_rw_file_perms };
+allow weston_t user_home_dir_t:dir { add_entry_dir_perms create remove_name };
+allow weston_t user_home_dir_t:file { create mmap_rw_file_perms lock rename };
+
 allow weston_t weston_exec_t:file execute_no_trans;
 type weston_pty_t;
 term_create_pty(weston_t, weston_pty_t)
@@ -180,6 +184,7 @@ userdebug_or_eng(`
         type trace_marker_t;
         type tracefs_t;
         type debugfs_t;
+        type adbd_t;
     ')
 
     allow weston_t debugfs_t:dir search;
@@ -189,6 +194,7 @@ userdebug_or_eng(`
     allow weston_t syslogd_runtime_t:dir search;
     allow weston_t devlog_t:sock_file write;
     allow weston_t syslogd_t:unix_dgram_socket sendto;
+    allow weston_t adbd_t:unix_stream_socket { connectto create_stream_socket_perms };
 ')
 
 manage_qmmf_data_files(weston_t)
@@ -274,3 +280,7 @@ allow weston_t self:capability dac_read_search;
 allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
 allow initrc_t weston_runtime_t:file { setattr getattr };
 allow initrc_t weston_runtime_t:sock_file { setattr getattr write };
+allow weston_t self:tcp_socket { create_stream_socket_perms };
+allow weston_t unreserved_port_t:tcp_socket name_bind;
+allow weston_t node_t:tcp_socket node_bind;
+allow weston_runtime_t fs_t:filesystem associate;
