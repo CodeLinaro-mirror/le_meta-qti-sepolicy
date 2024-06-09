@@ -47,6 +47,11 @@ gen_require(`
   type node_t;
   type mount_t;
   type pulseaudio_var_run_t;
+  type urandom_device_t;
+  type syslogd_t;
+  type shell_exec_t;
+  type devlog_t;
+  type wakelock_sysfs_t;
 ')
 
 type bt_device_t;
@@ -91,3 +96,11 @@ data_filetrans(btapp_t, bt_data_t, { file dir })
 manage_user_data_files(btapp_t, bt_data_t)
 allow mount_t bt_data_t:sock_file manage_sock_file_perms;
 allow btapp_t bluetooth_conf_t:sock_file {create unlink write };
+
+allow btapp_t devlog_t:sock_file write;
+allow btapp_t self:process { getsched setsched };
+allow btapp_t self:qipcrtr_socket create;
+allow btapp_t shell_exec_t:file exec_file_perms;
+allow btapp_t wakelock_sysfs_t:file append_file_perms;
+allow btapp_t syslogd_t:unix_dgram_socket sendto;
+allow btapp_t urandom_device_t:chr_file read_file_perms;
