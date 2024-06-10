@@ -24,3 +24,8 @@ genfscon sysfs /devices/system/cpu/cpu1/cpu_capacity gen_context(system_u:object
 genfscon sysfs /devices/system/cpu/cpu2/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
 genfscon sysfs /devices/system/cpu/cpu3/cpu_capacity gen_context(system_u:object_r:cpu_capacity_sysfs_t,s0)
 dev_associate_sysfs(cpu_capacity_sysfs_t)
+
+type battery_status_sysfs_t;
+genfscon sysfs /devices/platform/soc/a90000.i2c/i2c-1/1-0055/power_supply/bq27421-0/status gen_context(system_u:object_r:battery_status_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/a90000.i2c/i2c-1/1-0055/power_supply/bq27421-0/capacity gen_context(system_u:object_r:battery_status_sysfs_t,s0)
+dev_associate_sysfs(battery_status_sysfs_t)
