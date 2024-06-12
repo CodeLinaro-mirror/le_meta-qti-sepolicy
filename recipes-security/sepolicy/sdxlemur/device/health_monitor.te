@@ -1,0 +1,41 @@
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(health_monitor, 1.0)
+type health_monitor_t;
+type health_monitor_exec_t;
+gen_require(`
+  type shell_exec_t;
+  type proc_t;
+  type qcmap_etc_data_t;
+  type socket_device_t;
+  type systemd_tmpfiles_t;
+  class service { start status stop reload };
+')
+
+init_vendor_domain(health_monitor_t, health_monitor_exec_t)
+allow health_monitor_t self:{ socket qipcrtr_socket } { create_socket_perms };
+exec_files_pattern(health_monitor_t, socket_device_t, shell_exec_t);
+system_data_files_type(qcmap_etc_data_t);
+allow health_monitor_t qcmap_etc_data_t:dir search;
+data_rw_system_data_files(health_monitor_t, qcmap_etc_data_t)
+allow health_monitor_t qcmap_etc_data_t:file setattr;
+
+allow health_monitor_t proc_t:file {open read getattr};
+allow health_monitor_t self:fifo_file { read write };
+
+# Manage private files inside /var/run
+type health_monitor_var_run_t;
+files_pid_file(health_monitor_var_run_t)
+allow health_monitor_t health_monitor_var_run_t:dir { search add_name remove_name write };
+allow health_monitor_t health_monitor_var_run_t:file { create getattr open read unlink write };
+
+# Manage socket files inside /dev/socket
+type health_monitor_socket_device_t;
+files_type(health_monitor_socket_device_t);
+dev_node(health_monitor_socket_device_t);
+# Create directory for healthmonitor inside /dev/socket
+allow systemd_tmpfiles_t health_monitor_socket_device_t:dir { create read open setattr getattr relabelfrom relabelto };
+allow health_monitor_t health_monitor_socket_device_t:dir { search write create read add_name };
+allow health_monitor_t health_monitor_socket_device_t:sock_file { create setattr unlink write };
+filetrans_pattern( health_monitor_t, socket_device_t, health_monitor_socket_device_t, { sock_file dir })
