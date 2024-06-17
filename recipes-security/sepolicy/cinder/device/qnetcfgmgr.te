@@ -235,10 +235,8 @@ allow unconfined_t qnetcfgmgr_rt_table_t:file { read getattr append open write s
 allow qnetcfgmgr_t qnetcfgmgr_rt_table_t:file { getattr append open read write };
 
 #QNCM DNS support
-userdebug_or_eng('
 allow unconfined_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map execute_no_trans };
-)
-allow qnetcfgmgr_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map  };
+allow qnetcfgmgr_t qnetcfgmgr_dig_exec_t:file { getattr read open execute map execute_no_trans };
 allow qnetcfgmgr_t net_conf_t:file { getattr read open };
 allow qnetcfgmgr_t cert_t:dir search;
 allow qnetcfgmgr_t cert_t:file {getattr open read };
