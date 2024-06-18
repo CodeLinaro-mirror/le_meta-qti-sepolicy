@@ -27,12 +27,14 @@ userdebug_or_eng(`
         type unconfined_t;
         role unconfined_r;
         type debugfs_t;
+        type adbd_t;
     ')
     domtrans_pattern(unconfined_t, qdcm_exec_t, qdcm_t)
     role unconfined_r types qdcm_t;
     allow qdcm_t debugfs_t:dir search;
     allow qdcm_t weston_t:binder call;
     allow unconfined_t weston_t:binder call;
+    allow qdcm_t adbd_t:unix_stream_socket { connectto rw_socket_perms };
 ')
 
 #manage socket in /dev/socket/
