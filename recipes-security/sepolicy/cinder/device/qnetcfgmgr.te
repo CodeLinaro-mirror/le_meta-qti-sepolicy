@@ -265,3 +265,4 @@ dontaudit qnetcfgmgr_t default_t:dir { search };
 allow qnetcfgmgr_t self:process { getcap signal };
 dev_rw_sysfs(qnetcfgmgr_t)
 dontaudit qnetcfgmgr_t event_device_t:chr_file { getattr read open write ioctl };
+mls_file_read_all_levels(qnetcfgmgr_t)
