@@ -1,25 +1,16 @@
 #Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-## <summary>manifest mount</summary>
+## <summary>Health Monitor Interface</summary>
 
 ########################################
 ## <summary>
-##      Mount /manifest directory
+##      Read and write sockets.
 ## </summary>
 ## <param name="domain">
 ##      <summary>
 ##      Domain allowed access.
 ##      </summary>
 ## </param>
+## <rolecap/>
 #
-
-interface(`manifest_mount_dir',`
-    gen_require(`
-        type manifest_t;
-        type manifestb_t;
-    ')
-
-    allow $1 manifest_t:dir { mounton getattr };
-    #allow $1 manifestb_t:dir { mounton getattr };
-')
