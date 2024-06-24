@@ -3,7 +3,9 @@
 
 gen_require(`
  type pmip_service_t;
+ type sysfs_t;
 ')
 
 read_write_pmip_cm_socket_files(dnsmasq_t)
 allow dnsmasq_t pmip_service_t:packet_socket { read write };
+dontaudit dnsmasq_t sysfs_t:dir write;
