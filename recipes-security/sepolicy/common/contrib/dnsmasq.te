@@ -25,10 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
-#
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
+#Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+#Copyright (c) 2022,2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type dnsmasq_tmp_t;
 files_tmp_file(dnsmasq_tmp_t)
@@ -65,5 +64,6 @@ list_dirs_pattern(dnsmasq_t, init_var_run_t, init_var_run_t)
 # Following rule suppresses an avc denial that shows up on the first boot:
 dontaudit dnsmasq_t init_var_run_t:file { getattr };
 
-# Suppress a warning thrown due to an upstream bug in dnsmasq
-dontaudit dnsmasq_t unreserved_port_t:tcp_socket { name_bind };
+#Rule to access random ports by dnsmasq_t
+corenet_tcp_bind_all_reserved_ports(dnsmasq_t)
+corenet_tcp_bind_all_unreserved_ports(dnsmasq_t)
