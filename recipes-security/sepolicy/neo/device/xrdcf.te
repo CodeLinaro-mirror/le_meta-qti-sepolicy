@@ -22,9 +22,6 @@ gen_require(`
   type system_dir_t;
   type tmp_t;
   type proc_t;
-  type cert_t;
-  type image_variant_sysfs_t;
-  type battery_status_sysfs_t;
 ')
 
 manage_sock_files_pattern(xrdcf_t, socket_device_t, socket_device_t);
@@ -51,8 +48,3 @@ ifdef(`init_systemd', `
 ')
 allow xrdcf_t btapp_t:dbus send_msg;
 allow btapp_t xrdcf_t:dbus send_msg;
-read_files_pattern(xrdcf_t, cert_t, cert_t);
-read_files_pattern(xrdcf_t, image_variant_sysfs_t, image_variant_sysfs_t);
-allow xrdcf_t battery_status_sysfs_t:file read_file_perms;
-allow xrdcf_t battery_status_sysfs_t:dir list_dir_perms;
-
