@@ -43,5 +43,6 @@ manage_user_data_files(sfs_config_initrc_t, qseecomd_data_t)
 filetrans_pattern(sfs_config_initrc_t, persist_t, qseecomd_persist_t, { file dir })
 allow sfs_config_initrc_t qseecomd_persist_t:dir manage_dir_perms;
 allow sfs_config_initrc_t self:fifo_file rw_fifo_file_perms;
+allow sfs_config_initrc_t self:capability fsetid;
 dev_read_sysfs(sfs_config_initrc_t)
 kernel_read_system_state(sfs_config_initrc_t)
