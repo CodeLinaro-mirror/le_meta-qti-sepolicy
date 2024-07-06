@@ -1,5 +1,5 @@
 #Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/manifest(/.*)?           gen_context(system_u:object_r:manifest_t,s0)
-/manifest_b(/.*)?         gen_context(system_u:object_r:manifestb_t,s0)
+/manifest_a(/.*)?         gen_context(system_u:object_r:manifest_t,s0)
+/manifest_b(/.*)?         gen_context(system_u:object_r:manifest_t,s0)

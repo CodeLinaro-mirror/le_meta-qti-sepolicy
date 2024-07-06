@@ -4,13 +4,10 @@
 policy_module(manifest, 1.0)
 
 type manifest_t;
-type manifestb_t;
 files_mountpoint(manifest_t)
-files_mountpoint(manifestb_t)
 
 gen_require(`
     type mount_t;
 ')
 
 allow mount_t manifest_t:filesystem relabelfrom;
-allow mount_t manifestb_t:filesystem relabelfrom;
