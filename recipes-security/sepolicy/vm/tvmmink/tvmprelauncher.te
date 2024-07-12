@@ -45,3 +45,9 @@ gen_require(`
     type tvmmink_t;
 ')
 neverallow { domain -tvmprelauncher_t -tvmmink_t } tvmprelauncher_sock_t:sock_file rw_sock_file_perms;
+
+gen_require(`
+    type socket_device_t;
+')
+platform_container_bind_mount(tvmprelauncher_t, smcinvoke_device_t, chr_file)
+platform_container_bind_mount(tvmprelauncher_t, socket_device_t, dir)
