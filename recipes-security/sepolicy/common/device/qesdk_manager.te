@@ -1,0 +1,38 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(qesdk_manager, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type qesdk_manager_t;
+type qesdk_manager_exec_t;
+init_vendor_domain(qesdk_manager_t, qesdk_manager_exec_t)
+
+
+# Label and manage /dev/socket nodes
+type qesdk_bdk_socket_t;
+dev_node(qesdk_bdk_socket_t)
+device_manage_socket_file(qesdk_manager_t, qesdk_bdk_socket_t, "qesdbdk")
+
+type qesdk_adk_socket_t;
+dev_node(qesdk_adk_socket_t)
+device_manage_socket_file(qesdk_manager_t, qesdk_adk_socket_t, "qesdadk")
+
+allow qesdk_manager_t self:unix_stream_socket { accept listen };
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        class service {start stop status};
+    ')
+    #systemctl start/stop/status qesdk_manager
+    allow unconfined_t qesdk_manager_exec_t:service { status start stop };
+')
+
+leprop_rw_props(qesdk_manager_t);
+logging_send_syslog_msg(qesdk_manager_t)

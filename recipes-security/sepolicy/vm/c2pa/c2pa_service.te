@@ -1,0 +1,32 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(c2pa_service, 1.0)
+
+type c2paservice_t;
+type c2paservice_exec_t;
+type c2pa_persist_t;
+type c2paservice_tmpfs_t;
+
+gen_require(`
+type socket_device_t;
+type proc_t;
+type persist_t;
+')
+
+init_vendor_domain(c2paservice_t, c2paservice_exec_t)
+
+allow c2paservice_t self:process signal;
+allow c2paservice_t socket_device_t:dir search;
+
+user_data_files_type(c2pa_persist_t)
+filetrans_pattern(c2paservice_t, persist_t, c2pa_persist_t, { file dir })
+manage_user_data_files(c2paservice_t, c2pa_persist_t);
+
+kernel_read_system_state(c2paservice_t)
+files_tmpfs_file(c2paservice_tmpfs_t)
+
+fs_tmpfs_filetrans(c2paservice_t, c2paservice_tmpfs_t, file)
+allow c2paservice_t c2paservice_tmpfs_t:file { manage_file_perms mounton };
+
+platform_container_domain_type(c2paservice_t, c2paservice_exec_t);
