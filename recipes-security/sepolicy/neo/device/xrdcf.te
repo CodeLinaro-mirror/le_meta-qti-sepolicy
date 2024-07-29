@@ -1,0 +1,58 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(xrdcf, 1.0)
+type xrdcf_t;
+type xrdcf_exec_t;
+init_vendor_domain(xrdcf_t, xrdcf_exec_t)
+
+gen_require(`
+  type btapp_t;
+  type socket_device_t;
+  type bt_app_sock_t;
+  type qesdk_adk_socket_t;
+  type NetworkManager_t;
+  type NetworkManager_var_run_t;
+  type leprop_sock_t;
+  type leprop_t;
+  type qvr_config_t;
+  type sysdevice_sysfs_t;
+  type system_dbusd_t;
+  type system_dbusd_var_run_t;
+  type system_dir_t;
+  type tmp_t;
+  type proc_t;
+  type cert_t;
+  type image_variant_sysfs_t;
+  type battery_status_sysfs_t;
+')
+
+manage_sock_files_pattern(xrdcf_t, socket_device_t, socket_device_t);
+manage_sock_files_pattern(xrdcf_t, bt_app_sock_t, bt_app_sock_t);
+allow xrdcf_t btapp_t:unix_stream_socket {connectto};
+qesdk_adk_access(xrdcf_t)
+allow xrdcf_t qesdk_adk_socket_t:sock_file rw_sock_file_perms;
+allow xrdcf_t NetworkManager_t:unix_dgram_socket sendto;
+allow xrdcf_t leprop_sock_t:sock_file write;
+allow xrdcf_t leprop_t:unix_stream_socket connectto;
+allow xrdcf_t qvr_config_t:dir list_dir_perms;
+allow xrdcf_t qvr_config_t:file read_file_perms;
+allow xrdcf_t sysdevice_sysfs_t:file read_file_perms;
+allow xrdcf_t system_dbusd_t:unix_stream_socket connectto;
+allow xrdcf_t system_dir_t:dir search_dir_perms;
+manage_sock_files_pattern(xrdcf_t, tmp_t, tmp_t);
+manage_sock_files_pattern(xrdcf_t, system_dbusd_var_run_t, system_dbusd_var_run_t);
+manage_sock_files_pattern(xrdcf_t, NetworkManager_var_run_t, NetworkManager_var_run_t);
+allow xrdcf_t proc_t:file read_file_perms;
+## for DBus
+ifdef(`init_systemd', `
+   dbus_connect_system_bus(xrdcf_t)
+   dbus_send_system_bus(xrdcf_t)
+')
+allow xrdcf_t btapp_t:dbus send_msg;
+allow btapp_t xrdcf_t:dbus send_msg;
+read_files_pattern(xrdcf_t, cert_t, cert_t);
+read_files_pattern(xrdcf_t, image_variant_sysfs_t, image_variant_sysfs_t);
+allow xrdcf_t battery_status_sysfs_t:file read_file_perms;
+allow xrdcf_t battery_status_sysfs_t:dir list_dir_perms;
+

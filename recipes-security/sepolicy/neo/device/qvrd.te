@@ -91,11 +91,13 @@ gen_require(`
        type user_home_dir_t;
        type var_lib_t;
        type etc_t;
+       type usr_t;
        type tmpfs_t;
        type system_dbusd_var_run_t;
        type system_dbusd_t;
        type user_tmp_t;
        type dsmd_t;
+       type dsmd_sock_t;
        type splitxr_service_t;
        class dbus { acquire_svc send_msg};
 ')
@@ -132,6 +134,9 @@ allow qvrd_t panel_pixel_shift_t:dir search_dir_perms;
 #access panel illumination sysfs nodes
 allow qvrd_t panel_illumination_t:file { rw_file_perms };
 allow qvrd_t panel_illumination_t:dir search_dir_perms;
+
+#access stc color mode config files
+allow qvrd_t usr_t:file read_file_perms;
 
 #access dpu_data_config_t config file
 type dpu_data_config_t;
@@ -285,3 +290,4 @@ allow qvrd_t splitxr_service_t:dbus send_msg;
 allow qvrd_t tmp_t:dir search;
 allow qvrd_t dsmd_t:unix_stream_socket connectto;
 allow qvrd_t tmp_t:sock_file write;
+allow qvrd_t dsmd_sock_t:sock_file write;
