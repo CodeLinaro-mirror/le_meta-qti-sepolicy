@@ -44,6 +44,7 @@ gen_require(`
  type debugfs_t;
  type tracefs_t;
  type udev_t;
+ type dev_dri_t;
  type net_conf_t;
  type sdcard_t;
 ')
@@ -108,3 +109,5 @@ allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
 allow udev_t net_conf_t:lnk_file read;
 allow udev_t sdcard_t:dir getattr;
+allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name };
+allow udev_t dev_dri_t:lnk_file { create rename unlink };

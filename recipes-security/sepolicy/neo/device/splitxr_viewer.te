@@ -1,0 +1,179 @@
+# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted (subject to the limitations in the
+# disclaimer below) provided that the following conditions are met:
+#
+#     * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#
+#     * Neither the name of Qualcomm Innovation Center, Inc. nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE
+# GRANTED BY THIS LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+# HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+# GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+# IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(splitxr_viewer, 1.0)
+type splitxr_viewer_t;
+type splitxr_viewer_exec_t;
+init_vendor_domain(splitxr_viewer_t, splitxr_viewer_exec_t)
+
+userdebug_or_eng(`
+   gen_require(`
+      type debugfs_t;
+   ')
+
+   allow splitxr_viewer_t debugfs_t:dir search_dir_perms;
+')
+
+gen_require(`
+    type event_device_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type qvr_config_t;
+    type qvrd_socket_t;
+    type qvrd_t;
+    type socket_device_t;
+    type system_dir_t;
+    type initrc_t;
+    type vendor_dmabuf_system_heap_device_t;
+    type dri_device_t;
+    type gpu_device_t;
+    type dev_dri_t;
+    type gpumodel_t;
+    type sysfs_panel0_backlight_bl_power_t;
+    type sysfs_cpu_present;
+    type sysfs_cpu_capacity;
+    type sysfs_t;
+    type qglconfig_data_t;
+    type splitxr_service_t;
+    type pulseaudio_t;
+    type pulseaudio_var_run_t;
+    type user_runtime_root_t;
+    type sxr_data_t;
+    type home_root_t;
+    type urandom_device_t;
+    type user_home_dir_t;
+    type proc_t;
+    type firmware_t;
+    type sysctl_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+    type sdcard_t;
+    type mnt_t;
+    type tmpfs_t;
+    type var_lib_t;
+    type system_dbusd_var_lib_t;
+    type panel_illumination_t;
+    type image_variant_sysfs_t;
+    type sysdevice_sysfs_t;
+')
+
+allow splitxr_viewer_t event_device_t:chr_file rw_chr_file_perms;
+allow splitxr_viewer_t leprop_sock_t:sock_file write;
+allow splitxr_viewer_t leprop_t:unix_stream_socket connectto;
+allow splitxr_viewer_t qvr_config_t:dir search_dir_perms;
+allow splitxr_viewer_t qvr_config_t:file read_file_perms;
+allow splitxr_viewer_t qvrd_socket_t:sock_file write;
+allow splitxr_viewer_t qvrd_t:fd use;
+allow splitxr_viewer_t qvrd_t:unix_stream_socket connectto;
+allow splitxr_viewer_t socket_device_t:dir search_dir_perms;
+allow splitxr_viewer_t system_dir_t:dir search_dir_perms;
+allow splitxr_viewer_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow splitxr_viewer_t dri_device_t:chr_file rw_chr_file_perms;
+allow splitxr_viewer_t gpu_device_t:chr_file { rw_chr_file_perms map };
+
+#access to /dev/dri
+allow splitxr_viewer_t dev_dri_t:dir search_dir_perms;
+#needed for /dev/dri dir's s15 context which is accessed by libdrm
+mls_file_read_all_levels(splitxr_viewer_t)
+
+#Allow access to sysfs nodes
+allow splitxr_viewer_t gpumodel_t:file read_file_perms;
+allow splitxr_viewer_t sysfs_panel0_backlight_bl_power_t:file read_file_perms;
+allow splitxr_viewer_t sysfs_cpu_present:file read_file_perms;
+allow splitxr_viewer_t sysfs_cpu_capacity:file read_file_perms;
+#Allow read access to /sys/class/kgsl/kgsl-3d0 lnk_file
+allow splitxr_viewer_t sysfs_t:lnk_file read_lnk_file_perms;
+
+allow splitxr_viewer_t qglconfig_data_t:file read_file_perms;
+
+# Bind splitxr-viewer to UDP sockets of afs processes
+corenet_udp_bind_afs_fs_port(splitxr_viewer_t)
+corenet_udp_bind_afs_pt_port(splitxr_viewer_t)
+corenet_udp_bind_afs_ka_port(splitxr_viewer_t)
+
+# Bind splitxr-viewer to UDP sockets to generic nodes
+corenet_udp_bind_generic_node(splitxr_viewer_t)
+# To bind splitxr-viewer to TCP sockets to generic nodes
+corenet_tcp_bind_generic_node(splitxr_viewer_t)
+
+# Bind UDP sockets to all ports > 1024
+corenet_udp_bind_all_unreserved_ports(splitxr_viewer_t)
+# Bind TCP sockets to all ports > 1024
+corenet_tcp_bind_all_unreserved_ports(splitxr_viewer_t)
+
+allow splitxr_viewer_t self:fifo_file rw_fifo_file_perms;
+allow splitxr_viewer_t self:netlink_route_socket create_netlink_socket_perms;
+allow splitxr_viewer_t self:udp_socket create_socket_perms;
+allow splitxr_viewer_t self:tcp_socket { create_socket_perms listen accept };
+
+allow splitxr_viewer_t splitxr_service_t:fd use;
+allow splitxr_viewer_t splitxr_service_t:unix_dgram_socket { read write };
+allow splitxr_viewer_t splitxr_service_t:unix_stream_socket { read write connectto };
+
+allow splitxr_viewer_t pulseaudio_t:unix_stream_socket connectto;
+allow splitxr_viewer_t pulseaudio_var_run_t:dir search_dir_perms;
+allow splitxr_viewer_t pulseaudio_var_run_t:sock_file write_sock_file_perms;
+
+allow splitxr_viewer_t sxr_data_t:dir { search_dir_perms rw_dir_perms };
+allow splitxr_viewer_t sxr_data_t:file { create rw_file_perms };
+
+allow splitxr_viewer_t user_runtime_root_t:dir search_dir_perms;
+allow splitxr_viewer_t home_root_t:dir search_dir_perms;
+allow splitxr_viewer_t urandom_device_t:chr_file read_chr_file_perms;
+allow splitxr_viewer_t user_home_dir_t:dir search_dir_perms;
+allow splitxr_viewer_t proc_t:file read_file_perms;
+allow splitxr_viewer_t firmware_t:dir search_dir_perms;
+allow splitxr_viewer_t sdcard_t:dir search_dir_perms;
+
+allow splitxr_viewer_t sysctl_t:dir search_dir_perms;
+allow splitxr_viewer_t sysctl_vm_t:dir search_dir_perms;
+allow splitxr_viewer_t sysctl_vm_overcommit_t:file read_file_perms;
+
+allow splitxr_viewer_t mnt_t:dir search_dir_perms;
+allow splitxr_viewer_t tmpfs_t:dir { open read getattr };
+allow splitxr_viewer_t tmpfs_t:file { map rw_file_perms };
+allow splitxr_viewer_t var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t system_dbusd_var_lib_t:dir search_dir_perms;
+allow splitxr_viewer_t panel_illumination_t:file read_file_perms;
+
+allow initrc_t qvrd_socket_t:sock_file write;
+
+# read and write /sys/power/wake_lock and /sys/power/wake_unlock
+dev_rw_sysfs(splitxr_viewer_t)
+allow splitxr_viewer_t self:capability2 block_suspend;
+
+# permission to read /sys/devices/soc0/soc_id
+allow splitxr_viewer_t image_variant_sysfs_t:dir search_dir_perms;
+allow splitxr_viewer_t image_variant_sysfs_t:file read_file_perms;
+
+# permission to read /sys/devices/soc0/platform_subtype_id
+allow splitxr_viewer_t sysdevice_sysfs_t:file read_file_perms;

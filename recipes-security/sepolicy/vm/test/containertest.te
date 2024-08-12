@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(containertest, 1.0)
@@ -90,4 +90,23 @@ userdebug_or_eng(`
     # Memfd testing
     can_exec(containertest_t, tmpfs_t)
     allow containertest_t tmpfs_t:file { entrypoint map };
+
+    # User namespace
+    supervisor_connect(launchertest_t)
+    allow launchertest_t containertest_t:dir search;
+    allow launchertest_t containertest_t:lnk_file read;
+    allow launchertest_t containertest_t:file { open read };
+    allow launchertest_t socket_device_t:dir getattr;
+    gen_require(`
+        type user_home_dir_t;
+    ')
+    dontaudit containertest_t user_home_dir_t:dir getattr;
+
+    # finit_module testing
+    corecmd_exec_shell(containertest_t)
+    vendor_kernel_load_exempt(containertest_t)
+    kernel_load_module(containertest_t)
+
+    # Redirect to /dev/kmsg
+    mls_file_write_all_levels(launchertest_t)
 ')  # userdebug_or_eng

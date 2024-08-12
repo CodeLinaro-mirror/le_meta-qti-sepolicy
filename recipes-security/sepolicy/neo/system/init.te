@@ -1,0 +1,32 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type panel_illumination_t;
+    type panel_pixel_shift_t;
+    type video_name_sysfs_t;
+    type brightness_t;
+    type cpu_sysfs_t;
+    type cpu_scaling_freq_t;
+    type proc_sched_t;
+    type image_variant_sysfs_t;
+')
+
+allow initrc_t panel_illumination_t:dir search_dir_perms;
+allow initrc_t panel_illumination_t:file { open setattr getattr rw_file_perms };
+allow initrc_t panel_pixel_shift_t:dir search_dir_perms;
+allow initrc_t panel_pixel_shift_t:file { getattr setattr };
+allow initrc_t video_name_sysfs_t:file read_file_perms;
+allow initrc_t brightness_t:file { open setattr getattr rw_file_perms };
+
+allow init_t cpu_sysfs_t:dir search_dir_perms;
+allow init_t cpu_sysfs_t:dir manage_dir_perms;
+allow init_t cpu_sysfs_t:file manage_file_perms;
+allow initrc_t cpu_sysfs_t:file manage_file_perms;
+allow initrc_t cpu_sysfs_t:dir manage_dir_perms;
+allow initrc_t proc_sched_t:file manage_file_perms;
+allow init_t proc_sched_t:file manage_file_perms;
+allow init_t proc_sched_t:dir manage_dir_perms;
+allow init_t cpu_scaling_freq_t:file manage_file_perms;
+allow initrc_t image_variant_sysfs_t:dir search_dir_perms;
+allow initrc_t image_variant_sysfs_t:file manage_file_perms;

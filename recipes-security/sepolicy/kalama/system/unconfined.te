@@ -49,7 +49,7 @@ userdebug_or_eng(`
         type weston_runtime_t;
         type camera_data_t;
         type cpu_scaling_freq_t;
-        type cpu_core_ctl_sysfs_t;
+        type cpu_sysfs_t;
         type sysfs_panel0_backlight_bl_power_t;
         type sysfs_cpu_capacity;
         type sysfs_cpu_present;
@@ -73,8 +73,8 @@ userdebug_or_eng(`
     allow unconfined_t auditd_etc_t:dir { getattr read search };
     allow unconfined_t auditd_etc_t:file getattr;
     allow unconfined_t data_t:chr_file getattr;
-    allow unconfined_t cpu_core_ctl_sysfs_t:file rw_file_perms;
-    allow unconfined_t cpu_core_ctl_sysfs_t:dir { open read search getattr };
+    allow unconfined_t cpu_sysfs_t:file rw_file_perms;
+    allow unconfined_t cpu_sysfs_t:dir { open read search getattr };
     allow unconfined_t sysfs_panel0_backlight_bl_power_t:file getattr;
     # allow map the files in /data/misc/camera
     allow unconfined_t camera_data_t:file map;
@@ -105,6 +105,7 @@ userdebug_or_eng(`
         type tuicoreservice_dev_t;
         type zs_handle_sysfs_t;
         type zspage_sysfs_t;
+        type rfsa_adsp_lib_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     #For catf, which is internal test tool for audio
@@ -122,5 +123,7 @@ userdebug_or_eng(`
     allow unconfined_t tuicoreservice_dev_t:chr_file getattr;
     allow unconfined_t zs_handle_sysfs_t:dir getattr;
     allow unconfined_t zspage_sysfs_t:dir getattr;
+    allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+    allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
 
 ')

@@ -25,10 +25,16 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 gen_require(`
        type sysfs_t;
        type power_control_t;
        type encryption_control_t;
+       type initrc_t;
+       type qseecomd_persist_t;
 ')
 
 
@@ -51,3 +57,6 @@ allow qseecomd_t self:capability2 block_suspend;
 allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
 allow qseecomd_t power_control_t:file rw_file_perms;
 allow qseecomd_t encryption_control_t:file rw_file_perms;
+
+#allow initrc to create a /persist/data folder
+allow initrc_t qseecomd_persist_t: dir { create_dir_perms setattr_dir_perms };
