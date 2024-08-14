@@ -35,6 +35,7 @@ gen_require(`
         type data_t;
         type kernel_t;
         type pmsg0_t;
+        type qseecomd_data_t;
 ')
 
 kernel_dontaudit_read_system_state(fbe_service_t)
@@ -69,3 +70,6 @@ allow fbe_service_t data_t:dir { read ioctl };
 #Allow fbe_service_t to request for openssl encryption
 allow fbe_service_t kernel_t:system module_request;
 allow fbe_service_t pmsg0_t:chr_file rw_chr_file_perms;
+# Allow read/write to /data/vendor/tzstorage path.
+data_filetrans(fbe_service_t, qseecomd_data_t, { file dir })
+manage_user_data_files(fbe_service_t, qseecomd_data_t)
