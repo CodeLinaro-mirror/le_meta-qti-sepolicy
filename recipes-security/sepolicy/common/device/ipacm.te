@@ -210,9 +210,9 @@ gen_require(`
     type device_t;
 ')
 
-type ipa_odl_ctl_device_t;
+type qti_ipa_odl_ctl_device_t;
 type ipa_adpl_device_t;
-dev_node(ipa_odl_ctl_device_t);
+dev_node(qti_ipa_odl_ctl_device_t);
 dev_node(ipa_adpl_device_t);
 
 ### Manage socket files inside /dev/socket

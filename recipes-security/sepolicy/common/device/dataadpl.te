@@ -45,6 +45,7 @@ gen_require(`
     type event_device_t;
     type socket_device_t;
     type dataqti_device_t;
+    type qti_ipa_odl_ctl_device_t;
 ')
 
 logging_send_syslog_msg(dataadpl_t);
@@ -85,6 +86,7 @@ device_manage_socket_file(dataadpl_t, dataadpl_socket_device_t)
 dontaudit dataadpl_t self: capability {setuid setgid};
 
 rw_chr_files_pattern(dataadpl_t, device_t, dataqti_device_t)
+rw_chr_files_pattern(dataadpl_t, device_t, qti_ipa_odl_ctl_device_t)
 userdebug_or_eng(`
         dev_write_kmsg(dataadpl_t)
         mls_file_write_all_levels(dataadpl_t);
