@@ -1,0 +1,231 @@
+#Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(hlos-partition-repair, 1.0)
+
+# Define types
+type hlos_partition_repair_t;
+type hlos_partition_repair_exec_t;
+type hlos_partition_repair_conf_t;
+type persist_backup_t;
+type persist_backup_exec_t;
+type bkp_data_t;
+
+# Initialize vendor domains
+init_vendor_domain(hlos_partition_repair_t,hlos_partition_repair_exec_t)
+init_vendor_domain(persist_backup_t,persist_backup_exec_t)
+
+# Required types and classes
+gen_require(`
+    type adbd_system_data_t;
+    type adb_data_conf_t;
+    type ab_updater_conf_t;
+    type adsp_persist_t;
+    type coredump_data_t;
+    type csm_data_t;
+    type cgroup_t;
+    type default_t;
+    type default_context_t;
+    type data_t;
+    type debugfs_t;
+    type device_t;
+    type devpts_t;
+    type etc_t;
+    type file_context_t;
+    type fs_t;
+    type fsadm_exec_t;
+    type fsadm_run_t;
+    type fixed_disk_device_t;
+    type firmware_t;
+    type firmware_persist_t;
+    type init_var_run_t;
+    type kernel_t;
+    type manifest_t;
+    type mount_exec_t;
+    type mount_runtime_t;
+    type mplane_app_t;
+    type mpss_persist_t;
+    type persist_t;
+    type proc_t;
+    type qcmap_etc_data_t;
+    type qseecomd_persist_t;
+    type qwes_data_t;
+    type random_device_t;
+    type rawdump_data_t;
+    type reboot_cookie_data_t;
+    type removable_device_t;
+    type rfs_persist_t;
+    type setfiles_exec_t;
+    type system_data_t;
+    type sysfs_t;
+    type sysctl_t;
+    type shell_exec_t;
+    type tmp_t;
+    type tmpfs_t;
+    type tracefs_t;
+    type tombstone_data_t;
+    type unconfined_t;
+    type unconfined_mount_t;
+    type unlabeled_t;
+    type var_lib_t;
+    type var_run_t;
+    class blk_file { getattr ioctl open read };
+    class dir { add_name getattr mounton write read search remove_name create };
+    class file { create getattr open read setattr write execute execute_no_trans map link lock rename unlink };
+    class fifo_file { getattr read write };
+    class lnk_file read;
+    class process { setsched signal setfscreate };
+    class service { start status stop reload };
+    class filesystem { mount relabelfrom unmount };
+    class capability { setuid sys_boot };
+')
+
+
+mls_trusted_object(hlos_partition_repair_t);
+mls_trusted_object(persist_backup_t);
+
+mls_file_upgrade(hlos_partition_repair_t)
+mls_file_read_all_levels(hlos_partition_repair_t)
+mls_file_write_all_levels(hlos_partition_repair_t)
+
+mls_process_set_level(hlos_partition_repair_t)
+mls_process_write_all_levels(hlos_partition_repair_t)
+mls_process_write_to_clearance(hlos_partition_repair_t)
+allow hlos_partition_repair_t kernel_t:process { setsched };
+
+mls_file_upgrade(persist_backup_t)
+mls_file_read_all_levels(persist_backup_t)
+mls_file_write_all_levels(persist_backup_t)
+
+mls_process_set_level(persist_backup_t)
+mls_process_write_all_levels(persist_backup_t)
+mls_process_write_to_clearance(persist_backup_t)
+allow persist_backup_t kernel_t:process { setsched };
+
+manage_user_data_files(hlos_partition_repair_t,adb_data_conf_t);
+manage_user_data_files(hlos_partition_repair_t,qseecomd_persist_t);
+
+allow persist_backup_t setfiles_exec_t:file { getattr execute read open execute_no_trans map };
+allow persist_backup_t fsadm_run_t:dir { search getattr };
+allow hlos_partition_repair_t fsadm_run_t:dir  { getattr write add_name remove_name } ;
+allow hlos_partition_repair_t fsadm_run_t:file { write create setattr unlink link rename } ;
+
+allow hlos_partition_repair_t setfiles_exec_t:file { getattr execute read open execute_no_trans map };
+allow hlos_partition_repair_t default_context_t:dir search;
+allow hlos_partition_repair_t default_context_t:file { read open getattr };
+allow hlos_partition_repair_t file_context_t:dir search;
+allow hlos_partition_repair_t file_context_t:file { read open getattr map };
+allow hlos_partition_repair_t device_t:filesystem getattr;
+allow hlos_partition_repair_t tmpfs_t:filesystem getattr;
+allow hlos_partition_repair_t devpts_t:filesystem getattr;
+allow hlos_partition_repair_t cgroup_t:filesystem getattr;
+allow hlos_partition_repair_t debugfs_t:filesystem getattr;
+allow hlos_partition_repair_t debugfs_t:dir search;
+allow hlos_partition_repair_t tracefs_t:filesystem getattr;
+
+
+allow bkp_data_t fs_t:filesystem associate;
+allow hlos_partition_repair_t bkp_data_t:file { getattr create read open setattr relabelto relabelfrom write };
+allow hlos_partition_repair_t bkp_data_t:dir { getattr mounton create read open add_name relabelfrom search relabelto write setattr };
+allow unconfined_t bkp_data_t:dir getattr;
+allow hlos_partition_repair_t data_t:file { create getattr open read setattr write relabelfrom relabelto };
+allow hlos_partition_repair_t tombstone_data_t:dir { create setattr relabelfrom relabelto };
+allow hlos_partition_repair_t rawdump_data_t:dir { create getattr open read setattr relabelfrom relabelto };
+allow hlos_partition_repair_t reboot_cookie_data_t:file { getattr read create open setattr write relabelfrom relabelto };
+
+
+allow hlos_partition_repair_t adsp_persist_t:dir { relabelfrom relabelto setattr create };
+allow hlos_partition_repair_t firmware_persist_t:dir { relabelfrom relabelto setattr create };
+allow hlos_partition_repair_t mplane_app_t:file { getattr open read relabelfrom relabelto setattr write create };
+allow hlos_partition_repair_t mplane_app_t:dir { open read relabelto search setattr getattr relabelfrom add_name create write };
+allow hlos_partition_repair_t mpss_persist_t:dir { getattr open read relabelfrom relabelto setattr create };
+allow hlos_partition_repair_t qwes_data_t:dir { relabelfrom relabelto create setattr };
+allow hlos_partition_repair_t qwes_data_t:file { create getattr open read setattr write relabelfrom relabelto };
+allow hlos_partition_repair_t rfs_persist_t:dir { relabelfrom relabelto setattr create };
+
+allow hlos_partition_repair_t init_var_run_t:dir { search };
+allow hlos_partition_repair_t sysctl_t:dir { search };
+allow hlos_partition_repair_t adb_data_conf_t:file { getattr open read relabelfrom relabelto setattr write };
+allow hlos_partition_repair_t coredump_data_t:dir { relabelfrom relabelto };
+allow hlos_partition_repair_t csm_data_t:dir { getattr open read relabelfrom relabelto search setattr add_name create write };
+allow hlos_partition_repair_t csm_data_t:file { getattr open read relabelfrom relabelto setattr write create };
+allow hlos_partition_repair_t default_t:dir { getattr mounton };
+
+allow hlos_partition_repair_t manifest_t:dir getattr;
+allow hlos_partition_repair_t qcmap_etc_data_t:dir search;
+allow hlos_partition_repair_t self:process { setsched setfscreate };
+allow hlos_partition_repair_t self:capability { sys_boot };
+allow hlos_partition_repair_t var_run_t:file { getattr open read write create link rename setattr unlink };
+allow hlos_partition_repair_t var_run_t:dir { getattr open read write add_name remove_name };
+
+
+# Allow rules for hlos_partition_repair_t
+allow hlos_partition_repair_t shell_exec_t:file { mmap_exec_inherited_file_perms };
+allow hlos_partition_repair_t self:fifo_file { rw_inherited_fifo_file_perms };
+allow hlos_partition_repair_t proc_t:file { read_file_perms };
+allow hlos_partition_repair_t hlos_partition_repair_conf_t:file { read open };
+allow hlos_partition_repair_t mount_exec_t:file { exec_file_perms };
+allow hlos_partition_repair_t mount_runtime_t:dir { rw_dir_perms };
+allow hlos_partition_repair_t mount_runtime_t:file { manage_file_perms };
+allow hlos_partition_repair_t removable_device_t:blk_file { getattr };
+
+allow hlos_partition_repair_t fsadm_exec_t:file { exec_file_perms };
+allow hlos_partition_repair_t fsadm_run_t:dir { search };
+allow hlos_partition_repair_t fsadm_run_t:file { read_file_perms };
+allow hlos_partition_repair_t removable_device_t:blk_file { rw_blk_file_perms };
+allow hlos_partition_repair_t etc_t:file { read open getattr };
+allow hlos_partition_repair_t sysfs_t:lnk_file { read };
+allow hlos_partition_repair_t sysfs_t:dir { read };
+allow hlos_partition_repair_t sysfs_t:file { read open getattr };
+allow hlos_partition_repair_t var_lib_t:dir { search  };
+allow hlos_partition_repair_t random_device_t:chr_file { read };
+
+allow unconfined_t hlos_partition_repair_conf_t:file { getattr read };
+allow hlos_partition_repair_t tmp_t:dir { rw_dir_perms };
+allow hlos_partition_repair_t persist_t:dir { manage_dir_perms relabel_dir_perms mounton };
+allow hlos_partition_repair_t self:capability { sys_admin setuid chown fowner fsetid dac_read_search };
+allow hlos_partition_repair_t persist_t:file { manage_file_perms relabelto relabelfrom };
+
+
+allow hlos_partition_repair_t fs_t:filesystem { getattr relabelfrom mount unmount };
+allow hlos_partition_repair_t unlabeled_t:dir { list_dir_perms rmdir write add_name remove_name mounton relabelfrom };
+allow hlos_partition_repair_t tmp_t:file { manage_file_perms };
+allow hlos_partition_repair_t fixed_disk_device_t:blk_file { getattr };
+
+allow hlos_partition_repair_t qseecomd_persist_t:file { relabelto };
+allow hlos_partition_repair_t qseecomd_persist_t:dir { list_dir_perms relabelto setattr };
+
+allow hlos_partition_repair_t qseecomd_persist_t:file { getattr open read setattr };
+
+allow hlos_partition_repair_t data_t:dir { relabelfrom relabelto setattr add_name mounton write read };
+allow hlos_partition_repair_t firmware_t:dir getattr;
+
+# Allow rules for persist_backup_t
+allow persist_backup_t mount_exec_t:file { exec_file_perms };
+allow persist_backup_t mount_runtime_t:dir { rw_dir_perms };
+allow persist_backup_t mount_runtime_t:file { manage_file_perms };
+allow persist_backup_t removable_device_t:blk_file { read_blk_file_perms };
+allow persist_backup_t self:fifo_file { getattr read write };
+allow persist_backup_t shell_exec_t:file { mmap_exec_inherited_file_perms };
+allow persist_backup_t sysfs_t:dir read;
+allow persist_backup_t sysfs_t:file { getattr open read };
+allow persist_backup_t sysfs_t:lnk_file read;
+
+allow persist_backup_t etc_t:lnk_file read;
+allow persist_backup_t fs_t:filesystem { getattr mount relabelfrom unmount };
+allow persist_backup_t fsadm_exec_t:file { exec_file_perms };
+allow persist_backup_t persist_t:dir { getattr mounton search write add_name };
+allow persist_backup_t persist_t:file { rw_file_perms create };
+allow persist_backup_t self:capability setuid;
+allow persist_backup_t var_run_t:file { manage_file_perms };
+allow persist_backup_t self:process signal;
+allow persist_backup_t var_run_t:dir { rw_dir_perms create };
+allow persist_backup_t fixed_disk_device_t:blk_file { getattr };
+
+
+allow persist_backup_t proc_t:file { read getattr open };
+allow persist_backup_t persist_backup_t:capability sys_admin;
+allow persist_backup_t unlabeled_t:dir { search getattr write add_name };
+allow persist_backup_t system_data_t:dir getattr;
+
