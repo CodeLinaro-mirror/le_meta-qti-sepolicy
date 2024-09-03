@@ -136,4 +136,5 @@ interface(`location_client_generic_rules',`
     manage_sock_files_pattern($1, loc_socket_t, loc_socket_t)
     dgram_send_pattern($1, loc_socket_t, loc_socket_t, loc_hald_t)
     allow loc_hald_t $1:unix_dgram_socket sendto;
+    leprop_rw_props($1)
 ')
