@@ -137,4 +137,5 @@ interface(`location_client_generic_rules',`
     dgram_send_pattern($1, loc_socket_t, loc_socket_t, loc_hald_t)
     allow loc_hald_t $1:unix_dgram_socket sendto;
     read_files_pattern($1, etc_t, etc_t);
+    leprop_rw_props($1)
 ')
