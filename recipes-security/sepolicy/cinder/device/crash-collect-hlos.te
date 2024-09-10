@@ -33,7 +33,8 @@ allow unconfined_t rawdump_data_t:file { create read write getattr open unlink }
 allow crash_collect_hlos_t crash_collect_hlos_t:tcp_socket { create connect write read };
 allow crash_collect_hlos_t ssh_port_t:tcp_socket { name_connect };
 
-allow mount_copybind_t cc_conf_t:file { getattr };
+allow cc_conf_t fs_t:filesystem { associate };
+allow mount_copybind_t cc_conf_t:file { getattr setattr read open create write };
 allow mount_t cc_conf_t:file { getattr mounton };
 allow setfiles_t cc_conf_t:file { getattr };
 allow crash_collect_hlos_t cc_conf_t:file { read open };
