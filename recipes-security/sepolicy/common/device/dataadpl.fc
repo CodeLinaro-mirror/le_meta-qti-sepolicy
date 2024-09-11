@@ -28,6 +28,3 @@
 /usr/bin/adpl    --      gen_context(system_u:object_r:dataadpl_exec_t,s0)
 
 /dev/dpl_ctrl    -c      gen_context(system_u:object_r:dataadpl_device_t,s0)
-
-/dev/ipa_odl_ctl -c      gen_context(system_u:object_r:dataadpl_odl_device_t,s0)
-
