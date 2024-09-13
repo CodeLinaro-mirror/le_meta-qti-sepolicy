@@ -9,8 +9,12 @@ gen_require(`
     type tmp_t;
 ')
 
+type conn_mgr_initrc_t;
+type conn_mgr_initrc_exec_t;
+init_script_domain(conn_mgr_initrc_t, conn_mgr_initrc_exec_t)
 allow NetworkManager_t qvrd_t:unix_dgram_socket sendto;
 allow NetworkManager_t qvr_data_t:sock_file write_sock_file_perms;
 allow NetworkManager_t xrdcf_t:unix_dgram_socket sendto;
 allow NetworkManager_t initrc_t:unix_dgram_socket sendto;
 allow NetworkManager_t tmp_t:sock_file write;
+allow NetworkManager_t conn_mgr_initrc_t:unix_dgram_socket sendto;
