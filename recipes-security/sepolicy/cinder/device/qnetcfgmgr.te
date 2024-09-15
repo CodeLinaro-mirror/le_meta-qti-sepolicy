@@ -50,6 +50,7 @@ type qnetcfgmgr_rt_table_t;
 type qnetcfgmgr_ipv6_net_t;
 type qnetcfgmgr_chip_t;
 type qnetcfgmgr_run_qncm_t;
+type qnetcfgmgr_persist_qncm_t;
 
 init_vendor_domain(qnetcfgmgr_t, qnetcfgmgr_exec_t)
 init_script_domain(qnetcfgmgr_macsec_t, qnetcfgmgr_macsec_exec_t)
@@ -100,6 +101,7 @@ gen_require(`
   type cert_t;
   type user_home_dir_t;
   type node_t;
+  type persist_t;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -243,8 +245,15 @@ allow qnetcfgmgr_t cert_t:file {getattr open read };
 allow qnetcfgmgr_t home_root_t:dir search;
 allow qnetcfgmgr_t user_home_dir_t:dir search;
 allow qnetcfgmgr_t node_t:udp_socket { node_bind };
+
 #QNCM IP2MACv6
 allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
+
+#/persist/qncm/ files
+user_data_files_type(qnetcfgmgr_persist_qncm_t)
+manage_user_data_files(qnetcfgmgr_t, qnetcfgmgr_persist_qncm_t)
+allow qnetcfgmgr_t persist_t:dir search;
+allow initrc_t qnetcfgmgr_persist_qncm_t:dir setattr;
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
