@@ -1,0 +1,16 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary>qesdk one daemon</summary>
+
+interface(`qesdk_one_access',`
+    gen_require(`
+        type socket_device_t;
+        type unconfined_t;
+    ')
+
+    userdebug_or_eng(`
+        allow $1 unconfined_t:unix_stream_socket connectto;
+        allow $1 socket_device_t:sock_file { write };
+    ')
+')

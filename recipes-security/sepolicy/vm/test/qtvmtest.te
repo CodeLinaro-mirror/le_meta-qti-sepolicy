@@ -17,6 +17,8 @@ type embedunloadtest_t;
 type embedunloadtest_exec_t;
 type embedsmcinvoke_qtvm_t;
 type embedsmcinvoke_qtvm_t_exec_t;
+type embedipptest_qtvm_t;
+type embedipptest_qtvm_t_exec_t;
 
 init_vendor_domain(embedallpritest_t, embedallpritest_exec_t)
 init_vendor_domain(embeddeathtest_t, embeddeathtest_exec_t)
@@ -25,6 +27,7 @@ init_vendor_domain(embedsparetest_t, embedsparetest_exec_t)
 init_vendor_domain(embedstresstest_t, embedstresstest_exec_t)
 init_vendor_domain(embedunloadtest_t, embedunloadtest_exec_t)
 init_vendor_domain(embedsmcinvoke_qtvm_t, embedsmcinvoke_qtvm_t_exec_t)
+init_vendor_domain(embedipptest_qtvm_t, embedipptest_qtvm_t_exec_t)
 
 gen_require(`
     type tvmmink_t;
@@ -102,3 +105,14 @@ type embedsmcinvoke_qtvm_tmpfs_t;
 files_tmpfs_file(embedsmcinvoke_qtvm_tmpfs_t)
 fs_tmpfs_filetrans(embedsmcinvoke_qtvm_t, embedsmcinvoke_qtvm_tmpfs_t, file)
 allow embedsmcinvoke_qtvm_t embedsmcinvoke_qtvm_tmpfs_t:file { manage_file_perms mounton };
+
+allow embedipptest_qtvm_t socket_device_t:dir { search getattr };
+allow embedipptest_qtvm_t self:process signal;
+platform_container_domain_type(embedipptest_qtvm_t, embedipptest_qtvm_t_exec_t);
+
+# redirect log to /dev/msg
+type embedipptest_qtvm_tmpfs_t;
+files_tmpfs_file(embedipptest_qtvm_tmpfs_t)
+fs_tmpfs_filetrans(embedipptest_qtvm_t, embedipptest_qtvm_tmpfs_t, file)
+allow embedipptest_qtvm_t embedipptest_qtvm_tmpfs_t:file { manage_file_perms mounton };
+
