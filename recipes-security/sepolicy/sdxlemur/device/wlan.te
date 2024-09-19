@@ -49,6 +49,10 @@ gen_require(`
     type wlan_initrc_exec_t;
     type wlan_ezmesh_initrc_t;
     type wlan_ezmesh_initrc_exec_t;
+    type mount_copybind_exec_t;
+    type mount_exec_t;
+    type setfiles_exec_t;
+    type mount_runtime_t;
 ')
 
 ########################################
@@ -103,3 +107,12 @@ allow wlan_ezmesh_initrc_t wlan_service_t:file read_file_perms;
 allow wlan_ezmesh_initrc_t init_t:file read_file_perms;
 allow wlan_ezmesh_initrc_t initrc_t:file read_file_perms;
 allow wlan_ezmesh_initrc_t qcmap_cm_t:file read_file_perms;
+
+#mount ezmesh configure files
+mount_domtrans(wlan_initrc_t)
+
+allow wlan_initrc_t mount_copybind_exec_t:file { read open execute execute_no_trans };
+allow wlan_initrc_t mount_exec_t:file { map getattr read open execute execute_no_trans };
+allow wlan_initrc_t setfiles_exec_t:file { map getattr read open execute execute_no_trans };
+allow wlan_initrc_t mount_runtime_t:dir { search getattr };
+allow wlan_initrc_t wifi_system_data_t:file { mounton };
