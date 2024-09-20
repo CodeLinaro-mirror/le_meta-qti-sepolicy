@@ -167,6 +167,7 @@ allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
+allow dhcpc_t qnetcfgmgr_t:unix_stream_socket { read write };
 
 # Permissions added for DNSmasq to support hosting RU local management port
 allow dnsmasq_t initrc_var_run_t:dir { search write add_name };
@@ -249,6 +250,7 @@ allow qnetcfgmgr_t self:rawip_socket{ create setopt write read };
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
 allow qnetcfgmgr_t self:process { sigkill };
+allow qnetcfgmgr_t dhcpc_t:process sigkill;
 files_read_etc_files(qnetcfgmgr_t)
 files_read_etc_files(qcm_etc_t)
 allow qcm_etc_t qcm_etc_t:file rw_file_perms;
