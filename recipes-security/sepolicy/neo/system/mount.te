@@ -25,7 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#  Changes from Qualcomm Innovation Center are provided under the following license:
+#  Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
 #
 #  Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
 #
@@ -69,6 +69,7 @@ gen_require(`
     type hwfde_conf_file_t;
     type lib_t;
     type overlay_t;
+    type wifi_data_t;
 ')
 
 permissive mount_t;
@@ -85,5 +86,6 @@ allow mount_t kernel_t:process setsched;
 allow mount_t lib_t:filesystem relabelfrom;
 allow mount_t overlay_t:chr_file { create link rename unlink };
 allow mount_t var_t:chr_file unlink;
-allow mount_t data_t:sock_file { create unlink };
+allow mount_t data_t:sock_file manage_sock_file_perms;
+allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow unconfined_mount_t kernel_t:process setsched; #will be removing this line in futare
