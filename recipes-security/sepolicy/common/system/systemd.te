@@ -93,4 +93,9 @@ ifdef(`init_systemd',`
     allow systemd_tmpfiles_t persist_t:dir { getattr search read write add_name };
 
     dev_read_sysfs(systemd_tmpfiles_t);
+
+    gen_require(`
+        type sysfs_power_state_t;
+    ')
+    allow systemd_tmpfiles_t sysfs_power_state_t:file { getattr setattr relabelfrom relabelto};
 ')
