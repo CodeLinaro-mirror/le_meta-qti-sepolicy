@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qnetmgrd, 1.0)
@@ -44,6 +44,8 @@ userdebug_or_eng(`
 gen_require(`
       type default_t;
       type socket_device_t;
+      type power_manager_daemon_t;
+      type power_socket_t;
 ')
 
 allow qnetmgrd_t self:capability { net_admin net_raw chown fsetid setpcap setgid setuid };
@@ -82,6 +84,9 @@ files_type(netmgrd_socket_device_t);
 dev_node(netmgrd_socket_device_t);
 allow qnetmgrd_t netmgrd_socket_device_t:dir { search write create read add_name };
 allow qnetmgrd_t netmgrd_socket_device_t:sock_file { create setattr unlink};
+allow qnetmgrd_t power_manager_daemon_t:unix_stream_socket connectto;
+allow qnetmgrd_t power_socket_t:dir search;
+allow qnetmgrd_t power_socket_t:sock_file write;
 filetrans_pattern( qnetmgrd_t, socket_device_t, netmgrd_socket_device_t, { sock_file dir })
 
 gen_require(`
