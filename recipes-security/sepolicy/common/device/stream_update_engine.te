@@ -91,7 +91,7 @@ allow stream_update_engine_t sysctl_kernel_t:dir search;
 allow stream_update_engine_t sysctl_vm_t:dir search;
 allow stream_update_engine_t unconfined_t:binder call;
 allow stream_update_engine_t sysctl_vm_overcommit_t:file { read open };
-allow stream_update_engine_t sysctl_kernel_t:file { read open };
+allow stream_update_engine_t sysctl_kernel_t:file { read open getattr };
 
 ifdef(`nad-telaf',`
     gen_require(`
