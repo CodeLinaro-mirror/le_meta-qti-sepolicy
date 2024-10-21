@@ -47,6 +47,7 @@ gen_require(`
     type wifi_usr_t;
     type wifi_system_data_t;
     type wlan_service_exec_t;
+    type wlan_service_tmp_t;
 ')
 
 ifdef(`init_systemd',`
@@ -75,3 +76,7 @@ allow qcmap_cm_t user_tmp_t:file { lock };
 #this is to allow iperf
 allow qcmap_cm_t qcmap_tmp_t:file { map };
 corenet_tcp_connect_commplex_link_port(qcmap_cm_t);
+
+#read /tmp/sysinfo/board_name
+allow qcmap_cm_t wlan_service_tmp_t:dir { search };
+allow qcmap_cm_t wlan_service_tmp_t:file { open read getattr lock };
