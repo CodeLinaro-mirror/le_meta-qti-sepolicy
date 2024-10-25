@@ -215,7 +215,7 @@ allow persist_backup_t sysfs_t:lnk_file read;
 allow persist_backup_t etc_t:lnk_file read;
 allow persist_backup_t fs_t:filesystem { getattr mount relabelfrom unmount };
 allow persist_backup_t fsadm_exec_t:file { exec_file_perms };
-allow persist_backup_t persist_t:dir { getattr mounton search write add_name };
+allow persist_backup_t persist_t:dir { getattr mounton search write add_name relabelto };
 allow persist_backup_t persist_t:file { rw_file_perms create };
 allow persist_backup_t self:capability setuid;
 allow persist_backup_t var_run_t:file { manage_file_perms };
@@ -226,6 +226,7 @@ allow persist_backup_t fixed_disk_device_t:blk_file { getattr };
 
 allow persist_backup_t proc_t:file { read getattr open };
 allow persist_backup_t persist_backup_t:capability sys_admin;
-allow persist_backup_t unlabeled_t:dir { search getattr write add_name };
+allow persist_backup_t unlabeled_t:dir { search getattr write add_name relabelfrom mounton };
+
 allow persist_backup_t system_data_t:dir getattr;
 
