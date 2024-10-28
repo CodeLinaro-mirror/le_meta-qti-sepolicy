@@ -1,4 +1,4 @@
-From 541f92a75956007a821160adfd250747ef944db7 Mon Sep 17 00:00:00 2001
+From 585824c33546d1c89236da9350518bde085c9f1a Mon Sep 17 00:00:00 2001
 From: Dennis Cagle <d-cagle@codeaurora.org>
 Date: Wed, 30 Nov 2016 15:55:19 -0800
 Subject: [PATCH] Assign proc_t to proc dir
@@ -8,10 +8,10 @@ Subject: [PATCH] Assign proc_t to proc dir
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/policy/modules/kernel/files.fc b/policy/modules/kernel/files.fc
-index 3148da2..ff33faf 100644
+index c5012e6b4..9938be697 100644
 --- a/policy/modules/kernel/files.fc
 +++ b/policy/modules/kernel/files.fc
-@@ -158,8 +158,8 @@ ifdef(`distro_debian',`
+@@ -144,8 +144,8 @@ HOME_ROOT/lost\+found/.*	<<none>>
  #
  # /proc
  #
@@ -22,6 +22,3 @@ index 3148da2..ff33faf 100644
  
  #
  # /run
--- 
-1.9.1
-
