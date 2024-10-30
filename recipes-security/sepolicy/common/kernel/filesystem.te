@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -59,14 +59,13 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type functionfs_t;
 type trace_marker_t;
 fs_noxattr_type(functionfs_t)
 files_mountpoint(functionfs_t)
-genfscon functionfs / gen_context(system_u:object_r:functionfs_t,s0)
 
 type binder_device_t;
 type hwbinder_device_t;
