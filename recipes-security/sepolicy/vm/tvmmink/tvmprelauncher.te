@@ -24,6 +24,7 @@ type tvmroot_sock_t;
 ')
 
 allow tvmprelauncher_t self:process signal;
+allow tvmprelauncher_t self:qipcrtr_socket { create setopt getattr write read connect shutdown };
 allow tvmprelauncher_t self:unix_stream_socket { listen accept };
 allow tvmprelauncher_t smcinvoke_device_t:chr_file { getattr read write open ioctl };
 allow tvmprelauncher_t tvmmink_t:fd use;
