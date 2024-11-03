@@ -36,7 +36,6 @@ userdebug_or_eng(`
   allow netopeer2_t proc_t:file { read open getattr };
   ')
 
-
 allow netopeer2_t tmp_t:dir { search write add_name remove_name };
 allow netopeer2_t tmp_t:file { create read write open lock getattr unlink };
 allow netopeer2_t init_var_run_t:dir { search };
@@ -64,9 +63,9 @@ allow netopeer2_t user_home_t:dir { search };
 allow netopeer2_t user_home_t:file { read open getattr };
 
 
-allow netopeer2_t mplane_app_t:dir { add_name write getattr open read search};
+allow netopeer2_t mplane_app_t:dir { add_name write getattr open read search };
 allow netopeer2_t mplane_app_t:fifo_file { create open read write };
-allow netopeer2_t mplane_app_t:file { create lock map open getattr read write };
+allow netopeer2_t mplane_app_t:file { create lock map open getattr read write append};
 allow netopeer2_t socket_device_t:dir search;
 
 allow netopeer2_t sysdevice_sysfs_t:file { read open getattr };
