@@ -46,6 +46,7 @@ gen_require(`
     type leprop_t;
     type pmsg_device_t;
     type functionfs_t;
+    type image_variant_sysfs_t;
 ')
 allow usb_t cgroup_t:filesystem getattr;
 userdebug_or_eng(`
@@ -71,3 +72,6 @@ allow usb_t leprop_sock_t:sock_file write;
 allow usb_t leprop_t:unix_stream_socket connectto;
 allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 allow usb_t functionfs_t:dir getattr;
+
+allow usb_t image_variant_sysfs_t:dir search;
+allow usb_t image_variant_sysfs_t:file read_file_perms;
