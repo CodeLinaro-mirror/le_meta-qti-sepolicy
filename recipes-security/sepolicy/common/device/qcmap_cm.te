@@ -27,7 +27,7 @@
 #
 #Changes from Qualcomm Innovation Center are provided under the following license:
 #
-#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
 #modification, are permitted (subject to the limitations in the
@@ -140,7 +140,7 @@ rw_chr_files_pattern(qcmap_cm_t, device_t, datamtd_device_t)
 allow usb_t qcmap_etc_data_t:file { getattr read open };
 allow ifconfig_t qcmap_cm_t:unix_stream_socket { read write };
 allow kmod_t qcmap_cm_t:unix_stream_socket { read write };
-allow qcmap_cm_t brctl_exec_t:file { read open execute execute_no_trans getattr };
+allow qcmap_cm_t brctl_exec_t:file { exec_file_perms };
 allow qcmap_cm_t self:unix_stream_socket { rw_stream_socket_perms connectto };
 
 userdebug_or_eng(`
