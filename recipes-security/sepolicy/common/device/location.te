@@ -47,6 +47,7 @@ gen_require(`
     type usr_t;
     type init_var_run_t;
     type kpi_values_sysfs_t;
+    type ntske_port_t;
 ')
 
 ########################################
@@ -505,6 +506,7 @@ device_search_sockets({ xtwifi_agent_t xtwifi_client_t xtra_daemon_t edgnss_daem
 allow { lowi_server_t slim_daemon_t xtra_daemon_t edgnss_daemon_t } loc_t:unix_dgram_socket { read write sendto };
 
 allow xtra_daemon_t unreserved_port_t:tcp_socket name_connect;
+allow xtra_daemon_t ntske_port_t:tcp_socket name_connect;
 
 ## common rules
 dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_daemon_t edgnss_daemon_t engine_service_t slim_daemon_t} system_dir_t:dir search;
