@@ -40,7 +40,9 @@
 # /etc/data Files
 /etc/data/qnetmgr_cfg_qdu\.xml       		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
 /etc/data/qnetmgr_cfg_qru\.xml       		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
-/etc/data/qnetmgr_persistent_cfg_qru\.xml       		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
+/persist/qncm(/.*)?                            gen_context(system_u:object_r:qnetcfgmgr_persist_qncm_t,s0)
+/etc/data/default_golden_qnetmgr_cfg_qdu\.xml   -- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
+/etc/data/default_golden_qnetmgr_cfg_qru\.xml   -- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
 /etc/data/wpa_supplicant\.conf   		-- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
 /etc/data/dhcp/* 				 		  -- gen_context(system_u:object_r:qnetcfgmgr_etc_data_t,s0)
 

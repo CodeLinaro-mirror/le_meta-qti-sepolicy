@@ -44,6 +44,7 @@ init_vendor_domain(qwesd_t, qwesd_exec_t)
 logging_send_syslog_msg(qwesd_t)
 
 gen_require(`
+       type hlos_partition_repair_t;
        type smcinvoke_device_t;
        type qseecom_device_t;
        type qcmap_etc_data_t;
@@ -89,7 +90,7 @@ search_user_data_dir(qwesd_t);
 user_data_files_type(qwes_data_t)
 data_filetrans(qwesd_t, qwes_data_t, { file dir })
 manage_user_data_files(qwesd_t, qwes_data_t)
-neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t} qwes_data_t:file { write };
+neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t -hlos_partition_repair_t} qwes_data_t:file { write };
 
 # allow qwesd to read/write to /var/run/qwes_ipc minksocket file.
 files_pid_file(qwes_mink_socket_t)
