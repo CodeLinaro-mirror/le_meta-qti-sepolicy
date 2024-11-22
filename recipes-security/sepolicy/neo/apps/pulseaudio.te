@@ -12,6 +12,7 @@ gen_require(`
         type socket_device_t;
         type system_dmabuf_device_t;
         type vendor_dmabuf_audioml_heap_device_t;
+        type btapp_t;
 ')
 
 user_data_files_type(audio_data_file_t);
@@ -27,3 +28,7 @@ userdebug_or_eng(`
     ')
     allow pulseaudio_t unconfined_t:unix_stream_socket connectto;
 ')
+
+#Usecase to inetract with bt-app service for audio stream
+
+allow pulseaudio_t btapp_t:unix_stream_socket { connectto };
