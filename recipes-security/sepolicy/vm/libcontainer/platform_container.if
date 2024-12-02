@@ -30,7 +30,7 @@ interface(`platform_container_domain_type',`
 
     can_exec($1, $2)
 
-    # TODO: Any way to fine-tune this?
+    # needed until all containers using user namespaced /dev/kmsg
     mls_file_read_all_levels($1)
     mls_file_write_all_levels($1)
     # for bind-mounting when using the libminijail default option
@@ -41,9 +41,8 @@ interface(`platform_container_domain_type',`
     domtrans_pattern(platform_launcher_domain, $2, $1)
 ')
 
-########################################
 ## <summary>
-##      Allow bind mounting of a node
+##     Allow specified type to be bind-mounted by the platform
 ## </summary>
 ## <param name="domain">
 ##      <summary>
@@ -51,16 +50,28 @@ interface(`platform_container_domain_type',`
 ##      </summary>
 ## </param>
 ## <param name="target">
-##      <summary>
-##      File type to allow
-##      </summary>
+##     <summary>
+##     Type allowed to be bind-mounted
+##     </summary>
 ## </param>
-## <param name="class">
-##      <summary>
-##      File class to allow
-##      </summary>
+## <param name="filetype">
+##     <summary>
+##     The object being bind-mounted
+##     </summary>
 ## </param>
 #
 interface(`platform_container_bind_mount',`
+    gen_require(`
+        attribute platform_launcher_domain;
+        type supervisor_t;
+    ')
+
+    # for non user-namespaces
     allow $1 $2:$3 { getattr relabelto };
+
+    # for user namespaces
+    allow platform_launcher_domain $2:$3 getattr;
+    allow supervisor_t $2:$3 { getattr relabelto };
+    # allow creation of the target mountpoint regardless of filetype
+    allow supervisor_t $2:file { create_file_perms read mounton };
 ')
