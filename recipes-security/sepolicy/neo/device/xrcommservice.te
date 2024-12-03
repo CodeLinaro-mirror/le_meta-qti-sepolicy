@@ -1,0 +1,80 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+policy_module(xrcommservice, 1.0)
+
+type xrcommservice_t;
+type xrcommservice_exec_t;
+init_vendor_domain(xrcommservice_t, xrcommservice_exec_t)
+
+gen_require(`
+    type systemd_tmpfiles_t;
+    type socket_device_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type fs_t;
+    type node_t;
+    type dev_dri_t;
+    type dri_device_t;
+    type gpumodel_t;
+    type vendor_dmabuf_system_heap_device_t;
+    type afs_fs_port_t;
+    type afs_pt_port_t;
+    type afs_ka_port_t;
+    type unreserved_port_t;
+    type xrcommservice_data_t;
+')
+
+# Allow interracting with data/vendor/xrcomm directory
+manage_user_data_files(xrcommservice_t, xrcommservice_data_t)
+
+# Add permission to create lock file
+allow systemd_tmpfiles_t xrcommservice_data_t:dir { relabelto };
+allow systemd_tmpfiles_t xrcommservice_data_t:file { relabelto };
+
+# Allow bind for tcp/udp ports
+corenet_udp_bind_afs_fs_port(xrcommservice_t)
+corenet_udp_bind_afs_pt_port(xrcommservice_t)
+corenet_udp_bind_afs_ka_port(xrcommservice_t)
+corenet_udp_bind_generic_node(xrcommservice_t);
+corenet_tcp_bind_generic_node(xrcommservice_t);
+corenet_tcp_bind_all_unreserved_ports(xrcommservice_t);
+corenet_udp_bind_all_unreserved_ports(xrcommservice_t);
+
+# Allow tcp/udp socket creation
+allow xrcommservice_t self:tcp_socket { create_socket_perms shutdown getopt connect };
+allow xrcommservice_t self:udp_socket { create_socket_perms shutdown };
+
+# Allow access to data partition
+fs_associate(xrcommservice_t);
+fs_associate(xrcommservice_data_t);
+
+# Allow creation of unix socket
+allow xrcommservice_t self:unix_stream_socket { create_socket_perms connectto listen accept };
+allow xrcommservice_t socket_device_t:dir search_dir_perms;
+leprop_rw_props(xrcommservice_t);
+
+# Allow access to /dev/dri
+allow xrcommservice_t dev_dri_t:dir search_dir_perms;
+allow xrcommservice_t dri_device_t:chr_file rw_chr_file_perms;
+
+# Add fifo file permission
+allow xrcommservice_t self:fifo_file rw_fifo_file_perms;
+
+# Allow scheduling config
+allow xrcommservice_t self:capability { sys_nice };
+allow xrcommservice_t self:process { setsched getsched };
+
+
+allow xrcommservice_t gpumodel_t:file read_file_perms;
+
+allow xrcommservice_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+
+userdebug_or_eng(`
+     gen_require(`
+         type unconfined_t;
+     ')
+     allow unconfined_t xrcommservice_data_t:dir { search write add_name };
+     allow unconfined_t xrcommservice_data_t:file { create read write open lock };
+')

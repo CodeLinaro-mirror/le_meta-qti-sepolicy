@@ -112,24 +112,27 @@ gen_require(`
     attribute system_data;
     type sxr_data_t;
     type qvr_data_t;
+    type xrcommservice_data_t;
     type sysdevice_sysfs_t;
     type brightness_t;
     type sysfs_vblank_t;
     type image_variant_sysfs_t;
     type tuicoreservice_data_t;
+    type wlan_msl_sysfs_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -tuicoreservice_data_t }:file rw_file_perms;
+neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -xrcommservice_data_t -tuicoreservice_data_t }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 allow initrc_t brightness_t:file rw_file_perms;
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 allow initrc_t image_variant_sysfs_t:dir search;
 allow initrc_t image_variant_sysfs_t:file manage_file_perms;
+allow initrc_t wlan_msl_sysfs_t:dir { getattr open read search };
 
 allow initrc_t lib_t:system module_load;
 
