@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmroot, 1.0)
@@ -43,6 +43,9 @@ type vendor_vm_hlos_device_t;
 type vendor_vm_self_device_t;
 type vendor_vm_oem_device_t;
 type smmu_proxy_device_t;
+type init_t;
+type system_dbusd_runtime_t;
+type power_unit_t;
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -80,6 +83,7 @@ allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execu
 write_files_pattern(tvmroot_t, platform_container_domain, platform_container_domain)
 
 mls_file_read_all_levels(tvmroot_t)
+mls_file_write_all_levels(tvmroot_t)
 
 # Cryptsetup policies
 gen_require(`
@@ -97,6 +101,13 @@ allow tvmroot_t self:capability { sys_admin kill };
 allow tvmroot_t self:capability2 block_suspend;
 allow tvmroot_t proc_t:dir mounton;
 allow tvmroot_t proc_t:file { read };
+
+# shutdown and reboot vm
+allow tvmroot_t init_t:unix_stream_socket { connectto };
+allow tvmroot_t init_t:dir { search };
+allow tvmroot_t system_dbusd_runtime_t:dir { search };
+allow tvmroot_t system_dbusd_runtime_t:sock_file { write };
+allow tvmroot_t power_unit_t:service { start };
 
 logging_send_syslog_msg(tvmroot_t)
 

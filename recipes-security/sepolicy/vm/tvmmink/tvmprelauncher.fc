@@ -2,4 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/TVMPrelauncher      --      gen_context(system_u:object_r:tvmprelauncher_exec_t,s0)
-/dev/socket/prelauncher      -c      gen_context(system_u:object_r:tvmprelauncher_sock_t,s0)
+/dev/socket/prelauncher      -s      gen_context(system_u:object_r:tvmprelauncher_sock_t,s0)

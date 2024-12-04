@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(containertest, 1.0)
@@ -16,6 +16,7 @@ type containertest_t;
 type containertest_exec_t;
 platform_container_domain_type(containertest_t, containertest_exec_t)
 domtrans_pattern(launchertest_t, containertest_exec_t, containertest_t)
+role system_r types containertest_t;
 
 userdebug_or_eng(`
     # launchertest_t
@@ -48,6 +49,8 @@ userdebug_or_eng(`
     allow launchertest_t launchertest_tmpfs_t:chr_file manage_chr_file_perms;
     allow launchertest_t launchertest_tmpfs_t:dir manage_dir_perms;
     allow launchertest_t launchertest_tmpfs_t:lnk_file create;
+
+    # required for /dev/kmsg
     mls_file_read_all_levels(launchertest_t)
 
     # Memfd testing - copy elf contents to tmpfs and transition
@@ -66,31 +69,47 @@ userdebug_or_eng(`
     # TODO: Is this common? only saw this for one test
     can_exec(containertest_t, launchertest_tmpfs_t)
 
-    # /dev/dri
-    dev_rw_dri(containertest_t)
-    mls_file_read_all_levels(containertest_t)
-    mls_file_write_all_levels(containertest_t)
-    
-    # /dev/socket/letzd
-    optional_policy(`
-        gen_require(`
-            type socket_device_t;
-            type letzd_sock_t;
-        ')
-        allow containertest_t socket_device_t:dir { getattr search };
-        allow containertest_t letzd_sock_t:sock_file getattr;
-    ')
-
     # Inspect process list. Not all containers will care about this
     kernel_list_proc(containertest_t)
     corecmd_exec_shell(containertest_t)
     # /mnt/test.txt (mount namespace test)
+    gen_require(`
+        type mount_t;
+    ')
     allow containertest_t tmpfs_t:file { read write create open };
+    mount_domtrans(containertest_t)
+    allow containertest_t mount_t:process2 nnp_transition;
+    allow mount_t self:cap_userns sys_admin;
+    kernel_read_system_state(containertest_t)
+
 
     # Memfd testing
     can_exec(containertest_t, tmpfs_t)
     allow containertest_t tmpfs_t:file { entrypoint map };
 
-    # Redirect to /dev/kmsg
-    mls_file_write_all_levels(launchertest_t)
+    # User namespace
+    supervisor_connect(launchertest_t)
+    allow launchertest_t containertest_t:dir search;
+    allow launchertest_t containertest_t:lnk_file read;
+    allow launchertest_t containertest_t:file { open read };
+    allow launchertest_t socket_device_t:dir getattr;
+    gen_require(`
+        type user_home_dir_t;
+    ')
+    dontaudit containertest_t user_home_dir_t:dir getattr;
+
+    # finit_module testing
+    corecmd_exec_shell(containertest_t)
+    vendor_kernel_load_exempt(containertest_t)
+    kernel_load_module(containertest_t)
+
+    # bind mounts
+    gen_require(`
+        type socket_device_t;
+        type tvmmink_sock_t;
+        type vendor_virtio_mem_device_t;
+    ')
+    platform_container_bind_mount(containertest_t, socket_device_t, dir);
+    platform_container_bind_mount(containertest_t, tvmmink_sock_t, sock_file);
+    platform_container_bind_mount(containertest_t, vendor_virtio_mem_device_t, chr_file);
 ')  # userdebug_or_eng

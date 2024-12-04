@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ## <summary> libcontainer interface </summary>
@@ -21,31 +21,57 @@
 interface(`platform_container_domain_type',`
     gen_require(`
         attribute platform_container_domain;
-        role system_r;
-        type mount_exec_t;
-        type container_mount_t;
         attribute platform_hub_domain;
         attribute platform_launcher_domain;
     ')
 
     typeattribute $1 platform_container_domain;
     domain_type($1)
-    role system_r types $1;
 
     can_exec($1, $2)
 
-    # TODO: Any way to fine-tune this?
+    # needed until all containers using user namespaced /dev/kmsg
     mls_file_read_all_levels($1)
     mls_file_write_all_levels($1)
-
-    # Most services will need bind-mounting
-    #  Use a custom context which only allows specific
-    #  listed files to be mounted.
-    # TODO: Can we dynamically create a custom mount type here?
-    domtrans_pattern($1, mount_exec_t, container_mount_t)
-    allow $1 mount_exec_t:file entrypoint;
+    # for bind-mounting when using the libminijail default option
+    vendor_device_rw_exempt($1)
 
     allow platform_hub_domain $2:file { read open getattr };
     allow platform_launcher_domain $1:process2 nosuid_transition;
     domtrans_pattern(platform_launcher_domain, $2, $1)
+')
+
+## <summary>
+##     Allow specified type to be bind-mounted by the platform
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain type to allow
+##      </summary>
+## </param>
+## <param name="target">
+##     <summary>
+##     Type allowed to be bind-mounted
+##     </summary>
+## </param>
+## <param name="filetype">
+##     <summary>
+##     The object being bind-mounted
+##     </summary>
+## </param>
+#
+interface(`platform_container_bind_mount',`
+    gen_require(`
+        attribute platform_launcher_domain;
+        type supervisor_t;
+    ')
+
+    # for non user-namespaces
+    allow $1 $2:$3 { getattr relabelto };
+
+    # for user namespaces
+    allow platform_launcher_domain $2:$3 getattr;
+    allow supervisor_t $2:$3 { getattr relabelto };
+    # allow creation of the target mountpoint regardless of filetype
+    allow supervisor_t $2:file { create_file_perms read mounton };
 ')
