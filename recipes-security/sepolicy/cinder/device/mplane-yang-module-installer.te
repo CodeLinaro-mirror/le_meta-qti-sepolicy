@@ -66,14 +66,15 @@ allow mplane-yang-module-installer_t tmp_t:file { read open getattr map write cr
 allow mplane-yang-module-installer_t usr_t:dir { search getattr open read };
 allow mplane-yang-module-installer_t usr_t:file { getattr map getattr unlink read open };
 
-allow initrc_t mplane_app_t:file { getattr read open write create map rename unlink setattr };
+allow initrc_t mplane_app_t:file { getattr read open write create map rename unlink setattr append };
 allow mplane-yang-module-installer_t mplane_app_t:dir { add_name getattr open read search write remove_name create rmdir setattr };
 allow mplane-yang-module-installer_t mplane_app_t:file { create getattr lock open read write map setattr unlink rename setattr };
 allow mplane-yang-module-installer_t mplane_app_t:fifo_file unlink;
 allow mplane_app_t fs_t:filesystem associate;
 allow mplane-yang-module-installer_t socket_device_t:dir { search };
 allow initrc_t mplane_app_t:dir { getattr open read search add_name write remove_name setattr };
-allow initrc_t mplane_app_t:lnk_file { setattr };
+allow initrc_t mplane_app_t:lnk_file { setattr create unlink };
+allow initrc_t mplane_app_t:fifo_file { setattr };
 
 manage_user_data_files(initrc_t, mpss_persist_t)
 allow initrc_t mpss_persist_t:dir { getattr open read search add_name write search };
