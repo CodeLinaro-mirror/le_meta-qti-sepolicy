@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022, 2024 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -108,6 +108,12 @@ gen_require(`
  type home_root_t;
  type user_home_dir_t;
  type user_tmpfs_t;
+ type device_t;
+ type vendor_dmabuf_system_heap_device_t;
+ type sysfs_cpu_capacity;
+ type sysfs_cpu_present;
+ type gpumodel_t;
+ type pmsg_device_t;
 ')
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
@@ -147,6 +153,7 @@ files_type(weston_usr_t);
 allow weston_t weston_usr_t:dir search_dir_perms;
 allow weston_t weston_usr_t:file read_file_perms;
 
+mls_file_read_all_levels(weston_t);
 allow weston_t self:capability kill;
 allow weston_t brightness_t:file rw_file_perms;
 allow weston_t etc_t:file read_file_perms;
@@ -179,18 +186,26 @@ allow weston_t socket_device_t:dir manage_dir_perms;
 allow weston_t socket_device_t:file manage_file_perms;
 allow weston_t socket_device_t:sock_file manage_sock_file_perms;
 allow weston_t user_tmpfs_t:file { map rw_file_perms };
+allow weston_t device_t:dir search;
+allow weston_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow weston_t sysfs_cpu_capacity:file read_file_perms;
+allow weston_t sysfs_cpu_present:file read_file_perms;
+allow weston_t gpumodel_t:file read_file_perms;
+allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
 
 userdebug_or_eng(`
      gen_require(`
         type trace_marker_t;
         type tracefs_t;
         type debugfs_t;
+        type adbd_t;
     ')
 
     allow weston_t debugfs_t:dir search;
     allow weston_t trace_marker_t:file { write open };
     allow weston_t tracefs_t:dir search;
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
+    allow weston_t adbd_t:unix_stream_socket { connectto create_stream_socket_perms };
 ')
 
 manage_qmmf_data_files(weston_t)

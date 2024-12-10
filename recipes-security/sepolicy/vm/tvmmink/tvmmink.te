@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmmink, 1.0)
@@ -20,6 +20,18 @@ attribute platform_hub_domain;
 platform_hub_domain_type(tvmmink_t)
 platform_container_domain_type(tvmmink_t, tvmmink_exec_t)
 
+type vendor_dmabuf_ms4_heap_device_t;
+dev_node(vendor_dmabuf_ms4_heap_device_t);
+
+type vendor_dmabuf_ms5_heap_device_t;
+dev_node(vendor_dmabuf_ms5_heap_device_t);
+
+type vendor_dmabuf_ms6_heap_device_t;
+dev_node(vendor_dmabuf_ms6_heap_device_t);
+
+type vendor_dmabuf_ms7_heap_device_t;
+dev_node(vendor_dmabuf_ms7_heap_device_t);
+
 gen_require(`
 type etc_t;
 type device_t;
@@ -31,6 +43,10 @@ type tvmroot_t;
 type vendor_dmabuf_ms1_heap_device_t;
 type vendor_dmabuf_ms2_heap_device_t;
 type vendor_dmabuf_ms3_heap_device_t;
+type vendor_dmabuf_ms4_heap_device_t;
+type vendor_dmabuf_ms5_heap_device_t;
+type vendor_dmabuf_ms6_heap_device_t;
+type vendor_dmabuf_ms7_heap_device_t;
 type vendor_dmabuf_tui_heap_device_t;
 type vendor_vm_hlos_device_t;
 type vendor_vm_oem_device_t;
@@ -61,6 +77,10 @@ allow tvmmink_t vendor_dmabuf_tui_heap_device_t:chr_file { getattr read open ioc
 allow tvmmink_t vendor_dmabuf_ms1_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t vendor_dmabuf_ms2_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t vendor_dmabuf_ms3_heap_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmmink_t vendor_dmabuf_ms4_heap_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmmink_t vendor_dmabuf_ms5_heap_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmmink_t vendor_dmabuf_ms6_heap_device_t:chr_file { getattr read_chr_file_perms };
+allow tvmmink_t vendor_dmabuf_ms7_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t socket_device_t:dir { watch };
 allow tvmmink_t etc_t:file { read open };
 

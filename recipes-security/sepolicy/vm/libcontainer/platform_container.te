@@ -20,46 +20,113 @@ allow platform_container_domain platform_launcher_domain:fd use;
 # /proc/sys/kernel/cap_last_cap
 kernel_read_kernel_sysctls(platform_container_domain)
 
-# /dev namespacing. These policies include the 10 or so base nodes.
-#  Specific bind-mounted nodes should be handled at a type level.
-allow platform_container_domain self:capability { sys_admin mknod chown setgid setuid setpcap };
-auditallow platform_container_domain self:capability sys_admin;
 allow platform_container_domain self:cap_userns { sys_admin setuid setgid setpcap };
 # signal: tgkill (likely from mink preload)
 allow platform_container_domain self:process { getcap setcap signal };
 
-# TODO: Transition these away from default tmp_t/tmpfs_t/device_t labels?
-gen_require(`
-    type tmp_t;
-    type tmpfs_t;
-    type device_t;
-')
-allow platform_container_domain tmp_t:dir { getattr write search add_name create remove_name mounton rmdir open };
-allow platform_container_domain tmpfs_t:dir { getattr read write search mounton create add_name setattr open };
-allow platform_container_domain tmpfs_t:file { setattr mounton };
-allow platform_container_domain tmpfs_t:chr_file { open getattr create read write };
-allow platform_container_domain tmpfs_t:lnk_file create;
-allow platform_container_domain tmpfs_t:filesystem { getattr mount unmount };
-allow platform_container_domain device_t:filesystem { getattr remount unmount };
-allow platform_container_domain device_t:dir { search mounton };
-
 # TODO: isn't AT_SECURE a good thing to have?
 allow platform_launcher_domain platform_container_domain:process noatsecure;
 allow platform_launcher_domain platform_container_domain:process { rlimitinh siginh };
-
-gen_require(`
-    type container_mount_t;
-')
-
-allow platform_container_domain container_mount_t:process { noatsecure rlimitinh siginh };
-allow platform_container_domain container_mount_t:process2 { nnp_transition nosuid_transition };
 
 allow platform_container_domain platform_hub_domain:fd { use };
 allow platform_container_domain platform_hub_domain:unix_stream_socket connectto;
 allow platform_container_domain tvmmink_sock_t:sock_file write;
 
 # Redirect all TVMRoot logs to adb logcat
+#  no user variant support for bind mounts, so always allow the mount. But
+#  writes should be behind the macro
+gen_require(`
+    type kmsg_device_t;
+')
+platform_container_bind_mount(platform_container_domain, kmsg_device_t, chr_file)
 userdebug_or_eng(`
-    allow platform_container_domain kmsg_device_t:chr_file mounton;
     dev_write_kmsg(platform_container_domain)
 ')
+
+## <desc>
+## <p>
+## Toggle allowing the default minijail_mount_dev mknod system calls
+## </p>
+## </desc>
+gen_bool(allow_minijail_mount,true)
+if (allow_minijail_mount) {
+    gen_require(`
+	type tmp_t;
+	type tmpfs_t;
+	type device_t;
+	type socket_device_t;
+        type null_device_t;
+        type zero_device_t;
+        type urandom_device_t;
+        type devtty_t;
+    ')
+    # Create the mount targets. Since these happen before recursively
+    #  restorecon, tmp_t/tmpfs_t generic types are needed here. Reading
+    #  and writing of files should use the fixed label instead.
+    allow platform_container_domain tmp_t:dir { getattr write search add_name create remove_name mounton rmdir open };
+    allow platform_container_domain tmpfs_t:{ chr_file lnk_file } { getattr create relabelfrom setattr };
+    allow platform_container_domain tmpfs_t:dir { getattr create relabelfrom setattr write add_name search mounton };
+    allow platform_container_domain tmpfs_t:filesystem { getattr mount unmount };
+    allow platform_container_domain device_t:filesystem { getattr remount unmount };
+    allow platform_container_domain device_t:dir { search mounton };
+    # Peform the recursive restorecon call
+    allow platform_container_domain self:capability { sys_admin mknod chown setgid setuid setpcap fowner };
+    corecmd_exec_shell(platform_container_domain)
+    seutil_exec_setfiles(platform_container_domain)
+    seutil_read_file_contexts(platform_container_domain)
+    allow platform_container_domain { null_device_t zero_device_t urandom_device_t devtty_t }:chr_file relabelto;
+    allow platform_container_domain device_t:dir relabelto;
+    allow platform_container_domain device_t:lnk_file relabelto;
+    # /dev/shm uses tmpfs_t label
+    allow platform_container_domain tmpfs_t:dir { read open };
+
+    # legacy rules that were previously allowed but should move into specific bind mount calls
+    allow platform_container_domain tmpfs_t:file { setattr mounton };
+    auditallow platform_container_domain tmpfs_t:file { setattr mounton };
+    allow platform_container_domain tmpfs_t:chr_file { open read write };
+    auditallow platform_container_domain tmpfs_t:chr_file { open read write };
+    gen_require(`
+        type vendor_dmabuf_tui_demura_heap_device_t;
+        type vendor_vm_oem_device_t;
+        type vendor_vm_self_device_t;
+        type socket_device_t;
+    ')
+    platform_container_bind_mount(platform_container_domain, vendor_dmabuf_tui_demura_heap_device_t, chr_file)
+    platform_container_bind_mount(platform_container_domain, vendor_vm_oem_device_t, chr_file)
+    platform_container_bind_mount(platform_container_domain, vendor_vm_self_device_t, chr_file)
+    platform_container_bind_mount(platform_container_domain, socket_device_t, dir)
+
+    # Use dontaudit for restorecon access inside of bind-mounted directories.
+    #  Assume these are already properly labeled from the root namespace.
+    gen_require(`
+        type socket_device_t;
+        type tvmroot_sock_t;
+        type tvmmink_sock_t;
+        type supervisor_sock_t;
+        type vendor_vm_cp_pixel_device_t;
+    ')
+    dontaudit platform_container_domain {
+        device_t
+        socket_device_t
+    }:dir { getattr read open };
+    dontaudit platform_container_domain {
+        vendor_vm_cp_pixel_device_t
+        device_t
+    }:chr_file getattr;
+    dontaudit platform_container_domain {
+        tvmroot_sock_t
+        tvmmink_sock_t
+        supervisor_sock_t
+    }:sock_file { getattr relabelfrom relabelto write };
+    # restorecon tries to get attributes of many filesystems, not sure why
+    gen_require(`
+        type debugfs_t;
+        type cgroup_t;
+        type fs_t;
+    ')
+    dontaudit platform_container_domain { debugfs_t cgroup_t fs_t }:filesystem getattr;
+    kernel_dontaudit_getattr_proc(platform_container_domain)
+    kernel_dontaudit_read_system_state(platform_container_domain)
+    selinux_get_fs_mount(platform_container_domain)
+    seutil_read_config(platform_container_domain)
+}
