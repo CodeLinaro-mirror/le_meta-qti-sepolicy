@@ -69,6 +69,7 @@ gen_require(`
     type hwfde_conf_file_t;
     type lib_t;
     type overlay_t;
+    type systemd_unit_t;
 ')
 
 permissive mount_t;
@@ -85,3 +86,4 @@ allow mount_t lib_t:filesystem relabelfrom;
 allow mount_t overlay_t:chr_file { create link rename unlink };
 allow mount_t var_t:chr_file unlink;
 allow mount_t data_t:sock_file { create unlink };
+allow mount_t systemd_unit_t:lnk_file { getattr read };
