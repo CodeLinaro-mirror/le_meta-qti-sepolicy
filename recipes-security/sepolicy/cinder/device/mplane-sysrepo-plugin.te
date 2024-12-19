@@ -45,5 +45,5 @@ allow sysrepo-plugind_t etc_t:file { map };
 
 allow sysrepo-plugind_t mplane_app_t:dir { add_name getattr open read search write remove_name };
 allow sysrepo-plugind_t mplane_app_t:fifo_file { create open read write };
-allow sysrepo-plugind_t mplane_app_t:file { create getattr lock map open read write rename };
+allow sysrepo-plugind_t mplane_app_t:file { create getattr lock map open read write rename unlink};
 allow sysrepo-plugind_t socket_device_t:dir { search };
