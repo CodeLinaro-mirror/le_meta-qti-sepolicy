@@ -24,6 +24,16 @@ gen_require(`
     type afs_ka_port_t;
     type unreserved_port_t;
     type xrcommservice_data_t;
+    type qvr_config_t;
+    type system_dir_t;
+    type proc_net_t;
+    type sysctl_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+    type wlan_msl_sysfs_t;
+    type tmp_t;
+    type NetworkManager_var_run_t;
+    type http_cache_port_t;
 ')
 
 # Allow interracting with data/vendor/xrcomm directory
@@ -70,6 +80,34 @@ allow xrcommservice_t self:process { setsched getsched };
 allow xrcommservice_t gpumodel_t:file read_file_perms;
 
 allow xrcommservice_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+
+allow xrcommservice_t xrcommservice_data_t:file manage_file_perms;
+allow xrcommservice_t system_dir_t:dir search_dir_perms;
+allow xrcommservice_t qvr_config_t:dir search_dir_perms;
+allow xrcommservice_t qvr_config_t:dir list_dir_perms;
+allow xrcommservice_t qvr_config_t:file read_file_perms;
+
+allow initrc_t xrcommservice_data_t:dir setattr;
+
+allow xrcommservice_t self:netlink_route_socket { getattr read nlmsg_read write bind create };
+
+allow xrcommservice_t proc_net_t:file { read };
+
+allow xrcommservice_t sysctl_t:dir search_dir_perms;
+
+allow xrcommservice_t sysctl_vm_t:dir search_dir_perms;
+
+allow xrcommservice_t sysctl_vm_overcommit_t:file read_file_perms;
+
+allow xrcommservice_t wlan_msl_sysfs_t:dir { open read getattr search };
+
+allow xrcommservice_t tmp_t:dir { search write add_name create setattr search remove_name unlink };
+
+allow xrcommservice_t tmp_t:sock_file { create setattr unlink };
+
+allow xrcommservice_t NetworkManager_var_run_t:dir { search };
+
+allow xrcommservice_t http_cache_port_t:tcp_socket { name_connect };
 
 userdebug_or_eng(`
      gen_require(`
