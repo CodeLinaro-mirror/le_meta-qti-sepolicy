@@ -101,6 +101,7 @@ gen_require(`
  type kernel_t;
  type fs_t;
  type rfsa_adsp_lib_t;
+ type soc0_gpu_sysfs_t;
 ')
 
 #For hvx
@@ -246,6 +247,7 @@ allow qmmf_server_t kernel_t:unix_dgram_socket sendto;
 allow qmmf_server_t fs_t:filesystem getattr;
 allow qmmf_server_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
 allow qmmf_server_t rfsa_adsp_lib_t:file read_file_perms;
+allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
 
 gen_require(`
     type weston_runtime_t;
