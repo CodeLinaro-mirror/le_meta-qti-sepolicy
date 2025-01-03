@@ -17,7 +17,6 @@ SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://Move-root-user-to-unconfined-context.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
             file://common/ \
-            file://${BASEMACHINE}/ \
             file://poky-ssd-rpmb-storage.patch \
 "
 
