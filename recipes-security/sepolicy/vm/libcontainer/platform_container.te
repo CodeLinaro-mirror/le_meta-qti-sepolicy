@@ -35,10 +35,17 @@ allow platform_container_domain tvmmink_sock_t:sock_file write;
 # Redirect all TVMRoot logs to adb logcat
 #  no user variant support for bind mounts, so always allow the mount. But
 #  writes should be behind the macro
+gen_require(`
+    type kmsg_device_t;
+')
 platform_container_bind_mount(platform_container_domain, kmsg_device_t, chr_file)
 userdebug_or_eng(`
     dev_write_kmsg(platform_container_domain)
 ')
+
+# Wakelock support
+allow platform_container_domain sysfs_t:file { open write };
+allow platform_container_domain self:capability2 block_suspend;
 
 ## <desc>
 ## <p>

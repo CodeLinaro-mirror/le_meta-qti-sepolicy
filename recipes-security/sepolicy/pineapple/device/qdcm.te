@@ -1,0 +1,58 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(qdcm, 1.0)
+
+type qdcm_t;
+type qdcm_exec_t;
+type qdcm_socket_device_t;
+
+gen_require(`
+ type weston_t;
+ type weston_runtime_t;
+ type servicemanager_t;
+ type binderfs_t;
+ type binder_device_t;
+ type pmsg_device_t;
+ type sysctl_t;
+ type sysctl_vm_t;
+ type sysctl_vm_overcommit_t;
+ type ptmx_t;
+')
+
+init_vendor_domain(qdcm_t, qdcm_exec_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        role unconfined_r;
+        type debugfs_t;
+        type adbd_t;
+    ')
+    domtrans_pattern(unconfined_t, qdcm_exec_t, qdcm_t)
+    role unconfined_r types qdcm_t;
+    allow qdcm_t debugfs_t:dir search;
+    allow qdcm_t weston_t:binder call;
+    allow unconfined_t weston_t:binder call;
+    allow qdcm_t adbd_t:unix_stream_socket { connectto rw_socket_perms };
+')
+
+#manage socket in /dev/socket/
+files_type(qdcm_socket_device_t);
+files_type(qdcm_socket_device_t);
+dev_node(qdcm_socket_device_t);
+device_manage_socket_file(qdcm_t, qdcm_socket_device_t, "qdcmsocket");
+allow qdcm_t qdcm_socket_device_t:dir { add_entry_dir_perms remove_name unlink };
+allow qdcm_t qdcm_socket_device_t:sock_file { create_sock_file_perms unlink };
+
+servicemanager_binder_use(qdcm_t)
+servicemanager_binder_call(qdcm_t servicemanager_t)
+allow qdcm_t binderfs_t:dir search;
+allow qdcm_t binder_device_t:chr_file { map };
+allow qdcm_t pmsg_device_t:chr_file write_chr_file_perms;
+allow qdcm_t sysctl_t:dir search;
+allow qdcm_t sysctl_vm_t:dir search;
+allow qdcm_t sysctl_vm_overcommit_t:file read_file_perms;
+allow qdcm_t ptmx_t:chr_file rw_chr_file_perms;
+allow qdcm_t weston_runtime_t:dir search;
+allow qdcm_t weston_runtime_t:file { rw_file_perms };
