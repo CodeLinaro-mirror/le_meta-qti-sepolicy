@@ -1,0 +1,11 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/hibernate                --   gen_context(system_u:object_r:hibernate_server_exec_t,s0)
+/dev/power_state                  -c   gen_context(system_u:object_r:vendor_power_state_dev_t,s0)
+/dev/socket/hibernate             -s   gen_context(system_u:object_r:hibernate_socket_t,s0)
+/dev/socket/hibernate_notify      -s   gen_context(system_u:object_r:hibernate_notify_socket_t,s0)
+/usr/bin/hibernateutility         --   gen_context(system_u:object_r:hibernate_utility_exec_t,s0)
+
+#/dev/block/bootdevice/by-name/hibernation  -> /dev/sda10
+/dev/sda10  -b   gen_context(system_u:object_r:hibernate_swap_partition_t,s0)
