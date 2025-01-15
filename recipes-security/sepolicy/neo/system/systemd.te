@@ -48,6 +48,7 @@ gen_require(`
  type proc_t;
  type lib_t;
  type tracefs_t;
+ type udev_t;
 ')
 
 allow systemd_modules_load_t kernel_t:unix_dgram_socket sendto;
@@ -85,7 +86,7 @@ allow systemd_modules_load_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_modules_load_t etc_t:file read_file_perms;
 
 modutils_read_module_deps(systemd_modules_load_t);
-allow systemd_modules_load_t self:capability sys_module;
+allow systemd_modules_load_t self:capability { sys_module sys_admin };
 allow systemd_modules_load_t var_run_t:dir { read_file_perms getattr search };
 allow systemd_modules_load_t debugfs_t:dir search;
 allow systemd_modules_load_t modules_object_t:system module_load;
@@ -116,3 +117,6 @@ allow systemd_update_done_t kernel_t:unix_dgram_socket sendto;
 #/lib/modules mount point denials for system_module_load_t
 allow systemd_modules_load_t initrc_var_run_t:lnk_file read_lnk_file_perms;
 allow systemd_modules_load_t lib_t:system module_load;
+
+allow udev_t configfs_t:file { read open };
+allow udev_t lib_t:system module_load;
