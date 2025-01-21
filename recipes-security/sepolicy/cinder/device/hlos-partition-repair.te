@@ -49,6 +49,7 @@ gen_require(`
     type persist_t;
     type proc_t;
     type qcmap_etc_data_t;
+    type qnetcfgmgr_persist_qncm_t;
     type qseecomd_persist_t;
     type qwes_data_t;
     type random_device_t;
@@ -105,6 +106,7 @@ allow persist_backup_t kernel_t:process { setsched };
 
 manage_user_data_files(hlos_partition_repair_t,adb_data_conf_t);
 manage_user_data_files(hlos_partition_repair_t,qseecomd_persist_t);
+manage_user_data_files(hlos_partition_repair_t,qnetcfgmgr_persist_qncm_t);
 
 allow persist_backup_t setfiles_exec_t:file { getattr execute read open execute_no_trans map };
 allow persist_backup_t fsadm_run_t:dir { search getattr };
@@ -193,10 +195,10 @@ allow hlos_partition_repair_t unlabeled_t:dir { list_dir_perms rmdir write add_n
 allow hlos_partition_repair_t tmp_t:file { manage_file_perms };
 allow hlos_partition_repair_t fixed_disk_device_t:blk_file { getattr };
 
-allow hlos_partition_repair_t qseecomd_persist_t:file { relabelto };
 allow hlos_partition_repair_t qseecomd_persist_t:dir { list_dir_perms relabelto setattr };
-
-allow hlos_partition_repair_t qseecomd_persist_t:file { getattr open read setattr };
+allow hlos_partition_repair_t qseecomd_persist_t:file { relabelto getattr open read setattr };
+allow hlos_partition_repair_t qnetcfgmgr_persist_qncm_t:dir { list_dir_perms relabelto setattr };
+allow hlos_partition_repair_t qnetcfgmgr_persist_qncm_t:file { relabelto getattr open read setattr };
 
 allow hlos_partition_repair_t data_t:dir { relabelfrom relabelto setattr add_name mounton write read };
 allow hlos_partition_repair_t firmware_t:dir getattr;
