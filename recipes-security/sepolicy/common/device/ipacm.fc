@@ -24,6 +24,13 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following
+# license:
+#
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+#
 
 /usr/bin/ipacm                    --  gen_context(system_u:object_r:ipacm_exec_t,s0)
 /usr/bin/ipacmdiag                --  gen_context(system_u:object_r:ipacm_diag_exec_t,s0)
@@ -33,6 +40,7 @@
 /etc/initscripts/ipa_fws_le       --  gen_context(system_u:object_r:ipa_fw_initrc_exec_t,s0)
 
 /var/run/data/ipa(/.*)?               gen_context(system_u:object_r:ipacm_var_run_t,s0)
+/var/run/data/monitor(/.*)?           gen_context(system_u:object_r:ipacm_var_run_t,s0)
 /run/data/ipa(/.*)?                   gen_context(system_u:object_r:ipacm_var_run_t,s0)
 /data/misc/ipa(/.*)?                  gen_context(system_u:object_r:ipacm_data_t,s0)
 
