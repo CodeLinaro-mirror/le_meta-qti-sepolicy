@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ## <summary> libcontainer interface </summary>
@@ -35,6 +35,16 @@ interface(`platform_container_domain_type',`
     mls_file_write_all_levels($1)
     # for bind-mounting when using the libminijail default option
     vendor_device_rw_exempt($1)
+
+    # needed for user namespace wakelock support if supervisor used
+    optional_policy(`
+        gen_require(`
+            type supervisor_t;
+        ')
+        allow supervisor_t $1:process ptrace;
+        allow supervisor_t $1:file { open read };
+        allow supervisor_t $1:dir search;
+    ')
 
     allow platform_hub_domain $2:file { read open getattr };
     allow platform_launcher_domain $1:process2 nosuid_transition;
