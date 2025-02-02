@@ -49,6 +49,7 @@ allow pulseaudio_t sysctl_vm_t:dir search;
 allow pulseaudio_t servicemanager_t:binder { call transfer };
 allow pulseaudio_t binderfs_t:dir search;
 allow pulseaudio_t binder_device_t:chr_file { rw_chr_file_perms map};
+dev_rw_sysfs(pulseaudio_t);
 
 userdebug_or_eng(`
     gen_require(`
