@@ -46,6 +46,7 @@ type smmu_proxy_device_t;
 type init_t;
 type system_dbusd_runtime_t;
 type power_unit_t;
+type c2pa_persist_t;
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -128,6 +129,7 @@ allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
 
 allow tvmroot_t smmu_proxy_device_t:chr_file getattr;
 allow tvmroot_t tvmmink_sock_t:sock_file getattr;
+allow tvmroot_t c2pa_persist_t:dir getattr;
 
 # Check for dependencies (/persist, etc...)
 optional_policy(`
