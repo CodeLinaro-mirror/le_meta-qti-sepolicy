@@ -24,14 +24,27 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-relabel_all_data_files(setfiles_t)
+optional_policy(`
+    relabel_all_data_files(setfiles_t)
+')
 
-gen_require(`
-    type cache_t;
-    type persist_t;
+optional_policy(`
+    gen_require(`
+        type cache_t;
+    ')
+    allow setfiles_t cache_t:dir setattr;
+')
+
+optional_policy(`
+    gen_require(`
+        type persist_t;
+    ')
+    allow setfiles_t persist_t:dir setattr;
 ')
 
 allow setfiles_t self:capability sys_admin;
-allow setfiles_t cache_t:dir setattr;
-allow setfiles_t persist_t:dir setattr;
