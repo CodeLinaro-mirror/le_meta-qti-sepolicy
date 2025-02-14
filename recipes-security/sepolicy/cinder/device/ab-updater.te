@@ -7,6 +7,7 @@ policy_module(ab-updater, 1.0)
 type ab_updater_t;
 type ab_updater_exec_t;
 type ab_updater_conf_t;
+type abupdater_log_t;
 
 init_vendor_domain(ab_updater_t, ab_updater_exec_t)
 
@@ -61,6 +62,16 @@ allow unconfined_t ab_updater_conf_t:file { getattr read open write };
 allow ab_updater_conf_t fs_t:filesystem { associate };
 allow fs_t ab_updater_conf_t:filesystem { associate };
 allow setfiles_t ab_updater_conf_t:file { getattr };
+
+allow unconfined_t abupdater_log_t:dir { getattr read open search };
+allow unconfined_t abupdater_log_t:file { getattr open read };
+allow init_t abupdater_log_t:dir { search write add_name };
+allow init_t abupdater_log_t:file { create write open };
+allow mount_copybind_t abupdater_log_t:file { write ioctl };
+allow mount_t abupdater_log_t:file { write };
+allow setfiles_t abupdater_log_t:file { write };
+allow ab_updater_t abupdater_log_t:file { write getattr };
+allow abupdater_log_t fs_t:filesystem { associate };
 
 # allow rules to check the status of other service
 allow { ab_updater_t } file_type:{ service } { status };
