@@ -53,6 +53,10 @@ allow supervisor_t self:cap_userns { sys_admin sys_ptrace };
 # covered by dac_override
 dontaudit supervisor_t self:capability dac_read_search;
 
+# /tmp/supervisor/wake*
+dev_rw_sysfs(supervisor_t)
+allow supervisor_t supervisor_tmp_t:fifo_file { create open read watch };
+
 gen_require(`
     type device_t;
 ')
