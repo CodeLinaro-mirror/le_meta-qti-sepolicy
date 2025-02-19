@@ -24,29 +24,9 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-type ashmem_devices_t;
-dev_node(ashmem_devices_t);
-
-gen_require(`
-    type zs_handle_sysfs_t;
-    type zspage_sysfs_t;
-    type cpu_sysfs_t;
-    type mem_sleep_sysfs_t;
-    type transparent_hugepage_sysfs_t;
-')
-
-allow post_boot_script_t zs_handle_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t cpu_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t mem_sleep_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t transparent_hugepage_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t transparent_hugepage_sysfs_t:file { rw_file_perms create };
-files_read_etc_files(post_boot_script_t)
+/usr/bin/weston       --      gen_context(system_u:object_r:weston_exec_t,s0)
+/usr/bin/weston-terminal  --  gen_context(system_u:object_r:weston_exec_t,s0)
+/dev/socket/weston(/.*)?      gen_context(system_u:object_r:weston_socket_device_t,s0)
+/run/user/root/wayland.*      gen_context(system_u:object_r:weston_runtime_t,s0)
+/usr/share/weston(/.*)?       gen_context(system_u:object_r:weston_usr_t,s0)

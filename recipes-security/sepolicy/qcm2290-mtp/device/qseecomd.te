@@ -24,29 +24,39 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# Changes from Qualcomm Innovation Center are provided under the following license:
+
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
 # Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-type ashmem_devices_t;
-dev_node(ashmem_devices_t);
-
 gen_require(`
-    type zs_handle_sysfs_t;
-    type zspage_sysfs_t;
-    type cpu_sysfs_t;
-    type mem_sleep_sysfs_t;
-    type transparent_hugepage_sysfs_t;
+       type sysfs_t;
+       type power_control_t;
+       type encryption_control_t;
+       type initrc_t;
+       type qseecomd_persist_t;
 ')
 
-allow post_boot_script_t zs_handle_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t cpu_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t mem_sleep_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t transparent_hugepage_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t transparent_hugepage_sysfs_t:file { rw_file_perms create };
-files_read_etc_files(post_boot_script_t)
+
+allow qseecomd_t self:capability chown;
+allow qseecomd_t sysfs_t:file append;
+
+storage_read_scsi_generic(qseecomd_t)
+storage_setattr_scsi_generic_dev(qseecomd_t)
+storage_write_scsi_generic(qseecomd_t)
+storage_raw_read_fixed_disk(qseecomd_t)
+storage_raw_write_fixed_disk(qseecomd_t)
+
+#ssd partiton is /dev/sda1, which mls level is S15, allow qseecomd to access it
+mls_file_read_all_levels(qseecomd_t)
+mls_file_write_all_levels(qseecomd_t)
+
+allow qseecomd_t self:capability2 block_suspend;
+
+# allow qseecomd read/write access to /dev/mmcblk0rpmb
+allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
+allow qseecomd_t power_control_t:file rw_file_perms;
+allow qseecomd_t encryption_control_t:file rw_file_perms;
+
+#allow initrc to create a /persist/data folder
+allow initrc_t qseecomd_persist_t: dir { create_dir_perms setattr_dir_perms };
