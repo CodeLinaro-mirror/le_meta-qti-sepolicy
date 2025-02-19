@@ -1,0 +1,17 @@
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type power_sysfs_t;
+genfscon sysfs /power/mem_sleep  gen_context(system_u:object_r:power_sysfs_t,s0)
+dev_associate_sysfs(power_sysfs_t)
+
+type queue_sysfs_t;
+genfscon sysfs /devices/platform/soc/1d84000.ufshc/host0/target0:0:0/0:0:0:0/block/sda/queue  gen_context(system_u:object_r:queue_sysfs_t,s0)
+dev_associate_sysfs(queue_sysfs_t)
+
+type image_variant_sysfs_t;
+genfscon sysfs /devices/soc0/select_image  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_variant  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_crm_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+dev_associate_sysfs(image_variant_sysfs_t)
