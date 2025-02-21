@@ -10,6 +10,8 @@ gen_require(`
     type cpu_scaling_freq_t;
     type proc_sched_t;
     type image_variant_sysfs_t;
+    type sysfs_vblank_t;
+    type dev_dri_t;
 ')
 
 allow initrc_t panel_illumination_t:dir search_dir_perms;
@@ -30,3 +32,8 @@ allow init_t proc_sched_t:dir manage_dir_perms;
 allow init_t cpu_scaling_freq_t:file manage_file_perms;
 allow initrc_t image_variant_sysfs_t:dir search_dir_perms;
 allow initrc_t image_variant_sysfs_t:file manage_file_perms;
+allow init_t image_variant_sysfs_t:dir search_dir_perms;
+allow init_t image_variant_sysfs_t:file { getattr };
+allow init_t sysfs_vblank_t:file write_file_perms;
+allow initrc_t dev_dri_t:dir list_dir_perms;
+allow initrc_t dev_dri_t:lnk_file { getattr };
