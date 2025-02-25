@@ -43,6 +43,10 @@ userdebug_or_eng(`
     dev_write_kmsg(platform_container_domain)
 ')
 
+# Wakelock support
+allow platform_container_domain sysfs_t:file { open write };
+allow platform_container_domain self:capability2 block_suspend;
+
 ## <desc>
 ## <p>
 ## Toggle allowing the default minijail_mount_dev mknod system calls

@@ -1,0 +1,29 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type zs_handle_sysfs_t;
+genfscon sysfs /kernel/slab/zs_handle gen_context(system_u:object_r:zs_handle_sysfs_t,s0)
+dev_associate_sysfs(zs_handle_sysfs_t)
+
+type zspage_sysfs_t;
+genfscon sysfs /kernel/slab/zspage gen_context(system_u:object_r:zspage_sysfs_t,s0)
+dev_associate_sysfs(zspage_sysfs_t)
+
+type dev_pmsg0_t;
+genfscon sysfs /dev/pmsg0 gen_context(system_u:object_r:device_t,s0)
+dev_associate_sysfs(dev_pmsg0_t)
+
+type image_size_sysfs_t;
+genfscon sysfs /power/image_size gen_context(system_u:object_r:image_size_sysfs_t,s0)
+dev_associate_sysfs(image_size_sysfs_t)
+
+type mem_sleep_sysfs_t;
+genfscon sysfs /power/mem_sleep gen_context(system_u:object_r:mem_sleep_sysfs_t,s0)
+dev_associate_sysfs(mem_sleep_sysfs_t)
+
+type transparent_hugepage_sysfs_t;
+genfscon sysfs /kernel/mm/transparent_hugepage gen_context(system_u:object_r:transparent_hugepage_sysfs_t,s0)
+dev_associate_sysfs(transparent_hugepage_sysfs_t)
+
+genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-kiwi gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+dev_associate_sysfs(wlan_hsp_sysfs_t)
