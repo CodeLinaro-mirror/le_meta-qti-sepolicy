@@ -27,7 +27,7 @@
 
 #Changes from Qualcomm Innovation Center are provided under the following license:
 #
-#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#Copyright (c) 2022,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
 #modification, are permitted (subject to the limitations in the
@@ -72,11 +72,18 @@ gen_require(`
     type init_var_run_t;
     type default_t;
     class service { start status stop reload };
+    type socket_device_t;
+    type proc_t;
+    type sysfs_t;
 ')
 
 allow ssreq_server_t self:socket create_socket_perms;
 allow ssreq_server_t self:qipcrtr_socket create_socket_perms;
 dontaudit ssreq_server_t default_t:dir search;
+dontaudit ssreq_server_t socket_device_t:dir search;
+dontaudit ssreq_server_t proc_t:file { open read getattr }; #/proc/filesystems
+allow ssreq_server_t sysfs_t:file { append getattr open }; # for remoteproc nodes
+allow ssreq_server_t sysfs_t:lnk_file read; # for remoteproc nodes
 
 #Manage Dbus sockets
 ifdef(`init_systemd',`
@@ -92,4 +99,3 @@ ifdef(`init_systemd',`
     rw_sock_files_pattern(ssreq_server_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
 ')
 logging_send_syslog_msg(ssreq_server_t)
-
