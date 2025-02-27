@@ -16,3 +16,14 @@ dev_associate_sysfs(dev_pmsg0_t)
 type image_size_sysfs_t;
 genfscon sysfs /power/image_size gen_context(system_u:object_r:image_size_sysfs_t,s0)
 dev_associate_sysfs(image_size_sysfs_t)
+
+type mem_sleep_sysfs_t;
+genfscon sysfs /power/mem_sleep gen_context(system_u:object_r:mem_sleep_sysfs_t,s0)
+dev_associate_sysfs(mem_sleep_sysfs_t)
+
+type transparent_hugepage_sysfs_t;
+genfscon sysfs /kernel/mm/transparent_hugepage gen_context(system_u:object_r:transparent_hugepage_sysfs_t,s0)
+dev_associate_sysfs(transparent_hugepage_sysfs_t)
+
+genfscon sysfs /devices/platform/soc/b0000000.qcom,cnss-kiwi gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+dev_associate_sysfs(wlan_hsp_sysfs_t)

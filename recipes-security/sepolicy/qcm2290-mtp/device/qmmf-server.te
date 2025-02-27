@@ -1,0 +1,235 @@
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(qmmf-server, 1.0)
+
+gen_require(`
+    type system_dir_t;
+')
+
+########################################
+#
+# Declarations
+#
+
+type qmmf_server_t;
+type qmmf_server_exec_t;
+
+init_daemon_domain(qmmf_server_t, qmmf_server_exec_t)
+servicemanager_binder_use(qmmf_server_t)
+
+type qmmf_data_file_t;
+user_data_files_type(qmmf_data_file_t)
+
+type qmmf_config_file_t;
+allow qmmf_server_t system_dir_t:dir search_dir_perms;
+read_files_pattern(qmmf_server_t, qmmf_config_file_t, qmmf_config_file_t)
+
+type dev_dri_t;
+dev_node(dev_dri_t);
+allow qmmf_server_t dev_dri_t:dir search;
+
+#needed for /dev/dri dir's s15 context which is accessed by libdrm
+mls_file_read_all_levels(qmmf_server_t)
+
+gen_require(`
+ type tmp_t;
+ type sysfs_t;
+ type firmware_t;
+ type device_t;
+ type dri_device_t;
+ type ion_device_t;
+ type gpu_device_t;
+ type diag_device_t;
+ type ashmem_devices_t;
+ type urandom_device_t;
+ type devlog_t;
+ type syslogd_t;
+ type vendor_camera_config_t;
+ type weston_socket_device_t;
+ type weston_t;
+ type tmpfs_t;
+ type binder_device_t;
+ type initrc_var_run_t;
+ type syslogd_var_run_t;
+ type user_runtime_root_t;
+ type cvp_device_t;
+ type synx_device_t;
+ type gpumodel_t;
+ type perf_hal_socket_t;
+ type perf_hal_t;
+ type system_dmabuf_device_t;
+ type vendor_dmabuf_system_heap_device_t;
+ type adsprpcd_t;
+ type xdsp_device_t;
+ type binderfs_t;
+ type initrc_t;
+ type sysctl_kernel_t;
+')
+
+#For hvx
+optional_policy(`
+    adsprpcd_files_access(qmmf_server_t)
+')
+
+#For camera performance
+fs_manage_cgroup_dirs(qmmf_server_t)
+fs_manage_cgroup_files(qmmf_server_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        class service {start stop status};
+    ')
+    #systemctl start/stop/status qmmf-server
+    allow unconfined_t qmmf_server_exec_t:service { status start stop };
+')
+
+
+# For video related files
+rw_video_dev(qmmf_server_t)
+
+#For v4l related files
+gen_require(`
+  type v4l_device_t;
+')
+rw_chr_files_pattern(qmmf_server_t, device_t, v4l_device_t)
+
+# For leprop permissions
+leprop_rw_props(qmmf_server_t)
+
+# self
+allow qmmf_server_t self:unix_dgram_socket create_socket_perms;
+allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
+allow qmmf_server_t self:unix_stream_socket create_stream_socket_perms;
+
+# Allow search /run/
+gen_require(`
+ type var_run_t;
+')
+
+allow qmmf_server_t var_run_t:dir search_dir_perms;
+
+#Allow search /run/systemd/
+init_search_pids(qmmf_server_t)
+
+#For tmp file permissions
+allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
+
+# other context
+
+allow qmmf_server_t sysfs_t:file { read getattr open };
+
+# Weston Socket
+allow qmmf_server_t weston_socket_device_t:sock_file write;
+allow qmmf_server_t weston_socket_device_t:dir search_dir_perms;
+allow qmmf_server_t weston_t:unix_stream_socket connectto;
+
+# Temp for other modules
+allow qmmf_server_t firmware_t:dir { search };
+allow qmmf_server_t firmware_t:file read_file_perms;
+
+files_read_etc_files(qmmf_server_t);
+
+#For audio access
+audio_hal_access(qmmf_server_t)
+non_audio_hal_access(qmmf_server_t)
+
+#For /dev node permissions
+rw_chr_files_pattern(qmmf_server_t, device_t, dri_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, ion_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, gpu_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, ashmem_devices_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, cvp_device_t);
+rw_chr_files_pattern(qmmf_server_t, device_t, synx_device_t);
+
+allow qmmf_server_t self:process signal;
+
+allow qmmf_server_t devlog_t:sock_file write;
+allow qmmf_server_t self:socket {create getattr write read setopt};
+allow qmmf_server_t urandom_device_t:chr_file { open read};
+kernel_read_vm_overcommit_sysctl(qmmf_server_t)
+
+type qmmf_server_tmp_t;
+files_type(qmmf_server_tmp_t);
+files_var_filetrans(qmmf_server_t, qmmf_server_tmp_t, { dir file })
+allow qmmf_server_t qmmf_server_tmp_t:dir { write add_name remove_name };
+allow qmmf_server_t syslogd_t:unix_dgram_socket sendto;
+
+#For camx config read perms
+allow qmmf_server_t vendor_camera_config_t:dir search;
+allow qmmf_server_t vendor_camera_config_t:file { open read getattr };
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        type default_t;
+        type debugfs_t;
+        type tracefs_t;
+        type trace_marker_t;
+    ')
+
+    rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
+    allow qmmf_server_t debugfs_t:dir { search };
+    allow qmmf_server_t default_t:dir { search };
+    allow qmmf_server_t default_t:file { read getattr open };
+    allow qmmf_server_t unconfined_t:binder call;
+    allow qmmf_server_t tracefs_t:dir search;
+    allow qmmf_server_t tracefs_t:filesystem mount;
+    allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t unconfined_t:fd use;
+')
+
+manage_qmmf_data_files(qmmf_server_t)
+manage_camera_files_data(qmmf_server_t)
+device_search_sockets(qmmf_server_t)
+allow qmmf_server_t binder_device_t:chr_file { read write map };
+allow qmmf_server_t self:capability dac_override;
+allow qmmf_server_t gpu_device_t:chr_file map;
+allow qmmf_server_t self:qipcrtr_socket { create getattr read setopt write };
+allow qmmf_server_t sysfs_t:lnk_file read;
+allow qmmf_server_t tmp_t:dir search;
+allow qmmf_server_t tmpfs_t:dir search;
+allow qmmf_server_t initrc_var_run_t:dir search;
+allow qmmf_server_t syslogd_var_run_t:dir search;
+allow qmmf_server_t user_runtime_root_t:dir search;
+allow qmmf_server_t gpumodel_t:file read_file_perms;
+allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
+allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
+allow qmmf_server_t self:process getsched;
+allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t adsprpcd_t:dir watch;
+allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t binderfs_t:dir search;
+allow qmmf_server_t initrc_t:binder call;
+allow qmmf_server_t sysctl_kernel_t:dir search;
+
+gen_require(`
+    type weston_runtime_t;
+')
+manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
