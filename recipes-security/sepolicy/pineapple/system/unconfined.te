@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 #### workaround for FOTA /usr/bin/recovery
@@ -107,7 +107,10 @@ userdebug_or_eng(`
         type zspage_sysfs_t;
         type rfsa_adsp_lib_t;
         type mem_sleep_sysfs_t;
+        type thermal-engine_exec_t;
     ')
+
+    allow unconfined_t thermal-engine_exec_t:service { status start stop };
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     #For catf, which is internal test tool for audio
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
