@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 # systemd_modules_load
 
@@ -47,6 +51,8 @@ gen_require(`
  type dev_dri_t;
  type net_conf_t;
  type sdcard_t;
+ type systemd_tmpfiles_t;
+ type wifi_system_data_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
@@ -111,3 +117,5 @@ allow udev_t net_conf_t:lnk_file read;
 allow udev_t sdcard_t:dir getattr;
 allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name };
 allow udev_t dev_dri_t:lnk_file { create rename unlink };
+
+allow systemd_tmpfiles_t wifi_system_data_t:lnk_file read_file_perms;

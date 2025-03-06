@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 gen_require(`
@@ -10,10 +10,21 @@ gen_require(`
 dontaudit demuratnservice_t mnt_t:dir search;
 allow demuratnservice_t socket_device_t:dir getattr;
 allow demuratnservice_t tvmmink_sock_t:sock_file getattr;
-# /tmp/minijail.dev.xxx/membuf
-type demuratnservice_tmpfs_t;
-files_tmpfs_file(demuratnservice_tmpfs_t)
-fs_tmpfs_filetrans(demuratnservice_t, demuratnservice_tmpfs_t, file)
-allow demuratnservice_t demuratnservice_tmpfs_t:file { manage_file_perms mounton };
 
 platform_container_domain_type(demuratnservice_t, demuratnservice_exec_t);
+
+# /dev/membuf
+gen_require(`
+    type tuicoreservice_dev_t;
+')
+platform_container_bind_mount(demuratnservice_t, tuicoreservice_dev_t, chr_file)
+# /dev/mem_buf_vm
+gen_require(`
+    type device_t;
+')
+platform_container_bind_mount(demuratnservice_t, device_t, dir)
+# /dev/qti_virtio_mem
+gen_require(`
+    type vendor_virtio_mem_device_t;
+')
+platform_container_bind_mount(demuratnservice_t, vendor_virtio_mem_device_t, chr_file)

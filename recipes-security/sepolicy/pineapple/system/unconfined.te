@@ -106,6 +106,7 @@ userdebug_or_eng(`
         type zs_handle_sysfs_t;
         type zspage_sysfs_t;
         type rfsa_adsp_lib_t;
+        type mem_sleep_sysfs_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     #For catf, which is internal test tool for audio
@@ -125,5 +126,6 @@ userdebug_or_eng(`
     allow unconfined_t zspage_sysfs_t:dir getattr;
     allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
     allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
+    allow unconfined_t mem_sleep_sysfs_t:file { rw_file_perms };
 
 ')

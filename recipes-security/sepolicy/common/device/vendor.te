@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
@@ -44,22 +44,18 @@ gen_require(`
     type unlabeled_t;
     type sysfs_t;
     type proc_t;
-    type rebootd_t;
     type mount_runtime_t;
     type fs_t;
     type tmpfs_t;
     type security_t;
     type var_run_t;
-    type leprop_sock_t;
     type sysctl_vm_t;
     type sysdevice_sysfs_t;
     type sysfs_vblank_t;
     type kernel_t;
     type cpu_scaling_freq_t;
-    type setprop_exec_t;
     type sysctl_t;
     type debugfs_t;
-    type soc0_gpu_sysfs_t;
 ')
 # No rw access to generic files in /dev
 attribute vendor_device_rw_exception;
@@ -74,9 +70,17 @@ attribute vendor_kernel_load_exception;
 neverallow { vendor_domain -vendor_kernel_load_exception } self:system { module_load module_request };
 # Do not allow userspace creation of files in kernel managed directories (outside of initscripts)
 #   rebootd creates a fifo_file in /dev - allow this for now
+attribute vendor_userspace_kernel_create_exception;
+optional_policy(`
+    gen_require(`
+        type rebootd_t;
+    ')
+    typeattribute rebootd_t vendor_userspace_kernel_create_exception;
+')
+
 neverallow {
     vendor_domain
-    -rebootd_t
+    -vendor_userspace_kernel_create_exception
 } { sysfs_t proc_t device_t }:dir { add_name create link remove_name rename reparent rmdir write };
 dontaudit vendor_domain { sysfs_t proc_t }:dir write;
 kernel_dontaudit_request_load_module(vendor_domain)
@@ -98,7 +102,10 @@ allow tftp_server_t self:capability2 block_suspend;
 # /system/rfs/msm/mpss
 system_read_link_files(tftp_server_t)
 
-firmware_read_files(tftp_server_t)
+optional_policy(`
+    firmware_read_files(tftp_server_t)
+    firmware_manage_shared_props(tftp_server_t)
+')
 logging_send_syslog_msg(tftp_server_t)
 
 allow tftp_server_t self:socket create_socket_perms;
@@ -107,9 +114,10 @@ allow tftp_server_t self:capability net_bind_service;
 dontaudit tftp_server_t self:capability net_raw;
 kernel_read_vm_overcommit_sysctl(tftp_server_t)
 
-firmware_manage_shared_props(tftp_server_t)
-manage_user_data_files(tftp_server_t, mpss_persist_t)
-manage_user_data_files(tftp_server_t, adsp_persist_t)
+optional_policy(`
+    manage_user_data_files(tftp_server_t, mpss_persist_t)
+    manage_user_data_files(tftp_server_t, adsp_persist_t)
+')
 
 # /run/systemd/journal
 mls_file_read_all_levels(tftp_server_t)
@@ -118,36 +126,47 @@ allow tftp_server_t self:qipcrtr_socket create_socket_perms;
 dontaudit tftp_server_t self:capability { dac_override dac_read_search };
 
 type tombstone_data_t;
-user_data_files_type(tombstone_data_t)
-userdebug_or_eng(`
-    manage_user_data_files(tftp_server_t, tombstone_data_t)
+optional_policy(`
+    user_data_files_type(tombstone_data_t)
+    userdebug_or_eng(`
+        manage_user_data_files(tftp_server_t, tombstone_data_t)
+    ')
 ')
 
 type rfs_persist_t;
-user_data_files_type(rfs_persist_t)
+optional_policy(`
+    user_data_files_type(rfs_persist_t)
+')
 
 type tombstone_rfs_data_t;
-user_data_files_type(tombstone_rfs_data_t)
-allow tftp_server_t tombstone_rfs_data_t:dir setattr;
-
-allow tftp_server_t rfs_persist_t:dir { create setattr };
+optional_policy(`
+    user_data_files_type(tombstone_rfs_data_t)
+    allow tftp_server_t tombstone_rfs_data_t:dir setattr;
+    allow tftp_server_t rfs_persist_t:dir { create setattr };
+    allow tftp_server_t rfs_persist_t:dir create_dir_perms;
+    allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
+')
 allow tftp_server_t self:capability { setuid chown setgid setpcap };
 allow tftp_server_t self:process setcap;
-allow tftp_server_t rfs_persist_t:dir create_dir_perms;
-allow tftp_server_t rfs_persist_t:file { create_file_perms write read setattr };
 files_read_etc_files(tftp_server_t)
 
 type vendor_pddump_rfs_data_t;
-user_data_files_type(vendor_pddump_rfs_data_t)
+optional_policy(`
+    user_data_files_type(vendor_pddump_rfs_data_t)
+    allow tftp_server_t vendor_pddump_rfs_data_t:dir create_dir_perms;
+    allow tftp_server_t vendor_pddump_rfs_data_t:file { create_file_perms rw_file_perms };
+')
 
-allow tftp_server_t vendor_pddump_rfs_data_t:dir create_dir_perms;
-allow tftp_server_t vendor_pddump_rfs_data_t:file { create_file_perms rw_file_perms };
 ### misc properties ###
 
 type mpss_persist_t;
-user_data_files_type(mpss_persist_t)
+optional_policy(`
+    user_data_files_type(mpss_persist_t)
+')
 type adsp_persist_t;
-user_data_files_type(adsp_persist_t)
+optional_policy(`
+    user_data_files_type(adsp_persist_t)
+')
 type kernel_tests_t;
 files_type(kernel_tests_t)
 
@@ -184,7 +203,14 @@ allow post_boot_script_t self:capability sys_admin;
 allow post_boot_script_t var_run_t:dir { getattr search };
 allow post_boot_script_t var_run_t:lnk_file read;
 
-allow post_boot_script_t leprop_sock_t:sock_file write;
+optional_policy(`
+    gen_require(`
+        type leprop_sock_t;
+        type setprop_exec_t;
+    ')
+    allow post_boot_script_t leprop_sock_t:sock_file write;
+    allow post_boot_script_t setprop_exec_t:file { read_file_perms exec_file_perms };
+')
 allow post_boot_script_t self:fifo_file rw_file_perms;
 allow post_boot_script_t self:unix_stream_socket { create connect };
 allow post_boot_script_t socket_device_t:dir search;
@@ -194,7 +220,6 @@ allow post_boot_script_t sysdevice_sysfs_t:file read_file_perms;
 allow post_boot_script_t sysfs_vblank_t:file read_file_perms;
 
 allow post_boot_script_t cpu_scaling_freq_t:file { rw_file_perms };
-allow post_boot_script_t setprop_exec_t:file { read_file_perms exec_file_perms };
 allow post_boot_script_t sysctl_t:file { rw_file_perms };
 
 seutil_read_config(post_boot_script_t)
@@ -209,7 +234,12 @@ userdebug_or_eng(`
     allow post_boot_script_t debugfs_t:file rw_file_perms;
 ')
 
-allow post_boot_script_t soc0_gpu_sysfs_t:file read_file_perms;
+optional_policy(`
+    gen_require(`
+        type soc0_gpu_sysfs_t;
+    ')
+    allow post_boot_script_t soc0_gpu_sysfs_t:file read_file_perms;
+')
 allow post_boot_script_t self:lockdown integrity;
 
 ### dev nodes ###
@@ -319,14 +349,15 @@ userdebug_or_eng(`
     allow kmod_t kernel_tests_t:dir search;
 ')
 
-gen_require(`
-    type kmod_t;
-    type ptmx_t;
-    type adbd_t;
+optional_policy(`
+    gen_require(`
+        type adbd_t;
+        type kmod_t;
+        type ptmx_t;
+    ')
+    allow kmod_t adbd_t:unix_stream_socket rw_inherited_file_perms;
+    allow kmod_t ptmx_t:chr_file rw_chr_file_perms;
 ')
-
-allow kmod_t adbd_t:unix_stream_socket rw_inherited_file_perms;
-allow kmod_t ptmx_t:chr_file rw_chr_file_perms;
 
 manage_dirs_pattern(systemd_tmpfiles_t, device_t, socket_device_t)
 systemd_tmpfilesd_managed(socket_device_t)
