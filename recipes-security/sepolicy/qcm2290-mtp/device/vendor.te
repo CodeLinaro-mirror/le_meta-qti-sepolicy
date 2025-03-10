@@ -48,3 +48,13 @@ allow post_boot_script_t queue_sysfs_t:file { rw_file_perms create };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
+
+#sepolicy for touch start le script
+gen_require(`
+    type modules_object_t;
+')
+
+allow touch_script_t modules_object_t:dir search;
+allow touch_script_t self:fifo_file { rw_inherited_file_perms };
+allow touch_script_t modules_object_t:file getattr;
+allow initrc_t touch_script_exec_t:file entrypoint;
