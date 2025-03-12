@@ -1,0 +1,14 @@
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+########################################
+#
+# Declarations
+#
+
+gen_require(`
+	type etc_t;
+	type pdmappersvc_t;
+')
+
+allow pdmappersvc_t etc_t:lnk_file read_lnk_file_perms;
