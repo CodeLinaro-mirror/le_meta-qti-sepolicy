@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ### tftp server ###
@@ -102,3 +102,6 @@
 
 ### Touch script ###
 /etc/initscripts/start_touch_le -- gen_context(system_u:object_r:touch_script_exec_t,s0)
+
+# dev node
+/dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
