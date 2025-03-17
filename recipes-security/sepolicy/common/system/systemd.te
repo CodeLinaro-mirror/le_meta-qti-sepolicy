@@ -26,7 +26,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ifdef(`init_systemd',`
@@ -131,3 +131,78 @@ allow systemd_tmpfiles_t usr_t:file read_file_perms;
 allow systemd_sysctl_t kernel_t:unix_dgram_socket sendto;
 allow syslogd_t kernel_t:netlink_audit_socket rw_socket_perms;
 allow syslogd_t syslogd_var_run_t:sock_file unlink;
+
+# systemd_modules_load
+
+type systemd_gpt_generator_t;
+
+gen_require(`
+ type syslogd_var_run_t;
+ type kmsg_device_t;
+ type sysctl_kernel_t;
+ type modules_object_t;
+ type sysctl_t;
+ type proc_t;
+ type init_t;
+ type devlog_t;
+ type syslogd_t;
+ type etc_t;
+ type var_run_t;
+ type kernel_t;
+ type debugfs_t;
+')
+
+allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
+mls_file_read_all_levels(systemd_gpt_generator_t)
+mls_file_write_all_levels(systemd_gpt_generator_t)
+allow systemd_gpt_generator_t sysctl_kernel_t:dir search;
+allow systemd_gpt_generator_t sysctl_kernel_t:file { read getattr open ioctl };
+allow systemd_gpt_generator_t sysctl_t:dir search;
+storage_raw_read_fixed_disk(systemd_gpt_generator_t)
+dev_write_kmsg(systemd_gpt_generator_t)
+dev_write_kmsg(systemd_modules_load_t)
+
+mls_file_write_all_levels(systemd_modules_load_t)
+mls_key_write_to_clearance(systemd_modules_load_t)
+
+modutils_read_module_deps(systemd_modules_load_t)
+allow systemd_modules_load_t modules_object_t:dir search;
+allow systemd_modules_load_t init_var_run_t:dir search;
+allow systemd_modules_load_t proc_t:file read_file_perms;
+allow systemd_modules_load_t kernel_t:key manage_key_perms;
+allow systemd_modules_load_t sysctl_t:dir search;
+allow systemd_modules_load_t init_t:dir search;
+allow systemd_modules_load_t init_t:file read_file_perms;
+allow systemd_modules_load_t sysctl_kernel_t:dir search;
+allow systemd_modules_load_t sysctl_kernel_t:file read_file_perms;
+allow systemd_modules_load_t syslogd_var_run_t:dir search_dir_perms;
+allow systemd_modules_load_t devlog_t:sock_file write;
+allow systemd_modules_load_t syslogd_t:unix_dgram_socket sendto;
+allow systemd_modules_load_t etc_t:file read_file_perms;
+
+allow systemd_modules_load_t self:capability sys_module;
+allow systemd_modules_load_t var_run_t:dir { read_file_perms getattr search };
+allow systemd_modules_load_t debugfs_t:dir search;
+allow systemd_modules_load_t modules_object_t:system module_load;
+allow systemd_modules_load_t sysfs_t:file { open read };
+allow systemd_modules_load_t kernel_t:system module_request;
+allow systemd_modules_load_t systemd_modules_load_exec_t:file { execute read };
+
+#systemd_update_done
+
+allow systemd_update_done_t etc_t:file { open read write create setattr getattr unlink rename };
+allow systemd_update_done_t kmsg_device_t:chr_file write;
+allow systemd_update_done_t default_context_t:dir search;
+allow systemd_update_done_t devlog_t:sock_file write;
+allow systemd_update_done_t file_context_t:dir search;
+allow systemd_update_done_t file_context_t:file { getattr map open read };
+allow systemd_update_done_t init_t:dir search;
+allow systemd_update_done_t init_t:file { getattr ioctl open read };
+allow systemd_update_done_t init_var_run_t:dir search;
+allow systemd_update_done_t self:process setfscreate;
+allow systemd_update_done_t sysctl_kernel_t:dir search;
+allow systemd_update_done_t sysctl_kernel_t:file { getattr ioctl open read };
+allow systemd_update_done_t sysctl_t:dir search;
+allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
+allow systemd_update_done_t syslogd_var_run_t:dir search;
+allow systemd_update_done_t var_run_t:dir search;

@@ -58,6 +58,10 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 userdebug_or_eng(`
     optional_policy(`
@@ -217,4 +221,60 @@ userdebug_or_eng(`
         qesdk_adk_access(unconfined_t)
     ')
     logging_send_syslog_msg(unconfined_t)
+')
+
+#### workaround for FOTA /usr/bin/recovery
+
+userdebug_or_eng(`
+    gen_require(`
+        type qmmf_server_t;
+    ')
+
+    servicemanager_binder_call(unconfined_t, qmmf_server_t)
+
+    gen_require(`
+        type usb_dev_t;
+        type auditd_etc_t;
+        type data_t;
+        type policy_config_t;
+        type proc_kmsg_t;
+        type rebootd_pipe_t;
+        type webserver_t;
+        type weston_runtime_t;
+        type camera_data_t;
+        type sysfs_cpu_capacity;
+    ')
+
+    mls_file_read_all_levels(unconfined_t)
+    mls_file_write_all_levels(unconfined_t)
+    storage_raw_read_fixed_disk(unconfined_t)
+    storage_raw_write_fixed_disk(unconfined_t)
+    dev_read_kmsg(unconfined_t)
+    kernel_mounton_message_if(unconfined_t)
+    allow unconfined_t self:binder { call transfer };
+    allow unconfined_t self:lockdown { confidentiality integrity };
+    allow unconfined_t auditd_etc_t:dir { getattr read search };
+    allow unconfined_t auditd_etc_t:file getattr;
+    allow unconfined_t data_t:chr_file getattr;
+    # allow map the files in /data/misc/camera
+    allow unconfined_t camera_data_t:file map;
+    allow unconfined_t policy_config_t:dir { getattr read search };
+    allow unconfined_t policy_config_t:file getattr;
+    allow unconfined_t rebootd_pipe_t:fifo_file getattr;
+    allow unconfined_t usb_dev_t:dir { getattr read search open };
+    allow unconfined_t webserver_t:dir { read search open };
+    allow unconfined_t webserver_t:file getattr;
+    allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
+    allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t self:lockdown { confidentiality };
+
+    allow unconfined_t sysfs_cpu_capacity:file { getattr };
+    gen_require(`
+        type recovery_exec_t;
+        type aud_dev_sysfs_t;
+        type snd_card_state_t;
+    ')
+    allow unconfined_t recovery_exec_t:file exec_file_perms;
+    allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
+    allow unconfined_t snd_card_state_t:file { rw_file_perms };
 ')

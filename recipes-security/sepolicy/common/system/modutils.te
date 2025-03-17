@@ -98,3 +98,9 @@ type kerneltests_modules_data_t;
 allow kmod_t kerneltests_modules_data_t:file { read_file_perms map };
 allow kmod_t kerneltests_modules_data_t:dir { search };
 allow kmod_t kerneltests_modules_data_t:system { module_load };
+
+gen_require(`
+    type nsfs_t;
+')
+mls_key_write_to_clearance(kmod_t)
+allow kmod_t nsfs_t:file read_file_perms;
