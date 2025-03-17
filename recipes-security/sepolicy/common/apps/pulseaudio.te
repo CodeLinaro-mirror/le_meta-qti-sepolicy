@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 #policy_module(pulseaudio, 1.0)
 
@@ -95,3 +99,22 @@ allow pulseaudio_t audio_device_t:chr_file rw_chr_file_perms;
 allow pulseaudio_t snd_card_state_t:file rw_file_perms;
 allow pulseaudio_t etc_t:file map;
 dontaudit pulseaudio_t audio_data_file_t:dir search;
+
+gen_require(`
+ type audio_data_file_t;
+ type etc_t;
+ type system_dbusd_var_lib_t;
+ type default_t;
+ type system_dmabuf_device_t;
+')
+allow pulseaudio_t audio_data_file_t:dir search;
+audio_data_files_access(pulseaudio_t)
+allow pulseaudio_t etc_t:file map;
+allow pulseaudio_t system_dbusd_var_lib_t:lnk_file read;
+allow pulseaudio_t default_t:dir search;
+allow pulseaudio_t kernel_t:unix_dgram_socket sendto;
+allow pulseaudio_t self:qipcrtr_socket { connected_socket_perms };
+allow pulseaudio_t system_dmabuf_device_t:chr_file { read_chr_file_perms };
+
+mls_socket_write_all_levels(pulseaudio_t)
+mls_socket_read_all_levels(pulseaudio_t)
