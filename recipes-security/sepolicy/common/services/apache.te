@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type webserver_t;
 type qcmap_webserver_exec_t;
@@ -32,21 +36,26 @@ type webserver_socket_device_t;
 init_vendor_domain(qcmap_webserver_t, qcmap_webserver_exec_t)
 domtrans_pattern(httpd_t, qcmap_webserver_exec_t, qcmap_webserver_t)
 
+optional_policy(`
+    gen_require(`
+        type qcmap_data_t;
+        type httpd_data_t;
+    ')
+    qcmap_manage_var_run_qcmap_dir(httpd_t)
+    qcmap_httpd_data_filetrans(httpd_t, file )
+    search_dirs_pattern(qcmap_webserver_t, qcmap_data_t, qcmap_data_t)
+    dontaudit httpd_t httpd_data_t:file {map};
+    dontaudit httpd_t etc_t:file {map};
+    search_user_data_dir(qcmap_webserver_t)
+    manage_user_data_files(qcmap_webserver_t, httpd_data_t, httpd_data_t)
+')
+
 gen_require(`
-  type data_t;
-  type qcmap_data_t;
-  type httpd_data_t;
   type urandom_device_t;
 ')
-qcmap_manage_var_run_qcmap_dir(httpd_t)
 
-dontaudit httpd_t httpd_data_t:file {map};
-dontaudit httpd_t etc_t:file {map};
-qcmap_httpd_data_filetrans(httpd_t, file )
 allow httpd_t httpd_t: capability {sys_chroot};
-search_dirs_pattern(qcmap_webserver_t, qcmap_data_t, qcmap_data_t)
 allow httpd_t qcmap_webserver_t: process {signal};
-search_user_data_dir(qcmap_webserver_t)
 allow httpd_t webserver_t: file read_file_perms;
 
 userdebug_or_eng(`
@@ -54,7 +63,6 @@ files_list_default(httpd_t)
 ')
 
 search_dirs_pattern(httpd_t, webserver_t, webserver_t)
-manage_user_data_files(qcmap_webserver_t, httpd_data_t, httpd_data_t)
 kernel_read_system_state(qcmap_webserver_t)
 rw_fifo_files_pattern(qcmap_webserver_t, qcmap_webserver_t, qcmap_webserver_t)
 dev_read_urand(qcmap_webserver_t)
