@@ -1,0 +1,8 @@
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/power_manager_daemon       --      gen_context(system_u:object_r:power_manager_daemon_exec_t,s0)
+/etc/power_state.conf               --      gen_context(system_u:object_r:power_manager_conf_t,s0)
+/data/vendor/canwrapper(/.*)?               gen_context(system_u:object_r:canwrapper_data_log_t,s0)
+/usr/lib/systemd/system/suspend_ipa_offload\.service  -- gen_context(system_u:object_r:power_manager_daemon_unit_t,s0)
+/dev/socket/power_manager_daemon(/.*)?      gen_context(system_u:object_r:power_socket_t,s0)

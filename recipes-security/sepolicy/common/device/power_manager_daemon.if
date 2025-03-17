@@ -1,0 +1,27 @@
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary>power manager daemon</summary>
+
+########################################
+## <summary>
+##      Access a power manager socket.
+##      It can search power socket dir and have write permission for
+##      power socket file. Interface also allow unix stream socket
+##      connection.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`access_power_mgr_socket',`
+    gen_require(`
+        type power_socket_t;
+        type power_manager_daemon_t;
+    ')
+    allow $1 power_socket_t:dir search;
+    allow $1 power_socket_t:sock_file write;
+    allow $1 power_manager_daemon_t:unix_stream_socket connectto;
+')
