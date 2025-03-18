@@ -97,6 +97,13 @@ corecmd_exec_shell(tvmroot_t)
 allow tvmroot_t self:fifo_file write_fifo_file_perms;
 allow tvmroot_t self:capability setpcap;
 
+# OOM score adj. This requires dac_override with user namespaces as there is no common group ID
+gen_require(`
+    attribute vendor_domain_dac_override_exception;
+')
+typeattribute tvmroot_t vendor_domain_dac_override_exception;
+allow tvmroot_t self:capability dac_override;
+
 # minijail
 allow tvmroot_t self:capability { sys_admin kill };
 allow tvmroot_t self:capability2 block_suspend;
