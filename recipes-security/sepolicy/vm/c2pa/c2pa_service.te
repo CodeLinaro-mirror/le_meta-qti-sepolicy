@@ -28,8 +28,13 @@ manage_user_data_files(c2paservice_t, c2pa_persist_t);
 kernel_read_system_state(c2paservice_t)
 files_tmpfs_file(c2paservice_tmpfs_t)
 
-fs_tmpfs_filetrans(c2paservice_t, c2paservice_tmpfs_t, file)
-allow c2paservice_t c2paservice_tmpfs_t:file { manage_file_perms mounton };
+gen_require(`
+    bool allow_minijail_mount;
+')
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(c2paservice_t, c2paservice_tmpfs_t, file)
+    allow c2paservice_t c2paservice_tmpfs_t:file { manage_file_perms mounton };
+}
 
 allow c2paservice_t random_device_t:chr_file { open read };
 allow c2paservice_t urandom_device_t:chr_file { open read };
