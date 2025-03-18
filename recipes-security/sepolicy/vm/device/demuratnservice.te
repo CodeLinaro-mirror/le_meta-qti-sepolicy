@@ -28,3 +28,14 @@ gen_require(`
     type vendor_virtio_mem_device_t;
 ')
 platform_container_bind_mount(demuratnservice_t, vendor_virtio_mem_device_t, chr_file)
+
+# /tmp/minijail.dev.xxx/membuf
+gen_require(`
+    bool allow_minijail_mount;
+')
+type demuratnservice_tmpfs_t;
+files_tmpfs_file(demuratnservice_tmpfs_t)
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(demuratnservice_t, demuratnservice_tmpfs_t, file)
+    allow demuratnservice_t demuratnservice_tmpfs_t:file { manage_file_perms mounton };
+}
