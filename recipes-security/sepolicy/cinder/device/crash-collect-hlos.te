@@ -25,6 +25,9 @@ gen_require(`
     class service { start status stop reload };
 ')
 
+
+allow initrc_t rawdump_data_t:dir { search write add_name search };
+allow initrc_t rawdump_data_t:file { read open write };
 allow unconfined_t cc_conf_t:file { getattr open write read };
 allow unconfined_t rawdump_data_t:dir { write read open add_name remove_name search getattr };
 allow rawdump_data_t fs_t:filesystem { associate };
