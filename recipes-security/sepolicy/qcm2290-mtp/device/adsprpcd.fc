@@ -1,4 +1,0 @@
-# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-/usr/lib/rfsa/adsp(/.*)?           gen_context(system_u:object_r:rfsa_adsp_lib_t,s0)

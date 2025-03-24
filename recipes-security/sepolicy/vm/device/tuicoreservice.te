@@ -1,8 +1,0 @@
-# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-type vendor_dmabuf_tui_demura_heap_device_t;
-dev_node(vendor_dmabuf_tui_demura_heap_device_t);
-
-allow tuicoreservice_t vendor_dmabuf_tui_demura_heap_device_t:chr_file read_chr_file_perms;
-
