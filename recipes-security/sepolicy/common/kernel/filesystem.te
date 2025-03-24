@@ -59,7 +59,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type functionfs_t;
@@ -234,3 +234,14 @@ dev_associate_sysfs(hwfde_icepath_sysfs_t)
 type sysfs_devcoredump_t;
 genfscon sysfs /devices/virtual/devcoredump            gen_context(system_u:object_r:sysfs_devcoredump_t,s0)
 dev_associate_sysfs(sysfs_devcoredump_t)
+
+type power_sysfs_t;
+genfscon sysfs /power/mem_sleep  gen_context(system_u:object_r:power_sysfs_t,s0)
+dev_associate_sysfs(power_sysfs_t)
+
+type image_variant_sysfs_t;
+genfscon sysfs /devices/soc0/select_image  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_variant  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_crm_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+dev_associate_sysfs(image_variant_sysfs_t)
