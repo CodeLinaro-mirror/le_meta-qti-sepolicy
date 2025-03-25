@@ -169,9 +169,11 @@ allow wpa_cli_t qcmap_var_run_t:file { write getattr };
 dev_read_urand(wpa_cli_t)
 allow wpa_cli_t hostapd_var_run_t:sock_file { write };
 allow wpa_cli_t hostapd_var_run_t:dir search_dir_perms;
+allow wpa_cli_t qcmap_var_run_t:file { read };
 allow NetworkManager_t hostapd_var_run_t:dir search_dir_perms;
 allow NetworkManager_t hostapd_var_run_t:dir { add_name write search remove_name };
 allow NetworkManager_t hostapd_var_run_t:sock_file { create read write setattr };
+allow NetworkManager_t system_data_t:file manage_file_perms;
 
 # unused pipes
 gen_require(`
@@ -222,6 +224,8 @@ manage_user_data_files(wlan_initrc_t, wifi_data_t)
 
 dontaudit wpa_cli_t kmsg_device_t:chr_file { write_file_perms };
 dontaudit wpa_cli_t self:capability { setgid setpcap };
+allow wpa_cli_t self:capability { setuid };
+allow wpa_cli_t self:process { getcap setcap };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
 allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
 corecmd_exec_shell(wpa_cli_t)

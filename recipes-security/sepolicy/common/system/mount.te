@@ -60,6 +60,7 @@ gen_require(`
     type mount_runtime_t;
     type sdcard_t;
     type bluetooth_conf_t;
+    type NetworkManager_exec_t;
 ')
 
 allow mount_copybind_t var_t:dir { write add_name create };
@@ -107,3 +108,5 @@ type mount_t;
 
 allow mount_t binderfs_t:dir { getattr mounton };
 allow mount_t binderfs_t:filesystem mount;
+manage_files_pattern(mount_copybind_t, NetworkManager_exec_t, NetworkManager_exec_t);
+allow mount_t NetworkManager_exec_t:file { getattr mounton open };
