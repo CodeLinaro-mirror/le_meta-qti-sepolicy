@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmroot, 1.0)
@@ -47,6 +47,7 @@ type init_t;
 type system_dbusd_runtime_t;
 type power_unit_t;
 type c2pa_persist_t;
+class service { start stop status };
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -55,7 +56,6 @@ platform_container_domain_type(trustedinputservice_t, trustedinputservice_exec_t
 userdebug_or_eng(`
 gen_require(`
         type unconfined_t;
-        class service { start stop status };
 ')
     # systemctl start/stop/status tvmroot
     allow unconfined_t tvmroot_exec_t:service { status start stop };
