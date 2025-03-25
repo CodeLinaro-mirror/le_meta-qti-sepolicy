@@ -13,6 +13,16 @@ gen_require(`
  type proc_t;
  type etc_t;
  type fs_t;
+ type devlog_t;
+ type init_var_run_t;
+ type netopeer2_exec_t;
+ type node_t;
+ type random_device_t;
+ type shell_exec_t;
+ type sysdevice_sysfs_t;
+ type syslogd_t;
+ type syslogd_var_run_t;
+ type urandom_device_t;
 ')
 
 type sysrepo-plugind_t;
@@ -30,10 +40,10 @@ allow sysrepo-plugind_t proc_t:file { read open getattr };
 allow sysrepo-plugind_t tmpfs_t:file { read write open getattr map create unlink };
 allow sysrepo-plugind_t tmpfs_t:dir { search write add_name remove_name };
 
-allow sysrepo-plugind_t tmp_t:dir { search write add_name };
-allow sysrepo-plugind_t tmp_t:file { create write open };
+allow sysrepo-plugind_t tmp_t:dir { search write add_name remove_name};
+allow sysrepo-plugind_t tmp_t:file { create write open getattr lock read unlink};
 
-allow sysrepo-plugind_t self:tcp_socket { getattr create setopt connect name_connect write read shutdown };
+allow sysrepo-plugind_t self:tcp_socket { getattr create setopt connect name_connect write read shutdown bind getopt};
 allow sysrepo-plugind_t unreserved_port_t:tcp_socket name_connect;
 allow sysrepo-plugind_t self:process { signal };
 
@@ -45,5 +55,17 @@ allow sysrepo-plugind_t etc_t:file { map };
 
 allow sysrepo-plugind_t mplane_app_t:dir { add_name getattr open read search write remove_name };
 allow sysrepo-plugind_t mplane_app_t:fifo_file { create open read write };
-allow sysrepo-plugind_t mplane_app_t:file { create getattr lock map open read write rename unlink};
+allow sysrepo-plugind_t mplane_app_t:file { create getattr lock map append open read write rename unlink};
 allow sysrepo-plugind_t socket_device_t:dir { search };
+
+# Needed to launch netopeer2
+allow sysrepo-plugind_t devlog_t:sock_file write;
+allow sysrepo-plugind_t init_var_run_t:dir search;
+allow sysrepo-plugind_t netopeer2_exec_t:file { execute getattr map open read };
+allow sysrepo-plugind_t node_t:tcp_socket node_bind;
+allow sysrepo-plugind_t random_device_t:chr_file read;
+allow sysrepo-plugind_t shell_exec_t:file { execute execute_no_trans map open read };
+allow sysrepo-plugind_t sysdevice_sysfs_t:file { getattr open read };
+allow sysrepo-plugind_t syslogd_t:unix_dgram_socket sendto;
+allow sysrepo-plugind_t syslogd_var_run_t:dir search;
+allow sysrepo-plugind_t urandom_device_t:chr_file { open read };
