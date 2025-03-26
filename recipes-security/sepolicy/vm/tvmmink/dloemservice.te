@@ -37,8 +37,12 @@ dev_rw_sysfs(dloemservice_t)
 # Enable backtrace handler
 allow dloemservice_t self:process signal;
 
+gen_require(`
+    bool allow_minijail_mount;
+')
 type dloemservice_tmpfs_t;
 files_tmpfs_file(dloemservice_tmpfs_t)
-
-fs_tmpfs_filetrans(dloemservice_t, dloemservice_tmpfs_t, file)
-allow dloemservice_t dloemservice_tmpfs_t:file { manage_file_perms mounton };
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(dloemservice_t, dloemservice_tmpfs_t, file)
+    allow dloemservice_t dloemservice_tmpfs_t:file { manage_file_perms mounton };
+}

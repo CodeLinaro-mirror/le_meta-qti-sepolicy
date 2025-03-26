@@ -35,11 +35,15 @@ platform_container_domain_type(tvmprelauncher_t, tvmprelauncher_exec_t)
 allow tvmprelauncher_sock_t device_t:filesystem associate;
 
 # /tmp/minijail.dev.xxx/smcinvoke
+gen_require(`
+    bool allow_minijail_mount;
+')
 type tvmprelauncher_tmpfs_t;
 files_tmpfs_file(tvmprelauncher_tmpfs_t)
-
-fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
-allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
+    allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };
+}
 
 # Only mink can access the socket for prelauncher
 gen_require(`
