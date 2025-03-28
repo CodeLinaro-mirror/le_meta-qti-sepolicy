@@ -15,7 +15,6 @@ gen_require(`
  type fs_t;
  type devlog_t;
  type init_var_run_t;
- type netopeer2_exec_t;
  type node_t;
  type random_device_t;
  type shell_exec_t;
@@ -61,7 +60,6 @@ allow sysrepo-plugind_t socket_device_t:dir { search };
 # Needed to launch netopeer2
 allow sysrepo-plugind_t devlog_t:sock_file write;
 allow sysrepo-plugind_t init_var_run_t:dir search;
-allow sysrepo-plugind_t netopeer2_exec_t:file { execute getattr map open read };
 allow sysrepo-plugind_t node_t:tcp_socket node_bind;
 allow sysrepo-plugind_t random_device_t:chr_file read;
 allow sysrepo-plugind_t shell_exec_t:file { execute execute_no_trans map open read };
