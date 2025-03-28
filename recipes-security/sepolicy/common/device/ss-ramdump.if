@@ -1,3 +1,6 @@
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+#
 # Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,6 +33,46 @@
 
 #######################################
 ## <summary>
-##	subsystem ramdump daemon interface
+##    Interface used to create/read/open a sdcard directory and a file
 ## </summary>
+## <desc>
+##    <p>
+##    Allow the specified domain to manage SDCARD files.
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Domain allowed access for SDCARD files.
+##    </summary>
+## </param>
 #
+interface(`sdcard_dir_manage',`
+    gen_require(`
+        type sdcard_t;
+    ')
+    allow $1 sdcard_t:dir { create write search read open add_name getattr};
+    allow $1 sdcard_t:file { create write open read getattr unlink };
+')
+
+
+########################################
+## <summary>
+##    Interface used to give read permission to sdcard symlink file
+## </summary>
+## <desc>
+##    <p>
+##    Allow the specified domain to read sdacard symlink files.
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Domain allowed access for SDCARD symlink files.
+##    </summary>
+## </param>
+#
+interface(`sdcard_sym_link',`
+    gen_require(`
+        type sdcard_t;
+    ')
+    allow $1 sdcard_t:lnk_file read;
+')
