@@ -5,12 +5,10 @@ gen_require(`
     type qwesd_t;
     type qwes_mink_socket_t;
     type locale_t;
-    type initrc_t;
     type loc_hald_t;
 ')
 
 allow loc_hald_t locale_t:dir search;
-allow loc_hald_t initrc_t:unix_stream_socket connectto;
 
 ### location hal daemon
 #Qwes operations
