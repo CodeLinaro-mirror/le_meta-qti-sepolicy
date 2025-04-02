@@ -27,3 +27,6 @@
 /usr/sbin/hostapd_cli           --    gen_context(system_u:object_r:hostapd_cli_exec_t,s0)
 /lib/systemd/system/qcmap_hostapd@.service      gen_context(system_u:object_r:hostapd_unit_t,s0)
 /lib/systemd/system/qcmap_hostapd_cli@.service  gen_context(system_u:object_r:hostapd_cli_qcmap_unit_t,s0)
+
+/usr/lib/systemd/system/qcmap_hostapd@.service      gen_context(system_u:object_r:hostapd_unit_t,s0)
+/usr/lib/systemd/system/qcmap_hostapd_cli@.service  gen_context(system_u:object_r:hostapd_cli_qcmap_unit_t,s0)
