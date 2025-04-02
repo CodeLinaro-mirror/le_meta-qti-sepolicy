@@ -10,7 +10,7 @@ gen_require(`
 ')
 
 allow loc_hald_t locale_t:dir search;
-allow loc_hald_t initrc_t:unix_stream_socket conectto;
+allow loc_hald_t initrc_t:unix_stream_socket connectto;
 
 ### location hal daemon
 #Qwes operations
