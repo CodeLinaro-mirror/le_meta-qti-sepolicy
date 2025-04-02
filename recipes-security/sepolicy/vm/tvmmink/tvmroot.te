@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmroot, 1.0)
@@ -47,6 +47,7 @@ type init_t;
 type system_dbusd_runtime_t;
 type power_unit_t;
 type c2pa_persist_t;
+class service { start stop status };
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -55,7 +56,6 @@ platform_container_domain_type(trustedinputservice_t, trustedinputservice_exec_t
 userdebug_or_eng(`
 gen_require(`
         type unconfined_t;
-        class service { start stop status };
 ')
     # systemctl start/stop/status tvmroot
     allow unconfined_t tvmroot_exec_t:service { status start stop };
@@ -96,6 +96,13 @@ lvm_domtrans(tvmroot_t)
 corecmd_exec_shell(tvmroot_t)
 allow tvmroot_t self:fifo_file write_fifo_file_perms;
 allow tvmroot_t self:capability setpcap;
+
+# OOM score adj. This requires dac_override with user namespaces as there is no common group ID
+gen_require(`
+    attribute vendor_domain_dac_override_exception;
+')
+typeattribute tvmroot_t vendor_domain_dac_override_exception;
+allow tvmroot_t self:capability dac_override;
 
 # minijail
 allow tvmroot_t self:capability { sys_admin kill };
