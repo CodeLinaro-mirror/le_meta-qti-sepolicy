@@ -1,0 +1,97 @@
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(power_manager_daemon, 1.0)
+
+type power_manager_daemon_t;
+type power_manager_daemon_exec_t;
+
+init_vendor_domain(power_manager_daemon_t, power_manager_daemon_exec_t)
+
+gen_require(`
+    type debugfs_t;
+    type default_t;
+    type init_t;
+    type sysdevice_sysfs_t;
+    type power_unit_t;
+    type sysctl_t;
+    type sysctl_kernel_t;
+    type gpiochip_device_t;
+    type boot_kpi_values_t;
+    type etc_t;
+    type locale_t;
+')
+
+type power_tmp_t;
+files_tmp_file(power_tmp_t);
+files_tmp_filetrans(power_manager_daemon_t, power_tmp_t, sock_file)
+
+type power_manager_daemon_unit_t;
+type power_manager_conf_t;
+files_type(power_manager_conf_t)
+
+type canwrapper_data_log_t;
+user_data_files_type(canwrapper_data_log_t)
+data_filetrans(power_manager_daemon_t, canwrapper_data_log_t, { file dir })
+manage_user_data_files(power_manager_daemon_t, canwrapper_data_log_t)
+
+type power_socket_t;
+files_type(power_socket_t)
+dev_node(power_socket_t)
+device_manage_socket_file(power_manager_daemon_t, power_socket_t)
+allow power_manager_daemon_t power_socket_t:dir { search write add_name remove_name };
+allow power_manager_daemon_t power_socket_t:sock_file { create unlink };
+allow power_manager_daemon_t sysdevice_sysfs_t:file { read open };
+
+dev_read_input(power_manager_daemon_t)
+corecmd_exec_shell(power_manager_daemon_t)
+dev_rw_sysfs(power_manager_daemon_t)
+kernel_read_system_state(power_manager_daemon_t)
+
+allow power_manager_daemon_t power_manager_conf_t:file { read getattr open };
+allow power_manager_daemon_t self:capability {fsetid net_admin net_bind_service };
+allow power_manager_daemon_t self:socket connected_socket_perms;
+allow power_manager_daemon_t power_tmp_t:sock_file { create setattr };
+allow power_manager_daemon_t self:capability2 block_suspend;
+userdebug_or_eng(`
+    allow power_manager_daemon_t debugfs_t:dir search;
+')
+system_read_link_files(power_manager_daemon_t)
+allow power_manager_daemon_t power_tmp_t:sock_file unlink;
+allow power_manager_daemon_t self:process signal;
+dontaudit power_manager_daemon_t default_t:dir search;
+dontaudit power_manager_daemon_t self:capability sys_module;
+dontaudit power_manager_daemon_t sysctl_t:dir search;
+logging_send_syslog_msg(power_manager_daemon_t)
+
+ifdef(`init_systemd', `
+    gen_require(`
+        type systemd_logind_var_run_t;
+        type system_dbusd_var_run_t;
+        class service { start status stop };
+    ')
+    init_script_file(power_manager_daemon_unit_t)
+    init_dbus_chat(power_manager_daemon_t)
+    allow power_manager_daemon_t power_manager_daemon_unit_t:service start;
+    systemd_dbus_chat_logind(power_manager_daemon_t)
+    dbus_system_bus_client(power_manager_daemon_t)
+    allow power_manager_daemon_t system_dbusd_var_run_t:dir search;
+    allow power_manager_daemon_t systemd_logind_var_run_t:sock_file write;
+')
+dontaudit power_manager_daemon_t init_t:dir search;
+allow power_manager_daemon_t self:fifo_file rw_fifo_file_perms;
+allow power_manager_daemon_t self:can_socket { create write };
+allow power_manager_daemon_t self:qipcrtr_socket { create getattr read write };
+allow power_manager_daemon_t self:unix_stream_socket { listen accept };
+allow power_manager_daemon_t power_unit_t:service {start status stop } ;
+allow power_manager_daemon_t gpiochip_device_t:chr_file read_file_perms;
+allow power_manager_daemon_t self:can_socket { bind ioctl read setopt };
+allow power_manager_daemon_t etc_t:lnk_file read;
+allow power_manager_daemon_t locale_t:dir search;
+allow power_manager_daemon_t locale_t:file { getattr open read };
+allow power_manager_daemon_t boot_kpi_values_t:file { append getattr open };
+dontaudit power_manager_daemon_t init_t:file { getattr ioctl open read };
+dontaudit power_manager_daemon_t init_t:lnk_file read;
+dontaudit power_manager_daemon_t sysctl_kernel_t:dir search;
+dontaudit power_manager_daemon_t sysctl_kernel_t:file { open read ioctl getattr };
+dontaudit power_manager_daemon_t sysctl_t:dir search;
