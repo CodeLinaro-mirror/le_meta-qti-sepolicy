@@ -319,6 +319,8 @@ gen_require(`
     type dhcpd_exec_t;
     type radvd_t;
     type radvd_exec_t;
+    type NetworkManager_cli_unit_t;
+    type dhcpd_unit_t;
 ')
 allow qcmap_cm_t self:capability2 block_suspend;
 allow qcmap_cm_t wlan_service_t:process sigkill;
@@ -419,15 +421,17 @@ ifdef(`init_systemd',`
     allow qcmap_cm_t dhcpc_exec_t:service { start stop status reload };
     allow qcmap_cm_t ddclient_exec_t:service { start stop status reload };
     allow qcmap_cm_t wpa_cli_exec_t:service { start stop status reload };
-    allow qcmap_cm_t NetworkManager_exec_t:service { start stop status reload };
+    allow qcmap_cm_t { NetworkManager_exec_t NetworkManager_cli_unit_t }:service { start stop status reload };
     allow qcmap_cm_t avahi_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t pppd_exec_t:service { start stop status reload };
     allow qcmap_cm_t wlan_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t wlan_ezmesh_initrc_exec_t:service { start stop status reload };
     allow qcmap_cm_t minidlna_exec_t:service { start stop status reload };
     allow qcmap_cm_t qcmap_kernel_module_t:service { start stop status reload };
-    allow qcmap_cm_t dhcpd_exec_t:service { start status stop };
+    allow qcmap_cm_t { dhcpd_exec_t dhcpd_unit_t }:service { start status stop };
     allow qcmap_cm_t radvd_exec_t:service { start status stop };
+    networkmanager_startstop(qcmap_cm_t)
+    networkmanager_status(qcmap_cm_t)
 ')
 read_lnk_files_pattern(qcmap_cm_t, dnsmasq_t, dnsmasq_t)
 

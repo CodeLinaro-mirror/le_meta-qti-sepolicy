@@ -293,3 +293,8 @@ allow wlan_ezmesh_initrc_t urandom_device_t:chr_file read_chr_file_perms;
 allow wlan_ezmesh_initrc_t sysctl_t:dir search_dir_perms;
 allow wlan_ezmesh_initrc_t wireless_device_t:chr_file read_chr_file_perms;
 manage_user_data_files(wlan_ezmesh_initrc_t, wifi_data_t)
+
+#hostapd_cli service file
+type NetworkManager_cli_unit_t;
+init_unit_file(NetworkManager_cli_unit_t)
+corecmd_exec_shell(NetworkManager_cli_unit_t)
