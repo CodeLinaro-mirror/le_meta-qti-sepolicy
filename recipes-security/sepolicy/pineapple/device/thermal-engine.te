@@ -1,0 +1,20 @@
+# Copyright (c) 2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+########################################
+#
+# Declarations
+#
+
+
+gen_require(`
+    type cpu_sysfs_t;
+    type thermal-engine_t;
+    type etc_t;
+')
+
+allow thermal-engine_t cpu_sysfs_t:file { rw_file_perms };
+allow thermal-engine_t cpu_sysfs_t:dir { search read };
+allow thermal-engine_t etc_t:lnk_file { read };
+
