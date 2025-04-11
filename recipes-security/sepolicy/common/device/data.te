@@ -59,6 +59,13 @@ allow initrc_t qvr_data_t:dir manage_dir_perms;
 allow initrc_t qvr_data_t:file manage_file_perms;
 allow setfiles_t qvr_data_t:dir relabelto;
 
+type qfhlog_data_t;
+user_data_files_type(qfhlog_data_t)
+data_filetrans(initrc_t, qfhlog_data_t, { file dir })
+manage_user_data_files(initrc_t, qfhlog_data_t)
+allow initrc_t qfhlog_data_t:dir manage_dir_perms;
+allow initrc_t qfhlog_data_t:file manage_file_perms;
+
 #To support coredump in userdebug variant
 type coredump_data_t;
 user_data_files_type(coredump_data_t)
