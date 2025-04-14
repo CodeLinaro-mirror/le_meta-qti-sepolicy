@@ -24,6 +24,9 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(servicemanager, 1.0)
 
@@ -51,3 +54,20 @@ allow servicemanager_t binderfs_t:dir search;
 allow servicemanager_t binder_device_t:chr_file mmap_rw_file_perms;
 allow servicemanager_t binder_device_t:dir search;
 rw_chr_files_pattern(servicemanager_t, binder_device_t, binder_device_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+        type initrc_t;
+    ')
+
+    servicemanager_binder_call(servicemanager_t, unconfined_t)
+    servicemanager_binder_call(servicemanager_t, initrc_t)
+')
+
+gen_require(`
+    type socket_device_t;
+')
+
+allow servicemanager_t self:unix_dgram_socket { write create connect };
+device_search_sockets(servicemanager_t)
