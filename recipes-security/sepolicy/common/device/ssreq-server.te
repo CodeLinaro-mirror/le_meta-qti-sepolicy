@@ -83,12 +83,14 @@ ifdef(`init_systemd',`
     gen_require(`
        type systemd_logind_var_run_t;
        type system_dbusd_var_run_t;
+       type bin_t;
     ')
     dbus_system_bus_client(ssreq_server_t)
     init_dbus_chat(ssreq_server_t)
     allow ssreq_server_t self:dbus send_msg;
     allow ssreq_server_t mss_exec_t:service { start stop status};
     allow ssreq_server_t audio_unit_t:service { start stop status};
+    allow ssreq_server_t bin_t:service { start status stop reload };
     rw_sock_files_pattern(ssreq_server_t, systemd_logind_var_run_t, systemd_logind_var_run_t)
 ')
 logging_send_syslog_msg(ssreq_server_t)
