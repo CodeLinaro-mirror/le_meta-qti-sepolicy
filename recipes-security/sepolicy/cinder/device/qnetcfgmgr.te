@@ -191,6 +191,7 @@ allow qnetcfgmgr_t system_dbusd_t:file { read open};
 
 allow ifconfig_t qnetcfgmgr_rt_table_t:file { read getattr open write };
 allow ifconfig_t qnetcfgmgr_t:netlink_route_socket { read write };
+allow ifconfig_t qnetcfgmgr_t:unix_stream_socket { read write };
 
 dontaudit qnetcfgmgr_t domain:file getattr;
 dontaudit qnetcfgmgr_t domain:dir getattr;
@@ -255,6 +256,7 @@ user_data_files_type(qnetcfgmgr_persist_qncm_t)
 manage_user_data_files(qnetcfgmgr_t, qnetcfgmgr_persist_qncm_t)
 allow qnetcfgmgr_t persist_t:dir search;
 allow initrc_t qnetcfgmgr_persist_qncm_t:dir setattr;
+allow qnetcfgmgr_t qnetcfgmgr_persist_qncm_t:file map;
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
