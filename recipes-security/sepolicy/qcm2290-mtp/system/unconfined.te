@@ -52,6 +52,7 @@ userdebug_or_eng(`
         type weston_runtime_t;
         type camera_data_t;
         type sysfs_cpu_capacity;
+        type sysfs_cpu_present;
     ')
 
     mls_file_read_all_levels(unconfined_t)

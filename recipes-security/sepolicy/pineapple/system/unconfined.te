@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 #### workaround for FOTA /usr/bin/recovery
@@ -60,6 +60,11 @@ userdebug_or_eng(`
         type fbe_secure_data_t;
         type hwfde_conf_file_t;
         type install_evict_t;
+	type image_size_sysfs_t;
+	type transparent_hugepage_sysfs_t;
+        type thermal-engine_exec_t;
+        type diag-router_exec_t;
+        type time_daemon_exec_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -73,19 +78,25 @@ userdebug_or_eng(`
     allow unconfined_t auditd_etc_t:dir { getattr read search };
     allow unconfined_t auditd_etc_t:file getattr;
     allow unconfined_t data_t:chr_file getattr;
-    allow unconfined_t cpu_sysfs_t:file rw_file_perms;
-    allow unconfined_t cpu_sysfs_t:dir { open read search getattr };
+    allow unconfined_t cpu_sysfs_t:file { create rw_file_perms };
+    allow unconfined_t cpu_sysfs_t:dir list_dir_perms;
     allow unconfined_t sysfs_panel0_backlight_bl_power_t:file getattr;
+    allow unconfined_t image_size_sysfs_t:file getattr;
+    allow unconfined_t transparent_hugepage_sysfs_t:dir list_dir_perms;
+    allow unconfined_t thermal-engine_exec_t:service { status stop start };
+    allow unconfined_t diag-router_exec_t:service { status stop start };
+    allow unconfined_t time_daemon_exec_t:service { status stop start };
     # allow map the files in /data/misc/camera
     allow unconfined_t camera_data_t:file map;
     allow unconfined_t policy_config_t:dir { getattr read search };
     allow unconfined_t policy_config_t:file getattr;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr;
-    allow unconfined_t usb_dev_t:dir { getattr read search open };
+    allow unconfined_t usb_dev_t:dir list_dir_perms;
     allow unconfined_t webserver_t:dir { read search open };
     allow unconfined_t webserver_t:file getattr;
     allow unconfined_t weston_runtime_t:sock_file { getattr setattr write };
-    allow unconfined_t weston_runtime_t:file { getattr setattr };
+    allow unconfined_t weston_runtime_t:file { open getattr setattr };
+    allow unconfined_t weston_runtime_t:dir list_dir_perms;
     allow unconfined_t cpu_scaling_freq_t:file { getattr read open };
     allow unconfined_t self:lockdown confidentiality;
     allow unconfined_t binderfs_t:filesystem getattr;
@@ -107,7 +118,10 @@ userdebug_or_eng(`
         type zspage_sysfs_t;
         type rfsa_adsp_lib_t;
         type mem_sleep_sysfs_t;
+        type thermal-engine_exec_t;
     ')
+
+    allow unconfined_t thermal-engine_exec_t:service { status start stop };
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     #For catf, which is internal test tool for audio
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
