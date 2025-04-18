@@ -70,6 +70,7 @@ gen_require(`
     type lib_t;
     type overlay_t;
     type systemd_unit_t;
+    type data_t;
 ')
 
 permissive mount_t;
