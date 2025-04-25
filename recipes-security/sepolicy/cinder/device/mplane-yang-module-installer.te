@@ -14,6 +14,11 @@ gen_require(`
  type mpss_persist_t;
  type rfs_persist_t;
  type unconfined_t;
+ type boot_t;
+ type cache_t;
+ type firmware_t;
+ type mnt_t;
+ type bkp_data_t;
 ')
 type mplane_app_t;
 
@@ -85,3 +90,12 @@ userdebug_or_eng(`
     allow unconfined_t mpss_persist_t:file { getattr read open };
     allow unconfined_t mpss_persist_t:dir { getattr read open search };
  ')
+
+
+# Don't audit rules. Because libyang is searching on multiple folders which creates
+#   some denials that are not blockers
+dontaudit mplane-yang-module-installer_t boot_t:dir { getattr };
+dontaudit mplane-yang-module-installer_t cache_t:dir { getattr };
+dontaudit mplane-yang-module-installer_t firmware_t:dir { getattr };
+dontaudit mplane-yang-module-installer_t mnt_t:dir { getattr };
+dontaudit initrc_t bkp_data_t:dir { getattr };
