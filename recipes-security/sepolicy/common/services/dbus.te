@@ -29,6 +29,9 @@ systemd_read_logind_runtime_files(system_dbusd_t)
 
 gen_require(`
 	type etc_t;
+	type overlay_t;
 ')
 
 allow system_dbusd_t etc_t:file map;
+
+allow system_dbusd_t overlay_t:dir search;

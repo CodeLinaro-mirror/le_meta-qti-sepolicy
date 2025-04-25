@@ -69,3 +69,11 @@ userdebug_or_eng(`
   allow diag-router_t boot_kpi_values_t:file { open write };
 ')
 
+gen_require(`
+    type overlay_t;
+    type usbfs_t;
+')
+
+allow diag-router_t overlay_t:dir search;
+allow diag-router_t usbfs_t:dir { open read search };
+allow diag-router_t usbfs_t:file { open read write };

@@ -207,3 +207,9 @@ optional_policy(`
     ')
     allow initrc_t servicemanager_t:binder call;
 ')
+
+gen_require(`
+    type overlay_t;
+')
+
+allow init_t overlay_t:dir write;
