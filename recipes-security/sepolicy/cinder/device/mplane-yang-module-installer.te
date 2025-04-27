@@ -78,7 +78,7 @@ allow mplane-yang-module-installer_t mplane_app_t:fifo_file unlink;
 allow mplane_app_t fs_t:filesystem associate;
 allow mplane-yang-module-installer_t socket_device_t:dir { search };
 allow initrc_t mplane_app_t:dir { getattr open read search add_name write remove_name setattr };
-allow initrc_t mplane_app_t:lnk_file { setattr create unlink };
+allow initrc_t mplane_app_t:lnk_file { setattr create unlink getattr read};
 allow initrc_t mplane_app_t:fifo_file { setattr };
 
 manage_user_data_files(initrc_t, mpss_persist_t)
