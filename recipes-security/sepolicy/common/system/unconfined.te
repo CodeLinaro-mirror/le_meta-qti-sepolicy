@@ -27,7 +27,7 @@
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -60,15 +60,14 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 userdebug_or_eng(`
-    gen_require(`
-        attribute user_data;
-        attribute system_data;
-        type alogd_t;
-        type node_t;
-        type data_t;
+    optional_policy(`
+        gen_require(`
+            attribute user_data;
+            attribute system_data;
+        ')
+        manage_user_data_files(unconfined_t, user_data)
+        manage_system_data_files(unconfined_t, system_data)
     ')
-    manage_user_data_files(unconfined_t, user_data)
-    manage_system_data_files(unconfined_t, system_data)
 
     dev_write_kmsg(unconfined_t)
     mls_file_write_all_levels(unconfined_t)
@@ -80,11 +79,16 @@ userdebug_or_eng(`
 #    wlan_start_stop(unconfined_t)
 
     # Audio test app
-    servicemanager_binder_use(unconfined_t)
-    audio_binder_call_transfer(unconfined_t)
-    allow unconfined_t self:capability2 block_suspend;
-    allow unconfined_t alogd_t:dir search;
-    shutdown_domtrans(unconfined_t)
+    optional_policy(`
+        gen_require(`
+            type alogd_t;
+        ')
+        servicemanager_binder_use(unconfined_t)
+        audio_binder_call_transfer(unconfined_t)
+        allow unconfined_t self:capability2 block_suspend;
+        allow unconfined_t alogd_t:dir search;
+        shutdown_domtrans(unconfined_t)
+    ')
 
     allow domain unconfined_t:unix_dgram_socket sendto;
     allow unconfined_t self:process execmem;
@@ -109,22 +113,35 @@ userdebug_or_eng(`
     ')
 
     # Ping from shell
-    allow unconfined_t node_t:icmp_socket node_bind;
-
+    optional_policy(`
+        gen_require(`
+            type node_t;
+        ')
+        allow unconfined_t node_t:icmp_socket node_bind;
+    ')
     # Run iperf from shell
-    allow unconfined_t data_t:file map;
+    optional_policy(`
+        gen_require(`
+            type data_t;
+        ')
+        allow unconfined_t data_t:file map;
+    ')
 
     #Cat gpu soc from shell
-    gen_require(`
-        type soc0_gpu_sysfs_t;
+    optional_policy(`
+        gen_require(`
+            type soc0_gpu_sysfs_t;
+        ')
+        allow unconfined_t soc0_gpu_sysfs_t:file read_file_perms;
     ')
-    allow unconfined_t soc0_gpu_sysfs_t:file read_file_perms;
 
     #Run df -h
-    gen_require(`
-        type usb_dev_t;
+    optional_policy(`
+        gen_require(`
+            type usb_dev_t;
+        ')
+        allow unconfined_t usb_dev_t:dir search;
     ')
-    allow unconfined_t usb_dev_t:dir search;
     gen_require(`
         type sysdevice_sysfs_t;
         type sysfs_vblank_t;
@@ -141,51 +158,63 @@ userdebug_or_eng(`
     allow unconfined_t encryption_control_t:file { rw_file_perms };
 
     #Run wifi commands
-    gen_require(`
-        type wlan_hsp_sysfs_t;
+    optional_policy(`
+        gen_require(`
+            type wlan_hsp_sysfs_t;
+        ')
+        allow unconfined_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
+        allow unconfined_t wlan_hsp_sysfs_t:file { rw_file_perms };
     ')
-    allow unconfined_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms rw_dir_perms };
-    allow unconfined_t wlan_hsp_sysfs_t:file { rw_file_perms };
-    gen_require(`
-      type gpumodel_t;
+    optional_policy(`
+        gen_require(`
+            type gpumodel_t;
+        ')
+        allow unconfined_t gpumodel_t:file read_file_perms;
     ')
-    allow unconfined_t gpumodel_t:file read_file_perms;
     #Collect kmsg
     gen_require(`
         type proc_kmsg_t;
     ')
     allow unconfined_t proc_kmsg_t:file read_file_perms;
 
-    gen_require(`
-	type unconfined_t;
-	type binderfs_t;
-	type hwbinder_device_t;
-	type vndbinder_device_t;
+    optional_policy(`
+        gen_require(`
+            type unconfined_t;
+            type binderfs_t;
+            type hwbinder_device_t;
+            type vndbinder_device_t;
+        ')
+
+        allow unconfined_t binderfs_t:dir { getattr open read search };
+        allow unconfined_t hwbinder_device_t:chr_file getattr;
+        allow unconfined_t vndbinder_device_t:chr_file getattr;
     ')
 
-    allow unconfined_t binderfs_t:dir { getattr open read search };
-    allow unconfined_t hwbinder_device_t:chr_file getattr;
-    allow unconfined_t vndbinder_device_t:chr_file getattr;
-
-    gen_require(`
-        type kerneltests_modules_data_t;
-    ')
-    allow unconfined_t self:lockdown { integrity };
-    allow unconfined_t kerneltests_modules_data_t:dir { read_file_perms search };
-    allow unconfined_t kerneltests_modules_data_t:file { read_file_perms };
-
-    gen_require(`
-	type cpu_scaling_freq_t;
-	type cpu_sysfs_t;
-	type sysfs_cpu_present;
+    optional_policy(`
+        gen_require(`
+            type kerneltests_modules_data_t;
+        ')
+        allow unconfined_t self:lockdown { integrity };
+        allow unconfined_t kerneltests_modules_data_t:dir { read_file_perms search };
+        allow unconfined_t kerneltests_modules_data_t:file { read_file_perms };
     ')
 
-    allow unconfined_t cpu_scaling_freq_t:file { getattr write_file_perms };
-    allow unconfined_t cpu_sysfs_t:dir { rw_dir_perms search };
-    allow unconfined_t cpu_sysfs_t:file read_file_perms;
-    allow unconfined_t sysfs_cpu_present:file { getattr };
+    optional_policy(`
+        gen_require(`
+            type cpu_scaling_freq_t;
+            type cpu_sysfs_t;
+            type sysfs_cpu_present;
+        ')
+
+        allow unconfined_t cpu_scaling_freq_t:file { getattr write_file_perms };
+        allow unconfined_t cpu_sysfs_t:dir { rw_dir_perms search };
+        allow unconfined_t cpu_sysfs_t:file read_file_perms;
+        allow unconfined_t sysfs_cpu_present:file { getattr };
+    ')
 
     # For test app to access qesdk
-    qesdk_adk_access(unconfined_t)
+    optional_policy(`
+        qesdk_adk_access(unconfined_t)
+    ')
     logging_send_syslog_msg(unconfined_t)
 ')

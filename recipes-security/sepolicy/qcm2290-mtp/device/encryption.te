@@ -1,0 +1,28 @@
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+#
+
+policy_module(encryption, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type hwfde_conf_file_t;
+
+gen_require(`
+type qseecom_device_t;
+type hwfde_service_t;
+type fbe_service_t;
+type device_t;
+')
+
+# allow hwfde_service and fbe-service to read metadata from media-encryption.conf file
+allow hwfde_service_t hwfde_conf_file_t:file read_file_perms;
+allow fbe_service_t hwfde_conf_file_t:file read_file_perms;
+
+# allow hwfde_service to do basic operation with qseecom driver
+rw_chr_files_pattern(hwfde_service_t, device_t, qseecom_device_t);
+rw_chr_files_pattern(fbe_service_t, device_t, qseecom_device_t);

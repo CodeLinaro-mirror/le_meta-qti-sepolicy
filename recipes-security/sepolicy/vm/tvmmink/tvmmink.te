@@ -90,11 +90,15 @@ allow tvmmink_sock_t device_t:filesystem associate;
 dev_rw_sysfs(tvmmink_t)
 
 # /tmp/minijail.dev.xxx/smcinvoke
+gen_require(`
+    bool allow_minijail_mount;
+')
 type tvmmink_tmpfs_t;
 files_tmpfs_file(tvmmink_tmpfs_t)
-
-fs_tmpfs_filetrans(tvmmink_t, tvmmink_tmpfs_t, file)
-allow tvmmink_t tvmmink_tmpfs_t:file { manage_file_perms mounton };
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(tvmmink_t, tvmmink_tmpfs_t, file)
+    allow tvmmink_t tvmmink_tmpfs_t:file { manage_file_perms mounton };
+}
 
 allow tvmmink_t smmu_proxy_device_t:chr_file { open read write ioctl getattr };
 
