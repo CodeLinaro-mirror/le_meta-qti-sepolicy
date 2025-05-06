@@ -4,7 +4,11 @@
 gen_require(`
     type qwesd_t;
     type qwes_mink_socket_t;
+    type locale_t;
+    type loc_hald_t;
 ')
+
+allow loc_hald_t locale_t:dir search;
 
 ### location hal daemon
 #Qwes operations
