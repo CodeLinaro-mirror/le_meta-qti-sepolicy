@@ -10,8 +10,9 @@
 
 gen_require(`
     type cpu_sysfs_t;
+    type sysfs_cpu_capacity;
 ')
 
 allow perf_hal_t cpu_sysfs_t:dir list_dir_perms;
 allow perf_hal_t cpu_sysfs_t:file rw_file_perms;
-
+allow perf_hal_t sysfs_cpu_capacity:file read_file_perms;
