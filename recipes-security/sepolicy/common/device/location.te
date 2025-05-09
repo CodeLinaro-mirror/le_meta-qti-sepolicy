@@ -25,7 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(location, 1.0)
@@ -210,6 +210,27 @@ userdebug_or_eng(`
 ')
 
 dontaudit loc_hald_t self:capability { dac_override dac_read_search };
+
+
+gen_require(`
+    type NetworkManager_runtime_t;
+    type NetworkManager_tmp_t;
+    type wlan_initrc_t;
+')
+
+# Allow dir and sock_file permissions for wpa_ctrl
+manage_sock_files_pattern(loc_hald_t, loc_tmp_t, loc_tmp_t)
+files_tmp_filetrans(loc_hald_t, loc_tmp_t, sock_file)
+
+write_sock_files_pattern(wlan_initrc_t, loc_tmp_t, loc_tmp_t)
+
+# Allow wpa_supplicant dir and sock_file permissions
+list_dirs_pattern(loc_hald_t, NetworkManager_runtime_t, NetworkManager_runtime_t)
+rw_sock_files_pattern(loc_hald_t, NetworkManager_runtime_t, NetworkManager_runtime_t)
+
+#Allow send permissions to wpa_supplicant socket
+allow loc_hald_t wlan_initrc_t:unix_dgram_socket sendto;
+allow wlan_initrc_t loc_hald_t:unix_dgram_socket sendto;
 
 ### xtwifi_agent
 
