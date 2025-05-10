@@ -1,0 +1,30 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+#
+## <summary>auto_audio_hal</summary>
+
+########################################
+## <summary>
+##      auto audio hal access
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+
+interface(`auto_audio_hal_access',`
+    gen_require(`
+        type sound_device_t;
+        type urandom_device_t;
+        type device_t;
+        type snd_card_state_t;
+        type system_uncached_dmabuf_device_t;
+    ')
+    allow $1 sound_device_t:chr_file { map };
+    allow $1 urandom_device_t:chr_file { read open };
+    # the file corresponding to below denial is - /sys/kernel/snd_card/card_state
+    allow $1 snd_card_state_t:file { read getattr open write };
+    rw_chr_files_pattern($1, device_t, system_uncached_dmabuf_device_t);
+')
