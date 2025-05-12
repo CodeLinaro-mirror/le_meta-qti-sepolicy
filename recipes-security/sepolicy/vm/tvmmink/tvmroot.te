@@ -154,3 +154,4 @@ gen_require(`
     type tvmprelauncher_t;
 ')
 neverallow { domain -tvmroot_t -tvmprelauncher_t } tvmroot_sock_t:sock_file rw_sock_file_perms;
+platform_container_bind_mount(dloemservice_t, tvmmink_sock_t, sock_file);
