@@ -22,19 +22,19 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 #  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#userdebug_or_eng(`
+userdebug_or_eng(`
     # For overlayfs
-allow domain kernel_t:fd use;
-mls_fd_share_all_levels(kernel_t)
-allow kernel_t file_type:{ dir file } create;
-mls_file_write_all_levels(kernel_t)
-mls_file_upgrade(kernel_t)
-mls_file_downgrade(kernel_t)
+    allow domain kernel_t:fd use;
+    mls_fd_share_all_levels(kernel_t)
+    allow kernel_t file_type:{ dir file } create;
+    mls_file_write_all_levels(kernel_t)
+    mls_file_upgrade(kernel_t)
+    mls_file_downgrade(kernel_t)
 
-# mounting overlay from initramfs happens before SELinux is initialized. As a result,
-#  the root directory is unlabeled until something can correct the label. Restorecon
-#  is not possible before the SELinux server is initialized and some services need to
-#  run before systemd-tmpfiles can run. Allow searching through / until a workaround
-#  can be found. New files created in the overlay acquire the correct context
-allow domain unlabeled_t:dir search;
-#')
+    # mounting overlay from initramfs happens before SELinux is initialized. As a result,
+    #  the root directory is unlabeled until something can correct the label. Restorecon
+    #  is not possible before the SELinux server is initialized and some services need to
+    #  run before systemd-tmpfiles can run. Allow searching through / until a workaround
+    #  can be found. New files created in the overlay acquire the correct context
+    allow domain unlabeled_t:dir search;
+')
