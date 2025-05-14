@@ -33,6 +33,7 @@ gen_require(`
     type syslogd_t;
     type devlog_t;
     type cache_t;
+    type dosfs_t;
     type manifest_t;
     type unreserved_port_t;
     class service { start status stop reload };
@@ -72,7 +73,11 @@ allow swmgr_t manifest_t:file read_file_perms;
 
 allow recovery_t mplane_app_t:dir search_dir_perms;
 allow recovery_t mplane_app_t:file { rw_file_perms map };
-allow recovery_t fs_t:filesystem getattr;
+allow recovery_t fs_t:filesystem { getattr mount relabelfrom };
+allow recovery_t dosfs_t:filesystem { relabelfrom };
+allow recovery_t cache_t:filesystem { getattr mount relabelfrom relabelto };
+allow recovery_t manifest_t:filesystem { mount unmount relabelfrom relabelto };
+allow recovery_t manifest_t:dir { mounton };
 
 allow adbd_t mplane_app_t:dir { add_name getattr search write };
 allow adbd_t mplane_app_t:file { create setattr rw_file_perms };
