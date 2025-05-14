@@ -48,6 +48,7 @@ allow faultmgr_t faultmgr_conf_t:file {read write open getattr};          #/etc/
 allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
 allow faultmgr_t devlog_t:sock_file write;
 allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
+allow faultmgr_t sysfs_t:dir read;                         # /sys/kernel/reset_reason/
 allow faultmgr_t var_log_t:file { read write open getattr };
 allow alogd_t pmsg0_t:chr_file open;
 allow faultmgr_t init_var_run_t:dir search;
