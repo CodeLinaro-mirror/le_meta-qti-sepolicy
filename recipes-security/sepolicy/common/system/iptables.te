@@ -31,7 +31,9 @@ userdebug_or_eng(`
 
 gen_require(`
     type systemd_tmpfiles_t;
+    type overlay_t;
 ')
 systemd_tmpfilesd_managed(iptables_runtime_t)
 allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
 dontaudit iptables_t self:capability { kill };
+allow iptables_t overlay_t:dir search_dir_perms;
