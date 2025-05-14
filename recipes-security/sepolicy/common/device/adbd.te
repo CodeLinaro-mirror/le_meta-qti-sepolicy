@@ -266,3 +266,10 @@ allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
 allow usb_t image_variant_sysfs_t:dir search;
 allow usb_t image_variant_sysfs_t:file read_file_perms;
+
+gen_require(`
+    type overlay_t;
+')
+allow adbd_initrc_t overlay_t:dir rw_dir_perms;
+
+allow usb_t etc_t:dir add_entry_dir_perms;

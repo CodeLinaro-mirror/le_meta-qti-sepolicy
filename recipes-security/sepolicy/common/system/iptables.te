@@ -35,3 +35,8 @@ gen_require(`
 systemd_tmpfilesd_managed(iptables_runtime_t)
 allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
 dontaudit iptables_t self:capability { kill };
+
+gen_require(`
+    type overlay_t;
+')
+allow iptables_t overlay_t:dir search_dir_perms;

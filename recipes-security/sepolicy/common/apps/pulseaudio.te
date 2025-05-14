@@ -106,6 +106,7 @@ gen_require(`
  type system_dbusd_var_lib_t;
  type default_t;
  type system_dmabuf_device_t;
+ type etc_runtime_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
@@ -118,3 +119,5 @@ allow pulseaudio_t system_dmabuf_device_t:chr_file { read_chr_file_perms };
 
 mls_socket_write_all_levels(pulseaudio_t)
 mls_socket_read_all_levels(pulseaudio_t)
+
+allow pulseaudio_t etc_runtime_t:file read_file_perms;

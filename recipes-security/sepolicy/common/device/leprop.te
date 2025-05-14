@@ -69,3 +69,8 @@ allow setprop_t self:unix_stream_socket { create write connect };
 init_dontaudit_use_fds(setprop_t)
 term_dontaudit_use_unallocated_ttys(setprop_t)
 
+gen_require(`
+    type overlay_t;
+')
+allow leprop_t overlay_t:dir search_dir_perms;
+allow setprop_t overlay_t:dir search_dir_perms;

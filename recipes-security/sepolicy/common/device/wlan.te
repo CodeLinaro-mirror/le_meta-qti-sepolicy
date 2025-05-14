@@ -130,3 +130,16 @@ allow wlan_initrc_t wifi_data_t:sock_file { unlink create };
 allow wlan_initrc_t sysctl_net_t:file getattr;
 allow wlan_initrc_t syslogd_runtime_t:dir search;
 allow wlan_initrc_t init_runtime_t:dir search;
+
+allow wlan_initrc_t default_t:file read_file_perms;
+allow wlan_initrc_t self:netlink_socket create_socket_perms;
+
+gen_require(`
+    type mnt_t;
+    type leprop_sock_t;
+    type leprop_t;
+')
+
+allow wlan_initrc_t mnt_t:dir search_dir_perms;
+allow wlan_initrc_t leprop_sock_t:sock_file write_sock_file_perms;
+allow wlan_initrc_t leprop_t:unix_stream_socket connectto;

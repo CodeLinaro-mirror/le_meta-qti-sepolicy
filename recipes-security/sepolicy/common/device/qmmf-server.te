@@ -151,3 +151,19 @@ userdebug_or_eng(`
 manage_qmmf_data_files(qmmf_server_t)
 manage_camera_files_data(qmmf_server_t)
 device_search_sockets(qmmf_server_t)
+
+gen_require(`
+    type system_dmabuf_device_t;
+    type rfsa_adsp_lib_t;
+    type syslogd_runtime_t;
+    type adsprpcd_t;
+    type binderfs_t;
+    type binder_device_t;
+')
+allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+allow qmmf_server_t rfsa_adsp_lib_t:dir search_dir_perms;
+allow qmmf_server_t syslogd_runtime_t:dir search_dir_perms;
+allow qmmf_server_t adsprpcd_t:dir search_dir_perms;
+allow qmmf_server_t binderfs_t:dir search_dir_perms;
+allow qmmf_server_t binder_device_t:chr_file map;
+allow qmmf_server_t self:qipcrtr_socket create;

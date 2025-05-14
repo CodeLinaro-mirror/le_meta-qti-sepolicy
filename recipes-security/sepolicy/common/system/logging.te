@@ -103,3 +103,8 @@
     allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
     allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
 #')
+
+gen_require(`
+    type overlay_t;
+')
+allow syslogd_t overlay_t:dir search_dir_perms;
