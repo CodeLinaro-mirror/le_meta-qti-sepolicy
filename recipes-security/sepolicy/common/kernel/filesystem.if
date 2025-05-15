@@ -119,3 +119,25 @@ interface(`fs_blk_getattr_tmpfs',`
 
         allow $1 tmpfs_t:blk_file getattr;
 ')
+
+########################################
+## <summary>
+##    Rules for accessing boot kpi driver node.
+## </summary>
+## <desc>
+##    <p>
+##    Allow the specified domain to access boot kpi driver node
+##    </p>
+## </desc>
+## <param name="domain">
+##    <summary>
+##    Rules for accessing boot kpi ver node.
+##    </summary>
+## </param>
+#
+interface(`access_bootkpi_node',`
+        gen_require(`
+            type boot_kpi_values_t;
+        ')
+        allow $1 boot_kpi_values_t:file { write open getattr };
+')

@@ -184,6 +184,10 @@ userdebug_or_eng(`
     corecmd_exec_shell(loc_t);
 ')
 
+# boot KPI
+access_bootkpi_node(loc_hald_t);
+access_bootkpi_node(xtra_daemon_t);
+
 # temporary fix till /target changes are made cr#2387138
 read_files_pattern(loc_hald_t, default_t, default_t);
 data_filetrans(loc_hald_t, loc_data_t, { file dir })
