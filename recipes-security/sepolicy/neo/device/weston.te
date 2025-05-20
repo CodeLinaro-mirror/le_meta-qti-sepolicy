@@ -71,7 +71,7 @@ type weston_exec_t;
 type weston_socket_device_t;
 type weston_usr_t;
 
-init_vendor_domain(weston_t, weston_exec_t)
+init_daemon_domain(weston_t, weston_exec_t)
 
 #domain Transition from unconfined_t to weston_t when executing from adb shell
 userdebug_or_eng(`
@@ -117,7 +117,7 @@ gen_require(`
 ')
 
 dontaudit weston_t self:capability { setuid sys_admin } ;
-allow weston_t self:capability { net_admin sys_nice sys_tty_config } ;
+allow weston_t self:capability { net_admin sys_nice sys_tty_config kill };
 allow weston_t sysfs_t:dir read; #/sys/devices/platform/soc/
 allow weston_t sysfs_t:file { read getattr open }; #/sys/devices/platform/soc/
 allow weston_t sysfs_t:lnk_file { read getattr }; #/sys/class/drm/card0-DSI-1
@@ -140,7 +140,7 @@ files_type(weston_socket_device_t);
 dev_node(weston_socket_device_t);
 device_search_sockets(weston_t)
 allow weston_t weston_socket_device_t:dir manage_dir_perms;
-allow weston_t weston_socket_device_t:file manage_file_perms;
+allow weston_t weston_socket_device_t:file { manage_file_perms setattr };
 allow weston_t weston_socket_device_t:sock_file manage_sock_file_perms;
 
 allow weston_t self:process setsched;
@@ -154,7 +154,6 @@ allow weston_t weston_usr_t:dir search_dir_perms;
 allow weston_t weston_usr_t:file read_file_perms;
 
 mls_file_read_all_levels(weston_t);
-allow weston_t self:capability kill;
 allow weston_t brightness_t:file rw_file_perms;
 allow weston_t etc_t:file read_file_perms;
 allow weston_t etc_t:lnk_file read_lnk_file_perms;
@@ -177,6 +176,8 @@ allow weston_t user_runtime_root_t:dir add_entry_dir_perms;
 allow weston_t user_runtime_root_t:file { rw_file_perms create unlink };
 allow weston_t user_runtime_root_t:sock_file { create_sock_file_perms unlink };
 allow weston_t user_runtime_root_t:dir manage_dir_perms;
+allow weston_t user_runtime_root_t:sock_file setattr;
+allow weston_t user_runtime_root_t:file setattr;
 allow weston_t usr_t:dir list_dir_perms;
 allow weston_t usr_t:file read_file_perms;
 allow weston_t xkb_var_lib_t:file { read_file_perms map };
@@ -192,6 +193,8 @@ allow weston_t sysfs_cpu_capacity:file read_file_perms;
 allow weston_t sysfs_cpu_present:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
 allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
+allow weston_t self:fifo_file { read write getattr };
+allow weston_t weston_exec_t:file execute_no_trans;
 
 userdebug_or_eng(`
      gen_require(`
