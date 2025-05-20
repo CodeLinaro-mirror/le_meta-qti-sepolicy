@@ -12,4 +12,6 @@ genfscon sysfs /devices/soc0/image_variant  gen_context(system_u:object_r:image_
 genfscon sysfs /devices/soc0/image_crm_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
 dev_associate_sysfs(image_variant_sysfs_t)
 
-genfscon sysfs /devices/platform/soc/c800000.qcom,icnss gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+type brightness_sysfs_t;
+genfscon sysfs /devices/platform/soc/5e00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness gen_context(system_u:object_r:brightness_sysfs_t,s0)
+dev_associate_sysfs(brightness_sysfs_t)

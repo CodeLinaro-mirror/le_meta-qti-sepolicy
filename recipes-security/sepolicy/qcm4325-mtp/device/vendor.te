@@ -45,3 +45,10 @@ allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
+
+gen_require(`
+    type modules_object_t;
+')
+
+allow touch_script_t modules_object_t:dir search;
+allow touch_script_t self:fifo_file { rw_inherited_file_perms };
