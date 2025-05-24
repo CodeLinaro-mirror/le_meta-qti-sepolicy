@@ -32,6 +32,9 @@ gen_require(`
     type removable_device_t;
     type fs_t;
     type setfiles_t;
+    type power_unit_t;
+    type sysctl_kernel_t;
+    type sysctl_t;
     class service { start status stop reload };
 ')
 
@@ -75,6 +78,22 @@ allow abupdater_log_t fs_t:filesystem { associate };
 
 # allow rules to check the status of other service
 allow { ab_updater_t } file_type:{ service } { status };
+
+allow ab_updater_t abupdater_log_t:file ioctl;
+allow ab_updater_t init_t:lnk_file read;
+allow ab_updater_t init_t:unix_stream_socket connectto;
+allow ab_updater_t power_unit_t:service start;
+allow ab_updater_t proc_t:file ioctl;
+allow ab_updater_t sysctl_kernel_t:dir search;
+allow ab_updater_t sysctl_kernel_t:file { getattr ioctl open read };
+allow ab_updater_t sysctl_t:dir search;
+
+#============= initrc_t ==============
+allow initrc_t abupdater_log_t:dir { add_name getattr search write };
+allow initrc_t abupdater_log_t:file { append create getattr open read write };
+
+#============= setfiles_t ==============
+allow setfiles_t abupdater_log_t:dir { getattr open read relabelto };
 
 #Manage Dbus sockets
 ifdef(`init_systemd',`
