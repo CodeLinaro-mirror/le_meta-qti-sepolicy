@@ -58,3 +58,4 @@ allow mount_t self:capability { dac_read_search };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow mount_t self:capability fowner;
 allow mount_t alsa_etc_t:lnk_file { getattr read };
+allow mount_t self:capability fsetid;
