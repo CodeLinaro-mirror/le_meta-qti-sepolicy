@@ -1,4 +1,4 @@
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(fbe-service, 1.0)
@@ -67,6 +67,5 @@ allow fbe_service_t socket_device_t:dir search_dir_perms;
 allow fbe_service_t fbe_secure_data_t:file { create };
 allow fbe_service_t firmware_t:dir search_dir_perms;
 allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
-allow fsadm_t self:lockdown integrity;
 allow fbe_service_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t self:process signal;

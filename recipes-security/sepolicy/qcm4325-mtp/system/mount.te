@@ -25,36 +25,34 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Technologies, Inc. are provided under the following license:
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-type ashmem_devices_t;
-dev_node(ashmem_devices_t);
-
 gen_require(`
-    type cpu_sysfs_t;
-    type storage_disk_device_t;
-    type queue_sysfs_t;
-    type image_variant_sysfs_t;
-    type power_sysfs_t;
+    attribute file_type;
+    attribute user_data;
+    attribute system_data;
+    type mount_copybind_t;
+    type unconfined_mount_t;
+    type mount_t;
+    type alsa_etc_t;
+    type data_t;
+    type system_dbusd_var_lib_t;
+    type var_lib_t;
+    type var_t;
+    type wifi_data_t;
+    type hwfde_conf_file_t;
 ')
 
-allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
-allow post_boot_script_t cpu_sysfs_t:file { create write_file_perms };
-allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
-allow post_boot_script_t queue_sysfs_t:dir add_entry_dir_perms;
-allow post_boot_script_t queue_sysfs_t:file { rw_file_perms create };
-allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
-allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
-allow post_boot_script_t power_sysfs_t:file write_file_perms;
+#for overlayfs
+permissive mount_t;
+permissive mount_copybind_t;
+permissive unconfined_mount_t;
+allow mount_t hwfde_conf_file_t:file read_file_perms;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
+dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
 
-#sepolicy for touch start le script
-gen_require(`
-    type modules_object_t;
-')
-
-allow touch_script_t modules_object_t:dir search;
-allow touch_script_t self:fifo_file { rw_inherited_file_perms };
-allow touch_script_t modules_object_t:file getattr;
-allow initrc_t touch_script_exec_t:file entrypoint;
+allow mount_t self:capability { dac_read_search };
+allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
