@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type power_sysfs_t;
@@ -27,3 +27,5 @@ dev_associate_sysfs(zspage_sysfs_t)
 type mem_sleep_sysfs_t;
 genfscon sysfs /power/mem_sleep gen_context(system_u:object_r:mem_sleep_sysfs_t,s0)
 dev_associate_sysfs(mem_sleep_sysfs_t)
+
+genfscon sysfs /devices/platform/soc/c800000.qcom,icnss gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
