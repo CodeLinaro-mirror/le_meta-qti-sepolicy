@@ -42,6 +42,9 @@ gen_require(`
  type var_run_t;
  type kernel_t;
  type debugfs_t;
+ type dev_dri_t;
+ type cpu_sysfs_t;
+ type tracefs_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
@@ -98,3 +101,12 @@ allow systemd_update_done_t sysctl_t:dir search;
 allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
+
+allow udev_t cpu_sysfs_t:file write;
+allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name };
+allow udev_t dev_dri_t:lnk_file { create rename unlink };
+
+userdebug_or_eng(`
+ allow systemd_modules_load_t self:lockdown confidentiality;
+ allow systemd_modules_load_t tracefs_t:dir search;
+')
