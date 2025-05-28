@@ -50,6 +50,7 @@ userdebug_or_eng(`
         type rebootd_pipe_t;
         type webserver_t;
         type weston_runtime_t;
+        type camera_data_t;
         type sysfs_cpu_capacity;
     ')
 
@@ -65,6 +66,7 @@ userdebug_or_eng(`
     allow unconfined_t auditd_etc_t:file getattr;
     allow unconfined_t data_t:chr_file getattr;
     # allow map the files in /data/misc/camera
+    allow unconfined_t camera_data_t:file map;
     allow unconfined_t policy_config_t:dir { getattr read search };
     allow unconfined_t policy_config_t:file getattr;
     allow unconfined_t rebootd_pipe_t:fifo_file getattr;
