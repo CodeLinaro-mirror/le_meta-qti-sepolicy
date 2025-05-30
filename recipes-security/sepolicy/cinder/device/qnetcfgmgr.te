@@ -164,7 +164,7 @@ allow qnetcfgmgr_t tftp_server_t:file { read open };
 allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
 allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
-allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink ioctl };
 
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
@@ -261,7 +261,7 @@ allow qnetcfgmgr_t qnetcfgmgr_persist_qncm_t:file map;
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
 allow qnetcfgmgr_t self:process { sigkill };
-allow qnetcfgmgr_t dhcpc_t:process sigkill;
+allow qnetcfgmgr_t dhcpc_t:process { sigkill signull };
 files_read_etc_files(qnetcfgmgr_t)
 files_read_etc_files(qcm_etc_t)
 allow qcm_etc_t qcm_etc_t:file rw_file_perms;
