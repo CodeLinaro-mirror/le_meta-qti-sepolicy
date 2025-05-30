@@ -276,7 +276,7 @@ allow qnetcfgmgr_t faultmgr_t:dbus send_msg;
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
 allow qnetcfgmgr_t self:process { sigkill };
-allow qnetcfgmgr_t dhcpc_t:process sigkill;
+allow qnetcfgmgr_t dhcpc_t:process { sigkill signull };
 files_read_etc_files(qnetcfgmgr_t)
 files_read_etc_files(qcm_etc_t)
 allow qcm_etc_t qcm_etc_t:file rw_file_perms;
