@@ -37,6 +37,9 @@ gen_require(`
     type storage_disk_device_t;
     type image_variant_sysfs_t;
     type power_sysfs_t;
+    type zs_handle_sysfs_t;
+    type zspage_sysfs_t;
+    type mem_sleep_sysfs_t;
 ')
 
 allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
@@ -44,7 +47,6 @@ allow post_boot_script_t cpu_sysfs_t:file { create write_file_perms };
 allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
-allow post_boot_script_t power_sysfs_t:file write_file_perms;
 
 gen_require(`
     type modules_object_t;
@@ -52,3 +54,10 @@ gen_require(`
 
 allow touch_script_t modules_object_t:dir search;
 allow touch_script_t self:fifo_file { rw_inherited_file_perms };
+allow post_boot_script_t power_sysfs_t:file { rw_file_perms create};
+allow post_boot_script_t zs_handle_sysfs_t:dir { write getattr search add_name };
+allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t zspage_sysfs_t:dir { write open search getattr };
+allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t mem_sleep_sysfs_t:dir { add_name };
+allow post_boot_script_t mem_sleep_sysfs_t:file { rw_file_perms create };
