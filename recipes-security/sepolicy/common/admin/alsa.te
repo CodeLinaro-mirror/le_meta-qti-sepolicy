@@ -28,3 +28,8 @@
 files_map_etc_files(alsa_t)
 
 allow alsa_t user_home_t:dir search;
+
+gen_require(`
+    type overlay_t;
+')
+allow alsa_t overlay_t:dir search;
