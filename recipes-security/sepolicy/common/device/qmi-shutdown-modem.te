@@ -70,6 +70,9 @@ gen_require(`
     type init_var_run_t;
     type default_t;
     type socket_device_t;
+    type mss_exec_t;
+    type audio_unit_t;
+    class service { stop };
 ')
 
 userdebug_or_eng(`
@@ -101,5 +104,8 @@ ifdef(`init_systemd', `
 	allow qmi_shutdown_modem_t systemd_logind_var_run_t:sock_file write;
 	init_read_state(qmi_shutdown_modem_t)
 	kernel_read_system_state(qmi_shutdown_modem_t)
+	allow qmi_shutdown_modem_t self:dbus send_msg;
+	allow qmi_shutdown_modem_t mss_exec_t:service { stop };
+	allow qmi_shutdown_modem_t audio_unit_t:service { stop };
 ')
 allow qmi_shutdown_modem_t self:qipcrtr_socket create_socket_perms;
