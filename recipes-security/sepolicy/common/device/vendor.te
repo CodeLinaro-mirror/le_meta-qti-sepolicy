@@ -399,3 +399,6 @@ allow post_boot_script_t sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t sysfs_t:file create_file_perms;
 allow post_boot_script_t overlay_t:dir search_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
+
+type qmi_fw_vendor_t;
+files_type(qmi_fw_vendor_t)

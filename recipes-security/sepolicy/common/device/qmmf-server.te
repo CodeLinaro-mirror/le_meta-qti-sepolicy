@@ -168,6 +168,7 @@ gen_require(`
     type vendor_dmabuf_system_heap_device_t;
     type sysctl_vm_t;
     type sysctl_vm_overcommit_t;
+    type qmi_fw_vendor_t;
 ')
 allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t rfsa_adsp_lib_t:dir { manage_dir_perms watch };
@@ -191,3 +192,4 @@ allow qmmf_server_t cpu_sysfs_t:dir search_dir_perms;
 allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t sysctl_vm_t:dir search_dir_perms;
 allow qmmf_server_t sysctl_vm_overcommit_t:file read_file_perms;
+allow qmmf_server_t qmi_fw_vendor_t:file read_file_perms;
