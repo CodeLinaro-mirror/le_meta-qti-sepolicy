@@ -92,6 +92,7 @@ type init_runtime_t;
 type mnt_t;
 type leprop_sock_t;
 type leprop_t;
+type qmi_fw_vendor_t;
 ')
 
 userdebug_or_eng(`
@@ -140,3 +141,4 @@ allow wlan_initrc_t self:netlink_socket create_socket_perms;
 allow wlan_initrc_t mnt_t:dir search_dir_perms;
 allow wlan_initrc_t leprop_sock_t:sock_file write_sock_file_perms;
 allow wlan_initrc_t leprop_t:unix_stream_socket connectto;
+allow wlan_initrc_t qmi_fw_vendor_t:file read_file_perms;

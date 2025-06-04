@@ -399,3 +399,6 @@ allow post_boot_script_t overlay_t:dir search_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
 
 allow tftp_server_t overlay_t:dir setattr_dir_perms;
+
+type qmi_fw_vendor_t;
+files_type(qmi_fw_vendor_t)

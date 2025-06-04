@@ -119,6 +119,7 @@ gen_require(`
   type firmware_t;
   type overlay_t;
   type multicast_querier_sysfs_t;
+  type qmi_fw_vendor_t;
 ')
 
 userdebug_or_eng(`
@@ -661,3 +662,4 @@ dontaudit iptables_t ipa_fw_device_t:chr_file { read write};
 
 allow ifconfig_t overlay_t:dir search_dir_perms;
 allow qcmap_cm_t multicast_querier_sysfs_t:file write_file_perms;
+allow qcmap_cm_t qmi_fw_vendor_t:file read_file_perms;
