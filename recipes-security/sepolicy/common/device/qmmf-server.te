@@ -152,6 +152,7 @@ userdebug_or_eng(`
         type debugfs_t;
         type tracefs_t;
         type trace_marker_t;
+        type unconfined_execmem_t;
     ')
 
     rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
@@ -162,6 +163,7 @@ userdebug_or_eng(`
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t unconfined_execmem_t:binder call;
 ')
 
 manage_qmmf_data_files(qmmf_server_t)

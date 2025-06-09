@@ -275,6 +275,10 @@ userdebug_or_eng(`
         type snd_card_state_t;
         type rfsa_adsp_lib_t;
         type binderfs_t;
+        type data_t;
+        type overlay_t;
+        type qmmf_server_t;
+        type servicemanager_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
@@ -282,4 +286,11 @@ userdebug_or_eng(`
     allow unconfined_t rfsa_adsp_lib_t:dir { list_dir_perms watch };
     allow unconfined_t rfsa_adsp_lib_t:file read_file_perms;
     allow unconfined_t binderfs_t:filesystem getattr;
+    allow unconfined_execmem_t binderfs_t:dir search;
+    allow unconfined_execmem_t data_t:dir { add_name write };
+    #allow unconfined_execmem_t data_t:file { create getattr open write };
+    manage_user_data_files(unconfined_execmem_t, data_t)
+    allow unconfined_execmem_t overlay_t:dir { add_name search write };
+    allow unconfined_execmem_t qmmf_server_t:binder { call transfer };
+    allow unconfined_execmem_t servicemanager_t:binder call;
 ')
