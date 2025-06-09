@@ -52,6 +52,7 @@ userdebug_or_eng(`
         type weston_runtime_t;
         type camera_data_t;
         type sysfs_cpu_capacity;
+        type sysfs_cpu_present;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -90,4 +91,6 @@ userdebug_or_eng(`
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
     allow unconfined_t snd_card_state_t:file { rw_file_perms };
+    allow unconfined_t sysfs_cpu_capacity:file read_file_perms;
+    allow unconfined_t sysfs_cpu_present:file read_file_perms;
 ')

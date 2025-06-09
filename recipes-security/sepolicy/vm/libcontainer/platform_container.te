@@ -134,3 +134,11 @@ if (allow_minijail_mount) {
     selinux_get_fs_mount(platform_container_domain)
     seutil_read_config(platform_container_domain)
 }
+
+# Disallow TVMRoot and child processes from using execmem|heap|stack|mod
+gen_require(`
+    attribute file_type;
+    type textrel_shlib_t;
+')
+neverallow { platform_launcher_domain platform_container_domain } self:process { execmem execheap execstack };
+neverallow { platform_launcher_domain platform_container_domain } { file_type -textrel_shlib_t }:file execmod;
