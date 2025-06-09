@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmmink, 1.0)
@@ -61,7 +61,7 @@ allow tvmmink_t self:fifo_file write;
 allow tvmmink_t self:capability2 block_suspend;
 allow tvmmink_t self:process { signull signal };
 allow tvmmink_t self:qipcrtr_socket { create setopt getattr write read connect shutdown };
-allow tvmmink_t self:socket { create bind getattr read connect write };
+allow tvmmink_t self:socket { create bind getattr read connect write listen shutdown accept };
 allow tvmmink_t self:vsock_socket create;
 allow tvmmink_t self:unix_stream_socket { accept listen };
 allow tvmmink_t smcinvoke_device_t:chr_file { getattr read write open ioctl };
@@ -82,7 +82,7 @@ allow tvmmink_t vendor_dmabuf_ms5_heap_device_t:chr_file { getattr read_chr_file
 allow tvmmink_t vendor_dmabuf_ms6_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t vendor_dmabuf_ms7_heap_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmmink_t socket_device_t:dir { watch };
-allow tvmmink_t etc_t:file { read open };
+allow tvmmink_t etc_t:file { read open getattr };
 
 allow tvmmink_sock_t device_t:filesystem associate;
 
