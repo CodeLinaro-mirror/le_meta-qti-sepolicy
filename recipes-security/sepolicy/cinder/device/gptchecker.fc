@@ -1,0 +1,6 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+# gpt checker executables and conf file
+/usr/sbin/gptchecker     -- gen_context(system_u:object_r:gpt_checker_exec_t,s0)
