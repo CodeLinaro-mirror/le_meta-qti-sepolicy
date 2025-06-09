@@ -290,6 +290,7 @@ gen_require(`
  type sysctl_net_t;
  type tuicoreservice_data_t;
  type unreserved_port_t;
+ type user_home_t;
 ')
 
 allow weston_t cgroup_t:filesystem getattr;
@@ -308,3 +309,4 @@ allow weston_t sysctl_net_t:dir search;
 allow weston_t sysctl_net_t:file { getattr open read };
 allow weston_t tuicoreservice_data_t:file read_file_perms;
 allow weston_t unreserved_port_t:tcp_socket name_bind;
+allow weston_t user_home_t:dir search;
