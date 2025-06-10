@@ -107,6 +107,13 @@ gen_require(`
  type default_t;
  type system_dmabuf_device_t;
  type etc_runtime_t;
+ type adsprpcd_t;
+ type qmi_fw_vendor_t;
+ type rfsa_adsp_lib_t;
+ type system_uncached_dmabuf_device_t;
+ type binderfs_t;
+ type binder_device_t;
+ type servicemanager_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
@@ -121,3 +128,11 @@ mls_socket_write_all_levels(pulseaudio_t)
 mls_socket_read_all_levels(pulseaudio_t)
 
 allow pulseaudio_t etc_runtime_t:file read_file_perms;
+
+allow pulseaudio_t adsprpcd_t:dir search_dir_perms;
+allow pulseaudio_t qmi_fw_vendor_t:file read_file_perms;
+allow pulseaudio_t rfsa_adsp_lib_t:dir search_dir_perms;
+allow pulseaudio_t system_uncached_dmabuf_device_t:chr_file read_chr_file_perms;
+allow pulseaudio_t binderfs_t:dir search;
+allow pulseaudio_t binder_device_t:chr_file { map rw_chr_file_perms };
+allow pulseaudio_t servicemanager_t:binder call;
