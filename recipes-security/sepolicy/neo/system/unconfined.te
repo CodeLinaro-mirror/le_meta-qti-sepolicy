@@ -105,6 +105,6 @@ userdebug_or_eng(`
     allow unconfined_t panel_pixel_shift_t:dir { search_dir_perms read write};
     allow unconfined_t panel_pixel_shift_t:file rw_file_perms;
     allow unconfined_t weston_exec_t:service { start stop status };
-    allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
-    allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
+    allow unconfined_t rfsa_adsp_lib_t:dir { watch manage_dir_perms };
+    allow unconfined_t rfsa_adsp_lib_t:file { manage_file_perms exec_file_perms };
 ')
