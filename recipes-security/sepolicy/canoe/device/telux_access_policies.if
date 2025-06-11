@@ -1,0 +1,1200 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> telux_access_policies </summary>
+
+##################################################################################################
+# Interfaces to control access for CV2X related APIs in SDK
+##################################################################################################
+
+# Interface to get access for cv2x configuration related APIs.
+# @brief: This interface allows the client to update/get the v2x.xml file, set the cv2x IP interface's
+# global IP adresses, unicast routing infomation, transmit power, change L2 address, update malicious
+# or trusted UEs' source IDs, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_cv2x_config',`
+    gen_require(`
+        type telux_access_cv2x_config_t;
+    ')
+    allow $1 telux_access_cv2x_config_t:file {getattr};
+')
+
+# Interface to get access for cv2x status information
+# @brief: This interface allows the client to get cv2x status, register/deregister a listener callback
+# for cv2x transmit status, enable or disable cv2x received messages' meta data, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_cv2x_info',`
+    gen_require(`
+        type telux_access_cv2x_info_t;
+    ')
+    allow $1 telux_access_cv2x_info_t:file {getattr};
+')
+
+# Interface to get access for activating/deactivating v2x mode
+# @brief: This interface allows the client to activate/deactivate cv2x mode.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_cv2x_ops',`
+    gen_require(`
+        type telux_access_cv2x_ops_t;
+    ')
+    allow $1 telux_access_cv2x_ops_t:file {getattr};
+')
+
+# Interface to get access for cv2x flow related functionalities.
+# @brief: This interface allows the client to create, destroy sps/event flows and change
+# flow reservation parameters, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_cv2x_flow_ops',`
+    gen_require(`
+        type telux_access_cv2x_flow_ops_t;
+    ')
+    allow $1 telux_access_cv2x_flow_ops_t:file {getattr};
+')
+
+##################################################################################################
+# Interfaces to control access for Audio related APIs in SDK
+##################################################################################################
+
+# Interface to get access for audio voice stream related APIs.
+# @brief: This interface allows the client to perform audio voice stream related operations like
+# enabling the audio path for voice call, DTMF related functionalities.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_voice',`
+    gen_require(`
+        type telux_access_audio_voice_t;
+    ')
+    allow $1 telux_access_audio_voice_t:file {getattr};
+')
+
+# Interface to get access for audio play stream related APIs.
+# @brief: This interface allows the client to perform audio play stream related operations like
+# playing audio data files of varying supported formats and sample rate.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_play',`
+    gen_require(`
+        type telux_access_audio_play_t;
+    ')
+    allow $1 telux_access_audio_play_t:file {getattr};
+')
+
+# Interface to get access for audio capture stream related APIs.
+# @brief: This interface allows the client to perform audio capture stream related operations like
+# capturing audio data files from physical device like microphone to audio data file.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_capture',`
+    gen_require(`
+        type telux_access_audio_capture_t;
+    ')
+    allow $1 telux_access_audio_capture_t:file {getattr};
+')
+
+# Interface to get access for factory test operations using SDK.
+# @brief: This interface allows the client to perform audio loopback stream and audio tone generator
+# stream related operations like looping audio between two devices, generating the tone of a
+# particular supported frequency.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_factory_test',`
+    gen_require(`
+        type telux_access_audio_factory_test_t;
+    ')
+    allow $1 telux_access_audio_factory_test_t:file {getattr};
+')
+
+# Interface to get access for audio transcoding related APIs.
+# @brief: This interface allows the client to perform audio transcoder related operations.
+# The operations supported are transcoding a file from one supported format to another supported
+# format.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_transcode',`
+    gen_require(`
+        type telux_access_audio_transcode_t;
+    ')
+    allow $1 telux_access_audio_transcode_t:file {getattr};
+')
+
+# Interface to get access for in-call audio stream related APIs.
+# @brief: This interface allows the client to perform in-call audio stream related
+# operations like in-call playback/capture, HPCM functionalities.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_audio_voice_data',`
+    gen_require(`
+        type telux_access_audio_voice_data_t;
+    ')
+    allow $1 telux_access_audio_voice_data_t:file {getattr};
+')
+
+##################################################################################################
+# Interfaces to control access for Modem Config related APIs in SDK
+##################################################################################################
+
+# Interface to get access for executing modem config related APIs in SDK.
+# @brief: This interface allows the client to perform modem config operations by providing necessary
+# permissions for its operations.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_config_modem_config',`
+    gen_require(`
+        type telux_access_config_modem_config_t;
+    ')
+    allow $1 telux_access_config_modem_config_t:file {getattr};
+')
+
+##################################################################################################
+# Interfaces to control access for Config Manager related APIs in SDK
+##################################################################################################
+
+# Interface to get access to APIs to set the application configurations.
+# @brief: This interface allows the client to set configurations in /etc/tel.conf by
+# providing necessary permissions for its operations.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_set_global_config',`
+    gen_require(`
+        type telux_access_set_global_config_t;
+    ')
+    allow $1 telux_access_set_global_config_t:file {getattr};
+')
+
+# Interface to get access to APIs to set the application configurations.
+# @brief: This interface allows the client to set configurations in the app related conf files
+# by providing necessary permissions for its operations.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_set_local_config',`
+    gen_require(`
+        type telux_access_set_local_config_t;
+    ')
+    allow $1 telux_access_set_local_config_t:file {getattr};
+')
+
+
+##################################################################################################
+# Interfaces to control access for Data related APIs in SDK
+##################################################################################################
+
+# Interface to get access for data subsystem settings APIs.
+# @brief: This interface allows the client to change data subsystem settings.
+# The operations supported are setting default routing, allow/disallow PDN connection when device
+# is in roaming area, configuring N79 5G/Wlan 5 GHz interference priority, setting backhaul
+# preference, and allow/disallow data call bring-up on WWAN backhaul.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_setting',`
+    gen_require(`
+        type telux_access_data_setting_t;
+    ')
+    allow $1 telux_access_data_setting_t:file {getattr};
+')
+
+# Interface to get access for data call operations APIs.
+# @brief: This interface allows the client to perform data call operation.
+# The operations supported are Start/Stop data call, get active data call list, data call status
+# change indication, and data call traffic flow template status change indication.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_call_ops',`
+    gen_require(`
+        type telux_access_data_call_ops_t;
+    ')
+    allow $1 telux_access_data_call_ops_t:file {getattr};
+')
+
+# Interface to get access for data call properties APIs.
+# @brief: This interface allows the client to alter data call properties.
+# The operations supported are resetting data call statistics.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_call_props',`
+    gen_require(`
+        type telux_access_data_call_props_t;
+    ')
+    allow $1 telux_access_data_call_props_t:file {getattr};
+')
+
+# Interface to get access for data profile properties APIs.
+# @brief: This interface allows the client to change/create/delete data profiles.
+# The operations supported are create, modify and delete data profiles.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_profile_ops',`
+    gen_require(`
+        type telux_access_data_profile_ops_t;
+    ')
+    allow $1 telux_access_data_profile_ops_t:file {getattr};
+')
+
+# Interface to get access for data filter APIs.
+# @brief: This interface allows the client to restrict/add/remove data filter.
+# The operations supported are restrict, add, and remove data filters.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_filter_ops',`
+    gen_require(`
+        type telux_access_data_filter_ops_t;
+    ')
+    allow $1 telux_access_data_filter_ops_t:file {getattr};
+')
+
+# Interface to get access for data networking APIs.
+# @brief: This interface allows the client to create/change/remove data networking configurations.
+# The operations supported are change/create configurations for Vlan, firewall, NAT, L2TP, and Socks
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_network_config',`
+    gen_require(`
+        type telux_access_data_network_config_t;
+    ')
+    allow $1 telux_access_data_network_config_t:file {getattr};
+')
+
+# Interface to get access for data serving system APIs.
+# @brief: This interface allows the client to change data serving system configurations.
+# The operations supported are change/create configurations for data serving system
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_service_mgmt',`
+    gen_require(`
+        type telux_access_data_service_mgmt_t;
+    ')
+    allow $1 telux_access_data_service_mgmt_t:file {getattr};
+')
+
+# Interface to get access for data link manager APIs, for link information.
+# @brief: This interface allows the client to listen and update Eth mode.
+# The operations supported are listen Eth mode change status and get Eth capability.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_link_info',`
+    gen_require(`
+        type telux_access_data_link_info_t;
+    ')
+    allow $1 telux_access_data_link_info_t:file {getattr};
+')
+
+# Interface to get access for data link manager APIs, for link configuration.
+# @brief: This interface allows the client to update Eth mode.
+# The operations supported are listen to Eth mode change request and update Eth mode.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_link_config',`
+    gen_require(`
+        type telux_access_data_link_config_t;
+        type sysfs_t;
+    ')
+    allow $1 telux_access_data_link_config_t:file {getattr};
+    allow $1 sysfs_t:file {write};
+')
+
+# Interface to get access for data client APIs.
+# @brief: This interface allows the user to get info about devices and clients connected to MDM via
+# different interconnects.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_client_info',`
+    gen_require(`
+        type telux_access_data_client_info_t;
+    ')
+    allow $1 telux_access_data_client_info_t:file {getattr};
+')
+
+# Interface to get access for data client APIs.
+# @brief: This interface allows the user to configure devices and clients connected to MDM via
+# different interconnects.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_client_config',`
+    gen_require(`
+        type telux_access_data_client_config_t;
+    ')
+    allow $1 telux_access_data_client_config_t:file {getattr};
+')
+
+# Interface to get access for data QoS APIs.
+# @brief: This interface allows the client to add/delete traffic class and QoS filter.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_data_qos_ops',`
+    gen_require(`
+        type telux_access_data_qos_ops_t;
+    ')
+    allow $1 telux_access_data_qos_ops_t:file {getattr};
+')
+
+##################################################################################################
+# Interfaces to control access for Platform related APIs in SDK
+##################################################################################################
+
+# Interface to get access APIs, to recieve EFS events.
+# @brief: This interface allows the client to receive EFS events like EFS backup and restore events.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_platform_listen_fs_events',`
+    gen_require(`
+        type telux_access_platform_listen_fs_events_t;
+    ')
+    allow $1 telux_access_platform_listen_fs_events_t:file { getattr };
+')
+
+# Interface to get access to platform namespace APIs to trigger EFS operations.
+# @brief: This interface allows the client to trigger certain privileged operations like EFS backup.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_platform_fs_ops_ctrl',`
+    gen_require(`
+        type telux_access_platform_fs_ops_ctrl_t;
+    ')
+    allow $1 telux_access_platform_fs_ops_ctrl_t:file { getattr };
+')
+
+# Interface to get access to platform namespace APIs used for OTA management.
+# @brief: This interface allows the client to access APIs related to OTA management like indicating
+# start, resume, end of OTA activity and initiate an AB sync.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_platform_ota_mgmt',`
+    gen_require(`
+        type telux_access_platform_ota_mgmt_t;
+    ')
+    allow $1 telux_access_platform_ota_mgmt_t:file { getattr };
+')
+
+# Interface to get access to platform namespace APIs used for antenna management.
+# @brief: This interface allows the client to access APIs related to antenna management like indicating
+# set, get the active antenna.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_platform_antenna_mgmt',`
+    gen_require(`
+        type telux_access_platform_antenna_mgmt_t;
+    ')
+    allow $1 telux_access_platform_antenna_mgmt_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Power related APIs in SDK
+##################################################################################################
+
+# Interface to get access to APIs for controlling TCU Activity state
+# @brief: This interface allows the client to change TCU Activity state by providing necessary
+# permissions for its operation.
+# The client also needs to be a power client i.e get access through 'telux_allow_power' interface
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_power_control_state',`
+    gen_require(`
+        type telux_access_power_control_state_t;
+    ')
+    allow $1 telux_access_power_control_state_t:file { getattr };
+')
+
+
+##################################################################################################
+# Interfaces to control access for Sensor related APIs in SDK
+##################################################################################################
+
+# Interface to get access to sensor APIs for sensor data acquisition.
+# @brief: This interface allows the client to configure, control sensor clients and listen to
+# sensor data events.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sensor_data_read',`
+    gen_require(`
+        type telux_access_sensor_data_read_t;
+    ')
+    allow $1 telux_access_sensor_data_read_t:file { getattr };
+')
+
+# Interface to get access to certain privileged sensor APIs.
+# @brief: This interface allows the client to perform certain privileged operations like sensor
+# self test.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sensor_privileged_ops',`
+    gen_require(`
+        type telux_access_sensor_privileged_ops_t;
+    ')
+    allow $1 telux_access_sensor_privileged_ops_t:file { getattr };
+')
+
+# Interface to get access to sensor APIs for feature control.
+# @brief: This interface allows the client to control sensor features and listen to feature events.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sensor_feature_control',`
+    gen_require(`
+        type telux_access_sensor_feature_control_t;
+    ')
+    allow $1 telux_access_sensor_feature_control_t:file { getattr };
+')
+
+
+##################################################################################################
+# Interfaces to control access for Telephony related APIs in SDK
+##################################################################################################
+
+# Interface to get access for card related APIs.
+# @brief: This interface allows the client to perform card related operations like
+# power on/off the SIM card.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_tel_card_power',`
+    gen_require(`
+        type telux_access_tel_card_power_t;
+    ')
+    allow $1 telux_access_tel_card_power_t:file { getattr };
+')
+
+# Interface to get access for card related APIs.
+# @brief: This interface allows the client to perform card related operations like open/close a
+# logical channel to the SIM, transmit an APDU to the ICC card over a logical channel, exchange
+# APDUs with the SIM on a basic channel and perform SIM IO operations.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_tel_card_ops',`
+    gen_require(`
+        type telux_access_tel_card_ops_t;
+    ')
+    allow $1 telux_access_tel_card_ops_t:file { getattr };
+')
+
+# Interface to get access for card privilege related APIs.
+# @brief: This interface allows the client to perform card related operations like change
+# the password used in PIN1/PIN2 lock, unlock the SIM card for an app by entering PUK/PIN
+# pin and enable or disable FDN or Pin1 lock.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_tel_card_privileged_ops',`
+    gen_require(`
+        type telux_access_tel_card_privileged_ops_t;
+    ')
+    allow $1 telux_access_tel_card_privileged_ops_t:file { getattr };
+')
+
+# Interface to get access for SAP related APIs.
+# @brief: This interface allows the client to perform SAP related operations like open and close
+# SAP connection, send the APDU on SAP mode, ATR, SIM power off/on, SIM reset and read card status.
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_tel_sap',`
+    gen_require(`
+        type telux_access_tel_sap_t;
+    ')
+    allow $1 telux_access_tel_sap_t:file { getattr };
+')
+
+# Interface to get access for Cell broadcast related APIs.
+# @brief: This interface allows the client to perform Cell broadcast related operations like
+# retrieve and configure message filters for which broadcast messages will be received, request
+# /set activation and deactivation of configured broadcast messages
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_cell_broadcast_config',`
+    gen_require(`
+        type telux_access_tel_cell_broadcast_config_t;
+    ')
+    allow $1 telux_access_tel_cell_broadcast_config_t:file { getattr };
+')
+
+# Interface to get access for Cell broadcast related APIs.
+# @brief: This interface allows the client to perform Cell broadcast related operations when device
+# receives an incoming cell broadcast message.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_cell_broadcast_listen',`
+    gen_require(`
+        type telux_access_tel_cell_broadcast_listen_t;
+    ')
+    allow $1 telux_access_tel_cell_broadcast_listen_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM provisioning related APIs.
+# @brief: This interface allows the client to perform Remote SIM provisioning operations like
+# add profile, delete profile, set profile, update nickname, memory reset , provide confirmation
+# code and provide download status indication about added profile along with other optional
+# indication to provide user consent info and confirmation code.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_sim_profile_ops',`
+    gen_require(`
+        type telux_access_tel_sim_profile_ops_t;
+    ')
+    allow $1 telux_access_tel_sim_profile_ops_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM provisioning related APIs.
+# @brief: This interface allows the client to perform Remote SIM provisioning operations like
+# provide user consent in order to add profile.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_sim_profile_user_consent',`
+    gen_require(`
+        type telux_access_tel_sim_profile_user_consent_t;
+    ')
+    allow $1 telux_access_tel_sim_profile_user_consent_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM provisioning related APIs.
+# @brief: This interface allows the client to set Remote SIM provisioning operations like
+# set server address.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_sim_profile_config',`
+    gen_require(`
+        type telux_access_tel_sim_profile_config_t;
+    ')
+    allow $1 telux_access_tel_sim_profile_config_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM provisioning related APIs.
+# @brief: This interface allows the client to read Remote SIM provisioning operations like
+# request profile list, server address and EID.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_sim_profile_read',`
+    gen_require(`
+        type telux_access_tel_sim_profile_read_t;
+    ')
+    allow $1 telux_access_tel_sim_profile_read_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM provisioning related APIs.
+# @brief: This interface allows the client to perform Remote SIM provisioning operations like
+# perform HTTP request and send the result of HTTP Post request transaction to modem.
+# Parameters:
+#    1) Domain context.
+interface(`telux_allow_tel_sim_profile_http_proxy',`
+    gen_require(`
+        type telux_access_tel_sim_profile_http_proxy_t;
+    ')
+    allow $1 telux_access_tel_sim_profile_http_proxy_t:file { getattr };
+')
+
+# Interface to get access for Remote SIM related APIs.
+# @brief: This interface allows the client to perform Remote SIM operations like
+# send connection available/unvailable, card reset, card error, card removed, card wakeup and send
+# APDU and invoke listener API for card connect, disconnect , power up and power down events.
+#    1) Domain context.
+interface(`telux_allow_tel_remote_sim',`
+    gen_require(`
+        type telux_access_tel_remote_sim_t;
+    ')
+    allow $1 telux_access_tel_remote_sim_t:file { getattr };
+')
+
+# Interface to get access for SMS related APIs.
+# @brief: This interface allows the client to perform SMS related operations like
+# sends a single or multipart message, send an SMS in raw encoded PDU(s) format and receive
+# delivery report.
+#    1) Domain context.
+interface(`telux_allow_tel_sms_ops',`
+    gen_require(`
+        type telux_access_tel_sms_ops_t;
+    ')
+    allow $1 telux_access_tel_sms_ops_t:file { getattr };
+')
+
+# Interface to get access for SMS related APIs.
+# @brief: This interface allows the client to perform SMS related operations like
+# listen for incoming SMS.
+#    1) Domain context.
+interface(`telux_allow_tel_sms_listen',`
+    gen_require(`
+        type telux_access_tel_sms_listen_t;
+    ')
+    allow $1 telux_access_tel_sms_listen_t:file { getattr };
+')
+
+# Interface to get access for SMS related APIs.
+# @brief: This interface allows the client to perform SMS related operations like
+# set and get SMSC address.
+#    1) Domain context.
+interface(`telux_allow_tel_sms_config',`
+    gen_require(`
+        type telux_access_tel_sms_config_t;
+    ')
+    allow $1 telux_access_tel_sms_config_t:file { getattr };
+')
+
+# Interface to get access for SMS storage related APIs.
+# @brief: This interface allows the client to perform SMS storage related operations like
+# list SMS messages, read SMS message and delete SMS message/s from storage.
+#    1) Domain context.
+interface(`telux_allow_tel_sms_storage',`
+    gen_require(`
+        type telux_access_tel_sms_storage_t;
+    ')
+    allow $1 telux_access_tel_sms_storage_t:file { getattr };
+')
+
+# Interface to get access to APIs to set the IMS service configurations
+# @brief: This interface allows the client to set the IMS service configurations like enable/disable
+# IMS Service, enable/disable Voice over IMS, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_ims_settings',`
+    gen_require(`
+        type telux_access_tel_ims_settings_t;
+    ')
+    allow $1 telux_access_tel_ims_settings_t:file { getattr };
+')
+
+# Interface to get access to APIs for setting the Serving System related configurations
+# @brief: This interface allows the client to set Serving System configurations like RAT preference,
+# service domain preference, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_srv_system_config',`
+    gen_require(`
+        type telux_access_tel_srv_system_config_t;
+    ')
+    allow $1 telux_access_tel_srv_system_config_t:file { getattr };
+')
+
+# Interface to get access to APIs for getting the Serving System related configurations
+# @brief: This interface allows the client to get Serving System configurations like RAT preference,
+# service domain preference, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_srv_system_read',`
+    gen_require(`
+        type telux_access_tel_srv_system_read_t;
+    ')
+    allow $1 telux_access_tel_srv_system_read_t:file { getattr };
+')
+
+# Interface to get access to APIs for performing some network related operations
+# @brief: This interface allows the client to set preferred networks, perform network scan, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_network_selection_ops',`
+    gen_require(`
+        type telux_access_tel_network_selection_ops_t;
+    ')
+    allow $1 telux_access_tel_network_selection_ops_t:file { getattr };
+')
+
+# Interface to get access to APIs for getting network related configurations
+# @brief: This interface allows the client to get preferred networks, network selection mode, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_network_selection_read',`
+    gen_require(`
+        type telux_access_tel_network_selection_read_t;
+    ')
+    allow $1 telux_access_tel_network_selection_read_t:file { getattr };
+')
+
+# Interface to get access to APIs for setting configurations related to multi-SIM management
+# @brief: This interface allows the client to select the slot with high capability, switch the
+# active slot, etc. in multi-SIM capable devices
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_multisim_mgmt',`
+    gen_require(`
+        type telux_access_tel_multisim_mgmt_t;
+    ')
+    allow $1 telux_access_tel_multisim_mgmt_t:file { getattr };
+')
+
+# Interface to get access to APIs for getting private and sensitive information
+# @brief: This interface allows the client to get sensitive information like serving and neighbor
+# cells list, ICCID of the SIM, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_private_info_read',`
+    gen_require(`
+        type telux_access_tel_private_info_read_t;
+    ')
+    allow $1 telux_access_tel_private_info_read_t:file { getattr };
+')
+
+# Interface to get access to APIs that provides private subscription information
+# @brief: This interface allows the client to get private subscription information like phone
+# number, carrier name, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_sub_private_info_read',`
+    gen_require(`
+        type telux_access_tel_sub_private_info_read_t;
+    ')
+    allow $1 telux_access_tel_sub_private_info_read_t:file { getattr };
+')
+
+# Interface to get access to APIs for getting subscription information
+# @brief: This interface allows the client to get subscription information like Mobile Country Code
+# (MCC), Mobile Network Code(MNC), Group Identifier(GID), etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_subscription_read',`
+    gen_require(`
+        type telux_access_tel_subscription_read_t;
+    ')
+    allow $1 telux_access_tel_subscription_read_t:file { getattr };
+')
+
+# Interface to get access to APIs for getting Telephone calls information
+# @brief: This interface allows the client to get the list of Telephone calls and some of their
+# information like Call state, call end cause, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_call_info_read',`
+    gen_require(`
+        type telux_access_tel_call_info_read_t;
+    ')
+    allow $1 telux_access_tel_call_info_read_t:file { getattr };
+')
+
+# Interface to get access to APIs for managing Telephone calls information
+# @brief: This interface allows the client to perform operations like make/answer/hold/resume/
+# reject/hangup/conference swap Telephone calls, start/stop DTMF tones, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_call_mgmt',`
+    gen_require(`
+        type telux_access_tel_call_mgmt_t;
+    ')
+    allow $1 telux_access_tel_call_mgmt_t:file { getattr };
+')
+
+# Interface to get access to APIs that provides private Telephone call information
+# @brief: This interface allows the client to get private Telephone call information like phone
+# number, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_call_private_info',`
+    gen_require(`
+        type telux_access_tel_call_private_info_t;
+    ')
+    allow $1 telux_access_tel_call_private_info_t:file { getattr };
+')
+
+# Interface to get access to APIs to perform some emergency call related operations
+# @brief: This interface allows the client to perform emergency call operations like exit emergency
+# callback mode(ECBM), etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_emergency_ops',`
+    gen_require(`
+        type telux_access_tel_emergency_ops_t;
+    ')
+    allow $1 telux_access_tel_emergency_ops_t:file { getattr };
+')
+
+# Interface to get access to APIs to manage emergency calls
+# @brief: This interface allows the client to make an emergency call, update MSD, get HLAP timers
+# status, etc.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_ecall_mgmt',`
+    gen_require(`
+        type telux_access_tel_ecall_mgmt_t;
+    ')
+    allow $1 telux_access_tel_ecall_mgmt_t:file { getattr };
+')
+
+# Interface to get access to APIs related to phone management
+# @brief: This interface allows the client to perform phone related operations like setting device
+# operating mode.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_phone_mgmt',`
+    gen_require(`
+        type telux_access_tel_phone_mgmt_t;
+    ')
+    allow $1 telux_access_tel_phone_mgmt_t:file { getattr };
+')
+
+# Interface to get access to APIs for setting phone configuration
+# @brief: This interface allows the client to set phone configurations like cell info list update
+# interval
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_phone_config',`
+    gen_require(`
+        type telux_access_tel_phone_config_t;
+    ')
+    allow $1 telux_access_tel_phone_config_t:file { getattr };
+')
+
+# Interface to get access to APIs for setting emergency call related configuration
+# @brief: This interface allows the client to set configurations like eCall operating mode
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_ecall_config',`
+    gen_require(`
+        type telux_access_tel_ecall_config_t;
+    ')
+    allow $1 telux_access_tel_ecall_config_t:file { getattr };
+')
+
+# Interface to get access to APIs for supplementary services like call waiting, call forwarding.
+# @brief: This interface allows the client to enable/disable the supplementary services.
+#
+# Parameters:
+#   1) Domain context
+interface(`telux_allow_tel_supp_services',`
+    gen_require(`
+        type telux_access_tel_supp_services_t;
+    ')
+    allow $1 telux_access_tel_supp_services_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Thermal related APIs in SDK
+##################################################################################################
+
+# Interface to get access to APIs to acquire thermal data.
+# @brief: This interface allows the client to acquire data like thermal zones, trip points,
+# cooling devices, their states among other thermal information.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_therm_data_read',`
+    gen_require(`
+        type telux_access_therm_data_read_t;
+    ')
+    allow $1 telux_access_therm_data_read_t:file { getattr };
+')
+
+# Interface to get access to affect thermal shutdown behavior.
+# @brief: This interface allows the client to defer thermal shutdown when an e-call is in progress.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_therm_shutdown_ctrl',`
+    gen_require(`
+        type telux_access_therm_shutdown_ctrl_t;
+    ')
+    allow $1 telux_access_therm_shutdown_ctrl_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Location related APIs in SDK
+##################################################################################################
+
+# Interface to get access to APIs to acquire location data.
+# @brief: This interface allows the client to acquire data like location reports, GNSS information
+# and other relevant location data.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_loc_data',`
+    gen_require(`
+        type telux_access_loc_data_t;
+    ')
+    allow $1 telux_access_loc_data_t:file { getattr };
+')
+
+# Interface to get access for configuring general/specific engine states via location APIs.
+# @brief: This interface allows the client to configure the location engine like configure
+# minGpsWeek, minSVElevation, EngineState etc
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_loc_config',`
+    gen_require(`
+        type telux_access_loc_config_t;
+    ')
+    allow $1 telux_access_loc_config_t:file { getattr };
+')
+
+# Interface to get consent for accessing terrestrial position.
+# @brief: This interface allows the client to get consent for accessing terrestrial position.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_loc_consent',`
+    gen_require(`
+        type telux_access_loc_consent_t;
+    ')
+    allow $1 telux_access_loc_consent_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Crypto related APIs in SDK
+##################################################################################################
+
+# Interface to manage keys.
+# @brief: This interface allows the client to generate, import, export, upgrade key.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_key_ops',`
+    gen_require(`
+        type telux_access_sec_key_ops_t;
+    ')
+    allow $1 telux_access_sec_key_ops_t:file { getattr };
+')
+
+# Interface to sign and verify data.
+# @brief: This interface allows the client to sign and verify data.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_sign_ops',`
+    gen_require(`
+        type telux_access_sec_sign_ops_t;
+    ')
+    allow $1 telux_access_sec_sign_ops_t:file { getattr };
+')
+
+# Interface to encrypt and decrypt data.
+# @brief: This interface allows the client to encrypt and decrypt data.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_encryption_ops',`
+    gen_require(`
+        type telux_access_sec_encryption_ops_t;
+    ')
+    allow $1 telux_access_sec_encryption_ops_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Crypto accelerator related APIs in SDK
+##################################################################################################
+
+# Interface to get crypto accelerator manager.
+# @brief: This interface allows the client to get crypto accelerator manager.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_accelerator_mgr',`
+    gen_require(`
+        type telux_access_sec_accelerator_mgr_t;
+    ')
+    allow $1 telux_access_sec_accelerator_mgr_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Cellular connection security related APIs in SDK
+##################################################################################################
+
+# Interface to register/deregister and getting session info.
+# @brief: This interface allows the client to register/deregister and get session info.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_ccs_report',`
+    gen_require(`
+        type telux_access_sec_ccs_report_t;
+    ')
+    allow $1 telux_access_sec_ccs_report_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for Wifi connection security related APIs in SDK
+##################################################################################################
+
+# Interface to register/deregister.
+# @brief: This interface allows the client to register/deregister.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_wcs_report',`
+    gen_require(`
+        type telux_access_sec_wcs_report_t;
+    ')
+    allow $1 telux_access_sec_wcs_report_t:file { getattr };
+')
+
+# Interface to trust the AP.
+# @brief: This interface allows the client to trust the AP.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_wcs_config',`
+    gen_require(`
+        type telux_access_sec_wcs_config_t;
+    ')
+    allow $1 telux_access_sec_wcs_config_t:file { getattr };
+')
+
+# Interface to list trusted APs.
+# @brief: This interface allows the client to list trusted APs.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_sec_wcs_info',`
+    gen_require(`
+        type telux_access_sec_wcs_info_t;
+    ')
+    allow $1 telux_access_sec_wcs_info_t:file { getattr };
+')
+
+##################################################################################################
+# Interfaces to control access for WLAN related APIs in SDK
+##################################################################################################
+
+# Interface to get access for WLAN device settings operation APIs.
+# @brief: This interface allows the client to change wlan subsystem settings.
+# Examples of operations supported are enabling wlan, setting, wlan mode, and report wlan state
+# change.
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_wlan_device_config',`
+    gen_require(`
+        type telux_access_wlan_device_config_t;
+    ')
+    allow $1 telux_access_wlan_device_config_t:file {getattr};
+')
+
+# Interface to get access for WLAN access point operations APIs.
+# @brief: This interface allows the client to perform wlan access point operation.
+# The operations supported are configuration of access point parameters such as type, access, ssid,
+# passphrase, restarting hostapd daemon, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_wlan_ap_config',`
+    gen_require(`
+        type telux_access_wlan_ap_config_t;
+    ')
+    allow $1 telux_access_wlan_ap_config_t:file {getattr};
+')
+
+# Interface to get access for WLAN station mode operations APIs.
+# @brief: This interface allows the client to perform wlan station mode operation.
+# The operations supported are configuration of station mode parameters such as static/dynamic ip,
+# details of static ip address if selected, restarting wpa_supplicant daemon, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_wlan_sta_config',`
+    gen_require(`
+        type telux_access_wlan_sta_config_t;
+    ')
+    allow $1 telux_access_wlan_sta_config_t:file {getattr};
+')
+
+# Interface to execute operations on devices connected to WLAN access points.
+# @brief: This interface allows the client to perform operation on devices connected to wlan
+# access points station mode operation.
+# The operations supported are configuration of request list of devices connected to access points
+# and their information, request statistics of each device connected to access points, etc.
+#
+# Parameters:
+#    1) Domain context.
+
+interface(`telux_allow_wlan_ap_devices',`
+    gen_require(`
+        type telux_access_wlan_ap_devices_t;
+    ')
+    allow $1 telux_access_wlan_ap_devices_t:file {getattr};
+')

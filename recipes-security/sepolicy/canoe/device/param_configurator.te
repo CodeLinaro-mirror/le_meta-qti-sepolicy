@@ -1,0 +1,35 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(param_configurator, 1.0)
+type param_configurator_t;
+type param_configurator_exec_t;
+
+# domain transition if started from init
+init_vendor_domain(param_configurator_t, param_configurator_exec_t)
+
+# domain transition if started from adb shell
+transition_to_confined_domain(param_configurator_t, param_configurator_exec_t)
+
+gen_require(`
+        type user_devpts_t;
+        type etc_t;
+        type telsdk_etc_t;
+')
+
+# For std::cin
+allow param_configurator_t user_devpts_t:chr_file read;
+
+# Allow setting secondary groups
+allow param_configurator_t self:capability setgid;
+allow param_configurator_t etc_t:file read_file_perms;
+
+# Obtain required permissions for config manager client.
+telux_allow_config(param_configurator_t)
+
+# Write onto tel.conf
+allow param_configurator_t telsdk_etc_t:file write;
+
+# Obtain required permission in terms of API access control
+telux_allow_set_global_config(param_configurator_t)
+telux_allow_set_local_config(param_configurator_t)

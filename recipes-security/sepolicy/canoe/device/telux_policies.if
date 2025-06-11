@@ -25,7 +25,7 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# ​​​​​Changes from Qualcomm Technologies, Inc. are provided under the following license:
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
@@ -53,6 +53,7 @@ interface(`transition_to_confined_domain',`
     getty_use_fds($1)
     # permission required for tty
     allow $1 tty_device_t:chr_file { read write getattr ioctl };
+    allow $1 user_tty_device_t:chr_file { read write getattr ioctl };
     dontaudit $1 default_t:dir { search };
     allow $1 self:capability kill;
     allow $1 adbd_t:unix_stream_socket { read write };

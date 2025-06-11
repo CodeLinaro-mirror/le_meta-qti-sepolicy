@@ -25,22 +25,4 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# ​​​​​Changes from Qualcomm Technologies, Inc. are provided under the following license:
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-policy_module(telux_policies, 1.0)
-
-type telsdk_etc_t;
-files_type(telsdk_etc_t);
-
-type telsdk_data_t;
-user_data_files_type(telsdk_data_t)
-type telsdk_sem_tmpfs_t;
-
-gen_require(`
-    type mount_copybind_t;
-    type mount_t;
-')
-allow mount_copybind_t telsdk_etc_t:file { setattr getattr read open relabelto create write rename };
-allow mount_t telsdk_etc_t:file { getattr mounton };
+/usr/bin/telux_power_test_app    --  gen_context(system_u:object_r:telux_power_app_exec_t,s0)

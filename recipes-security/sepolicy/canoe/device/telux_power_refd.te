@@ -1,0 +1,86 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(telux_power_refd, 1.0)
+type telux_power_refd_t;
+type telux_power_refd_exec_t;
+
+type telux_power_refd_conf_t;
+files_type(telux_power_refd_conf_t)
+
+#domain transition if started from init
+init_vendor_domain(telux_power_refd_t, telux_power_refd_exec_t)
+
+#domain transition if started from adb shell
+transition_to_confined_domain(telux_power_refd_t, telux_power_refd_exec_t)
+
+#Telsdk Logging
+access_telux_files(telux_power_refd_t)
+
+gen_require(`
+    type sysctl_t;
+    type init_t;
+    type system_dbusd_var_run_t;
+    type node_t;
+    type http_cache_port_t;
+    type system_dbusd_t;
+    type power_unit_t;
+    type system_dir_t;
+    type unreserved_port_t;
+')
+
+#config
+allow telux_power_refd_t telux_power_refd_conf_t:file { read getattr open };
+
+#For power management
+corecmd_exec_shell(telux_power_refd_t)
+dev_rw_sysfs(telux_power_refd_t)
+kernel_read_system_state(telux_power_refd_t)
+allow telux_power_refd_t self:capability2 block_suspend;
+allow telux_power_refd_t self:process signal;
+dontaudit telux_power_refd_t default_t:dir search;
+dontaudit telux_power_refd_t self:capability sys_module;
+dontaudit telux_power_refd_t sysctl_t:dir search;
+
+#TCP/UDP socket for NAOIP trigger
+allow telux_power_refd_t self:tcp_socket { create setopt bind listen accept node_bind name_bind read shutdown };
+allow telux_power_refd_t http_cache_port_t:tcp_socket { name_bind };
+allow telux_power_refd_t unreserved_port_t:tcp_socket { name_bind };
+allow telux_power_refd_t node_t:tcp_socket { node_bind };
+allow telux_power_refd_t unreserved_port_t:udp_socket { name_bind };
+allow telux_power_refd_t node_t:udp_socket { node_bind };
+
+#Allow shutdown
+ifdef(`init_systemd', `
+    gen_require(`
+        type systemd_logind_var_run_t;
+        type system_dbusd_var_run_t;
+        class service { start status stop reload };
+    ')
+    init_dbus_chat(telux_power_refd_t)
+    systemd_dbus_chat_logind(telux_power_refd_t)
+    dbus_system_bus_client(telux_power_refd_t)
+    allow telux_power_refd_t system_dbusd_var_run_t:dir search;
+    allow telux_power_refd_t systemd_logind_var_run_t:sock_file write;
+    allow telux_power_refd_t telux_power_refd_exec_t:service { start status reload stop };
+')
+allow telux_power_refd_t power_unit_t:service start;
+
+#telsdk
+
+#Power Management services
+#Allow setting TCU activity state
+telux_allow_power_control_state(telux_power_refd_t)
+telux_allow_power(telux_power_refd_t)
+
+#Allow data clients
+telux_allow_data_call_ops(telux_power_refd_t)
+telux_allow_data_filter_ops(telux_power_refd_t)
+telux_allow_data(telux_power_refd_t)
+
+#Allow CAN trigger
+allow telux_power_refd_t self:can_socket { create bind ioctl read setopt };
+dontaudit telux_power_refd_t system_dir_t:dir { search };
+
+#Allow SMS trigger
+telux_allow_tel_sms_listen(telux_power_refd_t)

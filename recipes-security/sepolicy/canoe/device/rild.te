@@ -1,4 +1,4 @@
-# Copyright (c) 2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,18 +29,52 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(telux_policies, 1.0)
+policy_module(rild, 1.0)
+type rild_t;
+type rild_exec_t;
 
-type telsdk_etc_t;
-files_type(telsdk_etc_t);
-
-type telsdk_data_t;
-user_data_files_type(telsdk_data_t)
-type telsdk_sem_tmpfs_t;
+init_vendor_domain(rild_t, rild_exec_t)
 
 gen_require(`
-    type mount_copybind_t;
-    type mount_t;
+      type qnetmgrd_t;
+      type data_t;
+      type default_t;
+      type netmgrd_socket_device_t;
+      type sysctl_t;
 ')
-allow mount_copybind_t telsdk_etc_t:file { setattr getattr read open relabelto create write rename };
-allow mount_t telsdk_etc_t:file { getattr mounton };
+
+userdebug_or_eng(`
+    rw_diag_dev(rild_t)
+')
+
+logging_send_syslog_msg(rild_t)
+kernel_read_system_state(rild_t)
+dev_read_sysfs(rild_t)
+qcmap_read_qcmap_etc_data_files(rild_t)
+qnetmgr_write_data_sock_files(rild_t)
+
+allow rild_t self:capability net_admin;
+allow rild_t self:netlink_socket create_socket_perms;
+allow rild_t qnetmgrd_t:unix_stream_socket connectto;
+allow rild_t self:socket create_socket_perms;
+allow rild_t self:fifo_file rw_fifo_file_perms;
+allow rild_t data_t:dir search;
+allow rild_t self:qipcrtr_socket { read write create getattr setopt };
+allow rild_t self:unix_stream_socket { listen accept };
+
+type qmux_radio_sock_t;
+files_type(qmux_radio_sock_t);
+device_manage_socket_file(rild_t, qmux_radio_sock_t)
+dev_node(qmux_radio_sock_t)
+
+allow rild_t socket_device_t:dir search;
+allow rild_t qmux_radio_sock_t:dir { search add_name write remove_name};
+allow rild_t qmux_radio_sock_t:sock_file  { create rw_sock_file_perms setattr };
+allow rild_t netmgrd_socket_device_t:sock_file rw_sock_file_perms;
+
+dontaudit rild_t self:capability dac_override;
+dontaudit rild_t default_t:dir search;
+dontaudit rild_t sysctl_t:dir search;
+
+#Telux power management
+telux_allow_power(rild_t)

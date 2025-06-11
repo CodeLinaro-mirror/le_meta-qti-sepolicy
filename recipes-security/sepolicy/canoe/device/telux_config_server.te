@@ -1,0 +1,36 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(telux_config_server, 1.0)
+
+type telux_config_server_t;
+type telux_config_server_exec_t;
+
+gen_require(`
+    type default_t;
+')
+
+# domain transition if started from init
+init_vendor_domain(telux_config_server_t, telux_config_server_exec_t)
+
+# domain transition if started from adb shell
+transition_to_confined_domain(telux_config_server_t, telux_config_server_exec_t)
+
+# Allow systemctl commands
+unconfined_allow_systemctl_cmds(telux_config_server_exec_t)
+
+# Permissions required for telsdk config file access
+access_telux_files(telux_config_server_t)
+
+# Permission required for a QCSI application.
+allow telux_config_server_t self:socket create_socket_perms;
+device_search_sockets(telux_config_server_t);
+
+# Signalling for ssr whenever required
+allow telux_config_server_t self:process signal;
+
+# Allow Config service to write on pipe
+allow telux_config_server_t self:fifo_file rw_fifo_file_perms;
+
+# Allow config service to write/read/create/getattr on qipcrtr socket
+allow telux_config_server_t self:qipcrtr_socket { write read create getattr };

@@ -1,0 +1,153 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+##################################################################################################
+# Add context to the files used for controlling access to CV2X subsystem APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_cv2x_config          --  gen_context(system_u:object_r:telux_access_cv2x_config_t,s0)
+/etc/telux/permissions/telux_cv2x_ops             --  gen_context(system_u:object_r:telux_access_cv2x_ops_t,s0)
+/etc/telux/permissions/telux_cv2x_flow_ops        --  gen_context(system_u:object_r:telux_access_cv2x_flow_ops_t,s0)
+/etc/telux/permissions/telux_cv2x_info            --  gen_context(system_u:object_r:telux_access_cv2x_info_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Audio subsystem APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_audio_voice          --  gen_context(system_u:object_r:telux_access_audio_voice_t,s0)
+/etc/telux/permissions/telux_audio_play           --  gen_context(system_u:object_r:telux_access_audio_play_t,s0)
+/etc/telux/permissions/telux_audio_capture        --  gen_context(system_u:object_r:telux_access_audio_capture_t,s0)
+/etc/telux/permissions/telux_audio_factory_test   --  gen_context(system_u:object_r:telux_access_audio_factory_test_t,s0)
+/etc/telux/permissions/telux_audio_transcode      --  gen_context(system_u:object_r:telux_access_audio_transcode_t,s0)
+/etc/telux/permissions/telux_audio_voice_data     --  gen_context(system_u:object_r:telux_access_audio_voice_data_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Modem Config related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_config_modem_config   --  gen_context(system_u:object_r:telux_access_config_modem_config_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Config Manager related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_set_global_config   --  gen_context(system_u:object_r:telux_access_set_global_config_t,s0)
+/etc/telux/permissions/telux_set_local_config   --  gen_context(system_u:object_r:telux_access_set_local_config_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Data related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_data_setting         --  gen_context(system_u:object_r:telux_access_data_setting_t,s0)
+/etc/telux/permissions/telux_data_call_ops        --  gen_context(system_u:object_r:telux_access_data_call_ops_t,s0)
+/etc/telux/permissions/telux_data_call_props      --  gen_context(system_u:object_r:telux_access_data_call_props_t,s0)
+/etc/telux/permissions/telux_data_profile_ops     --  gen_context(system_u:object_r:telux_access_data_profile_ops_t,s0)
+/etc/telux/permissions/telux_data_filter_ops      --  gen_context(system_u:object_r:telux_access_data_filter_ops_t,s0)
+/etc/telux/permissions/telux_data_network_config  --  gen_context(system_u:object_r:telux_access_data_network_config_t,s0)
+/etc/telux/permissions/telux_data_service_mgmt    --  gen_context(system_u:object_r:telux_access_data_service_mgmt_t,s0)
+/etc/telux/permissions/telux_data_link_info       --  gen_context(system_u:object_r:telux_access_data_link_info_t,s0)
+/etc/telux/permissions/telux_data_link_config     --  gen_context(system_u:object_r:telux_access_data_link_config_t,s0)
+/etc/telux/permissions/telux_data_client_info     --  gen_context(system_u:object_r:telux_access_data_client_info_t,s0)
+/etc/telux/permissions/telux_data_client_config   --  gen_context(system_u:object_r:telux_access_data_client_config_t,s0)
+/etc/telux/permissions/telux_data_qos_ops         --  gen_context(system_u:object_r:telux_access_data_qos_ops_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Platform related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_platform_listen_fs_events  --  gen_context(system_u:object_r:telux_access_platform_listen_fs_events_t,s0)
+/etc/telux/permissions/telux_platform_fs_ops_ctrl       --  gen_context(system_u:object_r:telux_access_platform_fs_ops_ctrl_t,s0)
+/etc/telux/permissions/telux_platform_ota_mgmt           --  gen_context(system_u:object_r:telux_access_platform_ota_mgmt_t,s0)
+/etc/telux/permissions/telux_platform_antenna_mgmt       --  gen_context(system_u:object_r:telux_access_platform_antenna_mgmt_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Power related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_power_control_state   --  gen_context(system_u:object_r:telux_access_power_control_state_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Sensor related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_sensor_data_read        --  gen_context(system_u:object_r:telux_access_sensor_data_read_t,s0)
+/etc/telux/permissions/telux_sensor_privileged_ops   --  gen_context(system_u:object_r:telux_access_sensor_privileged_ops_t,s0)
+/etc/telux/permissions/telux_sensor_feature_control  --  gen_context(system_u:object_r:telux_access_sensor_feature_control_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Telephony related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_tel_card_power                --  gen_context(system_u:object_r:telux_access_tel_card_power_t,s0)
+/etc/telux/permissions/telux_tel_card_ops                  --  gen_context(system_u:object_r:telux_access_tel_card_ops_t,s0)
+/etc/telux/permissions/telux_tel_card_privileged_ops       --  gen_context(system_u:object_r:telux_access_tel_card_privileged_ops_t,s0)
+/etc/telux/permissions/telux_tel_sap                       --  gen_context(system_u:object_r:telux_access_tel_sap_t,s0)
+/etc/telux/permissions/telux_tel_cell_broadcast_config     --  gen_context(system_u:object_r:telux_access_tel_cell_broadcast_config_t,s0)
+/etc/telux/permissions/telux_tel_cell_broadcast_listen     --  gen_context(system_u:object_r:telux_access_tel_cell_broadcast_listen_t,s0)
+/etc/telux/permissions/telux_tel_sim_profile_ops           --  gen_context(system_u:object_r:telux_access_tel_sim_profile_ops_t,s0)
+/etc/telux/permissions/telux_tel_sim_profile_user_consent  --  gen_context(system_u:object_r:telux_access_tel_sim_profile_user_consent_t,s0)
+/etc/telux/permissions/telux_tel_sim_profile_config        --  gen_context(system_u:object_r:telux_access_tel_sim_profile_config_t,s0)
+/etc/telux/permissions/telux_tel_sim_profile_read          --  gen_context(system_u:object_r:telux_access_tel_sim_profile_read_t,s0)
+/etc/telux/permissions/telux_tel_sim_profile_http_proxy    --  gen_context(system_u:object_r:telux_access_tel_sim_profile_http_proxy_t,s0)
+/etc/telux/permissions/telux_tel_remote_sim                --  gen_context(system_u:object_r:telux_access_tel_remote_sim_t,s0)
+/etc/telux/permissions/telux_tel_sms_ops                   --  gen_context(system_u:object_r:telux_access_tel_sms_ops_t,s0)
+/etc/telux/permissions/telux_tel_sms_listen                --  gen_context(system_u:object_r:telux_access_tel_sms_listen_t,s0)
+/etc/telux/permissions/telux_tel_sms_config                --  gen_context(system_u:object_r:telux_access_tel_sms_config_t,s0)
+/etc/telux/permissions/telux_tel_sms_storage               --  gen_context(system_u:object_r:telux_access_tel_sms_storage_t,s0)
+/etc/telux/permissions/telux_tel_ims_settings              --  gen_context(system_u:object_r:telux_access_tel_ims_settings_t,s0)
+/etc/telux/permissions/telux_tel_srv_system_config         --  gen_context(system_u:object_r:telux_access_tel_srv_system_config_t,s0)
+/etc/telux/permissions/telux_tel_srv_system_read           --  gen_context(system_u:object_r:telux_access_tel_srv_system_read_t,s0)
+/etc/telux/permissions/telux_tel_network_selection_ops     --  gen_context(system_u:object_r:telux_access_tel_network_selection_ops_t,s0)
+/etc/telux/permissions/telux_tel_network_selection_read    --  gen_context(system_u:object_r:telux_access_tel_network_selection_read_t,s0)
+/etc/telux/permissions/telux_tel_multisim_mgmt             --  gen_context(system_u:object_r:telux_access_tel_multisim_mgmt_t,s0)
+/etc/telux/permissions/telux_tel_private_info_read         --  gen_context(system_u:object_r:telux_access_tel_private_info_read_t,s0)
+/etc/telux/permissions/telux_tel_sub_private_info_read     --  gen_context(system_u:object_r:telux_access_tel_sub_private_info_read_t,s0)
+/etc/telux/permissions/telux_tel_subscription_read         --  gen_context(system_u:object_r:telux_access_tel_subscription_read_t,s0)
+/etc/telux/permissions/telux_tel_call_info_read            --  gen_context(system_u:object_r:telux_access_tel_call_info_read_t,s0)
+/etc/telux/permissions/telux_tel_call_mgmt                 --  gen_context(system_u:object_r:telux_access_tel_call_mgmt_t,s0)
+/etc/telux/permissions/telux_tel_call_private_info         --  gen_context(system_u:object_r:telux_access_tel_call_private_info_t,s0)
+/etc/telux/permissions/telux_tel_emergency_ops             --  gen_context(system_u:object_r:telux_access_tel_emergency_ops_t,s0)
+/etc/telux/permissions/telux_tel_ecall_mgmt                --  gen_context(system_u:object_r:telux_access_tel_ecall_mgmt_t,s0)
+/etc/telux/permissions/telux_tel_phone_mgmt                --  gen_context(system_u:object_r:telux_access_tel_phone_mgmt_t,s0)
+/etc/telux/permissions/telux_tel_phone_config              --  gen_context(system_u:object_r:telux_access_tel_phone_config_t,s0)
+/etc/telux/permissions/telux_tel_ecall_config              --  gen_context(system_u:object_r:telux_access_tel_ecall_config_t,s0)
+/etc/telux/permissions/telux_tel_supp_services              --  gen_context(system_u:object_r:telux_access_tel_supp_services_t,s0)
+
+
+##################################################################################################
+# Add context to the files used for controlling access to Thermal related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_therm_data_read       --  gen_context(system_u:object_r:telux_access_therm_data_read_t,s0)
+/etc/telux/permissions/telux_therm_shutdown_ctrl   --  gen_context(system_u:object_r:telux_access_therm_shutdown_ctrl_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Location related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_loc_data     --  gen_context(system_u:object_r:telux_access_loc_data_t,s0)
+/etc/telux/permissions/telux_loc_config   --  gen_context(system_u:object_r:telux_access_loc_config_t,s0)
+/etc/telux/permissions/telux_loc_consent  --  gen_context(system_u:object_r:telux_access_loc_consent_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Crypto related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_sec_key_ops     --  gen_context(system_u:object_r:telux_access_sec_key_ops_t,s0)
+/etc/telux/permissions/telux_sec_sign_ops   --  gen_context(system_u:object_r:telux_access_sec_sign_ops_t,s0)
+/etc/telux/permissions/telux_sec_encryption_ops  --  gen_context(system_u:object_r:telux_access_sec_encryption_ops_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Crypto accelerator related APIs in SDK
+##################################################################################################
+/etc/telux/permissions/telux_sec_accelerator_mgr  --  gen_context(system_u:object_r:telux_access_sec_accelerator_mgr_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to Cellular/Wifi connection security related APIs
+##################################################################################################
+/etc/telux/permissions/telux_sec_ccs_report  --  gen_context(system_u:object_r:telux_access_sec_ccs_report_t,s0)
+/etc/telux/permissions/telux_sec_wcs_report  --  gen_context(system_u:object_r:telux_access_sec_wcs_report_t,s0)
+/etc/telux/permissions/telux_sec_wcs_config  --  gen_context(system_u:object_r:telux_access_sec_wcs_config_t,s0)
+/etc/telux/permissions/telux_sec_wcs_info  --  gen_context(system_u:object_r:telux_access_sec_wcs_info_t,s0)
+
+##################################################################################################
+# Add context to the files used for controlling access to WLAN related APIs in SDK.
+##################################################################################################
+/etc/telux/permissions/telux_wlan_device_config     --  gen_context(system_u:object_r:telux_access_wlan_device_config_t,s0)
+/etc/telux/permissions/telux_wlan_ap_config   --  gen_context(system_u:object_r:telux_access_wlan_ap_config_t,s0)
+/etc/telux/permissions/telux_wlan_sta_config  --  gen_context(system_u:object_r:telux_access_wlan_sta_config_t,s0)
+/etc/telux/permissions/telux_wlan_ap_devices  --  gen_context(system_u:object_r:telux_access_wlan_ap_devices_t,s0)

@@ -1,0 +1,5 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/telux_power_refd            --      gen_context(system_u:object_r:telux_power_refd_exec_t,s0)
+/etc/telux_power_refd.conf           --      gen_context(system_u:object_r:telux_power_refd_conf_t,s0)

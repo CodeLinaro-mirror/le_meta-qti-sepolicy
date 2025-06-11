@@ -1,0 +1,241 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(telux_access_policies, 1.0)
+
+##################################################################################################
+# Type identifiers for the files used to control access for CV2X APIs in SDK
+##################################################################################################
+type telux_access_cv2x_config_t;
+files_type(telux_access_cv2x_config_t);
+type telux_access_cv2x_ops_t;
+files_type(telux_access_cv2x_ops_t);
+type telux_access_cv2x_info_t;
+files_type(telux_access_cv2x_info_t);
+type telux_access_cv2x_flow_ops_t;
+files_type(telux_access_cv2x_flow_ops_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Audio APIs in SDK
+##################################################################################################
+type telux_access_audio_voice_t;
+files_type(telux_access_audio_voice_t);
+type telux_access_audio_play_t;
+files_type(telux_access_audio_play_t);
+type telux_access_audio_capture_t;
+files_type(telux_access_audio_capture_t);
+type telux_access_audio_factory_test_t;
+files_type(telux_access_audio_factory_test_t);
+type telux_access_audio_transcode_t;
+files_type(telux_access_audio_transcode_t);
+type telux_access_audio_voice_data_t;
+files_type(telux_access_audio_voice_data_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Modem Config APIs in SDK
+##################################################################################################
+type telux_access_config_modem_config_t;
+files_type(telux_access_config_modem_config_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for Config Manager APIs in SDK
+##################################################################################################
+type telux_access_set_global_config_t;
+files_type(telux_access_set_global_config_t);
+type telux_access_set_local_config_t;
+files_type(telux_access_set_local_config_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Data APIs in SDK
+##################################################################################################
+type telux_access_data_setting_t;
+files_type(telux_access_data_setting_t);
+type telux_access_data_call_ops_t;
+files_type(telux_access_data_call_ops_t);
+type telux_access_data_call_props_t;
+files_type(telux_access_data_call_props_t);
+type telux_access_data_profile_ops_t;
+files_type(telux_access_data_profile_ops_t);
+type telux_access_data_filter_ops_t;
+files_type(telux_access_data_filter_ops_t);
+type telux_access_data_network_config_t;
+files_type(telux_access_data_network_config_t);
+type telux_access_data_service_mgmt_t;
+files_type(telux_access_data_service_mgmt_t);
+type telux_access_data_link_info_t;
+files_type(telux_access_data_link_info_t);
+type telux_access_data_link_config_t;
+files_type(telux_access_data_link_config_t);
+type telux_access_data_client_info_t;
+files_type(telux_access_data_client_info_t);
+type telux_access_data_client_config_t;
+files_type(telux_access_data_client_config_t);
+type telux_access_data_qos_ops_t;
+files_type(telux_access_data_qos_ops_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Platform related APIs in SDK
+##################################################################################################
+type telux_access_platform_listen_fs_events_t;
+files_type(telux_access_platform_listen_fs_events_t);
+type telux_access_platform_fs_ops_ctrl_t;
+files_type(telux_access_platform_fs_ops_ctrl_t);
+type telux_access_platform_ota_mgmt_t;
+files_type(telux_access_platform_ota_mgmt_t);
+type telux_access_platform_antenna_mgmt_t;
+files_type(telux_access_platform_antenna_mgmt_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Power related APIs in SDK
+##################################################################################################
+type telux_access_power_control_state_t;
+files_type(telux_access_power_control_state_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Sensor related APIs in SDK
+##################################################################################################
+type telux_access_sensor_data_read_t;
+files_type(telux_access_sensor_data_read_t);
+type telux_access_sensor_privileged_ops_t;
+files_type(telux_access_sensor_privileged_ops_t);
+type telux_access_sensor_feature_control_t;
+files_type(telux_access_sensor_feature_control_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Telephony related APIs in SDK
+##################################################################################################
+type telux_access_tel_card_power_t;
+files_type(telux_access_tel_card_power_t);
+type telux_access_tel_card_ops_t;
+files_type(telux_access_tel_card_ops_t);
+type telux_access_tel_card_privileged_ops_t;
+files_type(telux_access_tel_card_privileged_ops_t);
+type telux_access_tel_sap_t;
+files_type(telux_access_tel_sap_t);
+type telux_access_tel_cell_broadcast_config_t;
+files_type(telux_access_tel_cell_broadcast_config_t);
+type telux_access_tel_cell_broadcast_listen_t;
+files_type(telux_access_tel_cell_broadcast_listen_t);
+type telux_access_tel_sim_profile_ops_t;
+files_type(telux_access_tel_sim_profile_ops_t);
+type telux_access_tel_sim_profile_user_consent_t;
+files_type(telux_access_tel_sim_profile_user_consent_t);
+type telux_access_tel_sim_profile_config_t;
+files_type(telux_access_tel_sim_profile_config_t);
+type telux_access_tel_sim_profile_read_t;
+files_type(telux_access_tel_sim_profile_read_t);
+type telux_access_tel_sim_profile_http_proxy_t;
+files_type(telux_access_tel_sim_profile_http_proxy_t);
+type telux_access_tel_remote_sim_t;
+files_type(telux_access_tel_remote_sim_t);
+type telux_access_tel_sms_ops_t;
+files_type(telux_access_tel_sms_ops_t);
+type telux_access_tel_sms_listen_t;
+files_type(telux_access_tel_sms_listen_t);
+type telux_access_tel_sms_storage_t;
+files_type(telux_access_tel_sms_storage_t);
+type telux_access_tel_sms_config_t;
+files_type(telux_access_tel_sms_config_t);
+type telux_access_tel_ims_settings_t;
+files_type(telux_access_tel_ims_settings_t);
+type telux_access_tel_srv_system_config_t;
+files_type(telux_access_tel_srv_system_config_t);
+type telux_access_tel_srv_system_read_t;
+files_type(telux_access_tel_srv_system_read_t);
+type telux_access_tel_network_selection_ops_t;
+files_type(telux_access_tel_network_selection_ops_t);
+type telux_access_tel_network_selection_read_t;
+files_type(telux_access_tel_network_selection_read_t);
+type telux_access_tel_multisim_mgmt_t;
+files_type(telux_access_tel_multisim_mgmt_t);
+type telux_access_tel_private_info_read_t;
+files_type(telux_access_tel_private_info_read_t);
+type telux_access_tel_sub_private_info_read_t;
+files_type(telux_access_tel_sub_private_info_read_t);
+type telux_access_tel_subscription_read_t;
+files_type(telux_access_tel_subscription_read_t);
+type telux_access_tel_call_info_read_t;
+files_type(telux_access_tel_call_info_read_t);
+type telux_access_tel_call_mgmt_t;
+files_type(telux_access_tel_call_mgmt_t);
+type telux_access_tel_call_private_info_t;
+files_type(telux_access_tel_call_private_info_t);
+type telux_access_tel_emergency_ops_t;
+files_type(telux_access_tel_emergency_ops_t);
+type telux_access_tel_ecall_mgmt_t;
+files_type(telux_access_tel_ecall_mgmt_t);
+type telux_access_tel_phone_mgmt_t;
+files_type(telux_access_tel_phone_mgmt_t);
+type telux_access_tel_phone_config_t;
+files_type(telux_access_tel_phone_config_t);
+type telux_access_tel_ecall_config_t;
+files_type(telux_access_tel_ecall_config_t);
+type telux_access_tel_supp_services_t;
+files_type(telux_access_tel_supp_services_t);
+
+
+##################################################################################################
+# Type identifiers for the files used to control access for Thermal related APIs in SDK
+##################################################################################################
+type telux_access_therm_data_read_t;
+files_type(telux_access_therm_data_read_t);
+type telux_access_therm_shutdown_ctrl_t;
+files_type(telux_access_therm_shutdown_ctrl_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for Location related APIs in SDK
+##################################################################################################
+type telux_access_loc_data_t;
+files_type(telux_access_loc_data_t);
+type telux_access_loc_config_t;
+files_type(telux_access_loc_config_t);
+type telux_access_loc_consent_t;
+files_type(telux_access_loc_consent_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for Crypto related APIs in SDK
+##################################################################################################
+type telux_access_sec_key_ops_t;
+files_type(telux_access_sec_key_ops_t);
+type telux_access_sec_sign_ops_t;
+files_type(telux_access_sec_sign_ops_t);
+type telux_access_sec_encryption_ops_t;
+files_type(telux_access_sec_encryption_ops_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for Crypto accelerator related APIs in SDK
+##################################################################################################
+type telux_access_sec_accelerator_mgr_t;
+files_type(telux_access_sec_accelerator_mgr_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for Cellular/Wifi connection security related
+# APIs in SDK
+##################################################################################################
+type telux_access_sec_ccs_report_t;
+files_type(telux_access_sec_ccs_report_t);
+type telux_access_sec_wcs_report_t;
+files_type(telux_access_sec_wcs_report_t);
+type telux_access_sec_wcs_config_t;
+files_type(telux_access_sec_wcs_config_t);
+type telux_access_sec_wcs_info_t;
+files_type(telux_access_sec_wcs_info_t);
+
+##################################################################################################
+# Type identifiers for the files used to control access for WLAN APIs in SDK
+##################################################################################################
+type telux_access_wlan_device_config_t;
+files_type(telux_access_wlan_device_config_t);
+type telux_access_wlan_ap_config_t;
+files_type(telux_access_wlan_ap_config_t);
+type telux_access_wlan_sta_config_t;
+files_type(telux_access_wlan_sta_config_t);
+type telux_access_wlan_ap_devices_t;
+files_type(telux_access_wlan_ap_devices_t);

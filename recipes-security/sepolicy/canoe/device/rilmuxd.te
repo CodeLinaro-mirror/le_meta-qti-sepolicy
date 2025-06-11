@@ -1,4 +1,4 @@
-# Copyright (c) 2020, The Linux Foundation. All rights reserved.
+# Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,18 +29,29 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(telux_policies, 1.0)
+policy_module(rilmuxd, 1.0)
+type rilmuxd_t;
+type rilmuxd_exec_t;
 
-type telsdk_etc_t;
-files_type(telsdk_etc_t);
-
-type telsdk_data_t;
-user_data_files_type(telsdk_data_t)
-type telsdk_sem_tmpfs_t;
+init_vendor_domain(rilmuxd_t, rilmuxd_exec_t)
 
 gen_require(`
-    type mount_copybind_t;
-    type mount_t;
+    type rild_t;
+    type qmux_radio_sock_t;
+    type socket_device_t;
 ')
-allow mount_copybind_t telsdk_etc_t:file { setattr getattr read open relabelto create write rename };
-allow mount_t telsdk_etc_t:file { getattr mounton };
+
+logging_send_syslog_msg(rilmuxd_t)
+
+allow rilmuxd_t rild_t:unix_stream_socket connectto;
+allow rilmuxd_t self:unix_dgram_socket create;
+
+allow rilmuxd_t socket_device_t:dir search;
+allow rilmuxd_t qmux_radio_sock_t:dir { add_name write search remove_name};
+allow rilmuxd_t qmux_radio_sock_t:sock_file { create rw_sock_file_perms unlink setattr };
+allow rilmuxd_t self:process signal;
+allow rilmuxd_t self:qipcrtr_socket { read write create getattr setopt };
+allow rilmuxd_t self:unix_stream_socket { accept listen };
+
+allow rilmuxd_t self:socket { create setopt getattr read write };
+access_telux_files(rilmuxd_t);

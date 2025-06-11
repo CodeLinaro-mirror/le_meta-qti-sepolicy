@@ -29,18 +29,25 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(telux_policies, 1.0)
+policy_module(modem_configurator, 1.0)
+type modem_cfg_t;
+type modem_cfg_exec_t;
 
-type telsdk_etc_t;
-files_type(telsdk_etc_t);
+#domain transition if started from init
+init_vendor_domain(modem_cfg_t, modem_cfg_exec_t)
 
-type telsdk_data_t;
-user_data_files_type(telsdk_data_t)
-type telsdk_sem_tmpfs_t;
+#domain transition if started from adb shell
+transition_to_confined_domain(modem_cfg_t, modem_cfg_exec_t)
+
+#Modem configuration services
+telux_allow_modemconfig(modem_cfg_t)
 
 gen_require(`
-    type mount_copybind_t;
-    type mount_t;
+        type etc_t;
 ')
-allow mount_copybind_t telsdk_etc_t:file { setattr getattr read open relabelto create write rename };
-allow mount_t telsdk_etc_t:file { getattr mounton };
+#Allow setting secondary groups
+allow modem_cfg_t self:capability setgid;
+allow modem_cfg_t etc_t:file read_file_perms;
+
+# Allow modem config operations
+telux_allow_config_modem_config(modem_cfg_t)

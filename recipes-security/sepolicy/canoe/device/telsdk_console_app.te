@@ -1,0 +1,111 @@
+# Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# ​​​​​Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(telsdk_console_app, 1.0)
+type telsdk_console_app_t;
+type telsdk_console_app_exec_t;
+
+#domain transition if started from init
+init_vendor_domain(telsdk_console_app_t, telsdk_console_app_exec_t)
+
+#domain transition if started from adb shell
+transition_to_confined_domain(telsdk_console_app_t, telsdk_console_app_exec_t)
+
+gen_require(`
+        type user_devpts_t;
+        type etc_t;
+        type user_home_dir_t;
+')
+
+dontaudit telsdk_console_app_t user_home_dir_t:dir search;
+allow telsdk_console_app_t user_devpts_t:chr_file read;
+
+#Allow setting secondary groups
+allow telsdk_console_app_t self:capability setgid;
+allow telsdk_console_app_t etc_t:file read_file_perms;
+telux_allow_group(telsdk_console_app_t)
+
+# Allow telsdk telephony clients
+telux_allow_tel(telsdk_console_app_t)
+telux_allow_tel_card_power(telsdk_console_app_t)
+telux_allow_tel_card_ops(telsdk_console_app_t)
+telux_allow_tel_card_privileged_ops(telsdk_console_app_t)
+telux_allow_tel_sap(telsdk_console_app_t)
+telux_allow_tel_cell_broadcast_config(telsdk_console_app_t)
+telux_allow_tel_cell_broadcast_listen(telsdk_console_app_t)
+telux_allow_tel_sim_profile_ops(telsdk_console_app_t)
+telux_allow_tel_sim_profile_user_consent(telsdk_console_app_t)
+telux_allow_tel_sim_profile_config(telsdk_console_app_t)
+telux_allow_tel_sim_profile_read(telsdk_console_app_t)
+telux_allow_tel_sim_profile_http_proxy(telsdk_console_app_t)
+telux_allow_tel_remote_sim(telsdk_console_app_t)
+telux_allow_tel_sms_ops(telsdk_console_app_t)
+telux_allow_tel_sms_listen(telsdk_console_app_t)
+telux_allow_tel_sms_config(telsdk_console_app_t)
+telux_allow_tel_sms_storage(telsdk_console_app_t)
+telux_allow_tel_ims_settings(telsdk_console_app_t)
+telux_allow_tel_srv_system_config(telsdk_console_app_t)
+telux_allow_tel_srv_system_read(telsdk_console_app_t)
+telux_allow_tel_network_selection_ops(telsdk_console_app_t)
+telux_allow_tel_network_selection_read(telsdk_console_app_t)
+telux_allow_tel_multisim_mgmt(telsdk_console_app_t)
+telux_allow_tel_private_info_read(telsdk_console_app_t)
+telux_allow_tel_sub_private_info_read(telsdk_console_app_t)
+telux_allow_tel_subscription_read(telsdk_console_app_t)
+telux_allow_tel_call_info_read(telsdk_console_app_t)
+telux_allow_tel_call_mgmt(telsdk_console_app_t)
+telux_allow_tel_call_private_info(telsdk_console_app_t)
+telux_allow_tel_emergency_ops(telsdk_console_app_t)
+telux_allow_tel_ecall_mgmt(telsdk_console_app_t)
+telux_allow_tel_phone_mgmt(telsdk_console_app_t)
+telux_allow_tel_phone_config(telsdk_console_app_t)
+telux_allow_tel_ecall_config(telsdk_console_app_t)
+telux_allow_tel_supp_services(telsdk_console_app_t)
+telux_allow_data_setting(telsdk_console_app_t)
+telux_allow_data_call_ops(telsdk_console_app_t)
+telux_allow_data_call_props(telsdk_console_app_t)
+telux_allow_data_profile_ops(telsdk_console_app_t)
+telux_allow_data_filter_ops(telsdk_console_app_t)
+telux_allow_data_network_config(telsdk_console_app_t)
+telux_allow_data_service_mgmt(telsdk_console_app_t)
+telux_allow_data_link_info(telsdk_console_app_t)
+telux_allow_data_link_config(telsdk_console_app_t)
+telux_allow_data_client_info(telsdk_console_app_t)
+telux_allow_data_client_config(telsdk_console_app_t)
+telux_allow_data_qos_ops(telsdk_console_app_t)
+
+# Allow telsdk data clients
+telux_allow_data(telsdk_console_app_t)
+
+# Allow telsdk audio clients
+telux_allow_audio_voice(telsdk_console_app_t)
+
+allow telsdk_console_app_t self:process signal;
