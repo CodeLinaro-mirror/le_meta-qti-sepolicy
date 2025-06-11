@@ -1,4 +1,4 @@
-#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(faultmgr, 1.0)
@@ -10,6 +10,7 @@ type faultmgr_conf_t;
 init_vendor_domain(faultmgr_t, faultmgr_exec_t)
 
 gen_require(`
+    type faultmgr_data_t;
     type default_t;
     type socket_device_t;
     type thermal-engine_t;
@@ -48,6 +49,7 @@ allow faultmgr_t faultmgr_conf_t:file {read write open getattr};          #/etc/
 allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
 allow faultmgr_t devlog_t:sock_file write;
 allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
+allow faultmgr_t sysfs_t:dir read;                         # /sys/kernel/reset_reason/
 allow faultmgr_t var_log_t:file { read write open getattr };
 allow alogd_t pmsg0_t:chr_file open;
 allow faultmgr_t init_var_run_t:dir search;
@@ -62,6 +64,8 @@ allow faultmgr_t thermal_sock_t:sock_file write;
 allow initrc_t faultmgr_conf_t:file read;
 allow initrc_t unconfined_t:dbus send_msg;
 allow faultmgr_t pwrmgr_t:dbus send_msg;
+allow faultmgr_t faultmgr_data_t:dir { read write open getattr append create search rename };
+allow faultmgr_t faultmgr_data_t:file { read write open getattr append};
 dontaudit faultmgr_t default_t:dir search;
 
 #Manage Dbus sockets
