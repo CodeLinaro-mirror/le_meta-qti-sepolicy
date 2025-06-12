@@ -37,6 +37,7 @@ userdebug_or_eng(`
         type fbe_secure_data_t;
         type hwfde_conf_file_t;
         type install_evict_t;
+	type rfsa_adsp_lib_t;
     ')
 
     servicemanager_binder_call(unconfined_t, qmmf_server_t)
