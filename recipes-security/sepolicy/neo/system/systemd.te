@@ -84,6 +84,7 @@ allow systemd_modules_load_t syslogd_var_run_t:dir search_dir_perms;
 allow systemd_modules_load_t devlog_t:sock_file write;
 allow systemd_modules_load_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_modules_load_t etc_t:file read_file_perms;
+allow systemd_modules_load_t self:key write;
 
 modutils_read_module_deps(systemd_modules_load_t);
 allow systemd_modules_load_t self:capability { sys_module sys_admin };
