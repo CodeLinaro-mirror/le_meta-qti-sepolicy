@@ -1,0 +1,68 @@
+#Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+ 
+ 
+policy_module(shutdown-logs, 1.0)
+
+type shutdown_logs_exec_t;
+type shutdown_logs_t;
+type shutdown_logs_data_t;
+
+init_vendor_domain(shutdown_logs_t, shutdown_logs_exec_t)
+
+gen_require(`
+    type abupdater_log_t;
+    type debugfs_t;
+    type kernel_t;
+    type mplane_app_t;
+    type var_log_t;
+    type shell_exec_t;
+    type dmesg_exec_t;
+    type init_t;
+    type init_var_run_t;
+    type proc_t;
+    type sysctl_kernel_t;
+    type sysctl_t;
+    type tmpfs_t;
+    type systemd_journal_t;
+')
+
+#============= shutdown_logs_t ==============
+allow shutdown_logs_t abupdater_log_t:dir search;
+allow shutdown_logs_t abupdater_log_t:file { getattr open read };
+allow shutdown_logs_t debugfs_t:dir search;
+allow shutdown_logs_t debugfs_t:file { getattr open read };
+allow shutdown_logs_t dmesg_exec_t:file { execute execute_no_trans getattr open read };
+allow shutdown_logs_t kernel_t:system syslog_read;
+allow shutdown_logs_t mplane_app_t:dir { add_name getattr search write };
+allow shutdown_logs_t mplane_app_t:file { create getattr open write };
+allow shutdown_logs_t self:capability2 syslog;
+allow shutdown_logs_t self:fifo_file { getattr read };
+allow shutdown_logs_t shell_exec_t:file { execute execute_no_trans open read map};
+allow shutdown_logs_t var_log_t:dir search;
+allow shutdown_logs_t var_log_t:file { getattr open read };
+allow shutdown_logs_t var_log_t:lnk_file read;
+
+allow shutdown_logs_t init_t:dir search;
+allow shutdown_logs_t init_t:file { getattr ioctl open read };
+allow shutdown_logs_t init_var_run_t:dir search;
+allow shutdown_logs_t init_var_run_t:file { open read };
+allow shutdown_logs_t mplane_app_t:dir remove_name;
+allow shutdown_logs_t mplane_app_t:file { read unlink };
+allow shutdown_logs_t proc_t:file { getattr ioctl open read };
+allow shutdown_logs_t self:fifo_file { ioctl write };
+allow shutdown_logs_t sysctl_kernel_t:dir search;
+allow shutdown_logs_t sysctl_kernel_t:file { getattr ioctl open read };
+allow shutdown_logs_t sysctl_t:dir search;
+allow shutdown_logs_t systemd_journal_t:dir { getattr open read search };
+allow shutdown_logs_t systemd_journal_t:file { getattr map open read };
+allow shutdown_logs_t tmpfs_t:filesystem getattr;
+
+allow shutdown_logs_t systemd_journal_t:file { getattr read };
+mls_file_read_all_levels(shutdown_logs_t)
+mls_file_write_all_levels(shutdown_logs_t)
+
+user_data_files_type(shutdown_logs_data_t)
+data_filetrans(shutdown_logs_t, shutdown_logs_data_t, {file dir})
+manage_user_data_files(shutdown_logs_t, shutdown_logs_data_t)
+files_read_etc_files(shutdown_logs_t)
