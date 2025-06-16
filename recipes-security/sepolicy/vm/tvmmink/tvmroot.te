@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmroot, 1.0)
@@ -46,6 +46,8 @@ type smmu_proxy_device_t;
 type init_t;
 type system_dbusd_runtime_t;
 type power_unit_t;
+type c2pa_persist_t;
+class service { start stop status };
 ')
 
 platform_container_domain_type(tuicoreservice_t, tuicoreservice_exec_t)
@@ -54,7 +56,6 @@ platform_container_domain_type(trustedinputservice_t, trustedinputservice_exec_t
 userdebug_or_eng(`
 gen_require(`
         type unconfined_t;
-        class service { start stop status };
 ')
     # systemctl start/stop/status tvmroot
     allow unconfined_t tvmroot_exec_t:service { status start stop };
@@ -75,9 +76,12 @@ allow tvmroot_sock_t device_t:filesystem associate;
 
 allow tvmroot_t self:process signal;
 allow tvmroot_t platform_container_domain:process sigkill;
-allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no_trans relabelfrom };
-
-allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
+allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write relabelfrom };
+# only downloadable services can use anonymous backing files managed by tvmroot (e.g. memfd_create)
+gen_require(`
+    attribute files_unconfined_type;
+')
+neverallow { domain -tvmroot_t -dloemservice_t -files_unconfined_type } tvmroot_tmpfs_t:file { execute execute_no_trans };
 
 # TODO : It will be deleted when minijail supports setting oom adj value.
 write_files_pattern(tvmroot_t, platform_container_domain, platform_container_domain)
@@ -95,6 +99,13 @@ lvm_domtrans(tvmroot_t)
 corecmd_exec_shell(tvmroot_t)
 allow tvmroot_t self:fifo_file write_fifo_file_perms;
 allow tvmroot_t self:capability setpcap;
+
+# OOM score adj. This requires dac_override with user namespaces as there is no common group ID
+gen_require(`
+    attribute vendor_domain_dac_override_exception;
+')
+typeattribute tvmroot_t vendor_domain_dac_override_exception;
+allow tvmroot_t self:capability dac_override;
 
 # minijail
 allow tvmroot_t self:capability { sys_admin kill };
@@ -119,6 +130,7 @@ allow tvmroot_t tmp_t:dir search;
 # Downloadable TPs domain transition
 domtrans_pattern(tvmroot_t, tvmroot_tmpfs_t, dloemservice_t)
 allow tvmroot_t dloemservice_t:process2 nosuid_transition;
+allow dloemservice_t tvmroot_tmpfs_t:file { entrypoint map read execute };
 
 allow tvmroot_t smcinvoke_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmroot_t vendor_vm_hlos_device_t:chr_file { getattr read_chr_file_perms };
@@ -128,6 +140,7 @@ allow tvmroot_t vendor_vm_oem_device_t:chr_file { getattr read_chr_file_perms };
 
 allow tvmroot_t smmu_proxy_device_t:chr_file getattr;
 allow tvmroot_t tvmmink_sock_t:sock_file getattr;
+allow tvmroot_t c2pa_persist_t:dir getattr;
 
 # Check for dependencies (/persist, etc...)
 optional_policy(`

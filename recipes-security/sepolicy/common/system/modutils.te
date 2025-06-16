@@ -27,7 +27,7 @@
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -73,13 +73,17 @@ userdebug_or_eng(`
     allow kmod_t tracefs_t:dir search;
 ')
 # Netlink sockets
-read_write_qcmap_cm_socket_files(kmod_t)
-qcmap_cm_rw_unix_netlink_socket(kmod_t)
-qcmap_cm_rw_netlink_socket_files(kmod_t)
-qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
-networkmanager_read_wifi_sysdata_files(kmod_t)
+optional_policy(`
+    read_write_qcmap_cm_socket_files(kmod_t)
+    qcmap_cm_rw_unix_netlink_socket(kmod_t)
+    qcmap_cm_rw_netlink_socket_files(kmod_t)
+    qcmap_cm_rw_unix_dgram_socket_files(kmod_t)
+    networkmanager_read_wifi_sysdata_files(kmod_t)
+')
 
-firmware_read_files(kmod_t)
+optional_policy(`
+    firmware_read_files(kmod_t)
+')
 
 gen_require(`
     type kmsg_device_t;

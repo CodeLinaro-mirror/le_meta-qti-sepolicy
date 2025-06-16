@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(dsp_service, 1.0)
@@ -18,6 +18,7 @@ gen_require(`
 
 userdebug_or_eng(`
     allow dsp_service_t debugfs_t:dir search;
+    files_read_etc_files(dsp_service_t);
 ')
 
 files_tmpfs_file(dsp_service_tmpfs_t)
@@ -25,6 +26,7 @@ fs_tmpfs_filetrans(dsp_service_t, dsp_service_tmpfs_t, file)
 
 allow dsp_service_t dsp_service_tmpfs_t:file { write setattr read create open mounton getattr};
 allow dsp_service_t xdsp_device_t:chr_file { read getattr open ioctl };
+platform_container_bind_mount(dsp_service_t, xdsp_device_t, chr_file)
 allow dsp_service_t self:process signal;
 allow dsp_service_t socket_device_t:dir search;
 allow tvmroot_t xdsp_device_t:chr_file getattr;

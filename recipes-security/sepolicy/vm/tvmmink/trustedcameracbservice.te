@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(trustedcameracbservice, 1.0)
@@ -31,4 +31,5 @@ allow trustedcameracbservice_t smmu_proxy_device_t:chr_file rw_chr_file_perms;
 allow trustedcameracbservice_t socket_device_t:dir { search getattr };
 allow trustedcameracbservice_t tvmmink_sock_t:sock_file getattr;
 platform_container_domain_type(trustedcameracbservice_t, trustedcameracbservice_exec_t);
+platform_container_bind_mount(trustedcameracbservice_t, smmu_proxy_device_t, chr_file);
 
