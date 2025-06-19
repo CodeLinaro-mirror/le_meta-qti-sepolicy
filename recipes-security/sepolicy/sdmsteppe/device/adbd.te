@@ -40,3 +40,4 @@ allow usb_t setfiles_exec_t:file { read map getattr open execute execute_no_tran
 allow usb_t setprop_exec_t:file { read map getattr open execute execute_no_trans };
 
 dontaudit usb_t kernel_t:system { module_request };
+dontaudit usb_t self:capability sys_admin;

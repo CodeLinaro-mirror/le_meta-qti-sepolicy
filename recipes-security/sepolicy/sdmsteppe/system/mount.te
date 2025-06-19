@@ -57,3 +57,6 @@ dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir
 
 allow mount_t self:capability { dac_read_search };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
+
+mls_process_read_to_clearance(unconfined_mount_t)
+mls_process_write_to_clearance(unconfined_mount_t)
