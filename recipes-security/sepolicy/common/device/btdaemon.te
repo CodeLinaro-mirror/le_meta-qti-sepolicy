@@ -46,7 +46,7 @@ init_vendor_domain(btdaemon_t, btdaemon_exec_t)
 #============= btdaemon_t ==============
 
 gen_require(`
-        type systemd_logind_var_run_t;
+	type systemd_logind_var_run_t;
 	type system_dbusd_var_run_t;
 	type system_dbusd_t;
 	type leprop_sock_t;
@@ -54,6 +54,17 @@ gen_require(`
 	type default_t;
 	type bt_data_t;
 	type proc_t;
+	type shell_exec_t;
+	type root_t;
+	type unreserved_port_t;
+	type node_t;
+	type sysfs_t;
+	type syslogd_t;
+	type init_var_run_t;
+	type syslogd_var_run_t;
+	type tty_device_t;
+	type debugfs_t;
+	type wireless_device_t;
 ')
 
 
@@ -61,13 +72,18 @@ gen_require(`
 allow btdaemon_t self:capability { net_admin sys_nice };
 allow btdaemon_t self:capability2 wake_alarm;
 allow btdaemon_t self:socket create;
+allow btdaemon_t self:tcp_socket { create setopt bind accept listen read write };
 allow btdaemon_t self:unix_dgram_socket { connect write create };
-allow btdaemon_t self:process { signal setsched };
+allow btdaemon_t self:process { signal setsched getattr sigkill };
+allow btdaemon_t self:fifo_file { getattr read write open };
 
 read_system_data_files(btdaemon_t, bt_data_t)
 
 allow btdaemon_t systemd_logind_var_run_t:sock_file write; #/run/dbus/system_bus_socket
 allow btdaemon_t system_dbusd_var_run_t:dir search; #/run/dbus
+allow btdaemon_t debugfs_t:dir search;
+
+allow btdaemon_t shell_exec_t:file { execute read open execute_no_trans };
 
 allow btdaemon_t default_t:dir search;
 
@@ -78,6 +94,19 @@ allow btdaemon_t proc_t:file { read open getattr }; #/proc/filesystems
 dev_read_urand(btdaemon_t)
 
 allow btdaemon_t system_dbusd_t:unix_stream_socket connectto;
+allow btdaemon_t root_t:dir { write add_name create setattr remove_name };
+allow btdaemon_t root_t:file { create rename read append open getattr write unlink };
+allow btdaemon_t unreserved_port_t:tcp_socket  { name_bind };
+allow btdaemon_t sysfs_t:file { getattr write open read };
+allow btdaemon_t sysfs_t:lnk_file { getattr open read write };
+allow syslogd_t init_var_run_t:lnk_file { getattr open read write };
+allow syslogd_t btdaemon_t:process { getattr signal sigkill };
+allow btdaemon_t tty_device_t:chr_file { read write open getattr setattr ioctl };
+allow btdaemon_t wireless_device_t:chr_file { read write open };
+
+# Allow to bind to node_t
+allow btdaemon_t node_t:tcp_socket node_bind;
+
 
 ## for DBus
 ifdef(`init_systemd', `
