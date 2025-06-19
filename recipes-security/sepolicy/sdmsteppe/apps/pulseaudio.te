@@ -1,0 +1,7 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit pulseaudio_t self:capability sys_admin;
+
+#TODO:revisit this when facing any problem with path-/sys/power/wake_lock
+dontaudit pulseaudio_t sysfs_t:file append;
