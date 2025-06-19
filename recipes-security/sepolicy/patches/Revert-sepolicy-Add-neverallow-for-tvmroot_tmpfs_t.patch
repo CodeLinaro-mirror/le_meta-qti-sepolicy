@@ -1,0 +1,44 @@
+This patch file is from Qualcomm Technologies, Inc. and is provided under the following license:
+Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries. 
+SPDX-License-Identifier: BSD-3-Clause-Clear
+
+From 39ff048b0703a9bcc02a66683986ede9886a6594 Mon Sep 17 00:00:00 2001
+From: Valerie Cagle <dcagle@qti.qualcomm.com>
+Date: Mon, 19 May 2025 10:17:23 -0700
+Subject: [PATCH] Revert "sepolicy: Add neverallow for tvmroot_tmpfs_t"
+
+Allow embedded services to launch only on trustedvm-v3-1 and below.
+
+Signed-off-by: Valerie Cagle <dcagle@qti.qualcomm.com>
+---
+ policy/modules/tvmmink/tvmroot.te | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/policy/modules/tvmmink/tvmroot.te b/policy/modules/tvmmink/tvmroot.te
+index 83a0319be..94d5fb52b 100644
+--- a/policy/modules/tvmmink/tvmroot.te
++++ b/policy/modules/tvmmink/tvmroot.te
+@@ -76,12 +76,9 @@ allow tvmroot_sock_t device_t:filesystem associate;
+ 
+ allow tvmroot_t self:process signal;
+ allow tvmroot_t platform_container_domain:process sigkill;
+-allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write relabelfrom };
+-# only downloadable services can use anonymous backing files managed by tvmroot (e.g. memfd_create)
+-gen_require(`
+-    attribute files_unconfined_type;
+-')
+-neverallow { domain -tvmroot_t -dloemservice_t -files_unconfined_type } tvmroot_tmpfs_t:file { execute execute_no_trans };
++allow tvmroot_t tvmroot_tmpfs_t:file { mmap_exec_file_perms map write execute_no_trans relabelfrom };
++
++allow platform_container_domain tvmroot_tmpfs_t:file { entrypoint map read execute };
+ 
+ # TODO : It will be deleted when minijail supports setting oom adj value.
+ write_files_pattern(tvmroot_t, platform_container_domain, platform_container_domain)
+@@ -130,7 +127,6 @@ allow tvmroot_t tmp_t:dir search;
+ # Downloadable TPs domain transition
+ domtrans_pattern(tvmroot_t, tvmroot_tmpfs_t, dloemservice_t)
+ allow tvmroot_t dloemservice_t:process2 nosuid_transition;
+-allow dloemservice_t tvmroot_tmpfs_t:file { entrypoint map read execute };
+ 
+ allow tvmroot_t smcinvoke_device_t:chr_file { getattr read_chr_file_perms };
+ allow tvmroot_t vendor_vm_hlos_device_t:chr_file { getattr read_chr_file_perms };
