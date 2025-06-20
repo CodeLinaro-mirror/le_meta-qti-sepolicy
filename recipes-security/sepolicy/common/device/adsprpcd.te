@@ -129,6 +129,8 @@ gen_require(`
     type devlog_t;
     type syslogd_t;
     type device_t;
+    type kernel_t;
+    type event_device_t;
 ')
 allow adsprpcd_t overlay_t:dir search_dir_perms;
 allow adsprpcd_t syslogd_runtime_t:dir search_dir_perms;
@@ -136,3 +138,8 @@ allow adsprpcd_t devlog_t:sock_file write_file_perms;
 allow adsprpcd_t syslogd_t:unix_dgram_socket sendto;
 allow adsprpcd_t device_t:dir { getattr watch };
 allow adsprpcd_t device_t:chr_file read_chr_file_perms;
+allow adsprpcd_t kernel_t:unix_dgram_socket sendto;
+mls_file_read_all_levels(adsprpcd_t)
+mls_file_read_to_clearance(adsprpcd_t)
+mls_trusted_object(adsprpcd_t)
+allow adsprpcd_t event_device_t:chr_file read;
