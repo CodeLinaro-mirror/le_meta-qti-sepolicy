@@ -33,6 +33,9 @@ gen_require(`
     type lastlog_t;
     type etc_t;
     type shadow_t;
+    type overlay_t;
+    type chkpwd_t;
+    type sulogin_t;
 ')
 
 logging_log_filetrans(local_login_t, lastlog_t, file)
@@ -46,3 +49,8 @@ auth_read_shadow(local_login_t)
 userdebug_or_eng(`
     unconfined_shell_domtrans(local_login_t)
 ')
+
+allow local_login_t overlay_t:dir search_dir_perms;
+allow chkpwd_t overlay_t:dir search_dir_perms;
+allow sulogin_t overlay_t:dir search_dir_perms;
+allow sulogin_t self:capability2 checkpoint_restore;
