@@ -71,3 +71,13 @@ gen_require(`
 
 allow servicemanager_t self:unix_dgram_socket { write create connect };
 device_search_sockets(servicemanager_t)
+
+gen_require(`
+    type overlay_t;
+    type unconfined_execmem_t;
+')
+allow servicemanager_t overlay_t:dir search_dir_perms;
+
+userdebug_or_eng(`
+    allow servicemanager_t unconfined_execmem_t:binder transfer;
+')

@@ -656,3 +656,13 @@ allow qcmap_cm_t firmware_t:file { read open };
 dontaudit ifconfig_t sysdevice_sysfs_t:file { read };
 dontaudit ifconfig_t ipa_fw_device_t:chr_file { read write};
 dontaudit iptables_t ipa_fw_device_t:chr_file { read write};
+
+
+gen_require(`
+    type overlay_t;
+    type multicast_querier_sysfs_t;
+    type qmi_fw_vendor_t;
+')
+allow ifconfig_t overlay_t:dir search_dir_perms;
+allow qcmap_cm_t multicast_querier_sysfs_t:file write_file_perms;
+allow qcmap_cm_t qmi_fw_vendor_t:file read_file_perms;

@@ -1,4 +1,4 @@
-# Copyright (c) 2017-2018 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,21 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-files_read_etc_runtime_files(chronyd_t)
-dev_read_urand(chronyd_t)
-init_write_utmp(chronyd_t);
-init_read_utmp(chronyd_t);
-gen_require(`
-    type systemd_resolved_var_run_t;
-    type init_var_run_t;
-')
-allow chronyd_t systemd_resolved_var_run_t:file { open read getattr };
-allow chronyd_t init_var_run_t:file { open read getattr };
-allow chronyd_t self:capability net_raw;
-allow chronyd_t etc_t:file map;
-sysnet_read_dhcpc_runtime_files(chronyd_t)
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
-gen_require(`
-    type overlay_t;
-')
-allow chronyd_t overlay_t:dir search_dir_perms;
+/usr/bin/hwfde_service            --      gen_context(system_u:object_r:hwfde_service_exec_t,s0)
+/dev/sde26                        -b      gen_context(system_u:object_r:hwfde_footer_blk_t,s0)

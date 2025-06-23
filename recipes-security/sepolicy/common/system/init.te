@@ -169,7 +169,8 @@ optional_policy(`
     gen_require(`
         type overlay_t;
     ')
-    allow init_t overlay_t:dir list_dir_perms;
+    allow init_t overlay_t:dir manage_dir_perms;
+    allow init_t overlay_t:chr_file manage_chr_file_perms;
 ')
 
 #
@@ -208,8 +209,19 @@ optional_policy(`
     allow initrc_t servicemanager_t:binder call;
 ')
 
-gen_require(`
-    type overlay_t;
+optional_policy(`
+    gen_require(`
+        type rfsa_adsp_lib_t;
+    ')
+    allow initrc_t rfsa_adsp_lib_t:dir search_dir_perms;
 ')
 
-allow init_t overlay_t:dir write;
+gen_require(`
+    type binderfs_t;
+    type fsadm_t;
+    type overlay_t;
+')
+allow init_t binderfs_t:dir getattr_dir_perms;
+allow init_t binderfs_t:filesystem remount;
+
+allow fsadm_t overlay_t:dir search_dir_perms;

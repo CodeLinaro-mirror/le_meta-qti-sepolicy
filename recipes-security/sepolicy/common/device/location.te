@@ -386,6 +386,11 @@ read_files_pattern(xtra_daemon_t, qcmap_var_run_t, qcmap_var_run_t);
 # IPC router
 allow xtra_daemon_t self:qipcrtr_socket create_socket_perms;
 
+gen_require(`
+    type qmi_fw_vendor_t;
+')
+allow xtra_daemon_t qmi_fw_vendor_t:file read_file_perms;
+
 userdebug_or_eng(`
     allow xtra_daemon_t adbd_t:unix_dgram_socket sendto;
 ')
@@ -536,6 +541,8 @@ dontaudit {loc_t loc_hald_t xtwifi_agent_t xtwifi_client_t lowi_server_t xtra_da
 gen_require(`
     type qwesd_t;
     type qwes_mink_socket_t;
+    type qmi_fw_vendor_t;
+    type NetworkManager_t;
 ')
 
 ### location hal daemon
@@ -549,3 +556,6 @@ stream_connect_pattern(xtwifi_agent_t,qwes_mink_socket_t,qwes_mink_socket_t,qwes
 ### xtwifi_client
 #Qwes operations
 stream_connect_pattern(xtwifi_client_t,qwes_mink_socket_t,qwes_mink_socket_t,qwesd_t);
+
+allow loc_hald_t qmi_fw_vendor_t:file read_file_perms;
+allow loc_hald_t NetworkManager_t:unix_dgram_socket sendto;

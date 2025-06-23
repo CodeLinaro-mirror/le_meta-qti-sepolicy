@@ -76,4 +76,4 @@ gen_require(`
 
 allow diag-router_t overlay_t:dir search;
 allow diag-router_t usbfs_t:dir { open read search };
-allow diag-router_t usbfs_t:file { open read write };
+allow diag-router_t usbfs_t:file rw_file_perms;

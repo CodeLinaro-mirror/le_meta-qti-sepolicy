@@ -105,3 +105,5 @@
 
 # dev node
 /dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
+
+/vendor/etc/qmi_fw.conf -- gen_context(system_u:object_r:qmi_fw_vendor_t,s0)

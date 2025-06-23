@@ -71,6 +71,7 @@ gen_require(`
     type xdsp_device_t;
     type qdsp_device_t;
     type system_dmabuf_device_t;
+    type rfsa_adsp_lib_t;
 ')
 
 allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -82,6 +83,7 @@ allow adsprpcd_t persist_t:dir search_dir_perms;
 allow adsprpcd_t system_dir_t:dir { search open read getattr};
 allow adsprpcd_t system_dir_t:file read_file_perms;
 allow sensors_qti_exec_t sensors_vendor_data_t:file watch;
+allow initrc_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
 
 #allow adsprpcd_audiopd.service to access /proc/sys/vm/overcommit_memory
 kernel_read_vm_overcommit_sysctl(adsprpcd_t)
@@ -120,3 +122,17 @@ allow adsprpcd_t self:dir watch;
 allow adsprpcd_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
 
 allow rfsa_adsp_lib_t fs_t:filesystem associate;
+
+gen_require(`
+    type overlay_t;
+    type syslogd_runtime_t;
+    type devlog_t;
+    type syslogd_t;
+    type device_t;
+')
+allow adsprpcd_t overlay_t:dir search_dir_perms;
+allow adsprpcd_t syslogd_runtime_t:dir search_dir_perms;
+allow adsprpcd_t devlog_t:sock_file write_file_perms;
+allow adsprpcd_t syslogd_t:unix_dgram_socket sendto;
+allow adsprpcd_t device_t:dir { getattr watch };
+allow adsprpcd_t device_t:chr_file read_chr_file_perms;
