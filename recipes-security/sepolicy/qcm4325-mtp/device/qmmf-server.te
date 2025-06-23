@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(qmmf-server, 1.0)
 
 gen_require(`
@@ -69,6 +73,7 @@ gen_require(`
  type urandom_device_t;
  type devlog_t;
  type syslogd_t;
+ type vendor_camera_config_t;
  type weston_socket_device_t;
  type weston_t;
  type tmpfs_t;
@@ -92,6 +97,10 @@ gen_require(`
 optional_policy(`
     adsprpcd_files_access(qmmf_server_t)
 ')
+
+#For camera performance
+fs_manage_cgroup_dirs(qmmf_server_t)
+fs_manage_cgroup_files(qmmf_server_t)
 
 userdebug_or_eng(`
     gen_require(`
@@ -171,6 +180,10 @@ files_var_filetrans(qmmf_server_t, qmmf_server_tmp_t, { dir file })
 allow qmmf_server_t qmmf_server_tmp_t:dir { write add_name remove_name };
 allow qmmf_server_t syslogd_t:unix_dgram_socket sendto;
 
+#For camx config read perms
+allow qmmf_server_t vendor_camera_config_t:dir search;
+allow qmmf_server_t vendor_camera_config_t:file { open read getattr };
+
 userdebug_or_eng(`
     gen_require(`
         type unconfined_t;
@@ -192,6 +205,7 @@ userdebug_or_eng(`
 ')
 
 manage_qmmf_data_files(qmmf_server_t)
+manage_camera_files_data(qmmf_server_t)
 device_search_sockets(qmmf_server_t)
 allow qmmf_server_t binder_device_t:chr_file { read write map };
 allow qmmf_server_t self:capability dac_override;

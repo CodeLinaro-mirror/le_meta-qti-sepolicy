@@ -19,5 +19,12 @@ type panel_pixel_shift_t;
 genfscon sysfs /kernel/rtimd/rtimd_eye    gen_context(system_u:object_r:panel_pixel_shift_t,s0)
 dev_associate_sysfs(panel_pixel_shift_t)
 
+type image_variant_sysfs_t;
+genfscon sysfs /devices/soc0/select_image  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_variant  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+genfscon sysfs /devices/soc0/image_crm_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
+dev_associate_sysfs(image_variant_sysfs_t)
+
 type proc_sched_t;
 genfscon proc /sys/walt/ gen_context(system_u:object_r:proc_sched_t,s0)

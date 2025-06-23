@@ -219,6 +219,8 @@ allow weston_t webserver_t:dir getattr;
 # Allow weston search /run for wayland socket
 gen_require(`
  type var_run_t;
+ type pmsg_device_t;
+ type brightness_sysfs_t;
 ')
 
 allow weston_t var_run_t:dir search_dir_perms;
@@ -239,3 +241,8 @@ allow weston_t sysfs_cpu_capacity:file read_file_perms;
 allow weston_t sysfs_cpu_present:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
 allow weston_t vendor_dmabuf_system_heap_device_t:chr_file { ioctl open read };
+
+allow weston_t fonts_cache_t:file lock;
+allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
+allow weston_t brightness_sysfs_t:file rw_file_perms;
+
