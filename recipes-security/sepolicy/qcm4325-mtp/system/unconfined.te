@@ -52,6 +52,8 @@ userdebug_or_eng(`
         type weston_runtime_t;
         type camera_data_t;
         type sysfs_cpu_capacity;
+	type cpu_sysfs_t;
+        type cpu_scaling_freq_t;
     ')
 
     mls_file_read_all_levels(unconfined_t)
@@ -81,7 +83,9 @@ userdebug_or_eng(`
     allow unconfined_t hwfde_conf_file_t:file read_file_perms;
     allow unconfined_t install_evict_t:file exec_file_perms;
 
-    allow unconfined_t sysfs_cpu_capacity:file { getattr };
+    allow unconfined_t sysfs_cpu_capacity:file read_file_perms;
+    allow unconfined_t cpu_sysfs_t:file rw_file_perms;
+    allow unconfined_t cpu_scaling_freq_t:file read_file_perms;
     gen_require(`
         type recovery_exec_t;
         type aud_dev_sysfs_t;
@@ -91,6 +95,8 @@ userdebug_or_eng(`
         type power_sysfs_t;
         type image_variant_sysfs_t;
         type brightness_sysfs_t;
+	type kerneltests_modules_data_t;
+        type fs_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
@@ -102,4 +108,7 @@ userdebug_or_eng(`
     allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
     allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
     allow unconfined_t brightness_sysfs_t:file getattr;
+    allow kerneltests_modules_data_t fs_t:filesystem associate;
+    allow unconfined_t kerneltests_modules_data_t:dir { add_name setattr write remove_name };
+    allow unconfined_t kerneltests_modules_data_t:file { create rename setattr unlink write };
 ')
