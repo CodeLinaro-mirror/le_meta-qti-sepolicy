@@ -25,9 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Technologies, Inc. are provided under the following license:
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
+#Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
+#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
@@ -35,26 +35,29 @@ dev_node(ashmem_devices_t);
 gen_require(`
     type cpu_sysfs_t;
     type storage_disk_device_t;
-    type queue_sysfs_t;
     type image_variant_sysfs_t;
     type power_sysfs_t;
+    type zs_handle_sysfs_t;
+    type zspage_sysfs_t;
+    type mem_sleep_sysfs_t;
 ')
 
 allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
 allow post_boot_script_t cpu_sysfs_t:file { create write_file_perms };
 allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
-allow post_boot_script_t queue_sysfs_t:dir add_entry_dir_perms;
-allow post_boot_script_t queue_sysfs_t:file { rw_file_perms create };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
-allow post_boot_script_t power_sysfs_t:file write_file_perms;
 
-#sepolicy for touch start le script
 gen_require(`
     type modules_object_t;
 ')
 
 allow touch_script_t modules_object_t:dir search;
 allow touch_script_t self:fifo_file { rw_inherited_file_perms };
-allow touch_script_t modules_object_t:file getattr;
-allow initrc_t touch_script_exec_t:file entrypoint;
+allow post_boot_script_t power_sysfs_t:file { rw_file_perms create};
+allow post_boot_script_t zs_handle_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t mem_sleep_sysfs_t:dir { add_name };
+allow post_boot_script_t mem_sleep_sysfs_t:file { rw_file_perms create };

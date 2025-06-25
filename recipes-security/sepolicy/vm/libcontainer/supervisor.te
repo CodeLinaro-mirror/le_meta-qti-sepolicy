@@ -1,4 +1,4 @@
-# Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.  
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(supervisor, 1.0)
@@ -68,3 +68,6 @@ allow supervisor_t device_t:chr_file { create relabelfrom setattr };
 mls_file_read_all_levels(supervisor_t)
 mls_file_upgrade(supervisor_t)
 mls_file_downgrade(supervisor_t)
+
+# exit()
+allow supervisor_t self:process signal;
