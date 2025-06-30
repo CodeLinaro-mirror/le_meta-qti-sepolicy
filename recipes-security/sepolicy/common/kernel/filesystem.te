@@ -90,6 +90,12 @@ type power_control_t;
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/power/control gen_context(system_u:object_r:power_control_t,s0)
 dev_associate_sysfs(power_control_t)
 
+type drm_card_sysfs_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0/card0-Virtual-1 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0/card0-DP-1 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+dev_associate_sysfs(drm_card_sysfs_t)
+
 type encryption_control_t;
 genfscon sysfs /devices/virtual/hdcp/msm_hdcp/min_level_change gen_context(system_u:object_r:encryption_control_t,s0)
 dev_associate_sysfs(encryption_control_t)
