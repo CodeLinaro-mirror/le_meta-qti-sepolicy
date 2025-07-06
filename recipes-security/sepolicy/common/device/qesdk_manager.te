@@ -36,3 +36,17 @@ userdebug_or_eng(`
 
 leprop_rw_props(qesdk_manager_t);
 logging_send_syslog_msg(qesdk_manager_t)
+
+gen_require(`
+    type cert_t;
+    type sysctl_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+')
+
+allow qesdk_manager_t cert_t:dir search;
+allow qesdk_manager_t cert_t:file { getattr open read };
+
+allow qesdk_manager_t sysctl_t:dir search;
+allow qesdk_manager_t sysctl_vm_t:dir search;
+allow qesdk_manager_t sysctl_vm_overcommit_t:file { open read };

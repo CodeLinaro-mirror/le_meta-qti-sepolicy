@@ -11,5 +11,6 @@ gen_require(`
 allow adsprpcd_t self:dir watch;
 
 allow adsprpcd_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+allow adsprpcd_t rfsa_adsp_lib_t:file { read_file_perms };
 
 allow rfsa_adsp_lib_t fs_t:filesystem associate;

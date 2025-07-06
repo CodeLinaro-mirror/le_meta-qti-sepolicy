@@ -37,6 +37,8 @@ gen_require(`
     type storage_disk_device_t;
     type image_variant_sysfs_t;
     type power_sysfs_t;
+    type zs_handle_sysfs_t;
+    type zspage_sysfs_t;
 ')
 
 allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
@@ -45,6 +47,10 @@ allow post_boot_script_t storage_disk_device_t:blk_file { getattr };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
+allow post_boot_script_t zs_handle_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
 
 gen_require(`
     type modules_object_t;
