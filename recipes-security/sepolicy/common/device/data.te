@@ -75,6 +75,14 @@ data_filetrans(initrc_t, qfhlog_data_t, { file dir })
 manage_user_data_files(initrc_t, qfhlog_data_t)
 allow initrc_t qfhlog_data_t:dir manage_dir_perms;
 allow initrc_t qfhlog_data_t:file manage_file_perms;
+allow setfiles_t qfhlog_data_t:dir relabelto;
+
+type splane_data_t;
+user_data_files_type(splane_data_t)
+manage_user_data_files(initrc_t, splane_data_t)
+manage_user_data_files(init_t, splane_data_t)
+allow init_t splane_data_t:dir { mounton };
+allow setfiles_t splane_data_t:dir relabelto;
 
 #To support coredump in userdebug variant
 type coredump_data_t;
