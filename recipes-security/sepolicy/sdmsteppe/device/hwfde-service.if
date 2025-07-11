@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,15 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-userdebug_or_eng(`
-    rw_diag_dev(iptables_t)
-')
+## <summary>hwfde-service daemon</summary>
 
-gen_require(`
-    type systemd_tmpfiles_t;
-    type overlay_t;
-')
-systemd_tmpfilesd_managed(iptables_runtime_t)
-allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
-dontaudit iptables_t self:capability { kill };
-allow iptables_t overlay_t:dir search_dir_perms;
+#######################################
+## <summary>
+##       hwfde-service interface
+## </summary>
+#

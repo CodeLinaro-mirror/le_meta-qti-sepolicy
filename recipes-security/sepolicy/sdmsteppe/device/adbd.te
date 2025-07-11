@@ -1,4 +1,4 @@
-# Copyright (c) 2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -24,54 +24,19 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-policy_module(leprop, 1.0)
-
-# leprop-service
-type leprop_t;
-type leprop_exec_t;
-init_vendor_domain(leprop_t, leprop_exec_t)
-inittab_domtrans(leprop_t, leprop_exec_t)
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+#
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 gen_require(`
-    type overlay_t;
+    type setfiles_exec_t;
+    type setprop_exec_t;
 ')
 
-allow leprop_t self:unix_dgram_socket create_socket_perms;
-allow leprop_t self:unix_stream_socket create_stream_socket_perms;
+# /sbin/start_usb exec restorecon and setprop command
+allow usb_t setfiles_exec_t:file exec_file_perms;
+allow usb_t setprop_exec_t:file exec_file_perms;
 
-type leprop_system_data_t;
-system_data_files_type(leprop_system_data_t)
-manage_system_data_files(leprop_t, leprop_system_data_t)
-
-type leprop_sock_t;
-files_type(leprop_sock_t)
-dev_node(leprop_sock_t)
-leprop_rw_props(leprop_t)
-device_manage_socket_file(leprop_t, leprop_sock_t, "leprop-service")
-
-# /var/volatile/tmp/core.leprop-service.*
-type leprop_tmp_t;
-files_tmp_file(leprop_tmp_t)
-files_tmp_filetrans(leprop_t, leprop_tmp_t, file)
-manage_files_pattern(leprop_t, leprop_tmp_t, leprop_tmp_t)
-# proptrigger.conf
-files_read_etc_files(leprop_t)
-
-# setprop utility
-type setprop_t;
-type setprop_exec_t;
-
-init_system_domain(setprop_t, setprop_exec_t)
-leprop_rw_props(setprop_t)
-device_search_sockets(setprop_t)
-
-allow setprop_t self:unix_dgram_socket create_socket_perms;
-allow setprop_t self:unix_stream_socket { create write connect };
-#allow setprop_t self:capability dac_override;  # TODO: why is this needed?
-
-init_dontaudit_use_fds(setprop_t)
-term_dontaudit_use_unallocated_ttys(setprop_t)
-
-allow leprop_t overlay_t:dir search_dir_perms;
-allow setprop_t overlay_t:dir search_dir_perms;
+dontaudit usb_t kernel_t:system { module_request };

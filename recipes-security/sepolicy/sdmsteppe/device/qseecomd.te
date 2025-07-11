@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,15 +25,20 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-userdebug_or_eng(`
-    rw_diag_dev(iptables_t)
-')
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 gen_require(`
-    type systemd_tmpfiles_t;
-    type overlay_t;
+       type power_control_t;
+       type encryption_control_t;
+       type initrc_t;
+       type qseecomd_persist_t;
 ')
-systemd_tmpfilesd_managed(iptables_runtime_t)
-allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
-dontaudit iptables_t self:capability { kill };
-allow iptables_t overlay_t:dir search_dir_perms;
+
+allow qseecomd_t power_control_t:file rw_file_perms;
+allow qseecomd_t encryption_control_t:file rw_file_perms;
+
+#allow initrc to create a /persist/data folder
+allow initrc_t qseecomd_persist_t: dir { create_dir_perms setattr_dir_perms };

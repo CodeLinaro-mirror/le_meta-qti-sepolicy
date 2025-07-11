@@ -45,6 +45,9 @@ gen_require(`
     type qdsp_device_t;
     type xdsp_device_t;
     type system_dmabuf_device_t;
+    type overlay_t;
+    type syslogd_runtime_t;
+    type device_t;
 ')
 
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -80,3 +83,18 @@ allow cdsprpcd_t adsprpcd_t:dir { read watch };
 
 allow cdsprpcd_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
 allow cdsprpcd_t rfsa_adsp_lib_t:file read_file_perms;
+
+allow cdsprpcd_t overlay_t:dir search_dir_perms;
+allow cdsprpcd_t syslogd_runtime_t:dir search_dir_perms;
+allow cdsprpcd_t device_t:chr_file read_chr_file_perms;
+allow cdsprpcd_t device_t:dir { getattr watch };
+
+userdebug_or_eng(`
+    gen_require(`
+        type devlog_t;
+        type syslogd_t;
+    ')
+
+    allow cdsprpcd_t devlog_t:sock_file write_file_perms;
+    allow cdsprpcd_t syslogd_t:unix_dgram_socket sendto;
+')

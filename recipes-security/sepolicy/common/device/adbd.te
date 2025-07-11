@@ -242,6 +242,7 @@ gen_require(`
     type leprop_t;
     type pmsg_device_t;
     type image_variant_sysfs_t;
+    type overlay_t;
 ')
 allow usb_t cgroup_t:filesystem getattr;
 
@@ -266,3 +267,5 @@ allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
 allow usb_t image_variant_sysfs_t:dir search;
 allow usb_t image_variant_sysfs_t:file read_file_perms;
+
+allow adbd_initrc_t overlay_t:dir list_dir_perms;
