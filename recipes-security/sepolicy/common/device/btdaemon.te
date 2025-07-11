@@ -95,7 +95,7 @@ dev_read_urand(btdaemon_t)
 
 allow btdaemon_t system_dbusd_t:unix_stream_socket connectto;
 allow btdaemon_t root_t:dir { write add_name create setattr remove_name };
-allow btdaemon_t root_t:file { create rename read append open getattr write unlink };
+allow btdaemon_t root_t:file { create rename read append open getattr write unlink link };
 allow btdaemon_t unreserved_port_t:tcp_socket  { name_bind };
 allow btdaemon_t sysfs_t:file { getattr write open read };
 allow btdaemon_t sysfs_t:lnk_file { getattr open read write };
