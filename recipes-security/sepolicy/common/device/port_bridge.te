@@ -67,3 +67,6 @@ manage_user_data_files(port_bridge_t, port_bridge_data_t)
 
 allow port_bridge_t dataqti_ppp_device_t:chr_file rw_chr_file_perms; #/dev/smd8
 allow port_bridge_t port_bridge_data_usb_t:file { open read write getattr }; #/data/usb/at_w_dun
+dontaudit port_bridge_t self:capability dac_override;
+allow init_t port_bridge_data_usb_t:dir search;
+allow init_t port_bridge_data_usb_t:file getattr;
