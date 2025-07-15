@@ -170,6 +170,8 @@ allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
 allow dhcpc_t qnetcfgmgr_t:netlink_route_socket { read write };
 allow dhcpc_t qnetcfgmgr_t:unix_stream_socket { read write };
+allow dhcpc_t qnetcfgmgr_persist_qncm_t:file { read write create open getattr map};
+allow dhcpc_t persist_t:dir search;
 
 # Permissions added for DNSmasq to support hosting RU local management port
 allow dnsmasq_t initrc_var_run_t:dir { search write add_name };
