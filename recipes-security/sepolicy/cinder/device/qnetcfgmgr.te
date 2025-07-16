@@ -102,6 +102,11 @@ gen_require(`
   type user_home_dir_t;
   type node_t;
   type persist_t;
+  type pmsg0_t;
+  type system_dbusd_var_run_t;
+  type faultmgr_t;
+  class dbus send_msg;
+  class dbus acquire_svc;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -259,6 +264,14 @@ manage_user_data_files(qnetcfgmgr_t, qnetcfgmgr_persist_qncm_t)
 allow qnetcfgmgr_t persist_t:dir search;
 allow initrc_t qnetcfgmgr_persist_qncm_t:dir setattr;
 allow qnetcfgmgr_t qnetcfgmgr_persist_qncm_t:file map;
+
+#  Dbus Client
+allow qnetcfgmgr_t pmsg0_t:chr_file write;
+allow qnetcfgmgr_t system_dbusd_var_run_t:dir search;
+allow qnetcfgmgr_t system_dbusd_var_run_t:sock_file write;
+allow qnetcfgmgr_t system_dbusd_t:unix_stream_socket connectto;
+allow qnetcfgmgr_t system_dbusd_t:dbus { send_msg acquire_svc };
+allow qnetcfgmgr_t faultmgr_t:dbus send_msg;
 
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
