@@ -95,6 +95,7 @@ userdebug_or_eng(`
         type zspage_sysfs_t;
         type power_sysfs_t;
         type image_variant_sysfs_t;
+        type brightness_sysfs_t;
 	type kerneltests_modules_data_t;
         type fs_t;
     ')
@@ -107,6 +108,7 @@ userdebug_or_eng(`
     allow unconfined_t zspage_sysfs_t:dir getattr;
     allow unconfined_t power_sysfs_t:file { rw_file_perms };
     allow unconfined_t image_variant_sysfs_t:file manage_file_perms;
+    allow unconfined_t brightness_sysfs_t:file getattr;
     allow kerneltests_modules_data_t fs_t:filesystem associate;
     allow unconfined_t kerneltests_modules_data_t:dir { add_name setattr write remove_name };
     allow unconfined_t kerneltests_modules_data_t:file { create rename setattr unlink write };
