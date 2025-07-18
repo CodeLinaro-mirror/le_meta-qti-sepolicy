@@ -99,6 +99,7 @@ userdebug_or_eng(`
         type brightness_sysfs_t;
 	type kerneltests_modules_data_t;
         type fs_t;
+	type binderfs_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
@@ -112,6 +113,7 @@ userdebug_or_eng(`
     allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
     allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
     allow unconfined_t brightness_sysfs_t:file getattr;
+    allow unconfined_t binderfs_t:file getattr;
     allow kerneltests_modules_data_t fs_t:filesystem associate;
     allow unconfined_t kerneltests_modules_data_t:dir { add_name setattr write remove_name };
     allow unconfined_t kerneltests_modules_data_t:file { create rename setattr unlink write };
