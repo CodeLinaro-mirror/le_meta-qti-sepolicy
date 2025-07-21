@@ -72,6 +72,6 @@ userdebug_or_eng(`
 
   allow diag-router_t usb_dev_t:dir { read open search };
   allow diag-router_t usbfs_t:dir { read open search };
-  allow diag-router_t usbfs_t:file { read write open };
+  allow diag-router_t usbfs_t:file { read write open ioctl };
 ')
 
