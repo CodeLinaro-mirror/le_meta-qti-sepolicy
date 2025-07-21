@@ -1,0 +1,16 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(gptchecker, 1.0)
+type gpt_checker_t;
+type gpt_checker_exec_t;
+init_vendor_domain(gpt_checker_t, gpt_checker_exec_t)
+
+gen_require(`
+    type proc_t;
+    type gpt_checker_conf_file_t;
+    type init_var_run_t;
+')
+allow gpt_checker_t proc_t:file { read  open getattr };
+allow gpt_checker_t gpt_checker_conf_file_t:file { read open };
+allow gpt_checker_t init_var_run_t:dir { search };

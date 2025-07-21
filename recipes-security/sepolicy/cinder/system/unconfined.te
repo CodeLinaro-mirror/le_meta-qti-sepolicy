@@ -1,5 +1,5 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 
 # cpu_scaling_min/max can be set from user shell in testing
@@ -14,6 +14,7 @@ userdebug_or_eng(`
 		type sysfs_usb_mode_t;
 		type tuicoreservice_dev_t;
 		type sysfs_cpu_capacity;
+		type gpt_checker_exec_t;
 	')
 
 allow unconfined_t sysfs_cpu_capacity:file read_file_perms;
@@ -26,4 +27,5 @@ allow unconfined_t dumgr_config_t:dir { search getattr read open };
 allow unconfined_t dumgr_config_t:file read_file_perms;
 allow unconfined_t sysfs_usb_mode_t:file { getattr read open write };
 allow unconfined_t tuicoreservice_dev_t:chr_file { ioctl open read };
+allow unconfined_t gpt_checker_exec_t:service { start status stop };
 ')
