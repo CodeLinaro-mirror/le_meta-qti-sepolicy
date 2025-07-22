@@ -71,6 +71,22 @@ gen_require(`
  type weston_t;
  type cvp_device_t;
  type synx_device_t;
+ type system_dmabuf_device_t;
+ type rfsa_adsp_lib_t;
+ type syslogd_runtime_t;
+ type adsprpcd_t;
+ type binderfs_t;
+ type binder_device_t;
+ type device_t;
+ type gpu_device_t;
+ type sysfs_cpu_capacity;
+ type sysfs_cpu_present;
+ type sysfs_t;
+ type cpu_sysfs_t;
+ type vendor_dmabuf_system_heap_device_t;
+ type sysctl_vm_t;
+ type sysctl_vm_overcommit_t;
+ type qmi_fw_vendor_t;
 ')
 
 # For video related files
@@ -136,6 +152,7 @@ userdebug_or_eng(`
         type debugfs_t;
         type tracefs_t;
         type trace_marker_t;
+        type unconfined_execmem_t;
     ')
 
     rw_chr_files_pattern(qmmf_server_t, device_t, diag_device_t);
@@ -146,55 +163,30 @@ userdebug_or_eng(`
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
+    allow qmmf_server_t unconfined_execmem_t:binder call;
 ')
 
 manage_qmmf_data_files(qmmf_server_t)
 manage_camera_files_data(qmmf_server_t)
 device_search_sockets(qmmf_server_t)
 
-gen_require(`
-    type system_dmabuf_device_t;
-    type rfsa_adsp_lib_t;
-    type syslogd_runtime_t;
-    type adsprpcd_t;
-    type binderfs_t;
-    type binder_device_t;
-    type device_t;
-    type gpu_device_t;
-    type sysfs_cpu_capacity;
-    type sysfs_cpu_present;
-    type sysfs_t;
-    type cpu_sysfs_t;
-    type vendor_dmabuf_system_heap_device_t;
-    type sysctl_vm_t;
-    type sysctl_vm_overcommit_t;
-    type qmi_fw_vendor_t;
-    type unconfined_execmem_t;
-')
 allow qmmf_server_t system_dmabuf_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t rfsa_adsp_lib_t:dir { manage_dir_perms watch };
 allow qmmf_server_t rfsa_adsp_lib_t:file read_file_perms;
 allow qmmf_server_t syslogd_runtime_t:dir search_dir_perms;
 allow qmmf_server_t adsprpcd_t:dir { manage_dir_perms watch };
 allow qmmf_server_t binderfs_t:dir search_dir_perms;
-allow qmmf_server_t binder_device_t:chr_file map;
 allow qmmf_server_t self:qipcrtr_socket create_socket_perms;
 allow qmmf_server_t device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t device_t:dir search_dir_perms;
 
 mls_file_read_all_levels(qmmf_server_t);
 
-allow qmmf_server_t gpu_device_t:chr_file map;
-allow qmmf_server_t sysfs_cpu_capacity:file rw_file_perms;
-allow qmmf_server_t sysfs_cpu_present:file rw_file_perms;
-allow qmmf_server_t sysfs_t:lnk_file read_file_perms;
+allow qmmf_server_t sysfs_cpu_capacity:file read_file_perms;
+allow qmmf_server_t sysfs_cpu_present:file read_file_perms;
 allow qmmf_server_t cpu_sysfs_t:file read_file_perms;
 allow qmmf_server_t cpu_sysfs_t:dir search_dir_perms;
 allow qmmf_server_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t sysctl_vm_t:dir search_dir_perms;
 allow qmmf_server_t sysctl_vm_overcommit_t:file read_file_perms;
 allow qmmf_server_t qmi_fw_vendor_t:file read_file_perms;
-
-userdebug_or_eng(`
-    allow qmmf_server_t unconfined_execmem_t:binder call;
-')

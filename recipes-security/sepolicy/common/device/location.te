@@ -216,6 +216,7 @@ gen_require(`
     type NetworkManager_runtime_t;
     type NetworkManager_tmp_t;
     type wlan_initrc_t;
+    type NetworkManager_t;
 ')
 
 # Allow dir and sock_file permissions for wpa_ctrl
@@ -231,6 +232,8 @@ rw_sock_files_pattern(loc_hald_t, NetworkManager_runtime_t, NetworkManager_runti
 #Allow send permissions to wpa_supplicant socket
 allow loc_hald_t wlan_initrc_t:unix_dgram_socket sendto;
 allow wlan_initrc_t loc_hald_t:unix_dgram_socket sendto;
+
+allow loc_hald_t NetworkManager_t:unix_dgram_socket sendto;
 
 ### xtwifi_agent
 
@@ -542,7 +545,6 @@ gen_require(`
     type qwesd_t;
     type qwes_mink_socket_t;
     type qmi_fw_vendor_t;
-    type NetworkManager_t;
 ')
 
 ### location hal daemon
@@ -558,4 +560,3 @@ stream_connect_pattern(xtwifi_agent_t,qwes_mink_socket_t,qwes_mink_socket_t,qwes
 stream_connect_pattern(xtwifi_client_t,qwes_mink_socket_t,qwes_mink_socket_t,qwesd_t);
 
 allow loc_hald_t qmi_fw_vendor_t:file read_file_perms;
-allow loc_hald_t NetworkManager_t:unix_dgram_socket sendto;

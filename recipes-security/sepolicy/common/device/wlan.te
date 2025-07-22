@@ -89,6 +89,13 @@ type sysctl_net_t;
 type wifi_data_t;
 type syslogd_runtime_t;
 type init_runtime_t;
+type mnt_t;
+type leprop_sock_t;
+type leprop_t;
+type qmi_fw_vendor_t;
+type etc_t;
+type NetworkManager_runtime_t;
+type wlan_initrc_exec_t;
 ')
 
 userdebug_or_eng(`
@@ -134,18 +141,6 @@ allow wlan_initrc_t init_runtime_t:dir search;
 allow wlan_initrc_t default_t:file read_file_perms;
 allow wlan_initrc_t self:netlink_socket create_socket_perms;
 
-gen_require(`
-    type mnt_t;
-    type leprop_sock_t;
-    type leprop_t;
-    type qmi_fw_vendor_t;
-    type usr_t;
-    type etc_t;
-    type unlabeled_t;
-    type NetworkManager_runtime_t;
-    type net_conf_t;
-')
-
 allow wlan_initrc_t mnt_t:dir search_dir_perms;
 allow wlan_initrc_t leprop_sock_t:sock_file write_sock_file_perms;
 allow wlan_initrc_t leprop_t:unix_stream_socket connectto;
@@ -158,8 +153,5 @@ allow wlan_initrc_t wifi_system_data_t:dir list_dir_perms;
 read_system_data_files(wlan_initrc_t, wifi_system_data_t)
 
 allow wlan_initrc_t NetworkManager_runtime_t:dir setattr_dir_perms;
-allow wlan_initrc_t usr_t:file exec_file_perms;
-allow wlan_initrc_t etc_t:file exec_file_perms;
-allow wlan_initrc_t unlabeled_t:file getattr_file_perms;
+allow wlan_initrc_t wlan_initrc_exec_t:file exec_file_perms;
 allow wlan_initrc_t etc_t:lnk_file read_lnk_file_perms;
-allow wlan_initrc_t net_conf_t:file write_file_perms;

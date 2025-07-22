@@ -113,6 +113,7 @@ gen_require(`
  type system_uncached_dmabuf_device_t;
  type binderfs_t;
  type binder_device_t;
+ type servicemanager_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
@@ -133,5 +134,5 @@ allow pulseaudio_t qmi_fw_vendor_t:file read_file_perms;
 allow pulseaudio_t rfsa_adsp_lib_t:dir search_dir_perms;
 allow pulseaudio_t system_uncached_dmabuf_device_t:chr_file read_chr_file_perms;
 allow pulseaudio_t binderfs_t:dir search;
-allow pulseaudio_t sysfs_t:file append;
 allow pulseaudio_t binder_device_t:chr_file { map rw_chr_file_perms };
+allow pulseaudio_t servicemanager_t:binder call;

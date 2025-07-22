@@ -1,5 +1,0 @@
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-dontaudit wlan_initrc_t self:capability sys_admin;
-allow wlan_initrc_t self:capability { chown dac_override fowner };

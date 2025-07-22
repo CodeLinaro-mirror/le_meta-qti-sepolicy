@@ -44,6 +44,7 @@ gen_require(`
     type var_t;
     type wifi_data_t;
     type hwfde_conf_file_t;
+    type overlay_t;
 ')
 
 #for overlayfs
@@ -58,5 +59,5 @@ dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir
 allow mount_t self:capability { dac_read_search };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 
-mls_process_read_to_clearance(unconfined_mount_t)
-mls_process_write_to_clearance(unconfined_mount_t)
+allow mount_t overlay_t:chr_file delete_chr_file_perms;
+allow mount_t var_t:chr_file unlink;

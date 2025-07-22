@@ -43,15 +43,13 @@ type weston_usr_t;
 type weston_runtime_t;
 
 init_vendor_domain(weston_t, weston_exec_t)
-permissive weston_t;
+
 #domain Transition from unconfined_t to weston_t when executing from adb shell
 userdebug_or_eng(`
     gen_require(`
         type unconfined_t;
-        role unconfined_r;
     ')
     domtrans_pattern(unconfined_t, weston_exec_t, weston_t)
-    role unconfined_r types weston_t;
 ')
 
 gen_require(`
@@ -93,33 +91,20 @@ gen_require(`
  type user_home_dir_t;
  type brightness_t;
  type device_t;
- type perf_hal_socket_t;
- type perf_hal_t;
  type sysfs_cpu_capacity;
  type sysfs_cpu_present;
- type tuicoreservice_vendor_t;
  type gpumodel_t;
- type pmsg_device_t;
  type vendor_dmabuf_system_heap_device_t;
  attribute domain_can_read_systemdata;
- type servicemanager_t;
- type binderfs_t;
- type binder_device_t;
- type init_runtime_t;
- type syslogd_runtime_t;
- type devlog_t;
- type syslogd_t;
- type unreserved_port_t;
- type node_t;
- type user_home_dir_t;
 ')
+
+allow weston_t sysfs_cpu_capacity:file { read_file_perms };
+allow weston_t sysfs_cpu_present:file { read_file_perms };
 
 #For weston-terminal
 allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
-allow weston_t user_home_dir_t:dir { add_entry_dir_perms create remove_name };
-allow weston_t user_home_dir_t:file { create mmap_rw_file_perms lock rename };
-
+allow weston_t user_home_dir_t:dir search;
 allow weston_t weston_exec_t:file execute_no_trans;
 type weston_pty_t;
 term_create_pty(weston_t, weston_pty_t)
@@ -157,17 +142,9 @@ allow weston_t weston_socket_device_t:file manage_file_perms;
 allow weston_t weston_socket_device_t:sock_file manage_sock_file_perms;
 
 allow weston_t self:process setsched;
-allow weston_t self:process { execmem getsched };
-
-#manage binder call
-servicemanager_binder_use(weston_t)
-servicemanager_binder_call(weston_t servicemanager_t)
-allow weston_t binderfs_t:dir search;
-allow weston_t binder_device_t:chr_file { map };
 
 # Weston needs to access buffer fd passed from qmmf-server.
 allow weston_t qmmf_server_t:fd use;
-allow weston_t self:fd use;
 
 #Manage Files under /usr/share/weston
 files_type(weston_usr_t);
@@ -179,17 +156,12 @@ userdebug_or_eng(`
         type trace_marker_t;
         type tracefs_t;
         type debugfs_t;
-        type adbd_t;
     ')
 
     allow weston_t debugfs_t:dir search;
     allow weston_t trace_marker_t:file { write open };
     allow weston_t tracefs_t:dir search;
     allow weston_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty
-    allow weston_t syslogd_runtime_t:dir search;
-    allow weston_t devlog_t:sock_file write;
-    allow weston_t syslogd_t:unix_dgram_socket sendto;
-    allow weston_t adbd_t:unix_stream_socket { connectto create_stream_socket_perms };
 ')
 
 manage_qmmf_data_files(weston_t)
@@ -216,7 +188,7 @@ allow weston_t initrc_var_run_t:sock_file { create write };
 allow weston_t self:process signal;
 allow weston_t self:unix_stream_socket create_stream_socket_perms;
 allow weston_t fonts_cache_t:dir { search_dir_perms setattr write add_name remove_name };
-allow weston_t fonts_cache_t:file { map manage_file_perms };
+allow weston_t fonts_cache_t:file { getattr map open read write create link rename unlink };
 allow weston_t fonts_t:dir { search_dir_perms read };
 allow weston_t fonts_t:file { getattr map open read };
 allow weston_t locale_t:dir search_dir_perms;
@@ -227,7 +199,6 @@ allow weston_t adsprpcd_t:dir getattr;
 allow weston_t boot_t:dir getattr;
 allow weston_t default_t:dir search_dir_perms;
 allow weston_t default_t:lnk_file getattr;
-allow weston_t default_t:file { read_file_perms };
 allow weston_t devpts_t:chr_file open;
 allow weston_t devpts_t:filesystem getattr;
 allow weston_t home_root_t:dir getattr;
@@ -235,15 +206,13 @@ allow weston_t leprop_system_data_t:file getattr;
 allow weston_t lost_found_t:dir getattr;
 allow weston_t persist_t:dir { getattr search };
 allow weston_t ptmx_t:chr_file { ioctl open read write };
-allow weston_t self:fifo_file { read write };
+allow weston_t self:fifo_file read;
 allow weston_t self:process setpgid;
 allow weston_t self:unix_stream_socket connectto;
 allow weston_t shell_exec_t:file { execute execute_no_trans open read };
 allow weston_t system_dir_t:dir getattr;
 allow weston_t target_etc_t:file getattr;
 allow weston_t webserver_t:dir getattr;
-allow weston_t data_t:file read_file_perms;
-allow weston_t init_runtime_t:dir search;
 
 # Allow weston search /run for wayland socket
 gen_require(`
@@ -264,49 +233,7 @@ allow weston_t brightness_t:file rw_file_perms;
 allow weston_t device_t:dir search;
 allow weston_t mnt_t:dir search_dir_perms;
 allow weston_t self:lockdown confidentiality;
-allow weston_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
-allow weston_t perf_hal_socket_t:sock_file write;
-allow weston_t perf_hal_t:unix_stream_socket connectto;
 allow weston_t sysfs_cpu_capacity:file read_file_perms;
 allow weston_t sysfs_cpu_present:file read_file_perms;
-allow weston_t tuicoreservice_vendor_t:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
-allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
-allow initrc_t weston_runtime_t:file { setattr getattr };
-allow initrc_t weston_runtime_t:sock_file { setattr getattr write };
-allow weston_t self:tcp_socket { create_stream_socket_perms };
-allow weston_t unreserved_port_t:tcp_socket name_bind;
-allow weston_t node_t:tcp_socket node_bind;
-allow weston_runtime_t fs_t:filesystem associate;
-
-gen_require(`
- type cgroup_t;
- type init_t;
- type socket_device_t;
- type system_dmabuf_device_t;
- type systemd_logind_runtime_t;
- type node_t;
- type overlay_t;
- type sysctl_net_t;
- type tuicoreservice_data_t;
- type unreserved_port_t;
- type user_home_t;
-')
-
-allow weston_t cgroup_t:filesystem getattr;
-allow weston_t init_t:dir search;
-allow weston_t init_t:file manage_file_perms;
-allow weston_t self:tcp_socket { create getopt setopt accept bind getattr listen shutdown };
-allow weston_t socket_device_t:dir rw_dir_perms;
-allow weston_t socket_device_t:file manage_file_perms;
-allow weston_t socket_device_t:sock_file manage_sock_file_perms;
-allow weston_t system_dmabuf_device_t:chr_file { ioctl open read };
-allow weston_t systemd_logind_runtime_t:dir search;
-
-allow weston_t overlay_t:dir setattr;
-allow weston_t self:process getsched;
-allow weston_t sysctl_net_t:dir search;
-allow weston_t sysctl_net_t:file { getattr open read };
-allow weston_t tuicoreservice_data_t:file read_file_perms;
-allow weston_t unreserved_port_t:tcp_socket name_bind;
-allow weston_t user_home_t:dir search;
+allow weston_t vendor_dmabuf_system_heap_device_t:chr_file { ioctl open read };

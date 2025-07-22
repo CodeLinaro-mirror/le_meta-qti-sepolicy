@@ -110,8 +110,12 @@ gen_require(`
     type power_control_t;
     type encryption_control_t;
     type overlay_t;
-    type sysfs_t;
     type multicast_querier_sysfs_t;
+    type proc_psi_t;
+    type tmpfs_t;
+    type leprop_system_data_t;
+    type wifi_system_data_t;
+    type storage_disk_device_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -214,26 +218,15 @@ allow systemd_update_done_t var_run_t:dir search;
 
 allow systemd_sysctl_t overlay_t:dir search;
 allow systemd_modules_load_t overlay_t:dir search;
-allow systemd_update_done_t overlay_t:dir rw_dir_perms;
-allow systemd_update_done_t self:capability sys_admin;
+allow systemd_update_done_t overlay_t:dir list_dir_perms;
 
-gen_require(`
-    type overlay_t;
-    type proc_psi_t;
-    type tmpfs_t;
-    type leprop_system_data_t;
-    type wifi_system_data_t;
-    type storage_disk_device_t;
-')
 allow systemd_logind_t overlay_t:dir search_dir_perms;
 allow systemd_logind_t proc_psi_t:dir search_dir_perms;
-allow systemd_logind_t proc_psi_t:file rw_file_perms;
+allow systemd_logind_t proc_psi_t:file read_file_perms;
 
-allow systemd_modules_load_t self:capability { sys_admin sys_nice };
+allow systemd_modules_load_t self:capability sys_nice;
 allow systemd_sysctl_t tmpfs_t:dir search_dir_perms;
-allow tftp_server_t self:capability sys_admin;
-allow tftp_server_t overlay_t:dir setattr_dir_perms;
-#allow systemd_tmpfiles_t leprop_system_data_t:file write_file_perms;
+
 manage_system_data_files(systemd_tmpfiles_t, leprop_system_data_t)
 allow systemd_tmpfiles_t wifi_system_data_t:dir manage_dir_perms;
 

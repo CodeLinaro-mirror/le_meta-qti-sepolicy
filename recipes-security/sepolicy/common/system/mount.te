@@ -137,9 +137,3 @@ optional_policy(`
     allow mount_t binderfs_t:dir { getattr mounton };
     allow mount_t binderfs_t:filesystem mount;
 ')
-
-gen_require(`
-    type overlay_t;
-')
-allow mount_t overlay_t:chr_file delete_chr_file_perms;
-allow mount_t var_t:chr_file unlink;

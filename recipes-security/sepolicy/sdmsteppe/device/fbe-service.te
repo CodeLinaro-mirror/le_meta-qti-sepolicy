@@ -46,8 +46,6 @@ leprop_rw_props(fbe_service_t)
 
 #Allow fbe_service_t to access /dev/ion node for loading keymaster TA using qseecom
 read_chr_files_pattern(fbe_service_t, device_t, ion_device_t);
-allow initrc_t fbe_secure_data_t:dir create_dir_perms;
-allow initrc_t overlay_t:dir manage_dir_perms;
 
 #  Allow creation of /unencrypted dir inside /overlay.
 allow fbe_secure_data_t fs_t:filesystem  { associate };
@@ -66,6 +64,5 @@ allow fbe_service_t smcinvoke_device_t:chr_file rw_chr_file_perms;
 allow fbe_service_t socket_device_t:dir search_dir_perms;
 allow fbe_service_t fbe_secure_data_t:file { create };
 allow fbe_service_t firmware_t:dir search_dir_perms;
-allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
 allow fbe_service_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t self:process signal;

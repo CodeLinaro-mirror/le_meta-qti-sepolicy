@@ -33,6 +33,10 @@ type leprop_exec_t;
 init_vendor_domain(leprop_t, leprop_exec_t)
 inittab_domtrans(leprop_t, leprop_exec_t)
 
+gen_require(`
+    type overlay_t;
+')
+
 allow leprop_t self:unix_dgram_socket create_socket_perms;
 allow leprop_t self:unix_stream_socket create_stream_socket_perms;
 
@@ -69,8 +73,5 @@ allow setprop_t self:unix_stream_socket { create write connect };
 init_dontaudit_use_fds(setprop_t)
 term_dontaudit_use_unallocated_ttys(setprop_t)
 
-gen_require(`
-    type overlay_t;
-')
 allow leprop_t overlay_t:dir search_dir_perms;
 allow setprop_t overlay_t:dir search_dir_perms;

@@ -53,4 +53,3 @@ userdebug_or_eng(`
 allow local_login_t overlay_t:dir search_dir_perms;
 allow chkpwd_t overlay_t:dir search_dir_perms;
 allow sulogin_t overlay_t:dir search_dir_perms;
-allow sulogin_t self:capability2 checkpoint_restore;

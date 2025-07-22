@@ -73,6 +73,7 @@ init_vendor_domain(diagrebootapp_t, diagrebootapp_exec_t)
 gen_require(`
     type sysfs_t;
     type rebootd_pipe_t;
+    type overlay_t;
 ')
 
 allow diagrebootapp_t rebootd_pipe_t:chr_file { read write ioctl open };
@@ -89,7 +90,4 @@ device_search_sockets(diagrebootapp_t)
 allow diagrebootapp_t sysfs_t:file setattr;
 allow diagrebootapp_t sysfs_t:lnk_file read;
 
-gen_require(`
-    type overlay_t;
-')
 allow diagrebootapp_t overlay_t:dir search_dir_perms;

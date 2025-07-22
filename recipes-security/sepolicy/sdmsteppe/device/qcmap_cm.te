@@ -1,8 +1,0 @@
-# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-gen_require(`
-    type dnsmasq_unit_t;
-')
-allow qcmap_cm_t dnsmasq_unit_t:service { start stop reload };
-dontaudit dnsmasq_t self:capability sys_admin;
