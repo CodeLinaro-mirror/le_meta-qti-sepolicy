@@ -131,8 +131,6 @@ allow tvmroot_t tmp_t:dir search;
 domtrans_pattern(tvmroot_t, tvmroot_tmpfs_t, dloemservice_t)
 allow tvmroot_t dloemservice_t:process2 nosuid_transition;
 allow dloemservice_t tvmroot_tmpfs_t:file { entrypoint map read execute };
-# All services need to talk with mink
-platform_container_bind_mount(dloemservice_t, tvmmink_sock_t, sock_file);
 
 allow tvmroot_t smcinvoke_device_t:chr_file { getattr read_chr_file_perms };
 allow tvmroot_t vendor_vm_hlos_device_t:chr_file { getattr read_chr_file_perms };
@@ -160,3 +158,7 @@ gen_require(`
     type tvmprelauncher_t;
 ')
 neverallow { domain -tvmroot_t -tvmprelauncher_t } tvmroot_sock_t:sock_file rw_sock_file_perms;
+
+# Downloadable cases need to talk with mink too
+platform_container_bind_mount(dloemservice_t, tvmmink_sock_t, sock_file);
+
