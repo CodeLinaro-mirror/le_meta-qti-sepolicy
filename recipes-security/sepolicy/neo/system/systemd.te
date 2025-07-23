@@ -50,6 +50,7 @@ gen_require(`
  type tracefs_t;
  type udev_t;
  type video_name_sysfs_t;
+ type dev_dri_t;
 ')
 
 allow systemd_modules_load_t kernel_t:unix_dgram_socket sendto;
@@ -123,3 +124,4 @@ allow systemd_modules_load_t lib_t:system module_load;
 allow udev_t configfs_t:file { read open };
 allow udev_t lib_t:system module_load;
 allow udev_t video_name_sysfs_t:file { getattr read_file_perms };
+allow udev_t dev_dri_t:lnk_file { rename unlink };

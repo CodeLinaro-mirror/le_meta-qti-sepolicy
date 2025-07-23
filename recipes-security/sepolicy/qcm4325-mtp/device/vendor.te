@@ -58,3 +58,5 @@ gen_require(`
 
 allow touch_script_t modules_object_t:dir search;
 allow touch_script_t self:fifo_file { rw_inherited_file_perms };
+allow touch_script_t modules_object_t:file getattr;
+
