@@ -54,6 +54,8 @@ gen_require(`
        type adbd_t;
        type unconfined_t;
        attribute domain;
+       type vendor_dmabuf_qseecom_heap_device_t;
+       type qmi_fw_vendor_t;
 ')
 
 # allow qwesd to read /etc/qwesd.rc config file
@@ -61,6 +63,8 @@ files_read_etc_files(qwesd_t)
 allow qwesd_t etc_t:dir list_dir_perms;
 read_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
 read_lnk_files_pattern(qwesd_t, etc_t, qwes_config_etc_t)
+allow qwesd_t qmi_fw_vendor_t:file read_file_perms;
+allow qwesd_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_file_perms;
 
 ##################################################################
 # Rules starting for loading TA using QSEECOM
@@ -137,6 +141,7 @@ gen_require(`
     type init_t;
     type var_run_t;
     type shell_exec_t;
+    type overlay_t;
 ')
 
 #============= qwes_ipc_setup_t ==============
@@ -154,6 +159,7 @@ allow qwes_ipc_setup_t self:unix_stream_socket { create connect };
 allow qwes_ipc_setup_t shell_exec_t:file { read map execute };
 allow qwes_ipc_setup_t var_run_t:dir search;
 allow qwes_ipc_setup_t var_run_t:lnk_file read;
+allow qwes_ipc_setup_t overlay_t:dir search;
 
 #################################################################################
 # Rules starting for configuring network connection for sync.
@@ -178,12 +184,13 @@ gen_require(`
   type qseecomd_persist_t;
   type qwes_data_t;
   type shell_exec_t;
+  type overlay_t;
 ')
 
 logging_send_syslog_msg(qwes_license_store_setup_t)
 
 # Allow read/write to /persist/data/ path.
-allow qwes_license_store_setup_t qseecomd_persist_t:file { write create open getattr setattr };
+allow qwes_license_store_setup_t qseecomd_persist_t:file { write create open getattr setattr unlink };
 filetrans_pattern(qwes_license_store_setup_t, persist_t, qseecomd_persist_t, { file dir })
 allow qwes_license_store_setup_t qseecomd_persist_t:dir manage_dir_perms;
 allow qwes_license_store_setup_t init_t:unix_stream_socket { read write };
@@ -214,9 +221,13 @@ allow qwes_license_store_setup_t etc_t:file map;
 allow qwes_license_store_setup_t shell_exec_t:file map;
 allow qwes_license_store_setup_t shell_exec_t:file { read execute };
 allow qwes_license_store_setup_t self:capability { fowner chown };
+allow qwes_license_store_setup_t overlay_t:chr_file create;
+allow qwes_license_store_setup_t overlay_t:dir setattr;
+allow qwes_license_store_setup_t overlay_t:chr_file { link rename };
 #################################################################################
 # Rules ending for setting up qwes_license_store.
 #################################################################################
 
 #============= qwesd_t ==============
 allow qwesd_t self:process getsched;
+allow qwesd_t self:capability2 wake_alarm;
