@@ -249,3 +249,11 @@ dev_associate_sysfs(image_variant_sysfs_t)
 type multicast_querier_sysfs_t;
 genfscon sysfs /devices/virtual/net/bridge0/bridge/multicast_querier gen_context(system_u:object_r:multicast_querier_sysfs_t,s0)
 dev_associate_sysfs(multicast_querier_sysfs_t)
+
+type zs_handle_sysfs_t;
+genfscon sysfs /kernel/slab/zs_handle gen_context(system_u:object_r:zs_handle_sysfs_t,s0)
+dev_associate_sysfs(zs_handle_sysfs_t)
+
+type zspage_sysfs_t;
+genfscon sysfs /kernel/slab/zspage gen_context(system_u:object_r:zspage_sysfs_t,s0)
+dev_associate_sysfs(zspage_sysfs_t)

@@ -3,6 +3,8 @@
 
 gen_require(`
     type storage_disk_device_t;
+    type overlay_t;
 ')
 
 allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
+allow fsadm_t overlay_t:dir search;

@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type data_t;
+    type rfs_persist_t;
+')
+
+dontaudit tftp_server_t data_t:dir { rename reparent setattr };
+allow tftp_server_t rfs_persist_t:dir { rename reparent };
