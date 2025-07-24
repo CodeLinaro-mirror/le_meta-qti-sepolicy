@@ -116,6 +116,7 @@ gen_require(`
     type leprop_system_data_t;
     type wifi_system_data_t;
     type storage_disk_device_t;
+    type drm_card_sysfs_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -223,6 +224,8 @@ allow systemd_update_done_t overlay_t:dir list_dir_perms;
 allow systemd_logind_t overlay_t:dir search_dir_perms;
 allow systemd_logind_t proc_psi_t:dir search_dir_perms;
 allow systemd_logind_t proc_psi_t:file read_file_perms;
+allow systemd_logind_t drm_card_sysfs_t:dir search_dir_perms;
+allow systemd_logind_t drm_card_sysfs_t:file read_file_perms;
 
 allow systemd_modules_load_t self:capability sys_nice;
 allow systemd_sysctl_t tmpfs_t:dir search_dir_perms;
@@ -239,3 +242,5 @@ mls_process_write_all_levels(systemd_modules_load_t)
 
 allow udev_t proc_psi_t:dir list_dir_perms;
 allow udev_t proc_psi_t:file rw_file_perms;
+allow udev_t drm_card_sysfs_t:dir list_dir_perms;
+allow udev_t drm_card_sysfs_t:file read_file_perms;

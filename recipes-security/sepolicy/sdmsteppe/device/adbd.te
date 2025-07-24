@@ -40,3 +40,4 @@ allow usb_t setfiles_exec_t:file exec_file_perms;
 allow usb_t setprop_exec_t:file exec_file_perms;
 
 dontaudit usb_t kernel_t:system { module_request };
+dontaudit usb_t self:capability { sys_admin dac_override dac_read_search };

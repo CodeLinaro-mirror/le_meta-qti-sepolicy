@@ -61,3 +61,6 @@ allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 
 allow mount_t overlay_t:chr_file delete_chr_file_perms;
 allow mount_t var_t:chr_file unlink;
+
+mls_process_read_to_clearance(unconfined_mount_t)
+mls_process_write_to_clearance(unconfined_mount_t)

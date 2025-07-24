@@ -1,0 +1,16 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit pulseaudio_t self:capability sys_admin;
+
+#TODO:revisit this when facing any problem with path-/sys/power/wake_lock
+dontaudit pulseaudio_t sysfs_t:file append;
+
+#TO DO : Check why pulseaudio_t is accessing unconfined_t and which service or resource is getting this unconfined_t label.
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+allow pulseaudio_t unconfined_t:fd use;
+allow pulseaudio_t unconfined_t:binder call;
+')

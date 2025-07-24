@@ -212,7 +212,7 @@ userdebug_or_eng(`
 
         allow unconfined_t cpu_scaling_freq_t:file manage_file_perms;
         allow unconfined_t cpu_sysfs_t:dir { rw_dir_perms search };
-        allow unconfined_t cpu_sysfs_t:file read_file_perms;
+        allow unconfined_t cpu_sysfs_t:file manage_file_perms;
         allow unconfined_t sysfs_cpu_present:file read_file_perms;
     ')
 
@@ -280,6 +280,7 @@ userdebug_or_eng(`
         type qmmf_server_t;
         type servicemanager_t;
         type tuicoreservice_dev_t;
+        type pulseaudio_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
@@ -295,4 +296,5 @@ userdebug_or_eng(`
     allow unconfined_execmem_t qmmf_server_t:binder { call transfer };
     allow unconfined_execmem_t servicemanager_t:binder call;
     allow unconfined_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
+    allow unconfined_t pulseaudio_t:binder { call transfer };
 ')

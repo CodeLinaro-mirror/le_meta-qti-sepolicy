@@ -124,7 +124,6 @@ allow weston_t xkb_var_lib_t:dir { read getattr search }; #/usr/share/X11/xkb
 rw_chr_files_pattern(weston_t, device_t, dri_device_t)
 rw_chr_files_pattern(weston_t, device_t, gpu_device_t)
 rw_chr_files_pattern(weston_t, device_t, ion_device_t)
-
 allow weston_t udev_var_run_t:dir search_dir_perms;
 allow weston_t udev_var_run_t:file read_file_perms;
 
@@ -206,7 +205,7 @@ allow weston_t leprop_system_data_t:file getattr;
 allow weston_t lost_found_t:dir getattr;
 allow weston_t persist_t:dir { getattr search };
 allow weston_t ptmx_t:chr_file { ioctl open read write };
-allow weston_t self:fifo_file read;
+allow weston_t self:fifo_file { read write };
 allow weston_t self:process setpgid;
 allow weston_t self:unix_stream_socket connectto;
 allow weston_t shell_exec_t:file { execute execute_no_trans open read };
@@ -236,4 +235,51 @@ allow weston_t self:lockdown confidentiality;
 allow weston_t sysfs_cpu_capacity:file read_file_perms;
 allow weston_t sysfs_cpu_present:file read_file_perms;
 allow weston_t gpumodel_t:file read_file_perms;
-allow weston_t vendor_dmabuf_system_heap_device_t:chr_file { ioctl open read };
+allow weston_t vendor_dmabuf_system_heap_device_t:chr_file read_chr_file_perms;
+
+gen_require(`
+ type perf_hal_socket_t;
+ type perf_hal_t;
+ type tuicoreservice_vendor_t;
+ type pmsg_device_t;
+ type cgroup_t;
+ type init_t;
+ type socket_device_t;
+ type system_dmabuf_device_t;
+ type systemd_logind_runtime_t;
+ type node_t;
+ type overlay_t;
+ type sysctl_net_t;
+ type tuicoreservice_data_t;
+ type unreserved_port_t;
+ type drm_card_sysfs_t;
+')
+
+allow weston_t perf_hal_socket_t:sock_file write;
+allow weston_t perf_hal_t:unix_stream_socket connectto;
+allow weston_t tuicoreservice_vendor_t:file read_file_perms;
+allow weston_t pmsg_device_t:chr_file write_chr_file_perms;
+allow initrc_t weston_runtime_t:file { setattr getattr };
+allow initrc_t weston_runtime_t:sock_file { setattr getattr write };
+allow weston_t self:tcp_socket { create_stream_socket_perms };
+allow weston_t node_t:tcp_socket node_bind;
+allow weston_runtime_t fs_t:filesystem associate;
+allow weston_t cgroup_t:filesystem getattr;
+allow weston_t init_t:dir search;
+allow weston_t init_t:file manage_file_perms;
+allow weston_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+allow weston_t systemd_logind_runtime_t:dir search;
+allow weston_t overlay_t:dir setattr;
+allow weston_t sysctl_net_t:dir search;
+allow weston_t sysctl_net_t:file read_file_perms;
+allow weston_t tuicoreservice_data_t:file read_file_perms;
+allow weston_t unreserved_port_t:tcp_socket name_bind;
+allow weston_t drm_card_sysfs_t:dir manage_dir_perms;
+allow weston_t drm_card_sysfs_t:file manage_file_perms;
+allow weston_t self:process getsched;
+allow weston_t self:fd use;
+allow weston_t sysfs_t:filesystem getattr;
+allow weston_t drm_card_sysfs_t:filesystem getattr;
+allow weston_t socket_device_t:dir rw_dir_perms;
+allow weston_t socket_device_t:file manage_file_perms;
+allow weston_t socket_device_t:sock_file manage_sock_file_perms;
