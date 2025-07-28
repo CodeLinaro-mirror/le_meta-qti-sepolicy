@@ -66,3 +66,4 @@ allow recovery_t self:unix_stream_socket {connect create write read};
 kernel_rw_vm_sysctls(recovery_t)
 allow recovery_t leprop_t:unix_stream_socket {connectto};
 allow recovery_t qvr_data_t:file {read_file_perms map};
+allow recovery_t self:capability dac_read_search;
