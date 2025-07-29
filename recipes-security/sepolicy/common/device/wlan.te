@@ -96,6 +96,7 @@ type qmi_fw_vendor_t;
 type etc_t;
 type NetworkManager_runtime_t;
 type wlan_initrc_exec_t;
+type rebootd_t;
 ')
 
 userdebug_or_eng(`
@@ -155,3 +156,4 @@ read_system_data_files(wlan_initrc_t, wifi_system_data_t)
 allow wlan_initrc_t NetworkManager_runtime_t:dir setattr_dir_perms;
 allow wlan_initrc_t wlan_initrc_exec_t:file exec_file_perms;
 allow wlan_initrc_t etc_t:lnk_file read_lnk_file_perms;
+allow wlan_initrc_t rebootd_t:dir search_dir_perms;
