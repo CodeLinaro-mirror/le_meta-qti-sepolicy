@@ -100,6 +100,7 @@ type rebootd_t;
 ')
 
 userdebug_or_eng(`
+    allow wlan_initrc_t self:capability sys_ptrace;
     rw_diag_dev(wlan_service_t)
 ')
 
