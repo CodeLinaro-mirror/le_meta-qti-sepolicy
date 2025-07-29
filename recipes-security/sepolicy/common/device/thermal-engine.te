@@ -61,6 +61,7 @@ dev_node(thermal_device_t)
 
 files_read_etc_files(thermal-engine_t)
 allow thermal-engine_t cpu_sysfs_t:dir search;
+allow thermal-engine_t cpu_sysfs_t:file read_file_perms;
 allow thermal-engine_t overlay_t:dir search;
 allow thermal-engine_t self:capability sys_nice;
 allow thermal-engine_t self:process { setsched getsched };
