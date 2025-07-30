@@ -27,7 +27,7 @@
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
 #
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023-2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type ashmem_devices_t;
@@ -76,7 +76,8 @@ allow post_boot_script_t removable_device_t:blk_file getattr;
 allow post_boot_script_t proc_sched_t:file rw_file_perms;
 allow post_boot_script_t proc_sched_t:dir search_dir_perms;
 
-allow post_boot_script_t sysfs_t:dir { write }; #/sys/class/block/mmcblk0/queue/scheduler, /sys/class/block/mmcblk0/queue/iosched/slice_idle
+allow post_boot_script_t sysfs_t:dir { write add_name }; #/sys/class/block/mmcblk0/queue/scheduler, /sys/class/block/mmcblk0/queue/iosched/slice_idle
+allow post_boot_script_t sysfs_t:file { create };
 
 userdebug_or_eng(`
     type init_qti_debug_t;
