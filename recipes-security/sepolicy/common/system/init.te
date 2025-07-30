@@ -91,6 +91,7 @@ gen_require(`
     type unconfined_t;
     type faultmgr_data_t;
     type qfhlog_data_t;
+    type splane_data_t;
 ')
 
 # If these neverallows are tripped, it likely means a daemon was created
@@ -98,7 +99,7 @@ gen_require(`
 #  service with a unique selinux context before allowing access to these
 #  attributes.
 neverallow { domain -initrc_t -tftp_server_t userdebug_or_eng(` -unconfined_t ') } mpss_persist_t:file rw_file_perms;
-neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -mpss_persist_t -qfhlog_data_t -faultmgr_data_t}:file rw_file_perms;
+neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -mpss_persist_t -qfhlog_data_t -splane_data_t -faultmgr_data_t}:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 
