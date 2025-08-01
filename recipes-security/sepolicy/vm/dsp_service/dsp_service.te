@@ -18,6 +18,7 @@ gen_require(`
 
 userdebug_or_eng(`
     allow dsp_service_t debugfs_t:dir search;
+    files_read_etc_files(dsp_service_t);
 ')
 
 files_tmpfs_file(dsp_service_tmpfs_t)

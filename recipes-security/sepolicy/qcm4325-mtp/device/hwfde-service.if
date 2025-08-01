@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# dev node
-/dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
-/etc/init.post_boot.*       --   gen_context(system_u:object_r:post_boot_script_exec_t,s0)
+## <summary>hwfde-service daemon</summary>
+
+#######################################
+## <summary>
+##       hwfde-service interface
+## </summary>
+#

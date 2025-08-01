@@ -139,8 +139,8 @@ userdebug_or_eng(`
     allow unconfined_t tuicoreservice_dev_t:chr_file getattr;
     allow unconfined_t zs_handle_sysfs_t:dir getattr;
     allow unconfined_t zspage_sysfs_t:dir getattr;
-    allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
-    allow unconfined_t rfsa_adsp_lib_t:file exec_file_perms;
+    allow unconfined_t rfsa_adsp_lib_t:dir { manage_dir_perms };
+    allow unconfined_t rfsa_adsp_lib_t:file { manage_file_perms exec_file_perms };
     allow unconfined_t mem_sleep_sysfs_t:file { rw_file_perms };
     allow unconfined_t soc0_gpu_sysfs_t:file read_file_perms;
 
