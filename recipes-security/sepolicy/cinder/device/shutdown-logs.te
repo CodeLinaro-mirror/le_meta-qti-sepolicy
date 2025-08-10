@@ -25,6 +25,8 @@ gen_require(`
     type sysctl_t;
     type tmpfs_t;
     type systemd_journal_t;
+    type persist_t;
+    type qnetcfgmgr_persist_qncm_t;
 ')
 
 #============= shutdown_logs_t ==============
@@ -42,6 +44,8 @@ allow shutdown_logs_t shell_exec_t:file { execute execute_no_trans open read map
 allow shutdown_logs_t var_log_t:dir search;
 allow shutdown_logs_t var_log_t:file { getattr open read };
 allow shutdown_logs_t var_log_t:lnk_file read;
+allow shutdown_logs_t persist_t:dir search;
+allow shutdown_logs_t qnetcfgmgr_persist_qncm_t:file { getattr open read };
 
 allow shutdown_logs_t init_t:dir search;
 allow shutdown_logs_t init_t:file { getattr ioctl open read };
