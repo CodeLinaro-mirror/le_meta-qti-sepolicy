@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /data(/.*)?                     gen_context(system_u:object_r:data_t,s0)
 /mnt/sdcard/data(/.*)?          gen_context(system_u:object_r:sdcard_data_t,s0)
@@ -32,6 +36,8 @@
 /data/misc/qvr(/.*)?            gen_context(system_u:object_r:qvr_data_t,s0)
 /data/cache(/.*)?               gen_context(system_u:object_r:cache_recovery_t,s0)
 /data/fhlog(/.*)?        --     gen_context(system_u:object_r:qfhlog_data_t,s0)
+/data/fmgr(/.*)?                gen_context(system_u:object_r:faultmgr_data_t,s0)
+/data/splane(/.*)?              gen_context(system_u:object_r:splane_data_t,s0)
 
 #To support coredump in userdebug variant only
 /data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)
