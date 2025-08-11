@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022,2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries. 
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 ifdef(`init_systemd',`
@@ -113,8 +113,6 @@ gen_require(`
     type multicast_querier_sysfs_t;
     type proc_psi_t;
     type tmpfs_t;
-    type leprop_system_data_t;
-    type wifi_system_data_t;
     type storage_disk_device_t;
     type drm_card_sysfs_t;
 ')
@@ -230,8 +228,18 @@ allow systemd_logind_t drm_card_sysfs_t:file read_file_perms;
 allow systemd_modules_load_t self:capability sys_nice;
 allow systemd_sysctl_t tmpfs_t:dir search_dir_perms;
 
-manage_system_data_files(systemd_tmpfiles_t, leprop_system_data_t)
-allow systemd_tmpfiles_t wifi_system_data_t:dir manage_dir_perms;
+optional_policy(`
+    gen_require(`
+        type leprop_system_data_t;
+    ')
+    manage_system_data_files(systemd_tmpfiles_t, leprop_system_data_t)
+')
+optional_policy(`
+    gen_require(`
+        type wifi_system_data_t;
+    ')
+    allow systemd_tmpfiles_t wifi_system_data_t:dir manage_dir_perms;
+')
 
 mls_file_read_all_levels(systemd_sysctl_t);
 

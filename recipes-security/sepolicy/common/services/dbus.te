@@ -24,14 +24,22 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries. 
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 systemd_read_logind_runtime_files(system_dbusd_t)
 
 gen_require(`
 	type etc_t;
-	type overlay_t;
 ')
 
 allow system_dbusd_t etc_t:file map;
 
-allow system_dbusd_t overlay_t:dir search;
+optional_policy(`
+    gen_require(`
+        type overlay_t;
+    ')
+    allow system_dbusd_t overlay_t:dir search;
+')
