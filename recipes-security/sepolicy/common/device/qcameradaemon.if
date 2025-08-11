@@ -25,4 +25,26 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 ## <summary>qcameradaemon daemon</summary>
+
+########################################
+## <summary>
+##      All permissions for camera.
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+## <rolecap/>
+#
+interface(`manage_camera_files_data',`
+    gen_require(`
+        type camera_data_t;
+    ')
+
+    manage_user_data_files($1, camera_data_t)
+')

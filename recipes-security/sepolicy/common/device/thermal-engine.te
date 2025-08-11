@@ -41,6 +41,8 @@ logging_send_syslog_msg(thermal-engine_t)
 gen_require(`
     type default_t;
     type syslogd_var_run_t;
+    type cpu_sysfs_t;
+    type overlay_t;
 ')
 
 # Manage socket files inside /dev/socket
@@ -57,6 +59,10 @@ files_type(thermal_etc_t)
 type thermal_device_t;
 dev_node(thermal_device_t)
 
+files_read_etc_files(thermal-engine_t)
+allow thermal-engine_t cpu_sysfs_t:dir search;
+allow thermal-engine_t cpu_sysfs_t:file read_file_perms;
+allow thermal-engine_t overlay_t:dir search;
 allow thermal-engine_t self:capability sys_nice;
 allow thermal-engine_t self:process { setsched getsched };
 allow thermal-engine_t self:capability2 block_suspend;

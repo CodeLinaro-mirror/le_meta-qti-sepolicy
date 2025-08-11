@@ -59,6 +59,9 @@
 #OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 #IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 type hostapd_cli_qcmap_t;
 type hostapd_cli_exec_t;
 init_vendor_domain(hostapd_cli_qcmap_t, hostapd_cli_exec_t)
@@ -144,3 +147,12 @@ userdebug_or_eng(`
 
 dontaudit hostapd_t kmsg_device_t:chr_file { getattr };
 dontaudit hostapd_t etc_t:file { map };
+
+gen_require(`
+  type wifi_system_data_t;
+  type hostapd_t;
+  type wifi_data_t;
+')
+
+read_system_data_files(hostapd_t, wifi_system_data_t);
+read_user_data_files(hostapd_t, wifi_data_t);
