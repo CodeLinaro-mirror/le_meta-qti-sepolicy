@@ -90,6 +90,12 @@ type power_control_t;
 genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/power/control gen_context(system_u:object_r:power_control_t,s0)
 dev_associate_sysfs(power_control_t)
 
+type drm_card_sysfs_t;
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0/card0-Virtual-1 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/ae00000.qcom,mdss_mdp/drm/card0/card0-DP-1 gen_context(system_u:object_r:drm_card_sysfs_t,s0)
+dev_associate_sysfs(drm_card_sysfs_t)
+
 type encryption_control_t;
 genfscon sysfs /devices/virtual/hdcp/msm_hdcp/min_level_change gen_context(system_u:object_r:encryption_control_t,s0)
 dev_associate_sysfs(encryption_control_t)
@@ -245,3 +251,15 @@ genfscon sysfs /devices/soc0/image_version  gen_context(system_u:object_r:image_
 genfscon sysfs /devices/soc0/image_variant  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
 genfscon sysfs /devices/soc0/image_crm_version  gen_context(system_u:object_r:image_variant_sysfs_t,s0)
 dev_associate_sysfs(image_variant_sysfs_t)
+
+type multicast_querier_sysfs_t;
+genfscon sysfs /devices/virtual/net/bridge0/bridge/multicast_querier gen_context(system_u:object_r:multicast_querier_sysfs_t,s0)
+dev_associate_sysfs(multicast_querier_sysfs_t)
+
+type zs_handle_sysfs_t;
+genfscon sysfs /kernel/slab/zs_handle gen_context(system_u:object_r:zs_handle_sysfs_t,s0)
+dev_associate_sysfs(zs_handle_sysfs_t)
+
+type zspage_sysfs_t;
+genfscon sysfs /kernel/slab/zspage gen_context(system_u:object_r:zspage_sysfs_t,s0)
+dev_associate_sysfs(zspage_sysfs_t)

@@ -293,3 +293,11 @@ allow wlan_ezmesh_initrc_t urandom_device_t:chr_file read_chr_file_perms;
 allow wlan_ezmesh_initrc_t sysctl_t:dir search_dir_perms;
 allow wlan_ezmesh_initrc_t wireless_device_t:chr_file read_chr_file_perms;
 manage_user_data_files(wlan_ezmesh_initrc_t, wifi_data_t)
+
+gen_require(`
+    type loc_hald_t;
+    type tmp_t;
+')
+allow NetworkManager_t loc_hald_t:unix_dgram_socket sendto;
+allow NetworkManager_t tmp_t:sock_file write;
+allow initrc_t wlan_initrc_exec_t:file entrypoint;

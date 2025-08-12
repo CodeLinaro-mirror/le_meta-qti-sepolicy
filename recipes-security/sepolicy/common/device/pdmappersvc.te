@@ -36,6 +36,8 @@ gen_require(`
     type default_t;
     type firmware_t;
     type syslogd_var_run_t;
+    type overlay_t;
+    type qmi_fw_vendor_t;
 ')
 
 dontaudit pdmappersvc_t default_t:dir search;
@@ -47,3 +49,5 @@ allow pdmappersvc_t self:capability net_bind_service;
 dev_read_urand(pdmappersvc_t)
 logging_send_syslog_msg(pdmappersvc_t)
 allow pdmappersvc_t self:qipcrtr_socket { write read create getattr };
+allow pdmappersvc_t overlay_t:dir search_dir_perms;
+allow pdmappersvc_t qmi_fw_vendor_t:file read_file_perms;

@@ -47,6 +47,7 @@
 /kernel-tests(/.*)?                gen_context(system_u:object_r:kernel_tests_t,s0)
 /kernel-tests/modules/lib/modules(/.*)?  gen_context(system_u:object_r:modules_object_t,s0)
 /data/kernel-tests/modules/lib/modules(/.*)? gen_context(system_u:object_r:kerneltests_modules_data_t,s0)
+/data/kernel-tests/modules(/.*)? gen_context(system_u:object_r:kerneltests_modules_t,s0)
 
 ### misc files ###
 
@@ -88,6 +89,7 @@
 /dev/dma_heap/system -c   gen_context(system_u:object_r:system_dmabuf_device_t,s0)
 /dev/dma_heap/qcom,system-uncached -c   gen_context(system_u:object_r:system_uncached_dmabuf_device_t,s0)
 /dev/dma_heap/qcom,qseecom -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
+/dev/dma_heap/qcom,qseecom-ta -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
 /dev/dma_heap/qcom,ms1     -c   gen_context(system_u:object_r:vendor_dmabuf_ms1_heap_device_t,s0)
 /dev/dma_heap/qcom,ms2     -c   gen_context(system_u:object_r:vendor_dmabuf_ms2_heap_device_t,s0)
 /dev/dma_heap/qcom,ms3     -c   gen_context(system_u:object_r:vendor_dmabuf_ms3_heap_device_t,s0)
@@ -105,3 +107,5 @@
 
 # dev node
 /dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)
+
+/vendor/etc/qmi_fw.conf -- gen_context(system_u:object_r:qmi_fw_vendor_t,s0)

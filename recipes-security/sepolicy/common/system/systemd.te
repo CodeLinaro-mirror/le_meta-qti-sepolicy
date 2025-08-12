@@ -110,6 +110,13 @@ gen_require(`
     type power_control_t;
     type encryption_control_t;
     type overlay_t;
+    type multicast_querier_sysfs_t;
+    type proc_psi_t;
+    type tmpfs_t;
+    type leprop_system_data_t;
+    type wifi_system_data_t;
+    type storage_disk_device_t;
+    type drm_card_sysfs_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -119,7 +126,7 @@ allow udev_t kernel_t:unix_dgram_socket sendto;
 allow udev_t configfs_t:dir list_dir_perms;
 allow udev_t configfs_t:file { getattr setattr };
 allow udev_t cpu_sysfs_t:dir { search getattr };
-allow udev_t cpu_sysfs_t:file { read_file_perms };
+allow udev_t cpu_sysfs_t:file { rw_file_perms };
 allow udev_t sysfs_devcoredump_t:file { read_file_perms setattr };
 allow udev_t sysfs_devcoredump_t:dir { read_file_perms setattr search };
 allow udev_t power_control_t:file { read_file_perms getattr setattr };
@@ -132,6 +139,8 @@ allow systemd_tmpfiles_t usr_t:file read_file_perms;
 allow systemd_sysctl_t kernel_t:unix_dgram_socket sendto;
 allow syslogd_t kernel_t:netlink_audit_socket rw_socket_perms;
 allow syslogd_t syslogd_var_run_t:sock_file unlink;
+allow udev_t overlay_t:dir search;
+allow udev_t multicast_querier_sysfs_t:file { setattr_file_perms getattr_file_perms };
 
 # systemd_modules_load
 
@@ -210,4 +219,28 @@ allow systemd_update_done_t var_run_t:dir search;
 
 allow systemd_sysctl_t overlay_t:dir search;
 allow systemd_modules_load_t overlay_t:dir search;
-allow systemd_update_done_t overlay_t:dir search;
+allow systemd_update_done_t overlay_t:dir list_dir_perms;
+
+allow systemd_logind_t overlay_t:dir search_dir_perms;
+allow systemd_logind_t proc_psi_t:dir search_dir_perms;
+allow systemd_logind_t proc_psi_t:file read_file_perms;
+allow systemd_logind_t drm_card_sysfs_t:dir search_dir_perms;
+allow systemd_logind_t drm_card_sysfs_t:file read_file_perms;
+
+allow systemd_modules_load_t self:capability sys_nice;
+allow systemd_sysctl_t tmpfs_t:dir search_dir_perms;
+
+manage_system_data_files(systemd_tmpfiles_t, leprop_system_data_t)
+allow systemd_tmpfiles_t wifi_system_data_t:dir manage_dir_perms;
+
+mls_file_read_all_levels(systemd_sysctl_t);
+
+allow systemd_generator_t storage_disk_device_t:blk_file read_file_perms;
+
+mls_process_write_to_clearance(systemd_modules_load_t)
+mls_process_write_all_levels(systemd_modules_load_t)
+
+allow udev_t proc_psi_t:dir list_dir_perms;
+allow udev_t proc_psi_t:file rw_file_perms;
+allow udev_t drm_card_sysfs_t:dir list_dir_perms;
+allow udev_t drm_card_sysfs_t:file read_file_perms;

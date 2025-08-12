@@ -80,6 +80,7 @@
         type iptables_runtime_t;
         type device_t;
         type wlan_hsp_sysfs_t;
+        type overlay_t;
     ')
     # syslogd_tmp_t has a higher mls clearance than systemd-tmpfiles, so dontaudit this
     dontaudit systemd_tmpfiles_t syslogd_tmp_t:dir { setattr relabelfrom relabelto create };
@@ -102,4 +103,5 @@
     allow syslogd_t iptables_runtime_t:file create;
     allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
     allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+    allow syslogd_t overlay_t:dir search_dir_perms;
 #')

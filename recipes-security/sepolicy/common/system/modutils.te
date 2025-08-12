@@ -101,6 +101,19 @@ allow kmod_t kerneltests_modules_data_t:system { module_load };
 
 gen_require(`
     type nsfs_t;
+    type overlay_t;
 ')
 mls_key_write_to_clearance(kmod_t)
 allow kmod_t nsfs_t:file read_file_perms;
+allow kmod_t overlay_t:dir search_dir_perms;
+
+userdebug_or_eng(`
+    type kerneltests_modules_t;
+    gen_require(`
+        type kmod_t;
+    ')
+    user_data_files_type(kerneltests_modules_t)
+    read_user_data_files(kmod_t, kerneltests_modules_t)
+    allow kmod_t kerneltests_modules_t:dir list_dir_perms;
+    allow kmod_t kerneltests_modules_t:system { module_load };
+')
