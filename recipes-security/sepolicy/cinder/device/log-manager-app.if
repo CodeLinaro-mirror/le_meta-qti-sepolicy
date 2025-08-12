@@ -1,0 +1,17 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> log-manager-app </summary>
+
+######################################
+## <summary>
+##      Sysrepo data access
+## </summary>
+## <desc>
+##      Allow access to sysrepo shared memory and repository
+## </desc>
+## <param name="domain">
+##  <summary>
+##      Domain allowed access
+##  </summary>
+## </param>
