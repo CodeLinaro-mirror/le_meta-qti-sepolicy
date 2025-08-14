@@ -1,0 +1,18 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(idv_service, 1.0)
+type idv_service_t;
+type idv_service_exec_t;
+init_vendor_domain(idv_service_t, idv_service_exec_t)
+platform_container_domain_type(idv_service_t, idv_service_exec_t)
+
+gen_require(`
+    bool allow_minijail_mount;
+')
+
+gen_require(`
+    type socket_device_t;
+')
+allow idv_service_t self:process signal;
+allow idv_service_t socket_device_t:dir search;
