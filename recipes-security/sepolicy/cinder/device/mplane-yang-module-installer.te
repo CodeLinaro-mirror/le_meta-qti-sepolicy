@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(mplane-yang-module-installer, 1.0)
@@ -19,6 +19,7 @@ gen_require(`
  type firmware_t;
  type mnt_t;
  type bkp_data_t;
+ type initrc_tmp_t;
 ')
 type mplane_app_t;
 
@@ -61,11 +62,16 @@ allow mplane-yang-module-installer_t self:process { signal };
 
 allow mplane-yang-module-installer_t tmpfs_t:dir { write add_name search create remove_name };
 allow mplane-yang-module-installer_t tmpfs_t:file { create read write open getattr map setattr };
+allow mplane-yang-module-installer_t tmp_t:dir search;
+allow mplane-yang-module-installer_t tmp_t:file { open read };
+allow mplane-yang-module-installer_t initrc_tmp_t:dir search;
+allow mplane-yang-module-installer_t initrc_tmp_t:file { open read };
 
 sr_data_access(mplane-yang-module-installer_t)
 
+
 # For sysrepocfg genkey
-allow mplane-yang-module-installer_t tmp_t:dir { search write add_name };
+allow mplane-yang-module-installer_t tmp_t:dir { search write add_name getattr };
 allow mplane-yang-module-installer_t tmp_t:file { read open getattr map write create };
 
 allow mplane-yang-module-installer_t usr_t:dir { search getattr open read };
