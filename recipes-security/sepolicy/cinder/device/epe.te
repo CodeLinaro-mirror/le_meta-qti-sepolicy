@@ -36,8 +36,10 @@ allow epe_t sysfs_t:dir read;
 allow epe_t sysctl_t:dir search;
 allow epe_t sysctl_vm_t:dir search;
 allow epe_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
-allow epe_t var_log_t:file { read write open getattr };
-
+allow epe_t var_log_t:file { read write open getattr setattr create rename unlink};
+allow epe_t var_log_t:dir {search read write add_name remove_name};
+allow epe_t pmsg0_t:chr_file { write open};
+allow epe_t var_log_t:lnk_file read;
 allow alogd_t pmsg0_t:chr_file open;
 allow epe_t init_var_run_t:dir search;
 allow epe_t proc_t:file { read open getattr };              #/proc/filesystem
