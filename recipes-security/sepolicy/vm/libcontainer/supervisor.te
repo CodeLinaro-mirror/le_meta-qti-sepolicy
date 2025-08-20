@@ -53,9 +53,10 @@ allow supervisor_t self:cap_userns { sys_admin sys_ptrace };
 # covered by dac_override
 dontaudit supervisor_t self:capability dac_read_search;
 
-# /tmp/supervisor/wake*
+# wakelock support
 dev_rw_sysfs(supervisor_t)
 allow supervisor_t supervisor_tmp_t:fifo_file { create open read write watch };
+allow supervisor_t self:unix_stream_socket { create_stream_socket_perms connectto };
 allow supervisor_t self:capability2 block_suspend;
 
 gen_require(`
