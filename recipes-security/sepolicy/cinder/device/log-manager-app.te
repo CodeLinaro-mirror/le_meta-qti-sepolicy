@@ -1,0 +1,125 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(log-manager-app, 1.0)
+
+gen_require(`
+type etc_t;
+type mplane_app_t;
+type shell_exec_t;
+type socket_device_t;
+type tmp_t;
+type tmpfs_t;
+type user_tmp_t;
+type data_t;
+type alogd_t;
+type diag_exec_t;
+type fs_t;
+type node_t;
+type unreserved_port_t;
+type removable_device_t;
+type abupdater_log_t;
+type debugfs_t;
+type sysctl_kernel_t;
+type sysctl_t;
+type var_log_t;
+type init_var_run_t;
+type pmsg0_t;
+type ss-ramdump_data_t;
+type initrc_tmp_t;
+type dmesg_exec_t;
+type proc_t;
+type init_t;
+type systemd_journal_t;
+type kernel_t;
+type default_t;
+type syslogd_var_run_t;
+type syslogd_t;
+type diag-router_t;
+type sysctl_vm_overcommit_t;
+type sysctl_vm_t;
+')
+
+type log-manager-app_t;
+type log-manager-app_exec_t;
+
+# Application is run as a service
+init_vendor_domain(log-manager-app_t, log-manager-app_exec_t)
+
+# Get configuration of log manager
+allow log-manager-app_t etc_t:file { getattr open read };
+
+# Needed to access /data/mplane/ folder
+allow log-manager-app_t mplane_app_t:dir { add_name search write read getattr remove_name create };
+allow log-manager-app_t mplane_app_t:file { create open read getattr write unlink };
+
+# Needed to access modem minidump
+allow log-manager-app_t data_t:dir { read getattr };
+allow log-manager-app_t ss-ramdump_data_t:file { getattr open read };
+
+# Needed for crashdumps
+allow log-manager-app_t removable_device_t:blk_file { getattr open read };
+allow log-manager-app_t fs_t:filesystem getattr;
+
+# Needed to track diag_mldog ouput
+allow log-manager-app_t self:fifo_file { read write getattr};
+
+# Needed for eventloop socket
+allow log-manager-app_t self:qipcrtr_socket { create getattr read setopt write };
+allow log-manager-app_t self:tcp_socket { getattr read write accept bind create listen setopt };
+allow log-manager-app_t self:capability setuid;
+allow log-manager-app_t self:process signal;
+allow log-manager-app_t socket_device_t:dir search;
+allow log-manager-app_t node_t:tcp_socket node_bind;
+allow log-manager-app_t unreserved_port_t:tcp_socket name_bind;
+
+# Needed for launch diag_mdlog
+allow log-manager-app_t shell_exec_t:file { execute execute_no_trans map open read getattr };
+allow log-manager-app_t self:capability setgid;
+allow diag-router_t log-manager-app_t:process signal;
+
+# Needed to access /tmp folder
+allow log-manager-app_t tmp_t:dir { search add_name getattr open read write create remove_name };
+allow log-manager-app_t tmp_t:file { create getattr open read setattr write unlink append ioctl };
+allow log-manager-app_t tmp_t:fifo_file { create open read };
+allow log-manager-app_t tmpfs_t:filesystem getattr;
+allow log-manager-app_t user_tmp_t:dir { getattr open read search };
+allow log-manager-app_t user_tmp_t:file { create getattr open read setattr write unlink };
+allow log-manager-app_t initrc_tmp_t:file { read open getattr write unlink };
+
+# Needed for diag_mdlog
+allow log-manager-app_t alogd_t:unix_stream_socket connectto;
+allow log-manager-app_t diag_exec_t:file { execute execute_no_trans getattr map open read };
+
+# Needed for log delivery on fault
+allow log-manager-app_t abupdater_log_t:dir search;
+allow log-manager-app_t abupdater_log_t:file { getattr ioctl open read };
+allow log-manager-app_t debugfs_t:dir search;
+allow log-manager-app_t debugfs_t:file { getattr ioctl open read };
+allow log-manager-app_t init_var_run_t:file { open read };
+allow log-manager-app_t init_var_run_t:dir { search };
+allow log-manager-app_t self:fifo_file ioctl;
+allow log-manager-app_t sysctl_kernel_t:dir search;
+allow log-manager-app_t sysctl_kernel_t:file { getattr ioctl open read };
+allow log-manager-app_t sysctl_t:dir search;
+allow log-manager-app_t var_log_t:dir search;
+allow log-manager-app_t var_log_t:file { getattr ioctl open read write };
+allow log-manager-app_t var_log_t:lnk_file read;
+allow log-manager-app_t pmsg0_t:chr_file { open write };
+allow log-manager-app_t dmesg_exec_t:file { getattr execute_no_trans execute open read };
+allow log-manager-app_t proc_t:file { getattr ioctl open read };
+allow log-manager-app_t init_t:dir { search open read };
+allow log-manager-app_t init_t:file { getattr ioctl open read };
+allow log-manager-app_t kernel_t:system { syslog_mod syslog_read };
+allow log-manager-app_t self:capability2 syslog;
+allow log-manager-app_t systemd_journal_t:dir { getattr search open read };
+allow log-manager-app_t systemd_journal_t:file { getattr map open read };
+allow log-manager-app_t default_t:lnk_file read;
+allow log-manager-app_t syslogd_t:unix_stream_socket connectto;
+allow log-manager-app_t syslogd_var_run_t:dir search;
+allow log-manager-app_t syslogd_var_run_t:sock_file write;
+allow log-manager-app_t sysctl_vm_overcommit_t:file { open read };
+allow log-manager-app_t sysctl_vm_t:dir search;
+
+mls_file_read_all_levels(log-manager-app_t)
+mls_file_write_all_levels( log-manager-app_t)
