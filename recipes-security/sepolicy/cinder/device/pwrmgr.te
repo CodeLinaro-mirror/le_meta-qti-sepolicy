@@ -1,14 +1,16 @@
-#Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-#SPDX-License-Identifier: BSD-3-Clause-Clear 
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(pwrmgr, 1.0)
 
 type pwrmgr_t;
 type pwrmgr_exec_t;
+type pwrmgr_conf_t;
 
 init_vendor_domain(pwrmgr_t, pwrmgr_exec_t)
 
 gen_require(`
+    type pwrmgr_data_t;
     type default_t;
     type socket_device_t;
     type thermal-engine_t;
@@ -18,29 +20,42 @@ gen_require(`
     type pmsg0_t;
     type proc_t;
     type sysfs_t;
+    type etc_t;
     type var_log_t;
     type init_var_run_t;
     type system_dbusd_var_run_t;
     type unconfined_t;
     type faultmgr_t;
-	class dbus send_msg;
+    type qfhlog_data_t;
+    type sysctl_t;
+    type power_unit_t;
+    type sysctl_kernel_t;
+    class dbus send_msg;
     class service { start status stop reload };
 ')
 
 userdebug_or_eng(`
      allow unconfined_t pwrmgr_exec_t:service { start stop status };
+     allow initrc_t unconfined_t:dbus send_msg;
 ')
 
 allow pwrmgr_t pwrmgr_t:fifo_file { read open write };
 allow pwrmgr_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
-allow pwrmgr_t var_log_t:file { read write open getattr setattr create rename unlink};
+allow pwrmgr_t var_log_t:file { read write open getattr setattr create rename unlink };
 allow pwrmgr_t var_log_t:dir {search read write add_name remove_name};
 allow pwrmgr_t pmsg0_t:chr_file { write open};
 allow pwrmgr_t var_log_t:lnk_file read;
 allow pwrmgr_t self:process signal;
 
-allow alogd_t pmsg0_t:chr_file open;
-allow pwrmgr_t init_var_run_t:dir search;
+allow pwrmgr_t etc_t:file { read open };
+allow pwrmgr_t pwrmgr_conf_t:file {read write open getattr};          #/etc/power_manager/public/
+allow pwrmgr_t self:netlink_kobject_uevent_socket {create bind setopt read};
+allow pwrmgr_t self:capability net_admin;
+allow pwrmgr_t init_t:dir search;
+allow pwrmgr_t init_t:file read;
+allow pwrmgr_t init_t:lnk_file read;
+allow pwrmgr_t init_t:unix_stream_socket connectto;
+allow pwrmgr_t init_var_run_t:dir { getattr search};
 allow pwrmgr_t proc_t:file { read open getattr };              #/proc/filesystem
 allow pwrmgr_t system_dbusd_var_run_t:dir search;
 allow pwrmgr_t self:socket create_socket_perms;
@@ -48,8 +63,10 @@ allow pwrmgr_t self:qipcrtr_socket create_socket_perms;
 allow pwrmgr_t socket_device_t:dir search_dir_perms;
 allow pwrmgr_t thermal-engine_t:unix_stream_socket connectto;
 allow pwrmgr_t thermal_sock_t:sock_file write;
-allow initrc_t unconfined_t:dbus send_msg;
-allow pwrmgr_t faultmgr_t:dbus send_msg; 
+allow pwrmgr_t faultmgr_t:dbus send_msg;
+allow pwrmgr_t sysctl_t:dir search;
+allow pwrmgr_t power_unit_t:service start;
+allow pwrmgr_t sysctl_kernel_t:dir search;
 dontaudit pwrmgr_t default_t:dir search;
 
 #Manage Dbus sockets

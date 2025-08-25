@@ -35,6 +35,7 @@ gen_require(`
     type mount_t;
     type init_t;
     type initrc_t;
+    type pwrmgr_t;
     type setfiles_t;
     type ss-ramdump_data_t;
     attribute mountpoint;
@@ -78,6 +79,16 @@ allow initrc_t qfhlog_data_t:dir manage_dir_perms;
 allow initrc_t qfhlog_data_t:file manage_file_perms;
 allow setfiles_t qfhlog_data_t:dir relabelto;
 
+type pwrmgr_data_t;
+user_data_files_type(pwrmgr_data_t)
+allow initrc_t pwrmgr_data_t:dir manage_dir_perms;
+allow initrc_t pwrmgr_data_t:file manage_file_perms;
+allow pwrmgr_t pwrmgr_data_t:dir manage_dir_perms;
+allow pwrmgr_t pwrmgr_data_t:file manage_file_perms;
+allow pwrmgr_t qfhlog_data_t:dir manage_dir_perms;
+allow pwrmgr_t qfhlog_data_t:file manage_file_perms;
+allow setfiles_t pwrmgr_data_t:dir relabelto;
+
 type splane_data_t;
 user_data_files_type(splane_data_t)
 manage_user_data_files(initrc_t, splane_data_t)
@@ -104,12 +115,12 @@ neverallow ~{
     domain_can_write_userdata
     mount_t
     init_t
-} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -faultmgr_data_t -ss-ramdump_data_t}:file read_file_perms;
+} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -faultmgr_data_t -ss-ramdump_data_t -pwrmgr_data_t -qfhlog_data_t }:file read_file_perms;
 neverallow ~{
     domain_can_write_userdata
     mount_t
     init_t
-} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -faultmgr_data_t -ss-ramdump_data_t}:file { create setattr write append rename link unlink };
+} { user_data -coredump_data_t -sxr_data_t -qvr_data_t -faultmgr_data_t -ss-ramdump_data_t -pwrmgr_data_t -qfhlog_data_t }:file { create setattr write append rename link unlink };
 
 attribute system_data;
 attribute domain_can_read_systemdata;
