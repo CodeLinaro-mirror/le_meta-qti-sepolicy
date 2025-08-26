@@ -70,4 +70,6 @@ allow usb_t leprop_sock_t:sock_file write;
 allow usb_t leprop_t:unix_stream_socket connectto;
 allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 dontaudit usb_t kernel_t:system { module_request };
+
+dontaudit adbd_t self:lockdown confidentiality;
 allow usb_t functionfs_t:dir getattr;

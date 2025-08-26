@@ -44,6 +44,7 @@ gen_require(`
  type debugfs_t;
  type dev_dri_t;
  type cpu_sysfs_t;
+ type tracefs_t;
 ')
 
 allow systemd_logind_t syslogd_var_run_t:dir search_dir_perms;
@@ -106,9 +107,6 @@ allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name 
 allow udev_t dev_dri_t:lnk_file { create rename unlink };
 
 userdebug_or_eng(`
- gen_require(`
-		type tracefs_t;
-	 ')
  allow systemd_modules_load_t self:lockdown confidentiality;
  allow systemd_modules_load_t tracefs_t:dir search;
 ')

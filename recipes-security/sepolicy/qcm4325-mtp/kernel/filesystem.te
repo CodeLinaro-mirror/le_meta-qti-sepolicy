@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 type power_sysfs_t;
@@ -15,3 +15,13 @@ dev_associate_sysfs(image_variant_sysfs_t)
 type brightness_sysfs_t;
 genfscon sysfs /devices/platform/soc/5e00000.qcom,mdss_mdp/backlight/panel0-backlight/brightness gen_context(system_u:object_r:brightness_sysfs_t,s0)
 dev_associate_sysfs(brightness_sysfs_t)
+
+type zs_handle_sysfs_t;
+genfscon sysfs /kernel/slab/zs_handle gen_context(system_u:object_r:zs_handle_sysfs_t,s0)
+dev_associate_sysfs(zs_handle_sysfs_t)
+
+type zspage_sysfs_t;
+genfscon sysfs /kernel/slab/zspage gen_context(system_u:object_r:zspage_sysfs_t,s0)
+dev_associate_sysfs(zspage_sysfs_t)
+
+genfscon sysfs /devices/platform/soc/c800000.qcom,icnss gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
