@@ -53,6 +53,7 @@ gen_require(`
     type mount_exec_t;
     type setfiles_exec_t;
     type mount_runtime_t;
+    type system_data_t;
 ')
 
 ########################################
@@ -116,3 +117,6 @@ allow wlan_initrc_t mount_exec_t:file { map getattr read open execute execute_no
 allow wlan_initrc_t setfiles_exec_t:file { map getattr read open execute execute_no_trans };
 allow wlan_initrc_t mount_runtime_t:dir { search getattr };
 allow wlan_initrc_t wifi_system_data_t:file { mounton };
+
+#Backup wlan ini configure
+allow wlan_initrc_t system_data_t:file { getattr open create write };
