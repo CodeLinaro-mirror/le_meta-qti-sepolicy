@@ -38,6 +38,8 @@ gen_require(`
     type queue_sysfs_t;
     type image_variant_sysfs_t;
     type power_sysfs_t;
+    type zs_handle_sysfs_t;
+    type zspage_sysfs_t;
 ')
 
 allow post_boot_script_t cpu_sysfs_t:dir { add_entry_dir_perms };
@@ -48,6 +50,10 @@ allow post_boot_script_t queue_sysfs_t:file { rw_file_perms create };
 allow post_boot_script_t image_variant_sysfs_t:file write_file_perms;
 allow post_boot_script_t power_sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
+allow post_boot_script_t zs_handle_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zs_handle_sysfs_t:file { rw_file_perms create };
+allow post_boot_script_t zspage_sysfs_t:dir { add_entry_dir_perms };
+allow post_boot_script_t zspage_sysfs_t:file { rw_file_perms create };
 
 #sepolicy for touch start le script
 gen_require(`

@@ -46,6 +46,7 @@ interface(`platform_container_domain_type',`
         allow supervisor_t $1:file { open read };
         allow supervisor_t $1:dir search;
         allow $1 supervisor_t:fd use;
+        allow $1 supervisor_t:unix_stream_socket { read write };
         allow $1 supervisor_tmp_t:fifo_file write;
     ')
 
