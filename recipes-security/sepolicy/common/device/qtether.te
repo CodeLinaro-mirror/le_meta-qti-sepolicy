@@ -126,6 +126,12 @@ files_dontaudit_getattr_default_dirs(qtether_t)
 kernel_read_network_state(qtether_t)
 qcmap_manage_user_data_files(qtether_t)
 
+# Allow watch permission on qcmap_data_t directories
+gen_require(`
+    type qcmap_data_t;
+')
+allow qtether_t qcmap_data_t:dir watch;
+
 # Manage socket files inside /dev/socket
 type qtether_socket_device_t;
 files_type(qtether_socket_device_t)
