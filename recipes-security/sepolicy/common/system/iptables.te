@@ -31,7 +31,9 @@ userdebug_or_eng(`
 
 gen_require(`
     type systemd_tmpfiles_t;
+    type qcmap_data_t;
 ')
 systemd_tmpfilesd_managed(iptables_runtime_t)
 allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
 dontaudit iptables_t self:capability { kill };
+read_user_data_files(iptables_t, qcmap_data_t)
