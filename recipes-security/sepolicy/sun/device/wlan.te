@@ -3,6 +3,8 @@
 
 gen_require(`
     type kernel_t;
+    type ptmx_t;
 ')
 
 allow wlan_initrc_t kernel_t:unix_dgram_socket sendto;
+allow wlan_initrc_t ptmx_t:chr_file { read write };
