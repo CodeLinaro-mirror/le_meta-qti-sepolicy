@@ -91,6 +91,7 @@ gen_require(`
  type binderfs_t;
  type initrc_t;
  type sysctl_kernel_t;
+ type rfsa_adsp_lib_t;
 ')
 
 #For hvx
@@ -228,6 +229,8 @@ allow qmmf_server_t xdsp_device_t:chr_file read_chr_file_perms;
 allow qmmf_server_t binderfs_t:dir search;
 allow qmmf_server_t initrc_t:binder call;
 allow qmmf_server_t sysctl_kernel_t:dir search;
+allow qmmf_server_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+allow qmmf_server_t rfsa_adsp_lib_t:file read_file_perms;
 
 gen_require(`
     type weston_runtime_t;

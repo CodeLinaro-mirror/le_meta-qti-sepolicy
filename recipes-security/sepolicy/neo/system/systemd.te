@@ -49,6 +49,8 @@ gen_require(`
  type lib_t;
  type tracefs_t;
  type udev_t;
+ type video_name_sysfs_t;
+ type dev_dri_t;
 ')
 
 allow systemd_modules_load_t kernel_t:unix_dgram_socket sendto;
@@ -84,6 +86,7 @@ allow systemd_modules_load_t syslogd_var_run_t:dir search_dir_perms;
 allow systemd_modules_load_t devlog_t:sock_file write;
 allow systemd_modules_load_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_modules_load_t etc_t:file read_file_perms;
+allow systemd_modules_load_t self:key write;
 
 modutils_read_module_deps(systemd_modules_load_t);
 allow systemd_modules_load_t self:capability { sys_module sys_admin };
@@ -120,3 +123,5 @@ allow systemd_modules_load_t lib_t:system module_load;
 
 allow udev_t configfs_t:file { read open };
 allow udev_t lib_t:system module_load;
+allow udev_t video_name_sysfs_t:file { getattr read_file_perms };
+allow udev_t dev_dri_t:lnk_file { rename unlink };
