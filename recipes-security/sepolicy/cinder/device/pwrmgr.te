@@ -33,7 +33,10 @@ userdebug_or_eng(`
 
 allow pwrmgr_t pwrmgr_t:fifo_file { read open write };
 allow pwrmgr_t sysfs_t:file { read open write getattr };       #/sys/devices/soc0/soc_id
-allow pwrmgr_t var_log_t:file { read write open getattr };
+allow pwrmgr_t var_log_t:file { read write open getattr setattr create rename unlink};
+allow pwrmgr_t var_log_t:dir {search read write add_name remove_name};
+allow pwrmgr_t pmsg0_t:chr_file { write open};
+allow pwrmgr_t var_log_t:lnk_file read;
 allow pwrmgr_t self:process signal;
 
 allow alogd_t pmsg0_t:chr_file open;
