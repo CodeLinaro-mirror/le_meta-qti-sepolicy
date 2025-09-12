@@ -30,6 +30,7 @@ gen_require(`
     type sysctl_t;
     type power_unit_t;
     type sysctl_kernel_t;
+    type removable_device_t;
     class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -67,6 +68,11 @@ allow pwrmgr_t faultmgr_t:dbus send_msg;
 allow pwrmgr_t sysctl_t:dir search;
 allow pwrmgr_t power_unit_t:service start;
 allow pwrmgr_t sysctl_kernel_t:dir search;
+allow pwrmgr_t pwrmgr_data_t:dir manage_dir_perms;
+allow pwrmgr_t pwrmgr_data_t:file manage_file_perms;
+allow pwrmgr_t qfhlog_data_t:dir manage_dir_perms;
+allow pwrmgr_t qfhlog_data_t:file manage_file_perms;
+allow pwrmgr_t removable_device_t:blk_file { read write open getattr append};
 dontaudit pwrmgr_t default_t:dir search;
 
 #Manage Dbus sockets

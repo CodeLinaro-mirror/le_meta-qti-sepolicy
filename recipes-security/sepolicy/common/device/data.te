@@ -83,10 +83,6 @@ type pwrmgr_data_t;
 user_data_files_type(pwrmgr_data_t)
 allow initrc_t pwrmgr_data_t:dir manage_dir_perms;
 allow initrc_t pwrmgr_data_t:file manage_file_perms;
-allow pwrmgr_t pwrmgr_data_t:dir manage_dir_perms;
-allow pwrmgr_t pwrmgr_data_t:file manage_file_perms;
-allow pwrmgr_t qfhlog_data_t:dir manage_dir_perms;
-allow pwrmgr_t qfhlog_data_t:file manage_file_perms;
 allow setfiles_t pwrmgr_data_t:dir relabelto;
 
 type splane_data_t;
