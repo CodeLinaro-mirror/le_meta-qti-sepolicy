@@ -17,6 +17,7 @@ gen_require(`
     type proc_t;
     type initrc_t;
     type etc_t;
+    type locale_t;
 ')
 
 userdebug_or_eng(`
@@ -44,6 +45,10 @@ allow qcrosvm_t initrc_t:unix_stream_socket { accept connectto listen };
 
 #AVC avc:  denied  { read } for  pid=1609 comm="qcrosvm" name="localtime" 
 allow qcrosvm_t etc_t:lnk_file { read_lnk_file_perms };
+
+#AVC avc:  denied  { search } for  pid=2982 comm="qcrosvm" name="zoneinfo"
+allow qcrosvm_t locale_t:dir search_dir_perms;
+allow qcrosvm_t locale_t:file { read_file_perms map };
 
 #============= gunyah_device_t ==============
 dev_node(gunyah_device_t)
