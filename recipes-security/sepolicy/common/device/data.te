@@ -35,7 +35,6 @@ gen_require(`
     type mount_t;
     type init_t;
     type initrc_t;
-    type pwrmgr_t;
     type setfiles_t;
     type ss-ramdump_data_t;
     attribute mountpoint;
