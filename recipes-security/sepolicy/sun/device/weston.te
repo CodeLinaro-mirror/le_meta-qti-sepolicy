@@ -1,0 +1,18 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type var_cache_t;
+files_type(var_cache_t);
+
+dontaudit weston_t self:capability dac_read_search;
+
+gen_require(`
+    type var_t;
+    type fonts_cache_t;
+    type user_home_t;
+')
+
+allow weston_t fonts_cache_t:dir { create_dir_perms read };
+allow weston_t var_cache_t:dir manage_dir_perms;
+allow weston_t var_cache_t:file manage_file_perms;
+allow weston_t user_home_t:file read;

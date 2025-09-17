@@ -89,6 +89,7 @@
 /dev/dma_heap/system -c   gen_context(system_u:object_r:system_dmabuf_device_t,s0)
 /dev/dma_heap/qcom,system-uncached -c   gen_context(system_u:object_r:system_uncached_dmabuf_device_t,s0)
 /dev/dma_heap/qcom,qseecom -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
+/dev/dma_heap/qcom,qseecom-ta -c  gen_context(system_u:object_r:vendor_dmabuf_qseecom_heap_device_t,s0)
 /dev/dma_heap/qcom,ms1     -c   gen_context(system_u:object_r:vendor_dmabuf_ms1_heap_device_t,s0)
 /dev/dma_heap/qcom,ms2     -c   gen_context(system_u:object_r:vendor_dmabuf_ms2_heap_device_t,s0)
 /dev/dma_heap/qcom,ms3     -c   gen_context(system_u:object_r:vendor_dmabuf_ms3_heap_device_t,s0)

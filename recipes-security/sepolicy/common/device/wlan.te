@@ -96,10 +96,34 @@ type qmi_fw_vendor_t;
 type etc_t;
 type NetworkManager_runtime_t;
 type wlan_initrc_exec_t;
+type rebootd_t;
+type unconfined_t;
+type loc_t;
+type loc_hald_t;
+type tftp_server_t;
+type alogd_t;
+type var_run_t;
+type net_conf_t;
 ')
 
 userdebug_or_eng(`
+    allow wlan_initrc_t self:capability sys_ptrace;
     rw_diag_dev(wlan_service_t)
+    allow wlan_initrc_t unconfined_t:fd use;
+    allow wlan_initrc_t loc_t:dir search_dir_perms;
+    allow wlan_initrc_t loc_t:file read_file_perms;
+    allow wlan_initrc_t loc_t:lnk_file read_lnk_file_perms;
+    allow wlan_initrc_t loc_hald_t:dir search_dir_perms;
+    allow wlan_initrc_t loc_hald_t:file read_file_perms;
+    allow wlan_initrc_t loc_hald_t:lnk_file read_lnk_file_perms;
+    allow wlan_initrc_t tftp_server_t:dir search_dir_perms;
+    allow wlan_initrc_t tftp_server_t:file read_file_perms;
+    allow wlan_initrc_t tftp_server_t:lnk_file read_lnk_file_perms;
+    allow wlan_initrc_t alogd_t:dir search;
+    allow wlan_initrc_t alogd_t:file read_file_perms;
+    allow wlan_initrc_t alogd_t:lnk_file read_lnk_file_perms;
+    allow loc_hald_t var_run_t:sock_file write;
+    allow wlan_initrc_t net_conf_t:file { open write };
 ')
 
 files_tmp_file(wlan_service_tmp_t)
@@ -155,3 +179,4 @@ read_system_data_files(wlan_initrc_t, wifi_system_data_t)
 allow wlan_initrc_t NetworkManager_runtime_t:dir setattr_dir_perms;
 allow wlan_initrc_t wlan_initrc_exec_t:file exec_file_perms;
 allow wlan_initrc_t etc_t:lnk_file read_lnk_file_perms;
+allow wlan_initrc_t rebootd_t:dir search_dir_perms;
