@@ -45,22 +45,26 @@ gen_require(`
     type wifi_data_t;
     type hwfde_conf_file_t;
     type overlay_t;
+    type var_spool_t;
+    type default_context_t;
 ')
 
 #for overlayfs
-permissive mount_t;
-permissive mount_copybind_t;
-permissive unconfined_mount_t;
 allow mount_t hwfde_conf_file_t:file read_file_perms;
-dontaudit { mount_t mount_copybind_t unconfined_mount_t } file_type:{ file dir } *;
-dontaudit { mount_t mount_copybind_t unconfined_mount_t } user_data:{ file dir } *;
-dontaudit { mount_t mount_copybind_t unconfined_mount_t } system_data:{ file dir } *;
 
 allow mount_t self:capability { dac_read_search };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 
-allow mount_t overlay_t:chr_file delete_chr_file_perms;
+allow mount_t overlay_t:chr_file { delete_chr_file_perms unlink };
+allow mount_t overlay_t:dir manage_dir_perms;
+allow mount_t overlay_t:file manage_file_perms;
 allow mount_t var_t:chr_file unlink;
+allow mount_t var_t:dir manage_dir_perms;
+allow mount_t var_t:file manage_file_perms;
+
+allow mount_t etc_t:dir mounton;
+allow mount_copybind_t default_context_t:dir search;
+allow mount_copybind_t var_spool_t:dir getattr;
 
 mls_process_read_to_clearance(unconfined_mount_t)
 mls_process_write_to_clearance(unconfined_mount_t)
