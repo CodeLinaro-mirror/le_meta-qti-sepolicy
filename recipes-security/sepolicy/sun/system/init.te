@@ -7,6 +7,7 @@ gen_require(`
     type zspage_sysfs_t;
     type zs_handle_sysfs_t;
     type sys_power_sysfs_t;
+    type fbe_secure_data_t;
 ')
 
 allow initrc_t overlay_t:dir manage_dir_perms;
@@ -16,6 +17,7 @@ allow initrc_t zs_handle_sysfs_t:dir search;
 allow initrc_t zs_handle_sysfs_t:file { getattr setattr };
 allow initrc_t sys_power_sysfs_t:dir search;
 allow initrc_t sys_power_sysfs_t:file { rw_file_perms setattr };
+allow initrc_t fbe_secure_data_t:dir create_dir_perms;
 
 allow init_t overlay_t:dir manage_dir_perms;
 allow init_t sysfs_vblank_t:file write_file_perms;
