@@ -80,15 +80,28 @@ allow btapp_t system_dbusd_t:unix_stream_socket connectto;
 
 allow btapp_t bluetooth_conf_t:file rw_file_perms;
 allow btapp_t pulseaudio_t:unix_stream_socket { connectto sendto };
-
 ## for DBus
 ifdef(`init_systemd', `
     dbus_connect_system_bus(btapp_t)
     dbus_send_system_bus(btapp_t)
 ')
 
-allow btapp_t bt_data_t:sock_file {create unlink write };
-data_filetrans(btapp_t, bt_data_t, { file dir })
-manage_user_data_files(btapp_t, bt_data_t)
+#declarations for bluetooth_data_file_t
+type bluetooth_data_file_t;
+typeattribute bluetooth_data_file_t file_type;
+
+allow btapp_t bluetooth_data_file_t:file { create open read write };
+allow btapp_t bluetooth_data_file_t:dir { create open read write rmdir search };
+
+# declarations for bt_role_conf_t
+type bt_role_conf_t;
+typeattribute bt_role_conf_t file_type;
+allow btapp_t bt_role_conf_t:file { read write open getattr };
+
+
+#File and socket management
+data_filetrans(btapp_t, bluetooth_data_file_t, { file dir sock_file })
+manage_user_data_files(btapp_t, bluetooth_data_file_t)
+
 allow mount_t bt_data_t:sock_file manage_sock_file_perms;
 allow btapp_t bluetooth_conf_t:sock_file {create unlink write };
