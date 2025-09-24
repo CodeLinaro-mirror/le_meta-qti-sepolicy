@@ -3,6 +3,9 @@
 
 dontaudit pulseaudio_t self:capability sys_admin;
 
+#TODO:revisit this when facing any problem with path-/sys/power/wake_lock
+dontaudit pulseaudio_t sysfs_t:file append;
+
 gen_require(`
     type sys_power_sysfs_t;
 ')
