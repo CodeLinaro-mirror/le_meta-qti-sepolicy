@@ -73,3 +73,12 @@ dontaudit usb_t kernel_t:system { module_request };
 
 dontaudit adbd_t self:lockdown confidentiality;
 allow usb_t functionfs_t:dir getattr;
+
+
+gen_require(`
+    type cpu_sysfs_t;
+')
+
+allow adbd_t cpu_sysfs_t:dir search;
+allow adbd_t cpu_sysfs_t:file { getattr open read };
+
