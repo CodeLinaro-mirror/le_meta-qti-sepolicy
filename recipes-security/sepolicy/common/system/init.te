@@ -172,6 +172,7 @@ gen_require(`
     type vndbinder_device_t;
     type gpumodel_t;
     type servicemanager_t;
+    type telsdk_data_t;
 ')
 
 allow initrc_t binderfs_t:dir { getattr search };
@@ -180,3 +181,4 @@ allow initrc_t vndbinder_device_t:chr_file { getattr setattr };
 allow initrc_t binder_device_t:chr_file { getattr setattr };
 allow initrc_t gpumodel_t:file { getattr open read };
 allow initrc_t servicemanager_t:binder call;
+allow initrc_t telsdk_data_t:dir search;

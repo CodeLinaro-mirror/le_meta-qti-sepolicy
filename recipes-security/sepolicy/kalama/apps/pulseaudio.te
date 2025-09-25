@@ -35,6 +35,8 @@ gen_require(`
  type servicemanager_t;
  type binderfs_t;
  type binder_device_t;
+ type agm_server_t;
+ type sysfs_t;
 ')
 allow pulseaudio_t audio_data_file_t:dir search;
 audio_data_files_access(pulseaudio_t)
@@ -49,6 +51,8 @@ allow pulseaudio_t sysctl_vm_t:dir search;
 allow pulseaudio_t servicemanager_t:binder { call transfer };
 allow pulseaudio_t binderfs_t:dir search;
 allow pulseaudio_t binder_device_t:chr_file { rw_chr_file_perms map};
+allow pulseaudio_t agm_server_t:binder { call transfer };
+allow pulseaudio_t sysfs_t:file append;
 
 userdebug_or_eng(`
     gen_require(`

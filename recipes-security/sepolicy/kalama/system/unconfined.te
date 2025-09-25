@@ -55,6 +55,7 @@ userdebug_or_eng(`
         type sysfs_cpu_present;
         type binderfs_t;
         type qseecomd_exec_t;
+        type telux_audio_server_exec_t;
         type pulseaudio_t;
         class service { status start stop };
         type fbe_secure_data_t;
@@ -115,6 +116,7 @@ userdebug_or_eng(`
     allow unconfined_t sysfs_cpu_capacity:file { read_file_perms };
     allow unconfined_t sysfs_cpu_present:file { read_file_perms };
     allow unconfined_t qseecomd_exec_t:service { status start stop };
+    allow unconfined_t telux_audio_server_exec_t:service { status start stop };
 
     allow unconfined_t binderfs_t:file getattr;
     allow unconfined_t dev_dri_t:dir getattr;

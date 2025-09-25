@@ -45,7 +45,9 @@ gen_require(`
     type systemd_logind_var_run_t;
     type system_dbusd_t;
     type system_dbusd_var_run_t;
+    type servicemanager_t;
     type binderfs_t;
+    type binder_device_t;
     type locale_t;
     type sysfs_t;
     type system_dmabuf_device_t;
@@ -103,7 +105,10 @@ allow telux_audio_server_t system_dbusd_t:unix_stream_socket connectto;
 allow telux_audio_server_t agm_server_t:dbus send_msg;
 allow telux_audio_server_t var_run_t:dir search_dir_perms;
 allow telux_audio_server_t var_run_t:lnk_file read_lnk_file_perms;
+allow telux_audio_server_t servicemanager_t:binder { call transfer };
 allow telux_audio_server_t binderfs_t:dir search;
+allow telux_audio_server_t binder_device_t:chr_file { rw_chr_file_perms map};
+allow telux_audio_server_t agm_server_t:binder { call transfer };
 #########################################################
 allow telux_audio_server_t etc_t:file { read getattr open };
 allow telux_audio_server_t locale_t:dir search;
