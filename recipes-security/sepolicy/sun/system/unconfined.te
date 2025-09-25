@@ -1,0 +1,39 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+        type binderfs_t;
+        type drm_card_sysfs_t;
+        type fbe_secure_data_t;
+        type hwfde_conf_file_t;
+        type install_evict_t;
+        type perf_hal_socket_t;
+        type power_sysfs_t;
+        type sys_power_sysfs_t;
+        type sysfs_panel0_backlight_bl_power_t;
+        type ts_hugepage_sysfs_t;
+        type zs_handle_sysfs_t;
+        type zspage_sysfs_t;
+        type touch_input_device_t;
+    ')
+    allow unconfined_t binderfs_t:file getattr;
+    allow unconfined_t drm_card_sysfs_t:dir list_dir_perms;
+    allow unconfined_t drm_card_sysfs_t:file getattr;
+    allow unconfined_t fbe_secure_data_t:dir list_dir_perms;
+    allow unconfined_t fbe_secure_data_t:file getattr;
+    allow unconfined_t hwfde_conf_file_t:file getattr;
+    allow unconfined_t install_evict_t:file getattr;
+    allow unconfined_t perf_hal_socket_t:sock_file getattr;
+    allow unconfined_t power_sysfs_t:file getattr;
+    allow unconfined_t sys_power_sysfs_t:dir list_dir_perms;
+    allow unconfined_t sys_power_sysfs_t:file getattr;
+    allow unconfined_t sysfs_panel0_backlight_bl_power_t:file getattr;
+    allow unconfined_t ts_hugepage_sysfs_t:dir list_dir_perms;
+    allow unconfined_t ts_hugepage_sysfs_t:file read_file_perms;
+    allow unconfined_t zs_handle_sysfs_t:dir list_dir_perms;
+    allow unconfined_t zs_handle_sysfs_t:file read_file_perms;
+    allow unconfined_t zspage_sysfs_t:dir list_dir_perms;
+    allow unconfined_t zspage_sysfs_t:file read_file_perms;
+    allow unconfined_t touch_input_device_t:file getattr;
+')
