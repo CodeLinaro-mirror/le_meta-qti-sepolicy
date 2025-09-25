@@ -77,8 +77,17 @@ allow usb_t functionfs_t:dir getattr;
 
 gen_require(`
     type cpu_sysfs_t;
+    type qmmf_server_exec_t;
+    type qmmf_server_t;
+    type servicemanager_t;
+    type binderfs_t;
+    type weston_runtime_t;
 ')
 
 allow adbd_t cpu_sysfs_t:dir search;
 allow adbd_t cpu_sysfs_t:file { getattr open read };
-
+allow adbd_t qmmf_server_exec_t:service { start status };
+allow adbd_t qmmf_server_t:binder { call transfer };
+allow adbd_t servicemanager_t:binder call;
+allow adbd_t binderfs_t:dir search;
+allow adbd_t weston_runtime_t:sock_file { getattr setattr write };
