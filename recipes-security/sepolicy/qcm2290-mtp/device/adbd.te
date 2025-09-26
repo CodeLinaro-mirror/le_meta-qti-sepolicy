@@ -84,6 +84,7 @@ gen_require(`
     type weston_runtime_t;
     type sysfs_cpu_capacity;
     type sysfs_cpu_present;
+    type cpu_scaling_freq_t;
 ')
 
 allow adbd_t cpu_sysfs_t:dir search;
@@ -95,3 +96,4 @@ allow adbd_t binderfs_t:dir search;
 allow adbd_t weston_runtime_t:sock_file { getattr setattr write };
 allow adbd_t sysfs_cpu_capacity:file { getattr open read };
 allow adbd_t sysfs_cpu_present:file { getattr open read };
+allow adbd_t cpu_scaling_freq_t:file { getattr read open };
