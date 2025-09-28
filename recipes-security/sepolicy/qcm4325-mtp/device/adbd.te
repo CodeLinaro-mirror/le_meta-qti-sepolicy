@@ -68,3 +68,14 @@ allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
 dontaudit usb_t kernel_t:system { module_request };
 
 allow usb_t functionfs_t:dir getattr;
+
+
+gen_require(`
+    type weston_runtime_t;
+    type sysfs_cpu_capacity;
+    type sysfs_cpu_present;
+')
+
+allow adbd_t weston_runtime_t:sock_file { getattr setattr write };
+allow adbd_t sysfs_cpu_capacity:file { getattr open read };
+allow adbd_t sysfs_cpu_present:file { getattr open read };
