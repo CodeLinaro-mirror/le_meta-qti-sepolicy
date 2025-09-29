@@ -71,6 +71,8 @@ allow usb_t functionfs_t:dir getattr;
 
 
 gen_require(`
+    type cpu_sysfs_t;
+    type cpu_scaling_freq_t;
     type qmmf_server_exec_t;
     type qmmf_server_t;
     type servicemanager_t;
@@ -80,6 +82,9 @@ gen_require(`
     type sysfs_cpu_present;
 ')
 
+allow adbd_t cpu_sysfs_t:dir search;
+allow adbd_t cpu_sysfs_t:file { getattr open read };
+allow adbd_t cpu_scaling_freq_t:file { getattr read open };
 allow adbd_t qmmf_server_exec_t:service { start status };
 allow adbd_t qmmf_server_t:binder { call transfer };
 allow adbd_t servicemanager_t:binder call;
