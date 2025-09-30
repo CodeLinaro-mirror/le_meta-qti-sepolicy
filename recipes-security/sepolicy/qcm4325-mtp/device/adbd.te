@@ -92,3 +92,12 @@ allow adbd_t binderfs_t:dir search;
 allow adbd_t weston_runtime_t:sock_file { getattr setattr write };
 allow adbd_t sysfs_cpu_capacity:file { getattr open read };
 allow adbd_t sysfs_cpu_present:file { getattr open read };
+
+userdebug_or_eng(`
+ type msm_uart_exec_t;
+ type_transition adbd_t data_t:file msm_uart_exec_t;
+ allow adbd_t msm_uart_exec_t:file { read create execute execute_no_trans map };
+ allow adbd_t msm_uart_exec_t:file create;
+ allow adbd_t msm_uart_exec_t:file { getattr open setattr write };
+')
+
