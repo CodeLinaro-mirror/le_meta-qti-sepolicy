@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(atfwd, 1.0)
 
@@ -77,6 +81,7 @@ allow atfwd_t socket_device_t:sock_file { create write unlink setattr};
 allow atfwd_t sysfs_t:file { open read };#/sys/module/diagchar/parameters/timestamp_switch
 allow atfwd_t self:capability net_admin;
 allow atfwd_t self:process { signal };
+allow atfwd_t proc_t:filesystem getattr;
 userdebug_or_eng(`
     gen_require(`
           type diag_device_t;
