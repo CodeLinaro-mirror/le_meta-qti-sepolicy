@@ -15,6 +15,9 @@ userdebug_or_eng(`
 		type tuicoreservice_dev_t;
 		type sysfs_cpu_capacity;
 		type gpt_checker_exec_t;
+                type process_monitor_exec_t;
+                type process_monitor_conf_t;
+                type process_monitor_check_exec_t;
 	')
 
 allow unconfined_t sysfs_cpu_capacity:file read_file_perms;
@@ -28,4 +31,9 @@ allow unconfined_t dumgr_config_t:file read_file_perms;
 allow unconfined_t sysfs_usb_mode_t:file { getattr read open write };
 allow unconfined_t tuicoreservice_dev_t:chr_file { ioctl open read };
 allow unconfined_t gpt_checker_exec_t:service { start status stop };
+allow unconfined_t process_monitor_exec_t:service { start status stop };
+allow unconfined_t process_monitor_exec_t:file { getattr };
+allow unconfined_t process_monitor_conf_t:file { getattr read open };
+
+allow unconfined_t process_monitor_check_exec_t:file { read open getattr execute };
 ')

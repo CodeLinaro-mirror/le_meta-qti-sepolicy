@@ -1,0 +1,85 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(processmonitor, 1.0)
+
+type process_monitor_t;
+type process_monitor_exec_t;
+type process_monitor_check_t;
+type process_monitor_check_exec_t;
+type process_monitor_conf_t;
+
+init_vendor_domain(process_monitor_t, process_monitor_exec_t)
+init_vendor_domain(process_monitor_check_t, process_monitor_check_exec_t)
+
+gen_require(`
+    type tmpfs_t;
+    class service { start stop status };
+    type system_dbusd_var_run_t;
+    type system_dbusd_t;
+    type cgroup_t;
+    type systemd_unit_t;
+    type pcie_diag_exec_t;
+    type diag-router_exec_t;
+    type qnetcfgmgr_exec_t;
+    type bin_t;
+    type init_t;
+    type etc_t;
+    type proc_t;
+    class dbus { send_msg acquire_svc};
+    type faultmgr_t;
+    type shell_exec_t;
+    type sysdevice_sysfs_t;
+')
+# Allow processmonitor to connect to the system bus
+allow process_monitor_t self:dbus send_msg;
+allow init_t process_monitor_t:dbus { send_msg };
+
+allow process_monitor_t init_t:dbus { send_msg acquire_svc};
+
+allow process_monitor_t faultmgr_t:dbus { send_msg };
+allow process_monitor_t tmpfs_t:filesystem { getattr };
+allow process_monitor_t init_t:file { read open getattr ioctl};
+allow process_monitor_t init_t:dir { search };
+allow process_monitor_t system_dbusd_var_run_t:dir { search };
+allow process_monitor_t system_dbusd_var_run_t:sock_file { write };
+allow process_monitor_t system_dbusd_t:unix_stream_socket { connectto };
+allow process_monitor_t cgroup_t:filesystem { getattr };
+allow process_monitor_t etc_t:file { read open };
+allow process_monitor_t proc_t:file { read open getattr};
+
+allow process_monitor_t systemd_unit_t:service { status };
+
+allow process_monitor_t pcie_diag_exec_t:service { status };
+
+allow process_monitor_t diag-router_exec_t:service { status };
+
+allow process_monitor_t qnetcfgmgr_exec_t:service { status };
+
+allow process_monitor_t bin_t:service { status };
+
+allow process_monitor_t init_t:service { status };
+allow process_monitor_t system_dbusd_t:dbus { send_msg acquire_svc };
+allow process_monitor_t system_dbusd_t:unix_stream_socket { connectto };
+
+allow init_t process_monitor_check_exec_t:file { read open execute execute_no_trans getattr ioctl write };
+allow process_monitor_t process_monitor_conf_t:file { read open getattr };
+allow process_monitor_check_t shell_exec_t:file { read execute open map };
+allow process_monitor_check_t etc_t:file { read open getattr map };
+allow process_monitor_check_t sysdevice_sysfs_t:file { read open getattr };
+
+# Manage D-Bus sockets for process_monitor
+ifdef(`init_systemd',`
+   # allow talking with systemd over dbus
+   init_dbus_chat(process_monitor_t)
+   # declare process_monitor_t as a system service domain
+   dbus_system_domain(process_monitor_t, process_monitor_exec_t)
+   # allow communication with unconfined domains over dbus
+   unconfined_dbus_chat(process_monitor_t)
+   # allow process_monitor to talk to initrc_t (if needed)
+   allow process_monitor_t initrc_t:dbus send_msg;
+   # allow process_monitor to connect to system bus and request a name
+   dbus_system_bus_client(process_monitor_t)
+   # allow process_monitor to send signals/messages to faultmgr
+   allow process_monitor_t faultmgr_t:dbus { send_msg };
+')
