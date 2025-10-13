@@ -89,6 +89,9 @@ gen_require(`
     type ipa_fw_device_t;
     type configfs_t;
     type sysdevice_sysfs_t;
+    type dataadpl_device_t;
+    type qcmap_etc_data_t;
+    type qti_ipa_odl_ctl_device_t;
 ')
 dontaudit qtether_t default_t:dir { search };
 
@@ -126,6 +129,12 @@ files_dontaudit_getattr_default_dirs(qtether_t)
 kernel_read_network_state(qtether_t)
 qcmap_manage_user_data_files(qtether_t)
 
+# Allow watch permission on qcmap_data_t directories
+gen_require(`
+    type qcmap_data_t;
+')
+allow qtether_t qcmap_data_t:dir watch;
+
 # Manage socket files inside /dev/socket
 type qtether_socket_device_t;
 files_type(qtether_socket_device_t)
@@ -154,3 +163,8 @@ read_files_pattern(qtether_t, configfs_t, configfs_t)
 
 #for EMAC dev node access
 emac_rw_dev(qtether_t)
+
+#for DPL dev node access
+rw_chr_files_pattern(qtether_t, device_t, dataadpl_device_t)
+data_rw_system_data_files(qtether_t, qcmap_etc_data_t)
+rw_chr_files_pattern(qtether_t, device_t, qti_ipa_odl_ctl_device_t)
