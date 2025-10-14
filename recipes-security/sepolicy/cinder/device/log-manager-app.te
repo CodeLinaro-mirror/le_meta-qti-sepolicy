@@ -79,7 +79,7 @@ allow log-manager-app_t self:capability setgid;
 allow diag-router_t log-manager-app_t:process signal;
 
 # Needed to access /tmp folder
-allow log-manager-app_t tmp_t:dir { search add_name getattr open read write create remove_name };
+allow log-manager-app_t tmp_t:dir { search add_name getattr open read write create remove_name rmdir };
 allow log-manager-app_t tmp_t:file { create getattr open read setattr write unlink append ioctl };
 allow log-manager-app_t tmp_t:fifo_file { create open read };
 allow log-manager-app_t tmpfs_t:filesystem getattr;
