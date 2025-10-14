@@ -11,3 +11,11 @@ gen_require(`
 ')
 
 allow pulseaudio_t sys_power_sysfs_t:dir search;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow pulseaudio_t unconfined_t:fd use;
+    allow pulseaudio_t unconfined_t:binder { call transfer };
+')
