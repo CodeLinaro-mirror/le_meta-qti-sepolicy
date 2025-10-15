@@ -1,0 +1,14 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+## <summary> process_monitor service monitors the health of critical services </summary>
+
+## <summary>
+##      Allow the specified domain to check status of process_monitor
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
