@@ -1,0 +1,63 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(hwfde-service, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type hwfde_service_t;
+type hwfde_service_exec_t;
+
+require {
+        type proc_t;
+        type overlay_t;
+        type debugfs_t;
+        type storage_disk_device_t;
+        type sysfs_t;
+        type hwfde_icepath_sysfs_t;
+}
+
+#allow hwfde_service to mount the encrypted partition
+allow hwfde_service_t proc_t:file getattr_file_perms;
+allow hwfde_service_t overlay_t:dir { getattr_dir_perms mounton };
+mls_file_read_all_levels(hwfde_service_t);
+mls_file_write_all_levels(hwfde_service_t);
+allow hwfde_service_t storage_disk_device_t:blk_file rw_blk_file_perms;
+
+init_vendor_domain(hwfde_service_t, hwfde_service_exec_t)
+logging_send_syslog_msg(hwfde_service_t)
+
+# allow hwfde_service to get metadata from footer partition
+type hwfde_footer_blk_t;
+dev_node(hwfde_footer_blk_t);
+allow hwfde_service_t hwfde_footer_blk_t:blk_file rw_blk_file_perms;
+
+# allow hwfde_service to read/write leproperties
+device_search_sockets(hwfde_service_t)
+leprop_rw_props(hwfde_service_t)
+
+# allow hwfde_service to read commandline from /proc/cmdline
+allow hwfde_service_t proc_t:file { open read };
+
+#allow hwfde_service to read/write in sysfs
+allow hwfde_service_t sysfs_t:dir read;
+allow hwfde_service_t hwfde_icepath_sysfs_t:file rw_file_perms;
+
+# allow hwfde_service to encrypt userdata partition
+storage_raw_write_removable_device(hwfde_service_t)
+storage_raw_read_removable_device(hwfde_service_t)
+
+# allow hwfde_service to mount userata partition on /overlay
+fs_mount_xattr_fs(hwfde_service_t)
+files_polyinstantiate_all(hwfde_service_t)
+overlay_mount_user_dir(hwfde_service_t)
+
+userdebug_or_eng(`
+    gen_require(`
+       type debugfs_t;
+   ')
+       allow hwfde_service_t debugfs_t:dir search_dir_perms;
+')
