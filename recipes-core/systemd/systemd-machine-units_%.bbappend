@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/systemd:"
 
-SRC_URI:append += " \
+SRC_URI += " \
     file://label-cache.service \
     file://label-persist.service \
     file://label-systemrw.service \
