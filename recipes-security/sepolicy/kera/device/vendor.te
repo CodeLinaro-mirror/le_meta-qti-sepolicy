@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit post_boot_script_t self:capability dac_override;
+
+gen_require(`
+    type etc_t;
+')
+
+allow post_boot_script_t etc_t:file read_file_perms;
