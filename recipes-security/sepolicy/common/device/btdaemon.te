@@ -65,6 +65,7 @@ gen_require(`
 	type tty_device_t;
 	type debugfs_t;
 	type wireless_device_t;
+	type devlog_t;
 ')
 
 
@@ -103,6 +104,11 @@ allow syslogd_t init_var_run_t:lnk_file { getattr open read write };
 allow syslogd_t btdaemon_t:process { getattr signal sigkill };
 allow btdaemon_t tty_device_t:chr_file { read write open getattr setattr ioctl };
 allow btdaemon_t wireless_device_t:chr_file { read write open };
+allow btdaemon_t init_var_run_t:dir { search };
+allow btdaemon_t syslogd_var_run_t:dir { search };
+allow btdaemon_t syslogd_var_run_t:sock_file { write };
+allow btdaemon_t syslogd_t:unix_dgram_socket { sendto };
+allow btdaemon_t devlog_t:sock_file { write };
 
 # Allow to bind to node_t
 allow btdaemon_t node_t:tcp_socket node_bind;
