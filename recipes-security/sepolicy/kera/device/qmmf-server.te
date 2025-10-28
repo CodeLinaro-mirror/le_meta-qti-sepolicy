@@ -3,6 +3,11 @@
 
 gen_require(`
     type binder_device_t;
+    type soc0_gpu_sysfs_t;
+    type fs_t;
 ')
 
 allow qmmf_server_t binder_device_t:chr_file map;
+allow qmmf_server_t fs_t:filesystem getattr;
+allow qmmf_server_t self:process getsched;
+allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
