@@ -38,6 +38,7 @@
 /data/fhlog(/.*)?        --     gen_context(system_u:object_r:qfhlog_data_t,s0)
 /data/fmgr(/.*)?                gen_context(system_u:object_r:faultmgr_data_t,s0)
 /data/splane(/.*)?              gen_context(system_u:object_r:splane_data_t,s0)
+/data/pmgr(/.*)?                gen_context(system_u:object_r:pwrmgr_data_t,s0)
 
 #To support coredump in userdebug variant only
 /data/coredump(/.*)?            gen_context(system_u:object_r:coredump_data_t,s0)

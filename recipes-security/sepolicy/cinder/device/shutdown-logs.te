@@ -36,7 +36,7 @@ allow shutdown_logs_t debugfs_t:dir search;
 allow shutdown_logs_t debugfs_t:file { getattr open read };
 allow shutdown_logs_t dmesg_exec_t:file { execute execute_no_trans getattr open read };
 allow shutdown_logs_t kernel_t:system syslog_read;
-allow shutdown_logs_t mplane_app_t:dir { add_name getattr search write };
+allow shutdown_logs_t mplane_app_t:dir { create read open rmdir add_name getattr search write };
 allow shutdown_logs_t mplane_app_t:file { create getattr open write };
 allow shutdown_logs_t self:capability2 syslog;
 allow shutdown_logs_t self:fifo_file { getattr read };
