@@ -1,6 +1,8 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 dontaudit systemd_update_done_t self:capability sys_admin;
+dontaudit systemd_modules_load_t self:capability sys_admin;
+dontaudit systemd_modules_load_t self:key write;
 
 allow systemd_update_done_t overlay_t:dir rw_dir_perms;
 gen_require(`
