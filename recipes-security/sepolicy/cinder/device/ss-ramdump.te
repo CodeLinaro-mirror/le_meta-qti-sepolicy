@@ -1,0 +1,13 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+
+gen_require(`
+    type fs_t;
+    type removable_device_t;
+    type shell_exec_t;
+')
+
+allow ss-ramdump_t removable_device_t:blk_file { read open };
+allow ss-ramdump_t fs_t:filesystem getattr;
+allow ss-ramdump_t shell_exec_t:file { execute read open execute_no_trans map };

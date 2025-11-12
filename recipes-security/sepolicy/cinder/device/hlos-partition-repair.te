@@ -39,6 +39,7 @@ gen_require(`
     type fixed_disk_device_t;
     type firmware_t;
     type firmware_persist_t;
+    type init_t;
     type init_var_run_t;
     type kernel_t;
     type manifest_t;
@@ -47,6 +48,7 @@ gen_require(`
     type mplane_app_t;
     type mpss_persist_t;
     type persist_t;
+    type power_unit_t;
     type proc_t;
     type qcmap_etc_data_t;
     type qnetcfgmgr_persist_qncm_t;
@@ -60,7 +62,9 @@ gen_require(`
     type setfiles_exec_t;
     type system_data_t;
     type sysfs_t;
+    type sysctl_kernel_t;
     type sysctl_t;
+    type system_dbusd_var_run_t;
     type shell_exec_t;
     type tmp_t;
     type tmpfs_t;
@@ -229,6 +233,15 @@ allow persist_backup_t fixed_disk_device_t:blk_file { getattr };
 allow persist_backup_t proc_t:file { read getattr open };
 allow persist_backup_t persist_backup_t:capability sys_admin;
 allow persist_backup_t unlabeled_t:dir { search getattr write add_name relabelfrom mounton };
-
 allow persist_backup_t system_data_t:dir getattr;
 
+# Allow rules for /sbi/reboot
+allow hlos_partition_repair_t sysctl_kernel_t:dir search;
+allow hlos_partition_repair_t init_t:dir search;
+allow hlos_partition_repair_t init_var_run_t:dir getattr;
+allow hlos_partition_repair_t sysctl_kernel_t:file { read open };
+allow hlos_partition_repair_t init_t:file { read open };
+allow hlos_partition_repair_t init_t:lnk_file read;
+allow hlos_partition_repair_t init_t:unix_stream_socket connectto;
+allow hlos_partition_repair_t system_dbusd_var_run_t:dir search;
+allow hlos_partition_repair_t power_unit_t:service start;
