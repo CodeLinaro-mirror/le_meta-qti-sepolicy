@@ -107,8 +107,8 @@ mls_key_write_to_clearance(kmod_t)
 allow kmod_t nsfs_t:file read_file_perms;
 allow kmod_t overlay_t:dir search_dir_perms;
 
+type kerneltests_modules_t;
 userdebug_or_eng(`
-    type kerneltests_modules_t;
     gen_require(`
         type kmod_t;
     ')
