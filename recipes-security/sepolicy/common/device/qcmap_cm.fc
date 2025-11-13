@@ -58,6 +58,7 @@
 /etc/initscripts/qcmap_wpa_cli_connectnetwork     --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
 /etc/initscripts/qcmap_wpa_cli_getnetwork         --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
 /etc/initscripts/qcmap_wpa_cli_removenetwork      --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
+/etc/initscripts/qcmap_wpa_cli_savenetwork        --    gen_context(system_u:object_r:NetworkManager_exec_t,s0)
 
 #WLAN SDx24 AUTO
 /usr/lib/systemd/system/init_qti_wlan_auto\.service --  gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
