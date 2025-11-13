@@ -4,6 +4,10 @@
 allow systemd_update_done_t overlay_t:dir rw_dir_perms;
 gen_require(`
     type proc_psi_t;
+    type kernel_t;
 ')
 
 allow systemd_logind_t proc_psi_t:file write_file_perms;
+
+# Suppress AVC denial to avoid userspace udev altering kernel thread scheduling
+dontaudit udev_t kernel_t:process setsched;
