@@ -24,7 +24,7 @@ gen_require(`
 filetrans_pattern(seatd_t, var_run_t, seatd_socket_t, sock_file)
 allow seatd_t overlay_t:dir search;
 allow seatd_t var_run_t:dir manage_dir_perms;
-allow seatd_t seatd_socket_t:sock_file create;
+allow seatd_t seatd_socket_t:sock_file { create unlink };
 allow seatd_t device_t:dir search;
 allow seatd_t event_device_t:chr_file { read_file_perms write_file_perms };
 allow seatd_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty*
