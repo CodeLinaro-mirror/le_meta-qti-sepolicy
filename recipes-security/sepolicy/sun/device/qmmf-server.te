@@ -9,6 +9,7 @@ gen_require(`
     type sys_power_sysfs_t;
     type ashmem_devices_t;
     type perf_hal_socket_t;
+    type perf_hal_t;
 ')
 
 allow qmmf_server_t binder_device_t:chr_file map;
@@ -19,3 +20,4 @@ allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
 allow qmmf_server_t sys_power_sysfs_t:dir search;
 allow qmmf_server_t ashmem_devices_t:chr_file map;
 allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
+allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
