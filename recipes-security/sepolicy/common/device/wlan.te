@@ -44,7 +44,17 @@ type socket_device_t;
 type default_t;
 type devlog_t;
 type syslogd_t;
+type kmod_t;
+type initrc_t;
+type wlan_initrc_t;
+type system_data_t;
+type mount_copybind_exec_t;
+type modules_object_t;
+type mount_exec_t;
+type mount_runtime_t;
 ')
+
+manage_system_data_files(wlan_initrc_t, wifi_system_data_t);
 
 userdebug_or_eng(`
     rw_diag_dev(wlan_service_t)
@@ -69,3 +79,18 @@ kernel_rw_net_sysctls(wlan_service_t)
 
 networkmanager_read_wifi_sysdata_files(kernel_t)
 allow kernel_t wifi_system_data_t:dir search_dir_perms;
+
+mount_domtrans(wlan_initrc_t)
+
+allow kmod_t wifi_system_data_t:dir { search };
+allow kmod_t system_data_t:file { read open };
+allow initrc_t wifi_system_data_t:dir { search };
+allow wlan_initrc_t system_data_t:file { getattr read open create write };
+allow wlan_initrc_t system_data_t:dir { remove_name add_name write };
+allow wlan_initrc_t mount_copybind_exec_t:file { read open execute execute_no_trans };
+allow wlan_initrc_t modules_object_t:lnk_file { read };
+allow wlan_initrc_t modules_object_t:dir { search };
+allow wlan_initrc_t modules_object_t:file { getattr };
+allow wlan_initrc_t mount_exec_t:file { getattr read open execute execute_no_trans };
+allow wlan_initrc_t mount_runtime_t:dir { search getattr read };
+allow wlan_initrc_t wifi_system_data_t:file { mounton };

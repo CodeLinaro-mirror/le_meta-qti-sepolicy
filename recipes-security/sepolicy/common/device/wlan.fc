@@ -26,3 +26,4 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /usr/sbin/wlan_services -- gen_context(system_u:object_r:wlan_service_exec_t,s0)
+/etc/initscripts/start_cnss_le -- gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
