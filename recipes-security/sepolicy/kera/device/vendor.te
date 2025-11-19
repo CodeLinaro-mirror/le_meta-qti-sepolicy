@@ -9,7 +9,12 @@ gen_require(`
     type modules_object_t;
     type tftp_server_t;
     type diag-router_t;
+    type perf_hal_data_t;
+    type perf_hal_data_scaling_t;
+    type ts_hugepage_sysfs_t;
 ')
+
+filetrans_pattern(post_boot_script_t, perf_hal_data_t, perf_hal_data_scaling_t, file)
 
 allow post_boot_script_t etc_t:file read_file_perms;
 allow touch_script_t modules_object_t:dir search;
@@ -18,3 +23,8 @@ allow touch_script_t overlay_t:dir search;
 
 permissive tftp_server_t;
 permissive diag-router_t;
+allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
+allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;
+
+allow post_boot_script_t ts_hugepage_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t ts_hugepage_sysfs_t:file { create write_file_perms };

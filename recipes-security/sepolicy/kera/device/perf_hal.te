@@ -1,6 +1,9 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
+type perf_hal_data_scaling_t;
+files_type(perf_hal_data_scaling_t);
+
 dontaudit perf_hal_t self:capability sys_admin;
 
 gen_require(`
