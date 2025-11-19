@@ -1,0 +1,72 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(tlpd, 1.0)
+
+type tlpd_t;
+type tlpd_exec_t;
+
+init_vendor_domain(tlpd_t, tlpd_exec_t)
+
+gen_require(`
+    type default_t;
+    type sysfs_t;
+')
+
+userdebug_or_eng(`
+    rw_diag_dev(tlpd_t)
+
+    # Systemd and fifo file
+    gen_require(`
+        type unconfined_t;
+        class service { start status stop };
+    ')
+    allow unconfined_t tlpd_exec_t:service { status start stop};
+    allow unconfined_t tlpd_data_t:fifo_file { open write getattr };
+    dev_write_kmsg(tlpd_t)
+')
+
+logging_send_syslog_msg(tlpd_t)
+
+#fifo file permissions
+allow tlpd_t self:fifo_file { create open read getattr write };
+
+# Allow execute permission
+allow tlpd_t tlpd_exec_t:file { execute_no_trans };
+
+# Socket permissions
+allow tlpd_t self:socket create_socket_perms;
+allow tlpd_t self:qipcrtr_socket create_socket_perms;
+allow tlpd_t self:unix_stream_socket create_stream_socket_perms;
+allow tlpd_t self:netlink_socket create_socket_perms;
+
+type tlpd_socket_device_t;
+files_type(tlpd_socket_device_t);
+dev_node(tlpd_socket_device_t);
+device_manage_socket_file(tlpd_t, tlpd_socket_device_t);
+device_rw_socket_files(tlpd_t, tlpd_socket_device_t);
+
+# Process Capabilities
+allow tlpd_t self:capability { net_admin };
+allow tlpd_t self:process { signal };
+
+# Qcmap files
+files_rw_qcmap_etc_data_files(tlpd_t)
+qcmap_manage_var_run_data_files(tlpd_t)
+
+dontaudit tlpd_t default_t:dir { search };
+
+# Allow tlpd children connections
+tlpd_use_unix_stream_sockets(tlpd_t)
+
+# /sys/module/diagchar/parameters/timestamp_switch
+dev_read_sysfs(tlpd_t)
+
+# Allow logging to /data
+type tlpd_data_t;
+user_data_files_type(tlpd_data_t)
+tlpd_manage_user_data_files(tlpd_t, tlpd_data_t)
+data_filetrans(tlpd_t, tlpd_data_t, file)
+
+# Allow fifo file read and write
+tlpd_manage_fifo(tlpd_t)
