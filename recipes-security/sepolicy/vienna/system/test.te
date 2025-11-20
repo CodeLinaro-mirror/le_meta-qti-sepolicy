@@ -1,0 +1,18 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(test, 1.0)
+
+# Define SELinux type for kernel tests and Allow to manage and execute test files
+gen_require(`
+    type kernel_tests_t;
+    type mount_t;
+    type kmod_t;
+')
+
+userdebug_or_eng(`
+    allow mount_t kernel_tests_t:dir manage_dir_perms;
+    allow mount_t kernel_tests_t:file { manage_file_perms execute };
+    allow kmod_t kernel_tests_t:file read_file_perms;
+    allow kmod_t kernel_tests_t:system module_load;
+')

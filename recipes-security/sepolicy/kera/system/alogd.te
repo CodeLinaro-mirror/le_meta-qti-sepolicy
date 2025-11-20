@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type sysctl_vm_overcommit_t;
+    type sysctl_vm_t;
+')
+
+allow alogd_t sysctl_vm_overcommit_t:file read_file_perms;
+allow alogd_t sysctl_vm_t:dir search_dir_perms;

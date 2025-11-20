@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type setfiles_t;
+    type usbfs_t;
+')
+
+allow setfiles_t usbfs_t:filesystem getattr;

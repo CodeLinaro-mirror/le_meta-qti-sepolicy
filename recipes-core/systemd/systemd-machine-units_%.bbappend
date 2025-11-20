@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/systemd:"
 
-SRC_URI:append += " \
+SRC_URI += " \
     file://label-cache.service \
     file://label-persist.service \
     file://label-systemrw.service \
@@ -60,6 +60,12 @@ do_install:append() {
         fi
 
         mount_file="${D}${systemd_system_unitdir}/bt_firmware.mount"
+        if [ -e $mount_file ]; then
+            append_selinux_mount_option $mount_file context=system_u:object_r:firmware_t:s0
+            # Not all firmware filesystems support xattrs. Don't use restorecon or rootcontext here
+        fi
+
+        mount_file="${D}${systemd_system_unitdir}/vendor-bt_firmware.mount"
         if [ -e $mount_file ]; then
             append_selinux_mount_option $mount_file context=system_u:object_r:firmware_t:s0
             # Not all firmware filesystems support xattrs. Don't use restorecon or rootcontext here

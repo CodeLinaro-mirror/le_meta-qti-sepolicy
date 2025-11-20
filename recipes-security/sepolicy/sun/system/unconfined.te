@@ -25,9 +25,9 @@ userdebug_or_eng(`
     allow unconfined_t hwfde_conf_file_t:file getattr;
     allow unconfined_t install_evict_t:file getattr;
     allow unconfined_t perf_hal_socket_t:sock_file getattr;
-    allow unconfined_t power_sysfs_t:file getattr;
+    allow unconfined_t power_sysfs_t:file rw_file_perms;
     allow unconfined_t sys_power_sysfs_t:dir list_dir_perms;
-    allow unconfined_t sys_power_sysfs_t:file getattr;
+    allow unconfined_t sys_power_sysfs_t:file rw_file_perms;
     allow unconfined_t sysfs_panel0_backlight_bl_power_t:file getattr;
     allow unconfined_t ts_hugepage_sysfs_t:dir list_dir_perms;
     allow unconfined_t ts_hugepage_sysfs_t:file read_file_perms;

@@ -1,0 +1,49 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type default_context_t;
+    type file_context_t;
+    type etc_t;
+    type overlay_t;
+    type var_spool_t;
+    type var_t;
+    type modules_conf_t;
+    type udev_rules_t;
+    type systemd_logind_var_lib_t;
+    type dbusd_etc_t;
+    type post_boot_script_exec_t;
+    type leprop_system_data_t;
+    type adbd_system_data_t;
+')
+
+allow mount_copybind_t default_context_t:dir search;
+allow mount_t default_context_t:file { getattr open read };
+allow mount_t file_context_t:file read_file_perms;
+allow mount_copybind_t file_context_t:dir search;
+allow mount_copybind_t file_context_t:file mmap_read_file_perms;
+allow mount_copybind_t var_spool_t:dir getattr;
+
+allow mount_t etc_t:dir mounton;
+allow mount_t var_spool_t:dir mounton;
+
+allow mount_t modules_conf_t:dir read;
+allow mount_t udev_rules_t:dir read;
+allow mount_t systemd_logind_var_lib_t:dir { create read };
+
+allow mount_t dbusd_etc_t:file { getattr open read };
+allow mount_t modules_conf_t:file { getattr open read };
+allow mount_t udev_rules_t:file { getattr open read };
+allow mount_t post_boot_script_exec_t:file { open read getattr };
+allow mount_t overlay_t:chr_file unlink;
+
+
+allow mount_t overlay_t:dir manage_dir_perms;
+allow mount_t overlay_t:file manage_file_perms;
+
+allow mount_t var_t:dir manage_dir_perms;
+allow mount_t var_t:file manage_file_perms;
+
+allow mount_t leprop_system_data_t:file read_file_perms;
+allow mount_t dbusd_etc_t:dir read;
+allow mount_t adbd_system_data_t:file read_file_perms;
