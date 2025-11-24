@@ -103,8 +103,8 @@ allow qmmf_server_t self:fifo_file rw_fifo_file_perms;
 allow qmmf_server_t tmp_t:lnk_file read_lnk_file_perms;
 
 # other context
-
-allow qmmf_server_t sysfs_t:file { read getattr open };
+allow qmmf_server_t sysfs_t:file read_file_perms;
+allow qmmf_server_t sysfs_t:lnk_file read_lnk_file_perms;
 
 # Weston Socket
 allow qmmf_server_t weston_socket_device_t:sock_file write;
@@ -160,10 +160,12 @@ userdebug_or_eng(`
     allow qmmf_server_t default_t:dir { search };
     allow qmmf_server_t default_t:file { read getattr open };
     allow qmmf_server_t unconfined_t:binder call;
+    allow qmmf_server_t unconfined_t:fd use;
     allow qmmf_server_t tracefs_t:dir search;
     allow qmmf_server_t tracefs_t:filesystem mount;
     allow qmmf_server_t trace_marker_t:file { write open };
     allow qmmf_server_t unconfined_execmem_t:binder call;
+    allow qmmf_server_t sysfs_t:file write;
 ')
 
 manage_qmmf_data_files(qmmf_server_t)
