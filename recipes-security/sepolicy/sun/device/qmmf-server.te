@@ -21,3 +21,10 @@ allow qmmf_server_t sys_power_sysfs_t:dir search;
 allow qmmf_server_t ashmem_devices_t:chr_file map;
 allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
 allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow qmmf_server_t unconfined_t:fd use;
+')
