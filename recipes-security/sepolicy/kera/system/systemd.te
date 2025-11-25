@@ -8,9 +8,43 @@ allow systemd_update_done_t overlay_t:dir rw_dir_perms;
 gen_require(`
     type proc_psi_t;
     type kernel_t;
+    type udev_t;
+    type mount_t;
+    type unlabeled_t;
+    type sdcard_t;
+    type mount_exec_t;
+    type mnt_t;
 ')
 
 allow systemd_logind_t proc_psi_t:file write_file_perms;
 
 # Suppress AVC denial to avoid userspace udev altering kernel thread scheduling
 dontaudit udev_t kernel_t:process setsched;
+
+allow udev_t shell_exec_t:file { read getattr open execute execute_no_trans };
+
+# Allow udev *.sh in /etc/udev/scripts/ 
+allow udev_t etc_t:file { execute execute_no_trans };
+
+# Add mount needed sepolicy rules
+allow mount_t unlabeled_t:filesystem relabelfrom;
+allow mount_t unlabeled_t:filesystem relabelto;
+
+
+# Allow udev to execute mount command for SD card mounting
+domtrans_pattern(udev_t, mount_exec_t, mount_t)
+
+# Allow udev to search and manage /mnt directory
+allow udev_t mnt_t:dir { search getattr read write add_name };
+
+# Allow udev to create and manage /mnt/sdcard directory
+# This includes permissions to check if directory exists, create it, and mount on it
+allow udev_t sdcard_t:dir { create_dir_perms mounton getattr search };
+
+# Allow udev to read block device attributes for SD card detection
+dev_read_sysfs(udev_t)
+
+# Allow udev to directly execute mount operations (for automountsdcard.sh)
+# This gives udev the necessary privileges to mount SD cards
+allow udev_t self:capability { sys_admin dac_override dac_read_search };
+allow udev_t self:process setfscreate;
