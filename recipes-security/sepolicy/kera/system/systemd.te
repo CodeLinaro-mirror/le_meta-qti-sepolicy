@@ -14,3 +14,10 @@ allow systemd_logind_t proc_psi_t:file write_file_perms;
 
 # Suppress AVC denial to avoid userspace udev altering kernel thread scheduling
 dontaudit udev_t kernel_t:process setsched;
+
+# Allow udev to access sdcard mount point for automount script
+gen_require(`
+    type sdcard_t;
+    type udev_t;
+')
+allow udev_t sdcard_t:dir list_dir_perms;
