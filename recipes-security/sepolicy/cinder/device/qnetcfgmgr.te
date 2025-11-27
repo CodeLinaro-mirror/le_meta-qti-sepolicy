@@ -107,6 +107,7 @@ gen_require(`
   type faultmgr_t;
   class dbus send_msg;
   class dbus acquire_svc;
+  class service stop;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -170,6 +171,11 @@ allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
 allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
 allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+
+userdebug_or_eng('
+# To support systemctl stop qnet_config_managerd
+allow unconfined_t qnetcfgmgr_exec_t:service stop;
+')
 
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
