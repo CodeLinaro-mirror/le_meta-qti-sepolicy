@@ -73,31 +73,29 @@ allow usb_t functionfs_t:dir getattr;
 gen_require(`
     type cpu_sysfs_t;
     type cpu_scaling_freq_t;
-    type qmmf_server_exec_t;
-    type qmmf_server_t;
-    type servicemanager_t;
-    type binderfs_t;
-    type weston_runtime_t;
-    type sysfs_cpu_capacity;
-    type sysfs_cpu_present;
 ')
 
 allow adbd_t cpu_sysfs_t:dir search;
-allow adbd_t cpu_sysfs_t:file { getattr open read };
-allow adbd_t cpu_scaling_freq_t:file { getattr read open };
-allow adbd_t qmmf_server_exec_t:service { start status };
-allow adbd_t qmmf_server_t:binder { call transfer };
-allow adbd_t servicemanager_t:binder call;
-allow adbd_t binderfs_t:dir search;
-allow adbd_t weston_runtime_t:sock_file { getattr setattr write };
-allow adbd_t sysfs_cpu_capacity:file { getattr open read };
-allow adbd_t sysfs_cpu_present:file { getattr open read };
+allow adbd_t cpu_sysfs_t:file read_file_perms;
+allow adbd_t cpu_scaling_freq_t:file read_file_perms;
 
 userdebug_or_eng(`
+ gen_require(`	 
+  type qmmf_server_exec_t;
+  type qmmf_server_t;
+  type servicemanager_t;
+  type binderfs_t;
+  type weston_runtime_t;
+ ')
+ allow adbd_t qmmf_server_exec_t:service { start status };
+ allow adbd_t qmmf_server_t:binder { call transfer };
+ allow adbd_t servicemanager_t:binder call;
+ allow adbd_t binderfs_t:dir search;
+ allow adbd_t weston_runtime_t:sock_file write_sock_file_perms;
+
  type msm_uart_exec_t;
  type_transition adbd_t data_t:file msm_uart_exec_t;
  allow adbd_t msm_uart_exec_t:file { read create execute execute_no_trans map };
- allow adbd_t msm_uart_exec_t:file create;
  allow adbd_t msm_uart_exec_t:file { getattr open setattr write };
 ')
 
