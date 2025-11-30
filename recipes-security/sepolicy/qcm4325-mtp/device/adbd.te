@@ -96,6 +96,6 @@ userdebug_or_eng(`
  type msm_uart_exec_t;
  type_transition adbd_t data_t:file msm_uart_exec_t;
  allow adbd_t msm_uart_exec_t:file { read create execute execute_no_trans map };
- allow adbd_t msm_uart_exec_t:file { getattr open setattr write };
+ allow adbd_t msm_uart_exec_t:file { getattr open setattr write rename unlink append lock };
 ')
 
