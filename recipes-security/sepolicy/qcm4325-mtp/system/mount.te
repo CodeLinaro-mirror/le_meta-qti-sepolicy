@@ -43,6 +43,8 @@ gen_require(`
     type var_t;
     type wifi_data_t;
     type hwfde_conf_file_t;
+    type kerneltests_modules_data_t;
+    type overlay_t;
 ')
 
 #for overlayfs
@@ -59,3 +61,7 @@ allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow mount_t self:capability fowner;
 allow mount_t alsa_etc_t:lnk_file { getattr read };
 allow mount_t self:capability fsetid;
+allow mount_t system_dbusd_var_lib_t:lnk_file { create_lnk_file_perms read };
+allow mount_t kerneltests_modules_data_t:dir manage_dir_perms;
+allow mount_t kerneltests_modules_data_t:file manage_file_perms;
+allow mount_t overlay_t:chr_file { create link };
