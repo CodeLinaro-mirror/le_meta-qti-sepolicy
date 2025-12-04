@@ -12,6 +12,8 @@ gen_require(`
     type kernel_t;
     type unconfined_mount_t;
     type adreno_lib_t;
+    type mnt_t;
+    type unlabeled_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -42,3 +44,12 @@ allow unconfined_mount_t overlay_t:dir search;
 dontaudit unconfined_mount_t kernel_t:process setsched;
 
 allow mount_t adreno_lib_t:file mounton;
+
+# Allow unconfined_mount_t to relabel from unlabeled_t filesystem (for SD card with exFAT)
+allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom relabelto };
+# Allow unconfined_mount_t to access /mnt directory
+allow unconfined_mount_t mnt_t:dir { search getattr read write add_name remove_name };
+# Allow MLS level transitions for filesystem relabeling
+# This is needed because the mount process runs at s0-s15 but the filesystem is at s15
+mls_file_write_all_levels(unconfined_mount_t)
+mls_file_read_all_levels(unconfined_mount_t)
