@@ -10,6 +10,8 @@ gen_require(`
     type var_spool_t;
     type var_t;
     type kernel_t;
+    type unconfined_mount_t;
+    type adreno_lib_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -33,3 +35,10 @@ allow mount_t var_t:file manage_file_perms;
 #TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
 allow mount_t overlay_t:dir manage_dir_perms;
 allow mount_t overlay_t:file manage_file_perms;
+
+allow unconfined_mount_t overlay_t:dir search;
+
+# Suppress AVC denial for kernel process setsched access due to a mlsconstain violation
+dontaudit unconfined_mount_t kernel_t:process setsched;
+
+allow mount_t adreno_lib_t:file mounton;

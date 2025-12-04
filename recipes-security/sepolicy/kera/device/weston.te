@@ -10,7 +10,7 @@ user_data_files_type(weston_data_t)
 type vendor_clstc_config_t;
 files_type(vendor_clstc_config_t)
 
-dontaudit weston_t self:capability dac_read_search;
+allow weston_t self:capability dac_read_search;
 
 gen_require(`
     type var_t;
@@ -36,3 +36,4 @@ allow weston_t binderfs_t:dir search;
 allow weston_t weston_data_t:dir manage_dir_perms;
 allow weston_t weston_data_t:file manage_file_perms;
 allow weston_t vendor_clstc_config_t:file read_file_perms;
+allow weston_t default_t:file read_file_perms;

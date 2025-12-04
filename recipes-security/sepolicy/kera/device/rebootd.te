@@ -9,6 +9,7 @@ userdebug_or_eng(`
     type proc_t;
     type system_dbusd_runtime_t;
     type devlog_t;
+    type overlay_t;
     type system_dbusd_t;
     ')
     allow rebootd_t overlay_t:dir search_dir_perms;
