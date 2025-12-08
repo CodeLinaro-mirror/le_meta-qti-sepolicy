@@ -48,6 +48,7 @@ gen_require(`
     type overlay_t;
     type syslogd_runtime_t;
     type device_t;
+    type event_device_t;
 ')
 
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -98,3 +99,4 @@ userdebug_or_eng(`
     allow cdsprpcd_t devlog_t:sock_file write_file_perms;
     allow cdsprpcd_t syslogd_t:unix_dgram_socket sendto;
 ')
+allow cdsprpcd_t event_device_t:chr_file read_chr_file_perms;
