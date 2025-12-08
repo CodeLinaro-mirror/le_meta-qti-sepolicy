@@ -37,5 +37,5 @@ userdebug_or_eng(`
     allow unconfined_t zspage_sysfs_t:dir list_dir_perms;
     allow unconfined_t zspage_sysfs_t:file read_file_perms;
     allow unconfined_t touch_input_device_t:file getattr;
-    allow unconfined_t adreno_lib_t:file getattr;
+    allow unconfined_t adreno_lib_t:file mmap_exec_file_perms;
 ')
