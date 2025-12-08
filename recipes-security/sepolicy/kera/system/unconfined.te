@@ -6,8 +6,11 @@ userdebug_or_eng(`
         type binderfs_t;
         type perf_hal_socket_t;
         type power_sysfs_t;
+        type sysfs_devcoredump_t;
     ')
     allow unconfined_t binderfs_t:file getattr;
     allow unconfined_t perf_hal_socket_t:sock_file getattr;
     allow unconfined_t power_sysfs_t:file getattr;
+    allow unconfined_t sysfs_devcoredump_t:file rw_file_perms;
+    allow unconfined_t sysfs_devcoredump_t:dir search;
 ')
