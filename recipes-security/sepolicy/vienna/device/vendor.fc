@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/dev/glinkpkt_q6_audio_ctrl       gen_context(system_u:object_r:glinkpkt_q6_audio_ctrl_t,s0)
