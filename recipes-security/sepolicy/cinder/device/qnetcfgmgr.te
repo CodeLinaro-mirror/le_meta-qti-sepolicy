@@ -96,6 +96,7 @@ gen_require(`
   type dnsmasq_t;
   type qnetcfgmgr_dig_exec_t;
   type dumgr_config_t;
+  type mplane_app_t;
   type net_conf_t;
   type home_root_t;
   type cert_t;
@@ -120,6 +121,8 @@ manage_system_data_files(qnetcfgmgr_t, qnetcfgmgr_etc_data_t, qnetcfgmgr_etc_dat
 allow qnetcfgmgr_t qnetcfgmgr_macsec_exec_t:file { read open getattr };
 allow qnetcfgmgr_t dumgr_config_t:dir { search getattr };
 allow qnetcfgmgr_t dumgr_config_t:file { read open write getattr };
+allow qnetcfgmgr_t mplane_app_t:dir search;
+allow qnetcfgmgr_t mplane_app_t:file { read open getattr };
 read_system_data_files(NetworkManager_t, qnetcfgmgr_etc_data_t)
 networkmanager_domtrans(qnetcfgmgr_t)
 allow qnetcfgmgr_t NetworkManager_exec_t:file { getattr execute read open execute_no_trans };
