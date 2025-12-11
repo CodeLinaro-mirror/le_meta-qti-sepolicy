@@ -191,8 +191,8 @@ userdebug_or_eng(`
 
 #### workaround for FOTA /usr/bin/recovery
 
-optional_policy(`
 userdebug_or_eng(`
+optional_policy(`
     gen_require(`
         type qmmf_server_t;
     ')

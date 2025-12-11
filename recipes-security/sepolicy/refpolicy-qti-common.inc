@@ -26,7 +26,7 @@ RPROVIDES:${PN} += "sepolicy"
 EXTRA_OEMAKE += "USER_BUILD=${@oe.utils.conditional('USER_BUILD', '1', 'y', 'n', d)}"
 EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 # Update userdebug_or_eng macro for VM while other machine images are validated
-EXTRA_OEMAKE:append:qti-distro-user = " USER_BUILD=${@bb.utils.contains('BASEMACHINE', 'trustedvm-v4', 'y', 'n', d)}"
+EXTRA_OEMAKE:append:qti-distro-user = " USER_BUILD=y"
 
 # Modules outside of 'services' and 'apps' layer to be removed
 PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"

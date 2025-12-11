@@ -170,3 +170,4 @@ neverallow { domain -tvmroot_t -tvmprelauncher_t } tvmroot_sock_t:sock_file rw_s
 # Downloadable cases need to talk with mink too
 platform_container_bind_mount(dloemservice_t, tvmmink_sock_t, sock_file);
 
+allow tvmroot_t self:user_namespace create;
