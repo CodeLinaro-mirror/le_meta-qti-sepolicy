@@ -48,6 +48,7 @@ gen_require(`
   type node_t;
   type mount_t;
   type pulseaudio_var_run_t;
+  type bt_data_t;
 ')
 
 type bt_device_t;
@@ -86,6 +87,10 @@ ifdef(`init_systemd', `
     dbus_connect_system_bus(btapp_t)
     dbus_send_system_bus(btapp_t)
 ')
+
+# Permissions for role.conf under /data/misc/bluetooth labeled bt_data_t
+allow btapp_t bt_data_t:file { open read write getattr };  # [FOCUSED on role.conf - reduced permissions]
+allow btapp_t bt_data_t:dir { search };                    # [Minimal dir access]
 
 allow btapp_t bt_data_t:sock_file {create unlink write };
 data_filetrans(btapp_t, bt_data_t, { file dir })
