@@ -21,6 +21,7 @@ gen_require(`
     type binder_device_t;
     type servicemanager_t;
     type binderfs_t;
+    type qmmf_data_file_t;
 ')
 
 allow weston_t fonts_cache_t:dir manage_dir_perms;
@@ -37,3 +38,8 @@ allow weston_t weston_data_t:dir manage_dir_perms;
 allow weston_t weston_data_t:file manage_file_perms;
 allow weston_t vendor_clstc_config_t:file read_file_perms;
 allow weston_t default_t:file read_file_perms;
+# /data  read only
+allow weston_t data_t:file read_file_perms;
+# qmmf_data_file_t /data/misc/display
+allow weston_t qmmf_data_file_t:dir manage_dir_perms;
+allow weston_t qmmf_data_file_t:file manage_file_perms;
