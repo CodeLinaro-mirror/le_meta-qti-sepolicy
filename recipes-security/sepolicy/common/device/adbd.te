@@ -143,6 +143,11 @@ files_type(usb_exec_t)
 init_daemon_domain(usb_t, usb_exec_t)
 allow usb_t sysdevice_sysfs_t:file { getattr open read };
 
+gen_require(`
+ type dataqti_device_t;
+')
+allow usb_t dataqti_device_t:chr_file getattr;
+
 dev_rw_sysfs(usb_t)
 allow usb_t self:unix_stream_socket create_socket_perms;
 dev_write_kmsg(usb_t)

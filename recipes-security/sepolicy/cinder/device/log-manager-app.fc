@@ -3,3 +3,4 @@
 
 /usr/bin/log_manager_app -- gen_context(system_u:object_r:log-manager-app_exec_t,s0)
 /usr/bin/mdlog_sim -- gen_context(system_u:object_r:log-manager-app_exec_t,s0)
+/tmp/mplane/o-ran/log -- gen_context(system_u:object_r:log_manager_tmp_t,s0)
