@@ -7,6 +7,8 @@ gen_require(`
     type overlay_t;
     type var_spool_t;
     type var_t;
+    type wlan_initrc_exec_t;
+    type wifi_data_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -25,3 +27,13 @@ allow mount_t var_t:file manage_file_perms;
 #TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
 allow mount_t overlay_t:dir manage_dir_perms;
 allow mount_t overlay_t:file manage_file_perms;
+
+allow mount_t wifi_data_t:dir search;
+
+allow mount_t {
+    wifi_data_t
+}:file read_file_perms;
+
+allow mount_t {
+    wlan_initrc_exec_t
+}:file { read_file_perms execute };
