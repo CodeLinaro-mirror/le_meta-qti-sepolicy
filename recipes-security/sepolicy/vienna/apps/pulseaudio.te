@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type glinkpkt_q6_audio_ctrl_t;
+ ')
+
+allow pulseaudio_t glinkpkt_q6_audio_ctrl_t:chr_file rw_chr_file_perms;
+rw_chr_files_pattern(pulseaudio_t, device_t, glinkpkt_q6_audio_ctrl_t);
+allow glinkpkt_q6_audio_ctrl_t device_t:filesystem associate;
