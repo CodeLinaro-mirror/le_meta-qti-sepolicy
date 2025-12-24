@@ -68,6 +68,7 @@ allow mount_copybind_t var_spool_t:dir getattr;
 
 allow mount_t data_t:dir manage_dir_perms;
 allow mount_t data_t:file manage_file_perms;
+allow mount_t data_t:chr_file { delete_chr_file_perms };
 
 mls_process_read_to_clearance(unconfined_mount_t)
 mls_process_write_to_clearance(unconfined_mount_t)
