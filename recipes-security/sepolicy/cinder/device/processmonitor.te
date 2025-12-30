@@ -5,12 +5,9 @@ policy_module(processmonitor, 1.0)
 
 type process_monitor_t;
 type process_monitor_exec_t;
-type process_monitor_check_t;
-type process_monitor_check_exec_t;
 type process_monitor_conf_t;
 
 init_vendor_domain(process_monitor_t, process_monitor_exec_t)
-init_vendor_domain(process_monitor_check_t, process_monitor_check_exec_t)
 
 gen_require(`
     type tmpfs_t;
@@ -61,12 +58,9 @@ allow process_monitor_t bin_t:service { status };
 allow process_monitor_t init_t:service { status };
 allow process_monitor_t system_dbusd_t:dbus { send_msg acquire_svc };
 allow process_monitor_t system_dbusd_t:unix_stream_socket { connectto };
+allow process_monitor_t sysdevice_sysfs_t:file { read open };
 
-allow init_t process_monitor_check_exec_t:file { read open execute execute_no_trans getattr ioctl write };
 allow process_monitor_t process_monitor_conf_t:file { read open getattr };
-allow process_monitor_check_t shell_exec_t:file { read execute open map };
-allow process_monitor_check_t etc_t:file { read open getattr map };
-allow process_monitor_check_t sysdevice_sysfs_t:file { read open getattr };
 
 # Manage D-Bus sockets for process_monitor
 ifdef(`init_systemd',`
