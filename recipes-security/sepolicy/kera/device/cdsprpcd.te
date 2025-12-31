@@ -6,4 +6,4 @@ gen_require(`
     type event_device_t;
 ')
 
-allow cdsprpcd_t event_device_t:chr_file read_chr_file_perms;
+allow cdsprpcd_t event_device_t:chr_file read;
