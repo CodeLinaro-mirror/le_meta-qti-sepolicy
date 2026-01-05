@@ -3,8 +3,6 @@
 
 
 # processmonitor executables file
-/usr/sbin/processmonitor     -- gen_context(system_u:object_r:process_monitor_exec_t,s0)
+/usr/sbin/processmonitor                           -- gen_context(system_u:object_r:process_monitor_exec_t,s0)
 /etc/dbus-1/system.d/process_monitor-dbus.conf     -- gen_context(system_u:object_r:dbusd_etc_t,s0)
 /etc/process_monitor-cinder.json                   -- gen_context(system_u:object_r:process_monitor_conf_t,s0)
-/etc/processmonitor-check-cinder.sh                   -- gen_context(system_u:object_r:process_monitor_check_exec_t,s0)
-
