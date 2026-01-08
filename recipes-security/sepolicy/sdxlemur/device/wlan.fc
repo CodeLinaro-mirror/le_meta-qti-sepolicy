@@ -1,0 +1,15 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/etc/rc\.d/init\.d/repacd-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/wsplcd-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/ezmesh-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/rc\.d/init\.d/hyfi-bridging-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/initscripts/start_wsplcd-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/initscripts/start_ezmesh-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/initscripts/start_repacd-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/initscripts/start_hyfi-bridging-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+/etc/initscripts/start_emesh-sp-mcc -- gen_context(system_u:object_r:wlan_ezmesh_initrc_exec_t,s0)
+
+/etc/misc/wifi/2g_wireless -- gen_context(system_u:object_r:wifi_system_data_t,s0)
+/etc/misc/wifi/5g_wireless -- gen_context(system_u:object_r:wifi_system_data_t,s0)
