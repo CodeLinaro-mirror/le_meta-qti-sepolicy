@@ -48,6 +48,7 @@ userdebug_or_eng(`
 
     # Allow unconfined_mount_t to relabel from unlabeled filesystem and mount to sdcard_t
     allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom mount };
+    allow unconfined_mount_t overlay_t: dir search;
 ')
 allow mount_t sdcard_t:filesystem { relabelto mount };
 allow mount_t sdcard_t:dir { mounton search getattr };
