@@ -25,6 +25,9 @@ gen_require(`
  type syslogd_t;
  type initrc_tmp_t;
  type usr_t;
+ type etc_t;
+ type init_var_run_t;
+ type sysdevice_sysfs_t;
 ')
 
 # Allow read write access
@@ -36,8 +39,9 @@ allow nsm_t unreserved_port_t:tcp_socket name_connect;
 allow nsm_t self:process { signal };
 allow nsm_t self:fifo_file { write read };
 
-# For /etc/passwd and /etc/nsswitch.conf
-files_read_etc_files(nsm_t)
+
+files_read_etc_files(nsm_t)         # For /etc/passwd and /etc/nsswitch.conf and /etc/mplane/ru/genkey.xml
+allow nsm_t etc_t:file map;         # for openssl API usage
 
 allow nsm_t mplane_app_t:dir { add_name getattr open read search write remove_name };
 allow nsm_t mplane_app_t:fifo_file { create open read write };
@@ -56,7 +60,7 @@ allow nsm_t urandom_device_t:chr_file { open read };            # Needed for net
 #============= nsm_t ==============
 allow nsm_t self:qipcrtr_socket { create getattr read write};
 allow nsm_t usr_t:dir { search getattr open read };
-allow nsm_t usr_t:file { getattr map getattr unlink read open };
+allow nsm_t usr_t:file { getattr map unlink read open };
 
 dev_read_sysfs(nsm_t)               # read-only sys filesystem
 kernel_read_system_state(nsm_t)     # to read, open proc
@@ -64,3 +68,6 @@ files_tmp_file(nsm_tmp_t)
 files_tmp_filetrans(nsm_t, nsm_tmp_t, { file dir })
 allow nsm_t initrc_tmp_t:dir search;
 allow nsm_t initrc_tmp_t:file { open read };
+allow nsm_t nsm_tmp_t:file { append create getattr open read unlink };
+allow nsm_t init_var_run_t:dir search; #for systemd watchdog API
+allow nsm_t sysdevice_sysfs_t:file { getattr open read }; #for /sys/devices/soc0/machine
