@@ -36,10 +36,13 @@
 userdebug_or_eng(`
     gen_require(`
         type rfsa_adsp_lib_t;
+        type uwb_t;
     ')
 
     allow unconfined_t rfsa_adsp_lib_t:dir rw_dir_perms;
     allow unconfined_t rfsa_adsp_lib_t:dir watch;
     allow unconfined_t rfsa_adsp_lib_t:file rw_file_perms;
     allow unconfined_t rfsa_adsp_lib_t:file { create watch unlink };
+    # uwb test app permission
+    unconfined_dbus_send(uwb_t)
 ')

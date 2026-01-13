@@ -1,0 +1,22 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(uwb, 1.0)
+
+type uwb_t;
+type uwb_exec_t;
+init_daemon_domain(uwb_t, uwb_exec_t)
+
+gen_require(`
+    type init_t;
+    type system_dbusd_t;
+    class process { sigchld signull };
+    class dbus acquire_svc;
+')
+
+dbus_system_bus_client(uwb_t)
+
+allow uwb_t system_dbusd_t:dbus acquire_svc;
+
+allow uwb_t init_t:process { sigchld signull };
+
