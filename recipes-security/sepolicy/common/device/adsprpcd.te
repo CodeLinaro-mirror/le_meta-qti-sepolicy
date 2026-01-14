@@ -146,4 +146,4 @@ allow adsprpcd_t kernel_t:unix_dgram_socket sendto;
 mls_file_read_all_levels(adsprpcd_t)
 mls_file_read_to_clearance(adsprpcd_t)
 mls_trusted_object(adsprpcd_t)
-allow adsprpcd_t event_device_t:chr_file read_chr_file_perms;
+allow adsprpcd_t event_device_t:chr_file read;

@@ -5,8 +5,11 @@ gen_require(`
     type proc_psi_t;
     type overlay_t;
     type init_runtime_t;
+    type glinkpkt_q6_audio_ctrl_t;
 ')
 
 allow systemd_logind_t proc_psi_t:file write;
 allow systemd_update_done_t overlay_t:dir rw_dir_perms;
 allow udev_t init_runtime_t:file read_file_perms;
+
+allow udev_t glinkpkt_q6_audio_ctrl_t:chr_file { rw_chr_file_perms relabel_chr_file_perms };

@@ -1,0 +1,9 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Allow watch permission on qcmap_data_t directories
+gen_require(`
+    type qcmap_data_t;
+')
+allow qtether_t qcmap_data_t:dir watch;
+

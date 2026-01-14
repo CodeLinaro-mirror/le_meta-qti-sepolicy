@@ -10,8 +10,6 @@ gen_require(`
     type var_t;
     type kernel_t;
     type unconfined_mount_t;
-    type mnt_t;
-    type unlabeled_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -38,14 +36,22 @@ allow unconfined_mount_t overlay_t:dir search;
 # Suppress AVC denial for kernel process setsched access due to a mlsconstain violation
 dontaudit unconfined_mount_t kernel_t:process setsched;
 
-# Allow unconfined_mount_t to relabel from unlabeled_t filesystem (for SD card with exFAT)
-allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom relabelto };
+# Allow mount operations for SD card
+gen_require(`
+    type sdcard_t;
+    type unlabeled_t;
+')
 
+userdebug_or_eng(`
+    # Allow mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow mount_t unlabeled_t:filesystem { relabelfrom mount };
 
-# Allow unconfined_mount_t to access /mnt directory
-allow unconfined_mount_t mnt_t:dir { search getattr read write add_name remove_name };
+    # Allow unconfined_mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom mount };
+    allow unconfined_mount_t overlay_t: dir search;
+')
+allow mount_t sdcard_t:filesystem { relabelto mount };
+allow mount_t sdcard_t:dir { mounton search getattr };
+allow unconfined_mount_t sdcard_t:filesystem { relabelto mount };
+allow unconfined_mount_t sdcard_t:dir { mounton search getattr };
 
-# Allow MLS level transitions for filesystem relabeling
-# This is needed because the mount process runs at s0-s15 but the filesystem is at s15
-mls_file_write_all_levels(unconfined_mount_t)
-mls_file_read_all_levels(unconfined_mount_t)

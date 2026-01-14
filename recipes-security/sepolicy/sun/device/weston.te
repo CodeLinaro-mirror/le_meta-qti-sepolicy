@@ -1,8 +1,6 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-permissive weston_t;
-
 type var_cache_t;
 files_type(var_cache_t);
 
@@ -23,6 +21,7 @@ gen_require(`
     type binder_device_t;
     type servicemanager_t;
     type binderfs_t;
+    type adreno_lib_t;
 ')
 
 allow weston_t fonts_cache_t:dir manage_dir_perms;
@@ -39,3 +38,4 @@ allow weston_t weston_data_t:dir manage_dir_perms;
 allow weston_t weston_data_t:file manage_file_perms;
 allow weston_t vendor_clstc_config_t:file read_file_perms;
 allow weston_t default_t:file read_file_perms;
+allow weston_t adreno_lib_t:file mmap_exec_file_perms;
