@@ -1,4 +1,6 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-/tmp/a2dp_avk_ctrl.socket            --      gen_context(system_u:object_r:vendor_bt_evk_ctrl_sock_t,s0)
+/dev/bt.*                      -c  gen_context(system_u:object_r:bt_device_t,s0)
+/data/misc/bluetooth(/.*)?         gen_context(system_u:object_r:bt_data_t,s0)
+/data/vendor/bluetooth(/.*)?       gen_context(system_u:object_r:bt_data_t,s0)
