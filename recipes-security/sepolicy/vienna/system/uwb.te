@@ -82,3 +82,6 @@ allow uwb_t sysctl_vm_overcommit_t:file read_file_perms;
 
 # Allow the process to actually block system suspension
 allow uwb_t self:capability2 block_suspend;
+
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(uwb_t)
