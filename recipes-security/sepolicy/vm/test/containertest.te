@@ -93,6 +93,7 @@ userdebug_or_eng(`
     allow launchertest_t containertest_t:lnk_file read;
     allow launchertest_t containertest_t:file { open read };
     allow launchertest_t socket_device_t:dir getattr;
+    allow launchertest_t self:user_namespace create;
     gen_require(`
         type user_home_dir_t;
     ')
