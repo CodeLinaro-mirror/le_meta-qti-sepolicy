@@ -96,6 +96,7 @@ gen_require(`
   type dnsmasq_t;
   type qnetcfgmgr_dig_exec_t;
   type dumgr_config_t;
+  type mplane_app_t;
   type net_conf_t;
   type home_root_t;
   type cert_t;
@@ -107,6 +108,7 @@ gen_require(`
   type faultmgr_t;
   class dbus send_msg;
   class dbus acquire_svc;
+  class service stop;
 ')
 
 system_data_files_type(qnetcfgmgr_etc_data_t)
@@ -119,6 +121,8 @@ manage_system_data_files(qnetcfgmgr_t, qnetcfgmgr_etc_data_t, qnetcfgmgr_etc_dat
 allow qnetcfgmgr_t qnetcfgmgr_macsec_exec_t:file { read open getattr };
 allow qnetcfgmgr_t dumgr_config_t:dir { search getattr };
 allow qnetcfgmgr_t dumgr_config_t:file { read open write getattr };
+allow qnetcfgmgr_t mplane_app_t:dir search;
+allow qnetcfgmgr_t mplane_app_t:file { read open getattr };
 read_system_data_files(NetworkManager_t, qnetcfgmgr_etc_data_t)
 networkmanager_domtrans(qnetcfgmgr_t)
 allow qnetcfgmgr_t NetworkManager_exec_t:file { getattr execute read open execute_no_trans };
@@ -170,6 +174,11 @@ allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
 allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
 allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+
+userdebug_or_eng('
+# To support systemctl stop qnet_config_managerd
+allow unconfined_t qnetcfgmgr_exec_t:service stop;
+')
 
 allow dhcpc_t initrc_var_run_t:dir { search write add_name };
 allow dhcpc_t initrc_var_run_t:file { map create };
@@ -276,7 +285,7 @@ allow qnetcfgmgr_t faultmgr_t:dbus send_msg;
 kernel_read_system_state(qnetcfgmgr_t)
 allow qnetcfgmgr_t mnt_t:dir search;
 allow qnetcfgmgr_t self:process { sigkill };
-allow qnetcfgmgr_t dhcpc_t:process sigkill;
+allow qnetcfgmgr_t dhcpc_t:process { sigkill signull };
 files_read_etc_files(qnetcfgmgr_t)
 files_read_etc_files(qcm_etc_t)
 allow qcm_etc_t qcm_etc_t:file rw_file_perms;

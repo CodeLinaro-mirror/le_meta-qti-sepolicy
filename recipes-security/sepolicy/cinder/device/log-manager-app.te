@@ -26,6 +26,7 @@ type var_log_t;
 type init_var_run_t;
 type pmsg0_t;
 type ss-ramdump_data_t;
+type initrc_t;
 type initrc_tmp_t;
 type dmesg_exec_t;
 type proc_t;
@@ -42,9 +43,16 @@ type sysctl_vm_t;
 
 type log-manager-app_t;
 type log-manager-app_exec_t;
+type log_manager_tmp_t;
 
 # Application is run as a service
 init_vendor_domain(log-manager-app_t, log-manager-app_exec_t)
+
+# Associate the custom type with a temporary file class
+files_tmp_file(log_manager_tmp_t)
+
+# transition default label to log_manager_tmp_t for folder /tmp/mplane/o-ran/log
+init_script_tmp_filetrans(log-manager-app_t, log_manager_tmp_t, { file dir })
 
 # Get configuration of log manager
 allow log-manager-app_t etc_t:file { getattr open read };
@@ -86,6 +94,12 @@ allow log-manager-app_t tmpfs_t:filesystem getattr;
 allow log-manager-app_t user_tmp_t:dir { getattr open read search };
 allow log-manager-app_t user_tmp_t:file { create getattr open read setattr write unlink };
 allow log-manager-app_t initrc_tmp_t:file { read open getattr write unlink };
+
+# Needed to access /tmp/mplane/o-ran/log
+allow log-manager-app_t log_manager_tmp_t:dir { search write add_name create remove_name getattr open };
+allow log-manager-app_t log_manager_tmp_t:file { create open read write getattr unlink append };
+allow initrc_t log_manager_tmp_t:dir { search write remove_name };
+allow initrc_t log_manager_tmp_t:file { read open getattr unlink };
 
 # Needed for diag_mdlog
 allow log-manager-app_t alogd_t:unix_stream_socket connectto;
