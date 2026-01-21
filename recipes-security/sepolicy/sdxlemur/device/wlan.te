@@ -54,6 +54,23 @@ gen_require(`
     type setfiles_exec_t;
     type mount_runtime_t;
     type system_data_t;
+
+    type systemd_unit_t;
+    type ipacm_t;
+    type initrc_t;
+    type hostapd_var_run_t;
+    type hostapd_t;
+    type wifi_usr_t;
+    type wlan_service_exec_t;
+    type wlan_service_tmp_t;
+    type sysfs_t;
+    type wlan_service_t;
+    type wpa_cli_t;
+    type hotplug_exec_t;
+    type init_t;
+    type qcmap_etc_data_t;
+    type hostapd_tmp_t;
+    type initrc_var_run_t;
 ')
 
 ########################################
@@ -120,3 +137,77 @@ allow wlan_initrc_t wifi_system_data_t:file { mounton };
 
 #Backup wlan ini configure
 allow wlan_initrc_t system_data_t:file { getattr open create write };
+
+########################################
+# New rules for EasyMesh R6
+
+# ezmesh process (wlan_ezmesh_initrc_t) adjusts attributes on control socket files it creates/uses.
+allow wlan_ezmesh_initrc_t wlan_service_tmp_t:sock_file { setattr };
+
+# 'rm' under wlan_ezmesh_initrc_t modifies and removes a temp file (map_bh_info.tmp) in tmpfs
+# labeled as hostapd_tmp_t.
+allow wlan_ezmesh_initrc_t hostapd_tmp_t:file { write unlink };
+
+allow wlan_initrc_t etc_t:file read_file_perms;
+
+# wpa_cli (running under wlan_initrc_t) adjusts attributes (e.g., owner/mode) on its control socket file.
+allow wlan_initrc_t wlan_service_tmp_t:sock_file { setattr };
+
+# uci (running in wlan_initrc_t) attempts to create directory entry "state" under /var.
+allow wlan_initrc_t var_t:dir { create add_name write };
+
+# The init logic checks hostapd global PID file under /run; only getattr is required per AVC.
+allow wlan_initrc_t hostapd_var_run_t:file { getattr };
+
+# wpa_cli (running under wlan_initrc_t) needs to traverse the hostapd runtime directory.
+allow wlan_initrc_t hostapd_var_run_t:dir { search };
+
+# wpa_cli needs to send commands to hostapd's global control socket via write on sock_file.
+allow wlan_initrc_t hostapd_var_run_t:sock_file { write };
+
+# wpa_cli (running under wlan_initrc_t) needs to send datagrams to hostapd control socket.
+allow wlan_initrc_t hostapd_t:unix_dgram_socket { sendto };
+
+# qcmap_cm_t domain needs to check attributes of init script labeled as wlan_ezmesh_initrc_exec_t.
+allow qcmap_cm_t wlan_ezmesh_initrc_exec_t:file getattr;
+
+# ipacm_t reads shell helper script jshn.sh labeled as wifi_usr_t.
+allow ipacm_t wifi_usr_t:file { getattr open read };
+
+# ipacm_t needs to invoke uci executable labeled as wlan_service_exec_t without domain transition.
+allow ipacm_t wlan_service_exec_t:file { getattr open read map execute execute_no_trans };
+
+# uci (running under ipacm_t) reads and locks the wireless config file labeled as wifi_system_data_t.
+allow ipacm_t wifi_system_data_t:file { getattr open read lock };
+
+# uci searches temporary working directory ".uci" under /tmp labeled as user_tmp_t.
+allow ipacm_t user_tmp_t:dir { search };
+
+# uci (running under ipacm_t) needs to traverse the temporary work directory ".uci" labeled as wlan_service_tmp_t.
+allow ipacm_t wlan_service_tmp_t:dir { search };
+
+# uci reads and locks the temporary "wireless" file in .uci; only read-like and lock are required.
+allow ipacm_t wlan_service_tmp_t:file { getattr open read lock };
+
+# ipacm_t needs to stat the init script labeled as wlan_ezmesh_initrc_exec_t.
+allow ipacm_t wlan_ezmesh_initrc_exec_t:file { getattr };
+
+allow hostapd_cli_qcmap_t initrc_var_run_t:file { read_file_perms write };
+
+# hostapd_cli_qcmap_t needs to stat the ezmesh init script labeled as wlan_ezmesh_initrc_exec_t.
+allow hostapd_cli_qcmap_t wlan_ezmesh_initrc_exec_t:file getattr;
+
+# hostapd_cli_qcmap_t (via ls/hotplug-call) needs to stat and read the hotplug script file.
+allow hostapd_cli_qcmap_t hotplug_exec_t:file { getattr open read };
+
+# hostapd (hostapd_t) sends datagrams to a control socket created/owned by wlan_initrc_t
+allow hostapd_t wlan_initrc_t:unix_dgram_socket { sendto };
+
+# hostapd (hostapd_t) sends signals to its own processes/threads (CAP_KILL).
+allow hostapd_t self:capability { kill };
+
+# wpa_cli requires CAP_DAC_READ_SEARCH to traverse/read despite DAC restrictions.
+allow wpa_cli_t self:capability { dac_read_search };
+
+# systemd (init_t) writes to the 'rt_tables' file labeled as qcmap_etc_data_t.
+allow init_t qcmap_etc_data_t:file { write };

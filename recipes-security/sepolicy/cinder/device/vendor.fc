@@ -3,3 +3,6 @@
 
 ### MHI device ###
 /dev/mhi_pipe_16                -c gen_context(system_u:object_r:mhi_pipe_device_t,s0)
+
+### Boot status ###
+/data/post_boot(/.*)?           -- gen_context(system_u:object_r:post_boot_data_t,s0)
