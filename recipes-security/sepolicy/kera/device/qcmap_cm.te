@@ -3,6 +3,9 @@
 
 gen_require(`
     type dnsmasq_unit_t;
+    type hostapd_unit_t;
 ')
 
 dontaudit qcmap_cm_t dnsmasq_unit_t:service { start stop status reload };
+allow qcmap_cm_t hostapd_unit_t:service { start stop reload };
+
