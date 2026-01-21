@@ -12,5 +12,5 @@ userdebug_or_eng(`
     allow unconfined_t perf_hal_socket_t:sock_file getattr;
     allow unconfined_t power_sysfs_t:file getattr;
     allow unconfined_t sysfs_devcoredump_t:dir search;
-    allow unconfined_t sysfs_devcoredump_t:file open;
+    allow unconfined_t sysfs_devcoredump_t:file rw_file_perms;
 ')
