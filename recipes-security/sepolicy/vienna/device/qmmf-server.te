@@ -6,6 +6,8 @@ gen_require(`
     type soc0_gpu_sysfs_t;
     type binder_device_t;
     type gpu_device_t ;
+    type kernel_t;
+    type ashmem_devices_t;
 ')
 
 allow qmmf_server_t binder_device_t:chr_file map;
@@ -13,3 +15,5 @@ allow qmmf_server_t fs_t:filesystem getattr;
 allow qmmf_server_t gpu_device_t:chr_file map;
 allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
 allow qmmf_server_t self:process getsched;
+allow qmmf_server_t kernel_t:unix_dgram_socket sendto;
+allow qmmf_server_t ashmem_devices_t:chr_file map;
