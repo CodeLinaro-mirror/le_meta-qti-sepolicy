@@ -16,6 +16,7 @@ gen_require(`
     type leprop_system_data_t;
     type adbd_system_data_t;
     type thermal_etc_t;
+    type shadow_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -45,6 +46,7 @@ allow mount_t overlay_t:file manage_file_perms;
 allow mount_t var_t:dir manage_dir_perms;
 allow mount_t var_t:file manage_file_perms;
 
+auth_read_shadow(mount_t)
 allow mount_t leprop_system_data_t:file read_file_perms;
 allow mount_t dbusd_etc_t:dir read;
 allow mount_t adbd_system_data_t:file read_file_perms;

@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type cdsprpcd_t;
+    type kernel_t;
+')
+
+allow cdsprpcd_t kernel_t:unix_dgram_socket sendto;
+

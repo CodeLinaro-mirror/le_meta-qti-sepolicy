@@ -5,4 +5,15 @@ gen_require(`
     type overlay_t;
 ')
 
-allow adbd_initrc_t overlay_t:dir { add_entry_dir_perms setattr };
+allow adbd_initrc_t overlay_t:dir { add_entry_dir_perms add_name setattr getattr search };
+
+userdebug_or_eng(`
+    gen_require(`
+	type overlay_t;
+	type rfsa_adsp_lib_t;
+    ')
+    allow adbd_t rfsa_adsp_lib_t:file { create open setattr write read };
+    allow adbd_t rfsa_adsp_lib_t:dir { getattr search write add_name };
+')
+
+
