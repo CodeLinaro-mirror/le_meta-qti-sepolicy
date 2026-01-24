@@ -72,3 +72,12 @@ mls_file_downgrade(supervisor_t)
 
 # exit()
 allow supervisor_t self:process signal;
+
+userdebug_or_eng(`
+    gen_require(`
+        type mount_t;
+    ')
+    allow supervisor_t mount_t:file { read open };
+    allow supervisor_t mount_t:dir search;
+    allow supervisor_t mount_t:process ptrace;
+')
