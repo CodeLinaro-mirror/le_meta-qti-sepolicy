@@ -66,6 +66,9 @@ allow health_monitor_t health_monitor_var_run_t:dir { search add_name remove_nam
 allow health_monitor_t health_monitor_var_run_t:file { create getattr open read unlink write setattr execute execute_no_trans };
 allow health_monitor_t sysfs_t:lnk_file { getattr open read write };
 
+# Rules needed for reading/writing into sysfs nodes for ethernet.
+rw_files_pattern(health_monitor_t, sysfs_t, sysfs_t)
+
 # Manage socket files inside /dev/socket
 type health_monitor_socket_device_t;
 files_type(health_monitor_socket_device_t);
