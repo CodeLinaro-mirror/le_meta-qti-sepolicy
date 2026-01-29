@@ -45,6 +45,7 @@ type vendor_vm_oem_device_t;
 type smmu_proxy_device_t;
 type init_t;
 type system_dbusd_runtime_t;
+type system_dbusd_t;
 type power_unit_t;
 type c2pa_persist_t;
 class service { start stop status };
@@ -124,6 +125,7 @@ allow tvmroot_t init_t:unix_stream_socket { connectto };
 allow tvmroot_t init_t:dir { search };
 allow tvmroot_t system_dbusd_runtime_t:dir { search };
 allow tvmroot_t system_dbusd_runtime_t:sock_file { write };
+allow tvmroot_t system_dbusd_t:unix_stream_socket connectto;
 allow tvmroot_t power_unit_t:service { start };
 
 logging_send_syslog_msg(tvmroot_t)
