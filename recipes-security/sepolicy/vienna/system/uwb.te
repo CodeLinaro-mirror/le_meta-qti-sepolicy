@@ -11,6 +11,10 @@ type uwb_device_t;
 files_type(uwb_device_t)
 dev_node(uwb_device_t)
 
+# UWB data file type for snoop logs
+type uwb_data_file_t;
+files_type(uwb_data_file_t)
+
 ########################################
 #
 # Local Policy
@@ -85,3 +89,9 @@ allow uwb_t self:capability2 block_suspend;
 
 # permissions for /sys/power/wake_lock /sys/power/wake_unlock
 dev_rw_sysfs(uwb_t)
+
+# UWB Snoop Log Support
+# Permission for  /data/vendor/uwb directory and file inside dir.
+allow uwb_t uwb_data_file_t:dir manage_dir_perms;
+allow uwb_t uwb_data_file_t:file manage_file_perms;
+

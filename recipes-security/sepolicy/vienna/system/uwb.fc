@@ -3,3 +3,5 @@
 
 /usr/bin/uwb_service    --    gen_context(system_u:object_r:uwb_exec_t,s0)
 /dev/spiuwb    -c    gen_context(system_u:object_r:uwb_device_t,s0)
+/data/vendor/uwb    -d    gen_context(system_u:object_r:uwb_data_file_t,s0)
+/data/vendor/uwb/.*    --    gen_context(system_u:object_r:uwb_data_file_t,s0)
