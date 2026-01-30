@@ -20,7 +20,7 @@ allow psi_daemon_t proc_t:file { read write open };
 # allow read/write for kernel sysfs files
 allow psi_daemon_t sysfs_t:file { read write open };
 
-allow psi_daemon_t vendor_virtio_mem_device_t:chr_file rw_file_perms;
+allow psi_daemon_t vendor_virtio_mem_device_t:chr_file { rw_file_perms setattr };
 
 allow psi_daemon_t self:capability sys_resource;
 
