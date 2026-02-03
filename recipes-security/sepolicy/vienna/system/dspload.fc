@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/etc/initscripts/start_dsp_le      gen_context(system_u:object_r:etc_start_dsp_t,s0)

@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/etc/sensors(/.*)?              gen_context(system_u:object_r:etc_sensors_t,s0)

@@ -6,3 +6,6 @@ gen_require(`
 ')
 
 allow post_boot_script_t etc_t:file read_file_perms;
+
+type glinkpkt_q6_audio_ctrl_t;
+files_type(glinkpkt_q6_audio_ctrl_t)

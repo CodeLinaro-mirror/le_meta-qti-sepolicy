@@ -35,3 +35,23 @@ allow unconfined_mount_t overlay_t:dir search;
 
 # Suppress AVC denial for kernel process setsched access due to a mlsconstain violation
 dontaudit unconfined_mount_t kernel_t:process setsched;
+
+# Allow mount operations for SD card
+gen_require(`
+    type sdcard_t;
+    type unlabeled_t;
+')
+
+userdebug_or_eng(`
+    # Allow mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow mount_t unlabeled_t:filesystem { relabelfrom mount };
+
+    # Allow unconfined_mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom mount };
+    allow unconfined_mount_t overlay_t: dir search;
+')
+allow mount_t sdcard_t:filesystem { relabelto mount };
+allow mount_t sdcard_t:dir { mounton search getattr };
+allow unconfined_mount_t sdcard_t:filesystem { relabelto mount };
+allow unconfined_mount_t sdcard_t:dir { mounton search getattr };
+

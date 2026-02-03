@@ -1,0 +1,87 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(uwb, 1.0)
+
+type uwb_t;
+type uwb_exec_t;
+init_daemon_domain(uwb_t, uwb_exec_t)
+
+type uwb_device_t;
+files_type(uwb_device_t)
+dev_node(uwb_device_t)
+
+########################################
+#
+# Local Policy
+#
+########################################
+
+gen_require(`
+    type init_t;
+    type system_dbusd_t;
+    type socket_device_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+    type firmware_t;
+    type default_t;
+    type cgroup_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type var_log_t;
+    class process { sigchld signull getsched signal };
+    class dbus { acquire_svc send_msg };
+    class capability2 { block_suspend };
+')
+
+dbus_system_bus_client(uwb_t)
+
+allow uwb_t system_dbusd_t:dbus acquire_svc;
+
+allow uwb_t init_t:process { sigchld signull };
+
+# Allow the service to Read/Write the device
+# (rw_chr_file_perms includes: open, read, write, ioctl, getattr, lock, append)
+allow uwb_t uwb_device_t:chr_file rw_chr_file_perms;
+
+
+# Cgroup access (CPU quotas)
+allow uwb_t cgroup_t:dir search;
+allow uwb_t cgroup_t:file read_file_perms;
+allow uwb_t cgroup_t:lnk_file read_lnk_file_perms;
+
+# Self process operations (scheduling)
+allow uwb_t self:process { getsched signal };
+
+# Allow internal pipes (required by Rust tokio runtime)
+allow uwb_t self:fifo_file rw_fifo_file_perms;
+
+# Socket device search (/dev/socket)
+allow uwb_t socket_device_t:dir search;
+
+# LeProp Service (Property system) interaction
+allow uwb_t leprop_sock_t:sock_file write;
+allow uwb_t leprop_t:unix_stream_socket connectto;
+
+# Logging (/var/log access)
+allow uwb_t var_log_t:dir search;
+allow uwb_t var_log_t:lnk_file read_lnk_file_perms;
+
+# Allow "passing through" the /vendor directory (which is labeled default_t)
+allow uwb_t default_t:dir search;
+
+# Allow reading the actual firmware files (which are labeled firmware_t)
+#/vendor/bt_firmware/image/tmoperifw20.mbn
+allow uwb_t firmware_t:dir list_dir_perms;
+allow uwb_t firmware_t:file read_file_perms;
+
+# Memory/VM Checks (New)
+# Required by Rust/Tokio to check overcommit_memory
+allow uwb_t sysctl_vm_t:dir search;
+allow uwb_t sysctl_vm_overcommit_t:file read_file_perms;
+
+# Allow the process to actually block system suspension
+allow uwb_t self:capability2 block_suspend;
+
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(uwb_t)
