@@ -6,6 +6,7 @@ gen_require(`
     type perf_hal_t;
     type sysfs_t;
     type unconfined_t;
+    type vendor_bt_evk_ctrl_sock_t;
 ')
 
 dontaudit pulseaudio_t self:capability sys_admin;
@@ -14,8 +15,10 @@ dontaudit pulseaudio_t sysfs_t:file append;
 
 allow pulseaudio_t perf_hal_socket_t:sock_file write_sock_file_perms;
 allow pulseaudio_t perf_hal_t:unix_stream_socket connectto;
+allow pulseaudio_t vendor_bt_evk_ctrl_sock_t:sock_file rw_sock_file_perms;
 
 userdebug_or_eng(`
     allow pulseaudio_t unconfined_t:fd use;
     allow pulseaudio_t unconfined_t:binder { call transfer };
+    allow pulseaudio_t unconfined_t:unix_stream_socket connectto;
 ')
