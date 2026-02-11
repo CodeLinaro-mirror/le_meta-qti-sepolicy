@@ -37,6 +37,7 @@ gen_require(`
     type leprop_sock_t;
     type leprop_t;
     type var_log_t;
+    type ssrdump_data_file_t;
     class process { sigchld signull getsched signal };
     class dbus { acquire_svc send_msg };
     class capability2 { block_suspend };
@@ -102,3 +103,7 @@ allow uwb_t uwb_data_file_t:file manage_file_perms;
 # Allow uwb_service to read configuration files in /etc/uwb only.
 allow uwb_t uwb_etc_t:dir list_dir_perms;
 allow uwb_t uwb_etc_t:file read_file_perms;
+# SSR Dump Support
+# Permission for /data/vendor/ssrdump directory and files inside dir for crash dump collection
+allow uwb_t ssrdump_data_file_t:dir rw_dir_perms;
+allow uwb_t ssrdump_data_file_t:file manage_file_perms;
