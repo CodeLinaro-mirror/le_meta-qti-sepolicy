@@ -5,3 +5,4 @@
 /dev/spiuwb    -c    gen_context(system_u:object_r:uwb_device_t,s0)
 /data/vendor/uwb    -d    gen_context(system_u:object_r:uwb_data_file_t,s0)
 /data/vendor/uwb/.*    --    gen_context(system_u:object_r:uwb_data_file_t,s0)
+/etc/uwb(/.*)?    --    gen_context(system_u:object_r:uwb_etc_t,s0)

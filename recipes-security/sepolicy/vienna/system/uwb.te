@@ -15,6 +15,10 @@ dev_node(uwb_device_t)
 type uwb_data_file_t;
 files_type(uwb_data_file_t)
 
+# UWB configuration file type for /etc/uwb
+type uwb_etc_t;
+files_type(uwb_etc_t)
+
 ########################################
 #
 # Local Policy
@@ -95,3 +99,6 @@ dev_rw_sysfs(uwb_t)
 allow uwb_t uwb_data_file_t:dir manage_dir_perms;
 allow uwb_t uwb_data_file_t:file manage_file_perms;
 
+# Allow uwb_service to read configuration files in /etc/uwb only.
+allow uwb_t uwb_etc_t:dir list_dir_perms;
+allow uwb_t uwb_etc_t:file read_file_perms;
