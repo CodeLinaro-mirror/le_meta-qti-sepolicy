@@ -103,7 +103,7 @@ do_install:append() {
 }
 
 rebuild_policy:append() {
-	policy_version=33
+	policy_version=31
 
         if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-vm', 'false', 'true', d)}; then
             if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
