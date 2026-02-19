@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(adbd, 1.0)
 
 type adbd_t;
@@ -213,6 +217,7 @@ allow mount_t usb_dev_t:dir { search getattr mounton };
 # allow creating debugfs dir/files from start_usb context
 gen_require(`
     type debugfs_t;
+    type  health_monitor_data_t;
 ')
 allow usb_t debugfs_t:dir rw_dir_perms;
 allow usb_t debugfs_t:file create;
@@ -229,3 +234,7 @@ allow usb_t usb_bind_tmp_t:file manage_file_perms;
 # Add permissions for usb_t to access adb_data_conf_t, so that
 # /data/debug_transport.conf can be accessed by start_usb
 allow usb_t adb_data_conf_t:file read_file_perms;
+
+# Add permission to pull health monitor log file in /data/health_monitor health_monitor_data_t
+allow adbd_t health_monitor_data_t:dir search;
+allow adbd_t health_monitor_data_t:file { getattr open read };
