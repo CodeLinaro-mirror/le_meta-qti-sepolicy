@@ -34,6 +34,9 @@ gen_require(`
   type system_dbusd_var_run_t;
   type power_unit_t;
   type system_dbusd_t;
+  type qcmap_var_run_t;
+  type ipacm_var_run_t;
+  type ipacm_t;
   type sysctl_vm_t;
   class service { start status stop reload };
 ')
@@ -114,3 +117,8 @@ allow health_monitor_t sysfs_t:file { read getattr open };
 allow health_monitor_t sysfs_t:dir { read search };
 allow health_monitor_t proc_net_t:file { read getattr execute open execute_no_trans map };
 allow health_monitor_t ifconfig_exec_t:file { read getattr execute open execute_no_trans map };
+
+allow health_monitor_t qcmap_var_run_t:dir search;
+allow health_monitor_t ipacm_var_run_t:dir search;
+allow health_monitor_t ipacm_t:process sigkill;
+
