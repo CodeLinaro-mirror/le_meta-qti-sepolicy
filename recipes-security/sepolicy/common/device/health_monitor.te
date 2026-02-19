@@ -1,0 +1,87 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(health_monitor, 1.0)
+type health_monitor_t;
+type health_monitor_exec_t;
+type health_monitor_data_t;
+gen_require(`
+  type shell_exec_t;
+  type proc_t;
+  type qcmap_etc_data_t;
+  type socket_device_t;
+  type systemd_tmpfiles_t;
+  type kmsg_device_t;
+  type data_t;
+  type etc_t;
+  type fs_t;
+  type net_conf_t;
+  type ping_exec_t;
+  type sysctl_t;
+  type init_var_run_t;
+  type sysctl_kernel_t;
+  type init_t;
+  type sysfs_t;
+  type system_dbusd_var_run_t;
+  type power_unit_t;
+  type system_dbusd_t;
+  class service { start status stop reload };
+')
+
+init_vendor_domain(health_monitor_t, health_monitor_exec_t)
+allow health_monitor_t self:fifo_file { getattr ioctl };
+allow health_monitor_data_t fs_t:filesystem associate;
+allow health_monitor_t etc_t:file { getattr open read };
+allow health_monitor_t net_conf_t:file { read open getattr };
+allow health_monitor_t ping_exec_t:file { getattr execute read write execute_no_trans map open };
+allow health_monitor_t self:icmp_socket { create read write getattr setopt getopt ioctl  };
+allow health_monitor_t self:udp_socket { bind create setopt getattr connect read write };
+allow health_monitor_t self:netlink_route_socket { bind create read nlmsg_write write getattr nlmsg_read };
+allow health_monitor_t etc_t:lnk_file { read };
+allow health_monitor_t self:{ socket qipcrtr_socket } { create_socket_perms };
+exec_files_pattern(health_monitor_t, socket_device_t, shell_exec_t);
+files_rw_qcmap_etc_data_files(health_monitor_t);
+data_rw_system_data_files(health_monitor_t, qcmap_etc_data_t)
+allow health_monitor_t qcmap_etc_data_t:file { getattr read open };
+system_data_files_type(qcmap_etc_data_t);
+allow health_monitor_t qcmap_etc_data_t:dir search;
+allow health_monitor_t qcmap_etc_data_t:file setattr;
+mls_file_write_all_levels(health_monitor_t);
+dev_write_kmsg(health_monitor_t);
+allow health_monitor_t health_monitor_data_t:dir { create search write add_name };
+allow health_monitor_t health_monitor_data_t:file {create append open read getattr };
+allow health_monitor_t self:process { getcap setcap signal };
+allow systemd_tmpfiles_t health_monitor_data_t:dir { getattr read create write add_name setattr search open relabelfrom relabelto};
+allow systemd_tmpfiles_t health_monitor_data_t:file { setattr};
+
+allow health_monitor_t proc_t:file {open read getattr ioctl};
+allow health_monitor_t self:fifo_file { read write };
+allow health_monitor_t self:capability net_raw;
+
+# Manage private files inside /var/run
+type health_monitor_var_run_t;
+files_pid_file(health_monitor_var_run_t)
+allow health_monitor_t health_monitor_var_run_t:dir { search add_name remove_name write };
+allow health_monitor_t health_monitor_var_run_t:file { create getattr open read unlink write setattr execute execute_no_trans };
+allow health_monitor_t sysfs_t:lnk_file { getattr open read write };
+
+# Manage socket files inside /dev/socket
+type health_monitor_socket_device_t;
+files_type(health_monitor_socket_device_t);
+dev_node(health_monitor_socket_device_t);
+# Create directory for healthmonitor inside /dev/socket
+allow systemd_tmpfiles_t health_monitor_socket_device_t:dir { create read open setattr getattr relabelfrom relabelto };
+allow health_monitor_t health_monitor_socket_device_t:dir { search write create read add_name remove_name getattr};
+allow health_monitor_t health_monitor_socket_device_t:sock_file { create setattr unlink write };
+filetrans_pattern( health_monitor_t, socket_device_t, health_monitor_socket_device_t, { sock_file dir })
+allow health_monitor_t sysctl_t:dir { search };
+allow health_monitor_t init_var_run_t:dir { search getattr };
+allow health_monitor_t sysctl_kernel_t:file { read open getattr ioctl };
+allow health_monitor_t sysctl_kernel_t:dir search;
+allow health_monitor_t init_t:file { open getattr ioctl read };
+allow health_monitor_t init_t:dir { search };
+allow health_monitor_t init_t:lnk_file { read };
+allow health_monitor_t system_dbusd_var_run_t:dir search;
+allow health_monitor_t system_dbusd_var_run_t:sock_file write;
+allow health_monitor_t system_dbusd_t:unix_stream_socket connectto;
+allow health_monitor_t power_unit_t:service { start status };

@@ -1,0 +1,8 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/health_monitor                      --   gen_context(system_u:object_r:health_monitor_exec_t,s0)
+/var/run/health_monitor(/.*)?                     gen_context(system_u:object_r:health_monitor_var_run_t,s0)
+/run/health_monitor(/.*)?                         gen_context(system_u:object_r:health_monitor_var_run_t,s0)
+/dev/socket/health_monitor(/.*)?                  gen_context(system_u:object_r:health_monitor_socket_device_t,s0)
+/data/health_monitor(/.*)?                        gen_context(system_u:object_r:health_monitor_data_t,s0)
