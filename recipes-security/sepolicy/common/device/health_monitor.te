@@ -31,6 +31,7 @@ gen_require(`
   type sysctl_kernel_t;
   type init_t;
   type sysfs_t;
+  type debugfs_t;
   type system_dbusd_var_run_t;
   type power_unit_t;
   type system_dbusd_t;
@@ -121,4 +122,6 @@ allow health_monitor_t ifconfig_exec_t:file { read getattr execute open execute_
 allow health_monitor_t qcmap_var_run_t:dir search;
 allow health_monitor_t ipacm_var_run_t:dir search;
 allow health_monitor_t ipacm_t:process sigkill;
+
+search_dirs_pattern(health_monitor_t, debugfs_t, debugfs_t)
 
