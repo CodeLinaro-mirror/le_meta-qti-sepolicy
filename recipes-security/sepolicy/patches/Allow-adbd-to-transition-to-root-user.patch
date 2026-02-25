@@ -1,24 +1,23 @@
-From 3d0ed3bd214d547eafcd78b1c72ca4b2e71884f6 Mon Sep 17 00:00:00 2001
+From 077c2f8eaa67ac9554d2436dc3329eae3b9110ac Mon Sep 17 00:00:00 2001
 From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Mon, 5 Nov 2018 16:59:40 -0800
 Subject: [PATCH] Allow adbd to transition to root user
 
 Change-Id: Idf7817502044de08ac29cc6eb5f29ac89a05a093
+
 ---
- config/appconfig-mls/root_default_contexts         | 1 +
- 1 files changed, 1 insertions(+)
+ config/appconfig-mls/root_default_contexts | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/config/appconfig-mls/root_default_contexts b/config/appconfig-mls/root_default_contexts
-index 7805778..43d3cb8 100644
+index 498b429f5..55f3e5b82 100644
 --- a/config/appconfig-mls/root_default_contexts
 +++ b/config/appconfig-mls/root_default_contexts
-@@ -1,5 +1,6 @@
+@@ -1,6 +1,7 @@
  system_r:crond_t:s0		unconfined_r:unconfined_t:s0 sysadm_r:cronjob_t:s0 staff_r:cronjob_t:s0 user_r:cronjob_t:s0
+ system_r:init_t:s0		unconfined_r:unconfined_t:s0 sysadm_r:sysadm_systemd_t:s0 staff_r:staff_systemd_t:s0 user_r:user_systemd_t:s0
  system_r:local_login_t:s0	unconfined_r:unconfined_t:s0 sysadm_r:sysadm_t:s0 staff_r:staff_t:s0 user_r:user_t:s0
 +system_r:adbd_t:s0		unconfined_r:unconfined_t:s0 sysadm_r:sysadm_t:s0 staff_r:staff_t:s0 user_r:user_t:s0
  
  staff_r:staff_su_t:s0		unconfined_r:unconfined_t:s0 sysadm_r:sysadm_t:s0 staff_r:staff_t:s0 user_r:user_t:s0
  sysadm_r:sysadm_su_t:s0		unconfined_r:unconfined_t:s0 sysadm_r:sysadm_t:s0 staff_r:staff_t:s0 user_r:user_t:s0
--- 
-1.9.1
-
