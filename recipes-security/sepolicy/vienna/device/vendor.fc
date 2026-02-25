@@ -5,3 +5,5 @@
 /dev/glinkpkt_wm_qsh_.*     -c    gen_context(system_u:object_r:glinkpkt_wm_qsh_device_t,s0)
 /data/vendor/ssrdump    -d    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
 /data/vendor/ssrdump/.*    --    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
+/dev/fastrpc-adsp            -c  gen_context(system_u:object_r:qdsp_device_t,s0)
+/dev/fastrpc-adsp-secure            -c  gen_context(system_u:object_r:xdsp_device_t,s0)

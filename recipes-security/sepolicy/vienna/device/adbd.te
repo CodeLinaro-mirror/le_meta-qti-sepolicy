@@ -12,8 +12,8 @@ userdebug_or_eng(`
 	type overlay_t;
 	type rfsa_adsp_lib_t;
     ')
-    allow adbd_t rfsa_adsp_lib_t:file { create open setattr write read };
-    allow adbd_t rfsa_adsp_lib_t:dir { getattr search write add_name };
+    allow adbd_t rfsa_adsp_lib_t:file manage_file_perms;
+    allow adbd_t rfsa_adsp_lib_t:dir manage_dir_perms;
 ')
 
 
