@@ -99,7 +99,6 @@ userdebug_or_eng(`
 	type kerneltests_modules_data_t;
         type fs_t;
 	type tuicoreservice_dev_t;
-	type msm_uart_exec_t;
     ')
     allow unconfined_t recovery_exec_t:file exec_file_perms;
     allow unconfined_t aud_dev_sysfs_t:file { write_file_perms };
@@ -115,6 +114,4 @@ userdebug_or_eng(`
     allow unconfined_t kerneltests_modules_data_t:dir { add_name setattr write remove_name };
     allow unconfined_t kerneltests_modules_data_t:file { create rename setattr unlink write };
     allow unconfined_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
-    allow msm_uart_exec_t fs_t:filesystem associate;
-    allow unconfined_t msm_uart_exec_t:file { setattr exec_file_perms write };
 ')

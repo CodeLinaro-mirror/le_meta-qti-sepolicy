@@ -215,5 +215,3 @@ allow qwes_license_store_setup_t self:capability { fowner chown };
 
 #============= qwesd_t ==============
 allow qwesd_t self:process getsched;
-allow qwes_license_store_setup_t qseecomd_persist_t:file unlink;
-
