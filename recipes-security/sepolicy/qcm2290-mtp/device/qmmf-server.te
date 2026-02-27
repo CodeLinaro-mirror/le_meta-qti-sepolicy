@@ -237,10 +237,13 @@ allow qmmf_server_t sysctl_kernel_t:dir search;
 allow qmmf_server_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
 allow qmmf_server_t rfsa_adsp_lib_t:file read_file_perms;
 
-gen_require(`
- type adbd_t;
+userdebug_or_eng(`
+ gen_require(`
+  type adbd_t;
+ ')
+
+ allow qmmf_server_t adbd_t:binder call;
 ')
-allow qmmf_server_t adbd_t:binder call;
 
 gen_require(`
     type weston_runtime_t;
