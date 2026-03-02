@@ -58,8 +58,7 @@ init_script_tmp_filetrans(log-manager-app_t, log_manager_tmp_t, { file dir })
 allow log-manager-app_t etc_t:file { getattr open read };
 
 # Needed to access /data/mplane/ folder
-allow log-manager-app_t mplane_app_t:dir { add_name search write read getattr remove_name create };
-allow log-manager-app_t mplane_app_t:file { create open read getattr write unlink };
+manage_user_data_files( log-manager-app_t, mplane_app_t);
 
 # Needed to access modem minidump
 allow log-manager-app_t data_t:dir { read getattr };
