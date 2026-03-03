@@ -6,3 +6,5 @@
 /run/health_monitor(/.*)?                         gen_context(system_u:object_r:health_monitor_var_run_t,s0)
 /dev/socket/health_monitor(/.*)?                  gen_context(system_u:object_r:health_monitor_socket_device_t,s0)
 /data/health_monitor(/.*)?                        gen_context(system_u:object_r:health_monitor_data_t,s0)
+/etc/initscripts/hm_recovery\.sh              --   gen_context(system_u:object_r:hm_recovery_exec_t,s0)
+
