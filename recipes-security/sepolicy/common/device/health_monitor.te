@@ -25,6 +25,7 @@ gen_require(`
   type system_dbusd_var_run_t;
   type power_unit_t;
   type system_dbusd_t;
+  type sysctl_vm_t;
   class service { start status stop reload };
 ')
 
@@ -85,3 +86,4 @@ allow health_monitor_t system_dbusd_var_run_t:dir search;
 allow health_monitor_t system_dbusd_var_run_t:sock_file write;
 allow health_monitor_t system_dbusd_t:unix_stream_socket connectto;
 allow health_monitor_t power_unit_t:service { start status };
+dontaudit health_monitor_t sysctl_vm_t:dir { search };
