@@ -1,9 +1,8 @@
 # Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-
 #seems nbd driver need to do
-#need to invistagate check
+#need to investigate check
 gen_require(`
     type mount_t;
     type  kernel_t;
@@ -12,8 +11,16 @@ gen_require(`
     type unconfined_t;
     class dbus send_msg;
     type leprop_system_data_t;
+    type post_boot_data_t;
 
 ')
+
+type post_boot_data_t, file_type;
+
+# set access to post_boot in post-boot-script to write boot message
+allow post_boot_script_t post_boot_data_t:dir { write add_name search getattr};
+allow post_boot_script_t post_boot_data_t:file { create open write };
+
 #set scheduling parameters for a kernel domain task.
 #allow mount_t  kernel_t:process {setsched } ;
 dontaudit mount_t  kernel_t:process {setsched};
