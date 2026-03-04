@@ -30,7 +30,10 @@ gen_require(`
   type init_var_run_t;
   type sysctl_kernel_t;
   type init_t;
+  type systemd_unit_t;
+  type dbusd_unit_t;
   type sysfs_t;
+  type debugfs_t;
   type system_dbusd_var_run_t;
   type power_unit_t;
   type system_dbusd_t;
@@ -122,3 +125,36 @@ allow health_monitor_t qcmap_var_run_t:dir search;
 allow health_monitor_t ipacm_var_run_t:dir search;
 allow health_monitor_t ipacm_t:process sigkill;
 
+search_dirs_pattern(health_monitor_t, debugfs_t, debugfs_t)
+
+# Allow reading symlinks in sysfs
+allow health_monitor_t sysfs_t:lnk_file read;
+allow health_monitor_t tmp_t:file { getattr write };
+
+dbus_system_bus_client(health_monitor_t)
+init_dbus_chat(health_monitor_t)
+allow health_monitor_t self:dbus send_msg;
+allow health_monitor_t dbusd_unit_t:service start;
+
+# setup qwes_ipc socket
+type hm_exec_t;
+type hm_recovery_exec_t;
+
+init_script_domain(hm_exec_t, hm_recovery_exec_t);
+
+allow health_monitor_t systemd_unit_t:service { start stop status reload };
+
+# Allow reading symbolic links in sysfs (e.g., "subsys1")
+allow hm_exec_t sysfs_t:lnk_file read;
+
+# Allow opening and writing to sysfs files (e.g., "restart_level")
+allow hm_exec_t sysfs_t:file { open write getattr read};
+
+allow hm_exec_t proc_t:file {read open getattr};
+mls_file_write_all_levels(hm_exec_t);
+
+# Allow writing to kernel logs (kmsg)
+dev_write_kmsg(hm_exec_t);
+
+allow hm_exec_t sysfs_t:dir write;
+allow hm_exec_t self:fifo_file { read write };
