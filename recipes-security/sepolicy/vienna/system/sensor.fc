@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /etc/sensors(/.*)?              gen_context(system_u:object_r:etc_sensors_t,s0)
+/usr/bin/sscrpcd                gen_context(system_u:object_r:sscrpcd_exec_t,s0)
