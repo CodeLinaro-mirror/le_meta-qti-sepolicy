@@ -7,9 +7,11 @@ gen_require(`
     type etc_t;
     type overlay_t;
     type modules_object_t;
+    type power_sysfs_t;
 ')
 
 allow post_boot_script_t etc_t:file read_file_perms;
 allow touch_script_t modules_object_t:dir search;
 allow touch_script_t modules_object_t:file getattr;
 allow touch_script_t overlay_t:dir search;
+allow post_boot_script_t power_sysfs_t:file write_file_perms;
