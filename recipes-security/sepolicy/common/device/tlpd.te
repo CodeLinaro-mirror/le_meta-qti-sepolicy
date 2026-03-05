@@ -11,6 +11,8 @@ init_vendor_domain(tlpd_t, tlpd_exec_t)
 gen_require(`
     type default_t;
     type sysfs_t;
+    type cert_t;
+    type urandom_device_t;
 ')
 
 userdebug_or_eng(`
@@ -49,6 +51,9 @@ device_rw_socket_files(tlpd_t, tlpd_socket_device_t);
 # Process Capabilities
 allow tlpd_t self:capability { net_admin };
 allow tlpd_t self:process { signal };
+allow tlpd_t cert_t:dir { search };
+allow tlpd_t urandom_device_t:chr_file { read open };
+allow tlpd_t cert_t:file { read open getattr };
 
 # Qcmap files
 files_rw_qcmap_etc_data_files(tlpd_t)
