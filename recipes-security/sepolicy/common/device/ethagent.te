@@ -25,6 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#Changes from Qualcomm Technologies, Inc. are provided under the following license:
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(ethagent, 1.0)
 type ethagent_t;
@@ -44,6 +47,7 @@ gen_require(`
     type wifi_data_t;
     type debugfs_t;
     type proc_net_t;
+    type cert_t;
     type qcmap_cm_t;
     type qcmap_var_run_t;
     type shell_exec_t;
@@ -60,6 +64,8 @@ allow ethagent_t  wifi_data_t:file open;
 allow ethagent_t  qcmap_cm_t:dir search;
 allow ethagent_t  qcmap_cm_t:file { read open };
 allow ethagent_t  qcmap_cm_t:lnk_file read;
+allow ethagent_t  cert_t:dir search;
+allow ethagent_t  cert_t:file { getattr open read };
 allow ethagent_t  qcmap_var_run_t:dir search;
 allow ethagent_t  qcmap_var_run_t:sock_file write;
 allow ethagent_t  self:fifo_file { getattr ioctl };
@@ -80,10 +86,9 @@ allow ethagent_t  var_run_t:dir search;
 allow ethagent_t  var_run_t:lnk_file read;
 allow ethagent_t  self:process signal;
 allow ethagent_t  self:udp_socket { create ioctl };
+# Allow ethagent to connect to tlpd's Unix stream socket
+tlpd_use_unix_stream_sockets(ethagent_t)
 kernel_read_system_state(ethagent_t)
-
-sprhd_use_unix_stream_sockets(ethagent_t)
-sprhd_rw_netlink_sockets(ethagent_t)
 
 type ethagent_initrc_exec_t;
 type ethagent_initrc_t;
