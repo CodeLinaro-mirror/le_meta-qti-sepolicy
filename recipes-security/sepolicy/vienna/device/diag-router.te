@@ -1,0 +1,8 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type diag_device_router_t;
+dev_node(diag_device_router_t)
+
+allow diag-router_t diag_device_router_t:chr_file rw_chr_file_perms;
+
