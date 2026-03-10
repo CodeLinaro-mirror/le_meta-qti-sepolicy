@@ -1,0 +1,58 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(smcservice, 1.0)
+
+type smcservice_t;
+type smcservice_exec_t;
+init_daemon_domain(smcservice_t,smcservice_exec_t)
+
+type smc_client_dev_t;
+files_type(smc_client_dev_t)
+dev_node(smc_client_dev_t)
+
+type vendor_uart_hs1_dev;
+files_type(vendor_uart_hs1_dev)
+dev_node(vendor_uart_hs1_dev)
+
+type vendor_sysfs_smc_uart;
+files_type(vendor_sysfs_smc_uart)
+
+type vendor_sysfs_smc_state;
+files_type(vendor_sysfs_smc_state)
+
+gen_require(`
+    type socket_device_t;
+    type firmware_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type ramdump_data_t;
+')
+
+# Allow the service to Read/Write the device
+allow smcservice_t smc_client_dev_t:chr_file rw_chr_file_perms;
+
+#Allow service to read smc_state
+allow smcservice_t vendor_sysfs_smc_state:file read;
+
+# Permission for /data/vendor/ramdump directory and files inside dir for crash dump collection
+allow smcservice_t ramdump_data_t:dir rw_dir_perms;
+allow smcservice_t ramdump_data_t:file {create rw_file_perms};
+
+#Allow service to access UART Node
+allow smcservice_t vendor_uart_hs1_dev:chr_file rw_chr_file_perms;
+allow smcservice_t vendor_sysfs_smc_uart:lnk_file read;
+
+# Socket device search (/dev/socket)
+allow smcservice_t socket_device_t:dir search;
+
+# LeProp Service (Property system) interaction
+allow smcservice_t leprop_sock_t:sock_file write;
+allow smcservice_t leprop_t:unix_stream_socket connectto;
+
+# Allow reading the actual firmware files (which are labeled firmware_t)
+allow smcservice_t firmware_t:dir search;
+allow smcservice_t firmware_t:file read_file_perms;
+
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(smcservice_t)
