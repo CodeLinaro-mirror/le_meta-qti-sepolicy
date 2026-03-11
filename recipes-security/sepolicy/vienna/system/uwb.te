@@ -19,6 +19,10 @@ files_type(uwb_data_file_t)
 type uwb_etc_t;
 files_type(uwb_etc_t)
 
+# Temporary file type for uwb adapter state marker
+type uwb_tmp_t;
+files_tmp_file(uwb_tmp_t)
+
 ########################################
 #
 # Local Policy
@@ -103,7 +107,22 @@ allow uwb_t uwb_data_file_t:file manage_file_perms;
 # Allow uwb_service to read configuration files in /etc/uwb only.
 allow uwb_t uwb_etc_t:dir list_dir_perms;
 allow uwb_t uwb_etc_t:file read_file_perms;
+
 # SSR Dump Support
 # Permission for /data/vendor/ssrdump directory and files inside dir for crash dump collection
 allow uwb_t ssrdump_data_file_t:dir rw_dir_perms;
 allow uwb_t ssrdump_data_file_t:file manage_file_perms;
+
+# Allow reading /proc/filesystems (filesystem detection for tmpfs)
+kernel_read_system_state(uwb_t)
+
+# Allow searching /tmp directory to reach uwb_adapter_active
+files_search_tmp(uwb_t)
+
+# Automatically transition files created in /tmp to uwb_tmp_t
+filetrans_pattern(uwb_t, tmp_t, uwb_tmp_t, file)
+
+# # Allow uwb_service to manage uwb_adapter_active file in /tmp for adapter state marker
+allow uwb_t uwb_tmp_t:dir rw_dir_perms;
+allow uwb_t uwb_tmp_t:file manage_file_perms;
+
