@@ -79,6 +79,7 @@ gen_require(`
        type system_data_t;
        type syslogd_var_run_t;
        type tlpd_t;
+       type cert_t;
        class unix_stream_socket { connectto };
 ')
 
@@ -178,6 +179,8 @@ init_vendor_domain(ipa_lnx_agent_t, ipa_lnx_agent_exec_t)
 logging_send_syslog_msg(ipa_lnx_agent_t)
 # Allow ipa_lnx_agent to connect to tlpd's Unix stream socket
 allow ipa_lnx_agent_t tlpd_t:unix_stream_socket connectto;
+allow ipa_lnx_agent_t cert_t:dir { search };
+allow ipa_lnx_agent_t cert_t:file { read open getattr };
 
 userdebug_or_eng(`
     rw_diag_dev(ipa_lnx_agent_t)
