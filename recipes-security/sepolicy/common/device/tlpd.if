@@ -1,0 +1,80 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary>
+##      Statistics Processing Engine for APPS Reported
+##      via Huff Encryption And Diag
+## </summary>
+
+########################################
+## <summary>
+##      Send and receive netlink messages from tlpd
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`tlpd_rw_netlink_sockets',`
+    gen_require(`
+        type tlpd_t;
+    ')
+
+    allow $1 tlpd_t:{ netlink_socket } rw_socket_perms;
+')
+
+########################################
+## <summary>
+##      Use tlpd unix stream sockets
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`tlpd_use_unix_stream_sockets',`
+    gen_require(`
+        type tlpd_t;
+    ')
+
+    allow $1 tlpd_t:unix_stream_socket { connectto read write };
+')
+
+
+#######################################
+## <summary>
+##      manage tlpd files and directories in /data/data_tlpd
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`tlpd_manage_user_data_files',`
+    gen_require(`
+        type tlpd_data_t;
+    ')
+    manage_user_data_files($1, tlpd_data_t)
+')
+
+#######################################
+## <summary>
+##       Allow tlpd control over fifo files
+## </summary>
+## <param name="domain">
+##      <summary>
+##      Domain allowed access.
+##      </summary>
+## </param>
+#
+interface(`tlpd_manage_fifo',`
+     gen_require(`
+        type tlpd_data_t;
+     ')
+    files_pid_filetrans($1, tlpd_data_t, { fifo_file } )
+    manage_fifo_files_pattern($1, tlpd_data_t, tlpd_data_t)
+    allow $1 self:fifo_file { read write };
+')

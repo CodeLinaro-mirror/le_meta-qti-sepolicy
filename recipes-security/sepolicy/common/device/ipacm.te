@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#Changes from Qualcomm Technologies, Inc. are provided under the following license:
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(ipacm, 1.0)
 
 ### ipa data directory
@@ -74,6 +78,8 @@ gen_require(`
        type wlan_initrc_t;
        type system_data_t;
        type syslogd_var_run_t;
+       type tlpd_t;
+       class unix_stream_socket { connectto };
 ')
 
 dontaudit ipacm_t self:capability { setuid setgid };
@@ -170,6 +176,8 @@ type ipa_lnx_agent_exec_t;
 
 init_vendor_domain(ipa_lnx_agent_t, ipa_lnx_agent_exec_t)
 logging_send_syslog_msg(ipa_lnx_agent_t)
+# Allow ipa_lnx_agent to connect to tlpd's Unix stream socket
+allow ipa_lnx_agent_t tlpd_t:unix_stream_socket connectto;
 
 userdebug_or_eng(`
     rw_diag_dev(ipa_lnx_agent_t)
