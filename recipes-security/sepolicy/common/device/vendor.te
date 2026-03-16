@@ -388,7 +388,6 @@ gen_require(`
     type zs_handle_sysfs_t;
     type zspage_sysfs_t;
     type cpu_sysfs_t;
-    type overlay_t;
     type power_sysfs_t;
 ')
 
@@ -402,10 +401,4 @@ allow post_boot_script_t cpu_sysfs_t:file { create_file_perms rw_file_perms };
 type ashmem_devices_t;
 dev_node(ashmem_devices_t);
 
-allow post_boot_script_t overlay_t:dir search_dir_perms;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
-
-allow tftp_server_t overlay_t:dir setattr_dir_perms;
-
-type qmi_fw_vendor_t;
-files_type(qmi_fw_vendor_t)

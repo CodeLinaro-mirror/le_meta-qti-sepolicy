@@ -104,10 +104,6 @@ optional_policy(`
 # Perform a bind mount with the real mount context
 mount_domtrans(mount_copybind_t)
 
-optional_policy(`
-    files_read_alexa_data_files(mount_copybind_t)
-')
-
 # Files made writable using mount-copybind must have a unique label
 neverallow mount_copybind_t etc_t:file { create relabelto };
 fs_blk_getattr_tmpfs(mount_t)

@@ -33,7 +33,6 @@ gen_require(`
     type lastlog_t;
     type etc_t;
     type shadow_t;
-    type overlay_t;
     type chkpwd_t;
     type sulogin_t;
 ')
@@ -50,6 +49,11 @@ userdebug_or_eng(`
     unconfined_shell_domtrans(local_login_t)
 ')
 
-allow local_login_t overlay_t:dir search_dir_perms;
-allow chkpwd_t overlay_t:dir search_dir_perms;
-allow sulogin_t overlay_t:dir search_dir_perms;
+optional_policy(`
+    gen_require(`
+        type overlay_t;
+    ')
+    allow local_login_t overlay_t:dir search_dir_perms;
+    allow chkpwd_t overlay_t:dir search_dir_perms;
+    allow sulogin_t overlay_t:dir search_dir_perms;
+')

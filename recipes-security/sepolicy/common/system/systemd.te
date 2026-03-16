@@ -109,7 +109,6 @@ gen_require(`
     type sysfs_devcoredump_t;
     type power_control_t;
     type encryption_control_t;
-    type overlay_t;
     type multicast_querier_sysfs_t;
     type proc_psi_t;
     type tmpfs_t;
@@ -137,7 +136,6 @@ allow systemd_tmpfiles_t usr_t:file read_file_perms;
 allow systemd_sysctl_t kernel_t:unix_dgram_socket sendto;
 allow syslogd_t kernel_t:netlink_audit_socket rw_socket_perms;
 allow syslogd_t syslogd_var_run_t:sock_file unlink;
-allow udev_t overlay_t:dir search;
 allow udev_t multicast_querier_sysfs_t:file { setattr_file_perms getattr_file_perms };
 
 # systemd_modules_load
@@ -215,11 +213,6 @@ allow systemd_update_done_t syslogd_t:unix_dgram_socket sendto;
 allow systemd_update_done_t syslogd_var_run_t:dir search;
 allow systemd_update_done_t var_run_t:dir search;
 
-allow systemd_sysctl_t overlay_t:dir search;
-allow systemd_modules_load_t overlay_t:dir search;
-allow systemd_update_done_t overlay_t:dir list_dir_perms;
-
-allow systemd_logind_t overlay_t:dir search_dir_perms;
 allow systemd_logind_t proc_psi_t:dir search_dir_perms;
 allow systemd_logind_t proc_psi_t:file read_file_perms;
 allow systemd_logind_t drm_card_sysfs_t:dir search_dir_perms;
@@ -252,3 +245,15 @@ allow udev_t proc_psi_t:dir list_dir_perms;
 allow udev_t proc_psi_t:file rw_file_perms;
 allow udev_t drm_card_sysfs_t:dir list_dir_perms;
 allow udev_t drm_card_sysfs_t:file read_file_perms;
+
+optional_policy(`
+    gen_require(`
+        type overlay_t;
+    ')
+    allow udev_t overlay_t:dir search;    
+    allow systemd_sysctl_t overlay_t:dir search;
+    allow systemd_modules_load_t overlay_t:dir search;
+    allow systemd_update_done_t overlay_t:dir list_dir_perms;
+    allow systemd_logind_t overlay_t:dir search_dir_perms;
+')
+

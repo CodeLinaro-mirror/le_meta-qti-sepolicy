@@ -216,10 +216,11 @@ optional_policy(`
     allow initrc_t rfsa_adsp_lib_t:dir search_dir_perms;
 ')
 
-gen_require(`
-    type binderfs_t;
-    type fsadm_t;
-    type overlay_t;
+optional_policy(`
+    gen_require(`
+	type binderfs_t;
+    ')
+    allow init_t binderfs_t:dir getattr_dir_perms;
+    dontaudit init_t binderfs_t:filesystem remount;
 ')
-allow init_t binderfs_t:dir getattr_dir_perms;
-dontaudit init_t binderfs_t:filesystem remount;
+
