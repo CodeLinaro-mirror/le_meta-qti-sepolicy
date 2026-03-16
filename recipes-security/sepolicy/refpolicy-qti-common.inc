@@ -29,10 +29,9 @@ EXTRA_OEMAKE += "SETFILES=${RECIPE_SYSROOT_NATIVE}/sbin/setfiles"
 EXTRA_OEMAKE:append:qti-distro-user = " USER_BUILD=y"
 
 # Modules outside of 'services' and 'apps' layer to be removed
-PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
+PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage webadm cloudinit"
 # Modules inside 'services' and 'apps' layers to keep. All others in these layers are turned off
-CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient bluetooth tinyproxy hostapd xserver nscd radvd"
-REMOVE_MODULES ?= "cloudinit"
+CONTRIB_MODULES ?= "shutdown mta dbus xserver nscd radvd"
 
 def append_policy_file(src_path, dst_path):
     # Append our policy fragment to the end of the upstream file
@@ -77,7 +76,6 @@ do_install[postfuncs] += "${@bb.utils.contains('IMAGE_FSTYPES', 'ubi', 'create_d
 
 python update_modules_conf () {
     contrib_modules = d.getVar("CONTRIB_MODULES").split()
-    remove_modules = d.getVar("REMOVE_MODULES").split()
     module_conf_name = os.path.join(d.getVar("S"), "policy", "modules.conf")
     new_file = ""
 
@@ -89,9 +87,6 @@ python update_modules_conf () {
             elif '=' in line:
                 module_name = line.split('=')[0].strip()
                 if (layer == "services" or layer == "apps") and module_name not in contrib_modules:
-                    new_file += module_name + ' = off\n'
-                    continue
-                if module_name in remove_modules:
                     new_file += module_name + ' = off\n'
                     continue
             new_file += line

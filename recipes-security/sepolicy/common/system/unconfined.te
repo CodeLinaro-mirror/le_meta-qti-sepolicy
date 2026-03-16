@@ -54,7 +54,6 @@ userdebug_or_eng(`
             type alogd_t;
         ')
         servicemanager_binder_use(unconfined_t)
-        audio_binder_call_transfer(unconfined_t)
         allow unconfined_t self:capability2 block_suspend;
         allow unconfined_t alogd_t:dir search;
         shutdown_domtrans(unconfined_t)
@@ -183,9 +182,6 @@ userdebug_or_eng(`
     ')
 
     # For test app to access qesdk
-    optional_policy(`
-        qesdk_adk_access(unconfined_t)
-    ')
     logging_send_syslog_msg(unconfined_t)
 ')
 

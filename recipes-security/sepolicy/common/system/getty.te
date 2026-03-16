@@ -44,8 +44,10 @@ optional_policy(`
     allow getty_t dataqti_ppp_device_t:chr_file setattr;
 ')
 
-gen_require(`
-    type  overlay_t;
-')
+optional_policy(`
+    gen_require(`
+        type  overlay_t;
+    ')
 
-allow getty_t overlay_t:dir search;
+    allow getty_t overlay_t:dir search;
+')

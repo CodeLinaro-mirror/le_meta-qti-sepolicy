@@ -77,10 +77,7 @@
     gen_require(`
         type systemd_tmpfiles_t;
         type init_var_run_t;
-        type iptables_runtime_t;
         type device_t;
-        type wlan_hsp_sysfs_t;
-        type overlay_t;
     ')
     # syslogd_tmp_t has a higher mls clearance than systemd-tmpfiles, so dontaudit this
     dontaudit systemd_tmpfiles_t syslogd_tmp_t:dir { setattr relabelfrom relabelto create };
@@ -100,8 +97,26 @@
     allow syslogd_t self:netlink_audit_socket nlmsg_write;
     allow syslogd_t self:unix_stream_socket { write setopt shutdown };
     allow syslogd_t device_t:lnk_file unlink;
-    allow syslogd_t iptables_runtime_t:file create;
-    allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
-    allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
-    allow syslogd_t overlay_t:dir search_dir_perms;
+
+    optional_policy(`
+        gen_require(`
+            type iptables_runtime_t;
+        ')
+        allow syslogd_t iptables_runtime_t:file create;
+    ')
+
+    optional_policy(`
+        gen_require(`
+            type wlan_hsp_sysfs_t;
+        ')
+        allow syslogd_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
+        allow syslogd_t wlan_hsp_sysfs_t:file { create rw_file_perms };
+    ')
+
+    optional_policy(`
+        gen_require(`
+            type overlay_t;
+        ')
+        allow syslogd_t overlay_t:dir search_dir_perms;
+    ')
 #')
