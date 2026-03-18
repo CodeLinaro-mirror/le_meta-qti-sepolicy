@@ -1,0 +1,52 @@
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# systemd_modules_load
+
+
+gen_require(`
+ type tracefs_t;
+ type udev_t;
+ type dev_dri_t;
+ type net_conf_t;
+ type sdcard_t;
+')
+
+allow systemd_logind_t kernel_t:unix_dgram_socket sendto;
+
+files_mmap_read_kernel_modules(systemd_modules_load_t)
+
+allow systemd_modules_load_t tracefs_t:dir search;
+allow systemd_modules_load_t self:lockdown confidentiality;
+allow systemd_modules_load_t self:key write;
+
+#systemd_update_done
+
+allow udev_t net_conf_t:lnk_file read;
+allow udev_t sdcard_t:dir getattr;
+allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name };
+allow udev_t dev_dri_t:lnk_file { create rename unlink };

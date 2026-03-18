@@ -1,0 +1,545 @@
+# Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+## <summary> telux_policies </summary>
+
+# Domain transition from unconfined to confined
+# @brief : This interface allows transition of a running application, defined by
+# "process context",which is started with unconfined selinux permissions
+# to a confined domain defined by the "domain context".
+#
+# Parameters:
+#   1) Domain context (app context)
+#   2) Process context
+
+interface(`transition_to_confined_domain',`
+    gen_require(`
+        type unconfined_t;
+        type default_t;
+        role unconfined_r;
+        type tty_device_t;
+        type adbd_t;
+    ')
+    domtrans_pattern(unconfined_t, $2, $1)
+    role unconfined_r types $1;
+    getty_use_fds($1)
+    # permission required for tty
+    allow $1 tty_device_t:chr_file { read write getattr ioctl };
+    dontaudit $1 default_t:dir { search };
+    allow $1 self:capability kill;
+    allow $1 adbd_t:unix_stream_socket { read write };
+')
+
+# Telux logging interfaces
+# @brief: The logging interfaces allow the domain to be restricted to
+# read/write permissions to telux logging file. There is an interface to allow
+# complete access to the telux log and config files as well.
+#
+
+# @brief:  This interface allows domain context to read from telux log files
+#
+# Parameters:
+#   1) Domain context
+
+interface(`read_telux_log_file',`
+    gen_require(`
+        type telsdk_data_t;
+    ')
+    read_user_data_files($1, telsdk_data_t)
+')
+
+# @brief:  This interface allows domain context to write to telux log files
+#
+# Parameters:
+#   1) Domain context
+
+interface(`write_telux_log_file',`
+    gen_require(`
+        type telsdk_data_t;
+    ')
+    manage_user_data_files($1, telsdk_data_t)
+
+    # Any process that needs to write to log file will also need to be able to write
+    # logs to syslog since critical errors while logging are logged to syslog
+    logging_send_syslog_msg($1)
+')
+
+# @brief:  This interface allows domain context to read and write
+# telux log files. It also allows domain to read telsdk configuration
+# details.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`access_telux_files',`
+    gen_require(`
+        type telsdk_etc_t;
+        type telsdk_data_t;
+        type telsdk_sem_tmpfs_t;
+        type socket_device_t;
+    ')
+    allow $1 telsdk_etc_t:file read_file_perms;
+
+    read_telux_log_file($1)
+    write_telux_log_file($1)
+    # To allow libraries to log to diag
+    userdebug_or_eng(`
+        rw_diag_dev($1)
+    ')
+    dev_read_sysfs($1) # Requried for diag logging.
+    files_type(telsdk_sem_tmpfs_t);
+    fs_tmpfs_filetrans($1, telsdk_sem_tmpfs_t, file )
+    allow $1 telsdk_sem_tmpfs_t:file { create read write getattr open link unlink};
+    dontaudit $1 telsdk_sem_tmpfs_t:file map;
+
+    # To allow libraries to log to logcat
+    allow $1 socket_device_t:dir search;
+
+    # Allow QMI access for telux-config service
+    telux_allow_qmi_client($1)
+
+    # To allow machine name node reading
+    gen_require(`
+        type sysdevice_sysfs_t;
+    ')
+    allow $1 sysdevice_sysfs_t:file { read open };
+')
+
+# Qmi client interfaces
+# @brief: The QMI client interfaces allow the domain to contain a qmi
+# client by providing necessary permissions for the QMI IPC.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_qmi_client',`
+    gen_require(`
+      type devlog_t;
+    ')
+    # Below permissions are required for QMI client IPC
+    allow $1 devlog_t:sock_file write;
+    device_search_sockets($1)
+    allow $1 self:socket create_socket_perms;
+    allow $1 self:fifo_file rw_fifo_file_perms;
+')
+
+# Telephony client interfaces
+# @brief: The telephony client interface allow the domain to contain a telephony
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_tel',`
+    gen_require(`
+      type rilmuxd_t;
+      type qmux_radio_sock_t;
+      type devlog_t;
+    ')
+    manage_sock_files_pattern($1, qmux_radio_sock_t, qmux_radio_sock_t)
+    device_search_sockets($1)
+    allow $1 self:fifo_file rw_fifo_file_perms;
+    allow $1 self:socket create_socket_perms;
+    allow $1 rilmuxd_t:unix_stream_socket connectto;
+    logging_send_syslog_msg($1)
+    allow $1 self:unix_dgram_socket { write create connect };
+    access_telux_files($1)
+    telux_allow_group($1)
+')
+
+# Data client interfaces
+# @brief: The data client interfaces allow the domain to contain a telux data
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telsdk_read_qcmap_etc_data_files',`
+    gen_require(`
+      type qcmap_etc_data_t;
+      attribute domain_can_read_systemdata;
+    ')
+    typeattribute $1 domain_can_read_systemdata;
+    read_system_data_files($1, qcmap_etc_data_t)
+')
+
+interface(`telux_allow_data',`
+    gen_require(`
+        type netmgrd_socket_device_t;
+        type etc_t;
+    ')
+    telsdk_read_qcmap_etc_data_files($1)
+    qnetmgr_write_data_sock_files($1)
+    qnetmgr_use_unix_stream_sockets($1)
+    dev_read_sysfs($1)
+    allow $1 self:capability { net_admin setgid };
+
+    allow $1 self:netlink_socket create_socket_perms;
+    #permission are required to create and read socket for allowing data call
+    allow $1 self:netlink_route_socket create_socket_perms;
+    allow $1 self:netlink_route_socket { nlmsg_read };
+    allow $1 self:udp_socket create_socket_perms;
+    access_telux_files($1)
+    device_rw_socket_files($1, netmgrd_socket_device_t);
+    read_files_pattern($1, etc_t, etc_t);
+    #qnetmgr_read_config_file($1);
+    telux_allow_group($1)
+    #ioctl call to kernel (Data link Eth Thermal API)
+    allow $1 self:tcp_socket { create ioctl };
+    telux_allow_qmi_client($1)
+')
+
+# Audio client interfaces
+# @brief: The audio client interfaces allow the domain to contain a telux audio
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_audio',`
+
+    telux_allow_qmi_client($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+')
+
+# Location client interfaces
+# @brief: The location client interfaces allow the domain to contain a telux location
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_loc',`
+
+    # To allow QDgnssRemoteApi
+    allow $1 self:socket { getattr setopt write read};
+    logging_send_syslog_msg($1);
+
+
+    # To allow loc client to log to diag, access debug file system
+    userdebug_or_eng(`
+        rw_diag_dev($1)
+        kernel_manage_debugfs($1)
+    ')
+
+    # Miscellaneous permissions requried for location client
+    location_client_generic_rules($1)
+
+    corecmd_exec_shell($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+    telux_allow_loc_data($1)
+    telux_allow_loc_config($1)
+')
+
+# Thermal client interfaces
+# @brief: The Thermal client interfaces allow the domain to contain a telux thermal
+# clients by providing necessary permissions for its operation.
+#
+
+# @brief: This interface provides permissions for the operation
+# of thermalshutdown manager.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_thermalshutdown',`
+    telux_allow_qmi_client($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+')
+
+# @brief: This interface provides permissions for the operation
+# of thermal manager.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_thermalmanager',`
+    telux_allow_qmi_client($1)
+    dev_read_sysfs($1)
+    # To allow ThermalRemoteApi(query on EAP)
+    allow $1 self:socket { getattr setopt write read create};
+    device_search_sockets($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+')
+
+# Power client interfaces
+# @brief: The power client interface allow the domain to contain a telux power
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_power',`
+    telux_allow_qmi_client($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+    # To allow machine name node reading
+    gen_require(`
+        type sysdevice_sysfs_t;
+    ')
+    allow $1 sysdevice_sysfs_t:file { read open };
+')
+
+# Modem config client interface
+# @brief: The modem config client interface allow the domain to contain a telux config
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_modemconfig',`
+    telux_allow_qmi_client($1)
+    logging_send_syslog_msg($1)
+    access_telux_files($1)
+    telux_allow_group($1)
+')
+
+# sensor client interface
+# @brief: The sensor client interface allows the domain to contain a telux sensor
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_sensor',`
+
+    # For read /etc/tel.conf, read/write tel.log
+    access_telux_files($1)
+    telux_allow_group($1)
+
+    # For socket communication: /etc/nsswitch.conf, /etc/group for getgrnam
+    read_files_pattern($1, etc_t, etc_t);
+
+    # For sensor client lib, from sensor_hal_daemon.if
+    sensor_dev_socket($1)
+    sensor_configuration_access($1)
+
+')
+
+# @brief: This interface provides permissions to read the firmware files
+#         and the necessary permissions for the QMI IPC.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_version',`
+    gen_require(`
+       type firmware_t;
+    ')
+    allow $1 firmware_t:dir { search open };
+    allow $1 firmware_t:file read_file_perms;
+    device_search_sockets($1)
+    allow $1 self:socket create_socket_perms;
+    allow $1 self:fifo_file rw_fifo_file_perms;
+')
+
+# @brief: This interface provides permissions to read the /etc/group file
+#         for necessary supplemantary group permission
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_group',`
+    gen_require(`
+       type etc_t;
+       type tmpfs_t;
+    ')
+    # supress the map denials for /etc/group file
+    dontaudit $1 etc_t:file map;
+    # do not require permission for semaphore map
+    dontaudit $1 tmpfs_t:file map;
+    allow $1 self:qipcrtr_socket { write read create getattr setopt shutdown };
+')
+
+# platform client interface
+# @brief: The platform client interface allows the domain to contain a telux platform
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_platform',`
+
+    # For read /etc/tel.conf, read/write tel.log
+    access_telux_files($1)
+
+    # Allow logging into syslog - used by telsdk logging in case of error
+    logging_send_syslog_msg($1)
+
+    # For socket communication: /etc/nsswitch.conf, /etc/group for getgrnam
+    read_files_pattern($1, etc_t, etc_t);
+
+    # Allow QMI access for FS-HMI service
+    telux_allow_qmi_client($1)
+    telux_allow_group($1)
+
+')
+
+# Crypto client interface
+# @brief: The crypto client interface allows the domain to contain a telux crypto
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_crypto',`
+    access_telux_files($1)
+    telux_allow_group($1)
+    read_files_pattern($1, etc_t, etc_t);
+')
+
+# Crypto acclerator client interface
+# @brief: The crypto client interface allows the domain to contain a telux crypto
+# accelerator client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_crypto_accel',`
+    access_telux_files($1)
+    telux_allow_group($1)
+    read_files_pattern($1, etc_t, etc_t);
+    ifdef(`qti-mvm',`
+        allow_mvm_lib($1)
+    ')
+')
+
+# Cellular connection security client interface
+# @brief: The cellular connection security client interface allows the domain
+# to contain a telux cellular connection security client by providing necessary
+# permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_cellular_con_sec',`
+    access_telux_files($1)
+    telux_allow_group($1)
+    read_files_pattern($1, etc_t, etc_t);
+')
+
+# Wifi connection security client interface
+# @brief: The WiFi connection security client interface allows the domain
+# to contain a telux WiFi connection security client by providing necessary
+# permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_wifi_con_sec',`
+    access_telux_files($1)
+    telux_allow_group($1)
+    read_files_pattern($1, etc_t, etc_t);
+')
+
+# WLAN client interfaces
+# @brief: The wlan client interfaces allow the domain to contain a telux wlan
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_wlan',`
+    gen_require(`
+        type netmgrd_socket_device_t;
+        type etc_t;
+    ')
+    telsdk_read_qcmap_etc_data_files($1)
+    qnetmgr_write_data_sock_files($1)
+    qnetmgr_use_unix_stream_sockets($1)
+    dev_read_sysfs($1)
+    allow $1 self:capability { net_admin setgid };
+
+    allow $1 self:netlink_socket create_socket_perms;
+    access_telux_files($1)
+    device_rw_socket_files($1, netmgrd_socket_device_t);
+    read_files_pattern($1, etc_t, etc_t);
+    telux_allow_group($1)
+    telux_allow_qmi_client($1)
+')
+
+# Cv2x client interface
+# @brief: The Cv2x client interface allow the domain to contain a cv2x radio
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_v2x',`
+    gen_require(`
+        type netmgrd_socket_device_t;
+        type cv2xIpc_sock_t;
+        type cv2xd_t;
+     ')
+    telux_allow_qmi_client($1)
+    access_telux_files($1)
+    device_rw_socket_files($1, netmgrd_socket_device_t)
+
+    #permission for creating sock to get MTU in radio
+    allow $1 self:udp_socket create_socket_perms;
+
+    #cv2x-daemon IPC support
+    allow $1 cv2xd_t:unix_stream_socket { connectto };
+    device_rw_socket_files($1, cv2xIpc_sock_t)
+    allow $1 self:process signal;
+')
+
+# Config client interface
+# @brief: The Config client interface allow the domain to contain a config manager
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_config',`
+    telux_allow_group($1)
+
+    access_telux_files($1)
+
+    # For socket communication: /etc/nsswitch.conf, /etc/group for getgrnam
+    read_files_pattern($1, etc_t, etc_t);
+')
+
+# Platform time client interface
+# @brief: The Platform time client interface allow the domain to contain a time manager
+# client by providing necessary permissions for its operation.
+#
+# Parameters:
+#   1) Domain context
+
+interface(`telux_allow_platform_time',`
+    # only need location permissions for now
+    telux_allow_loc($1)
+')
