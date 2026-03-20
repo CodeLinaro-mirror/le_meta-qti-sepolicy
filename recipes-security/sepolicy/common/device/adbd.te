@@ -225,3 +225,50 @@ type usb_bind_tmp_t;
 files_tmp_file(usb_bind_tmp_t)
 files_tmp_filetrans(usb_t,usb_bind_tmp_t,{ file dir })
 allow usb_t usb_bind_tmp_t:file manage_file_perms;
+
+mls_file_read_all_levels(adbd_t)
+mls_file_write_all_levels(adbd_t)
+dev_write_kmsg(adbd_initrc_t)
+
+gen_require(`
+    type cgroup_t;
+    type debugfs_t;
+    type event_device_t;
+    type fs_t;
+    type port_bridge_usb_device_t;
+    type tmp_t;
+    type tmpfs_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type pmsg_device_t;
+    type image_variant_sysfs_t;
+    type overlay_t;
+    type usbfs_t;
+')
+allow usb_t cgroup_t:filesystem getattr;
+
+userdebug_or_eng(`
+    allow usb_t debugfs_t:dir search;
+    allow usb_t debugfs_t:filesystem getattr;
+')
+allow usb_t event_device_t:chr_file getattr;
+allow usb_t fs_t:filesystem getattr;
+allow usb_t port_bridge_usb_device_t:chr_file relabel_chr_file_perms;
+allow usb_t self:capability fowner;
+
+allow usb_t tmp_t:dir { add_entry_dir_perms del_entry_dir_perms };
+allow usb_t tmp_t:file { write_file_perms create_file_perms delete_file_perms };
+allow usb_t tmpfs_t:filesystem getattr;
+allow usb_t tmpfs_t:dir add_entry_dir_perms;
+allow usb_t socket_device_t:dir search;
+allow usb_t leprop_sock_t:sock_file write;
+allow usb_t leprop_t:unix_stream_socket connectto;
+allow adbd_initrc_t adbd_initrc_exec_t:file read_file_perms;
+
+allow usb_t pmsg_device_t:chr_file rw_chr_file_perms;
+allow usb_t image_variant_sysfs_t:dir search;
+allow usb_t image_variant_sysfs_t:file read_file_perms;
+
+allow adbd_initrc_t overlay_t:dir list_dir_perms;
+allow usb_t overlay_t:dir setattr_dir_perms;
+allow usb_t usbfs_t:dir getattr_dir_perms;

@@ -36,6 +36,7 @@ init_vendor_domain(time_daemon_t, time_daemon_exec_t)
 gen_require(`
     type default_t;
     type syslogd_var_run_t;
+    type qmi_fw_vendor_t;
 ')
 
 logging_send_syslog_msg(time_daemon_t)
@@ -57,3 +58,4 @@ allow time_daemon_t self:process signal;
 allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
 allow time_daemon_t self:unix_stream_socket { accept listen };
 allow time_daemon_t syslogd_var_run_t:dir search;
+allow time_daemon_t qmi_fw_vendor_t:file read_file_perms;

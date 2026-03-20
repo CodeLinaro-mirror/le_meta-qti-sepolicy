@@ -24,6 +24,9 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(cdsprpcd , 1.0)
 
@@ -42,6 +45,9 @@ gen_require(`
     type qdsp_device_t;
     type xdsp_device_t;
     type system_dmabuf_device_t;
+    type overlay_t;
+    type syslogd_runtime_t;
+    type device_t;
 ')
 
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -67,3 +73,28 @@ rw_chr_files_pattern(cdsprpcd_t, device_t, xdsp_device_t);
 
 #allow cdsprpcd_t to access /dev/dma_heap/system
 allow cdsprpcd_t system_dmabuf_device_t:chr_file read_chr_file_perms;
+
+gen_require(`
+    type rfsa_adsp_lib_t;
+')
+
+# read and watch permissions to cdsprpcd
+allow cdsprpcd_t adsprpcd_t:dir { read watch };
+
+allow cdsprpcd_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+allow cdsprpcd_t rfsa_adsp_lib_t:file read_file_perms;
+
+allow cdsprpcd_t overlay_t:dir search_dir_perms;
+allow cdsprpcd_t syslogd_runtime_t:dir search_dir_perms;
+allow cdsprpcd_t device_t:chr_file read_chr_file_perms;
+allow cdsprpcd_t device_t:dir { getattr watch };
+
+userdebug_or_eng(`
+    gen_require(`
+        type devlog_t;
+        type syslogd_t;
+    ')
+
+    allow cdsprpcd_t devlog_t:sock_file write_file_perms;
+    allow cdsprpcd_t syslogd_t:unix_dgram_socket sendto;
+')

@@ -1,0 +1,12 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(gstreamer, 1.0)
+
+gen_require(`
+    type initrc_t;
+    type gst_data_t;
+')
+
+# Allow initrc_t map gstreamer cache files
+allow initrc_t gst_data_t:file map;

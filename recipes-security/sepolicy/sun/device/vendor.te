@@ -1,0 +1,26 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit post_boot_script_t self:capability dac_override;
+filetrans_pattern(post_boot_script_t, perf_hal_data_t, perf_hal_data_scaling_t, file)
+
+gen_require(`
+    type etc_t;
+    type overlay_t;
+    type modules_object_t;
+    type ts_hugepage_sysfs_t;
+    type sys_power_sysfs_t;
+    type perf_hal_data_t;
+    type perf_hal_data_scaling_t;
+')
+
+allow post_boot_script_t etc_t:file read_file_perms;
+allow post_boot_script_t ts_hugepage_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t ts_hugepage_sysfs_t:file { create write_file_perms };
+allow post_boot_script_t sys_power_sysfs_t:dir add_entry_dir_perms;
+allow post_boot_script_t sys_power_sysfs_t:file create;
+allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
+allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;
+allow touch_script_t modules_object_t:dir search;
+allow touch_script_t modules_object_t:file getattr;
+allow touch_script_t overlay_t:dir search;

@@ -1,0 +1,22 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit usb_t kernel_t:system { module_request };
+dontaudit usb_t self:capability { sys_admin dac_override dac_read_search };
+
+gen_require(`
+    type overlay_t;
+')
+
+allow adbd_initrc_t overlay_t:dir { add_entry_dir_perms setattr };
+
+userdebug_or_eng(`
+    gen_require(`
+        type adbd_t;
+        type rfsa_adsp_lib_t;
+    ')
+
+    allow adbd_t self:lockdown confidentiality;
+    allow adbd_t rfsa_adsp_lib_t:dir rw_dir_perms;
+    allow adbd_t rfsa_adsp_lib_t:file manage_file_perms;
+')

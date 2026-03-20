@@ -1,0 +1,11 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Allow open/write permission on event_device_t file
+gen_require(`
+    type event_device_t;
+')
+
+userdebug_or_eng(`
+allow qnetmgrd_t event_device_t:chr_file write_file_perms;
+')

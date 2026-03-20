@@ -1,6 +1,0 @@
-# Copyright (c) 2023-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-/usr/bin/DSP_service      --      gen_context(system_u:object_r:dsp_service_exec_t,s0)
-/dev/fastrpc-cdsp         -c      gen_context(system_u:object_r:qdsp_device_t,s0)
-/dev/fastrpc-cdsp-secure  -c      gen_context(system_u:object_r:xdsp_device_t,s0)

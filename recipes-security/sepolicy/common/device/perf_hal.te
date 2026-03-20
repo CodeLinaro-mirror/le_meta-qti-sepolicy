@@ -29,6 +29,9 @@
 #IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 #OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 #IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(perf_hal, 1.0)
 
@@ -63,6 +66,7 @@ gen_require(`
     type post_boot_script_t;
     type pmqos_device_t;
     type pmsg_device_t;
+    type cpu_sysfs_t;
 ')
 
 #etc files
@@ -144,3 +148,6 @@ dontaudit perf_hal_t self:capability { dac_override dac_read_search };
 
 leprop_rw_props(perf_hal_t);
 leprop_rw_props(post_boot_script_t);
+
+allow perf_hal_t cpu_sysfs_t:dir list_dir_perms;
+allow perf_hal_t cpu_sysfs_t:file rw_file_perms;

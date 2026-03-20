@@ -1,0 +1,62 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type default_context_t;
+    type file_context_t;
+    type var_cache_t;
+    type etc_t;
+    type overlay_t;
+    type var_spool_t;
+    type var_t;
+    type kernel_t;
+    type unconfined_mount_t;
+    type adreno_lib_t;
+')
+
+allow mount_copybind_t default_context_t:dir search;
+allow mount_copybind_t file_context_t:dir search;
+allow mount_copybind_t file_context_t:file mmap_read_file_perms;
+allow mount_copybind_t var_cache_t:dir getattr;
+allow mount_copybind_t var_spool_t:dir getattr;
+
+allow mount_t etc_t:dir mounton;
+allow mount_t overlay_t:chr_file unlink;
+
+allow mount_t var_cache_t:dir mounton;
+
+allow mount_t var_spool_t:dir mounton;
+allow mount_t var_t:chr_file unlink;
+
+#TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
+allow mount_t var_t:dir manage_dir_perms;
+allow mount_t var_t:file manage_file_perms;
+
+#TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
+allow mount_t overlay_t:dir manage_dir_perms;
+allow mount_t overlay_t:file manage_file_perms;
+
+allow unconfined_mount_t overlay_t:dir search;
+
+# Suppress AVC denial for kernel process setsched access due to a mlsconstain violation
+dontaudit unconfined_mount_t kernel_t:process setsched;
+
+allow mount_t adreno_lib_t:file mounton;
+
+# Allow mount operations for SD card
+gen_require(`
+    type sdcard_t;
+    type unlabeled_t;
+    type unconfined_mount_t;
+')
+userdebug_or_eng(`
+    # Allow mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow mount_t unlabeled_t:filesystem { relabelfrom mount };
+    # Allow unconfined_mount_t to relabel from unlabeled filesystem and mount to sdcard_t
+    allow unconfined_mount_t unlabeled_t:filesystem { relabelfrom mount };
+')
+allow mount_t sdcard_t:filesystem { relabelto mount };
+allow mount_t sdcard_t:dir { mounton search getattr };
+allow unconfined_mount_t sdcard_t:filesystem { relabelto mount };
+allow unconfined_mount_t sdcard_t:dir { mounton search getattr };
+

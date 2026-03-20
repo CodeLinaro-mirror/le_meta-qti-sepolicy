@@ -1,0 +1,30 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type overlay_t;
+    type sysfs_vblank_t;
+    type zspage_sysfs_t;
+    type zs_handle_sysfs_t;
+    type sys_power_sysfs_t;
+    type fbe_secure_data_t;
+    type gst_data_t;
+    type qmmf_data_file_t;
+    type drm_card_sysfs_t;
+')
+
+allow initrc_t overlay_t:dir manage_dir_perms;
+allow initrc_t zspage_sysfs_t:dir search;
+allow initrc_t zspage_sysfs_t:file { getattr setattr };
+allow initrc_t zs_handle_sysfs_t:dir search;
+allow initrc_t zs_handle_sysfs_t:file { getattr setattr };
+allow initrc_t sys_power_sysfs_t:dir search;
+allow initrc_t sys_power_sysfs_t:file { rw_file_perms setattr };
+allow initrc_t fbe_secure_data_t:dir create_dir_perms;
+allow initrc_t gst_data_t:file mmap_read_inherited_file_perms;
+allow initrc_t qmmf_data_file_t:dir search_dir_perms;
+allow initrc_t drm_card_sysfs_t:dir search_dir_perms;
+allow initrc_t drm_card_sysfs_t:file read_file_perms;
+
+allow init_t overlay_t:dir manage_dir_perms;
+allow init_t sysfs_vblank_t:file write_file_perms;

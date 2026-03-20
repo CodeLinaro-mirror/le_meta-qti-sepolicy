@@ -1,5 +1,0 @@
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-# SPDX-License-Identifier: BSD-3-Clause-Clear
-
-/usr/bin/containertest          gen_context(system_u:object_r:launchertest_exec_t,s0)
-/usr/bin/minijail_child_test    gen_context(system_u:object_r:containertest_exec_t,s0)

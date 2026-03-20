@@ -1,0 +1,71 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type default_context_t;
+    type file_context_t;
+    type etc_t;
+    type overlay_t;
+    type var_spool_t;
+    type var_t;
+    type modules_conf_t;
+    type udev_rules_t;
+    type systemd_logind_var_lib_t;
+    type dbusd_etc_t;
+    type post_boot_script_exec_t;
+    type leprop_system_data_t;
+    type adbd_system_data_t;
+    type thermal_etc_t;
+    type shadow_t;
+')
+
+allow mount_copybind_t default_context_t:dir search;
+allow mount_t default_context_t:file { getattr open read };
+allow mount_t file_context_t:file read_file_perms;
+allow mount_copybind_t file_context_t:dir search;
+allow mount_copybind_t file_context_t:file mmap_read_file_perms;
+allow mount_copybind_t var_spool_t:dir getattr;
+
+allow mount_t etc_t:dir mounton;
+allow mount_t var_spool_t:dir mounton;
+
+allow mount_t modules_conf_t:dir read;
+allow mount_t udev_rules_t:dir read;
+allow mount_t systemd_logind_var_lib_t:dir { create read };
+
+allow mount_t dbusd_etc_t:file { getattr open read };
+allow mount_t modules_conf_t:file { getattr open read };
+allow mount_t udev_rules_t:file { getattr open read };
+allow mount_t post_boot_script_exec_t:file { open read getattr };
+allow mount_t overlay_t:chr_file unlink;
+
+
+allow mount_t overlay_t:dir manage_dir_perms;
+allow mount_t overlay_t:file manage_file_perms;
+
+allow mount_t var_t:dir manage_dir_perms;
+allow mount_t var_t:file manage_file_perms;
+
+auth_read_shadow(mount_t)
+allow mount_t leprop_system_data_t:file read_file_perms;
+allow mount_t dbusd_etc_t:dir read;
+allow mount_t adbd_system_data_t:file read_file_perms;
+allow mount_t thermal_etc_t:file read_file_perms;
+
+# The /etc partition is read-only and reserved for sensitive configuration files.
+# Typically, a volatile bind mechanism is used, where the framework copies /etc
+# into a writable partition such as systemrw. However, on the Aspen target, the
+# systemrw partition is not available, so this approach cannot be applied. To
+# handle writable files under /etc, Aspen uses an overlay filesystem, with the
+# mount service directing writes to /overlay/etc. Type transition rules are not
+# functioning as expected because the test binaries, such as ssc_sensor_info etc,
+# run under the bin_t domain. As a result, we are providing permissions to the
+# generic etc_t type to allow file creation inside /etc for debugging purposes.
+# Adding policies in userdebug flag only for this particular target.
+#
+# Importantly, this does not mean full access is given to etc_t; only minimal
+# permissions required for debugging are provided.
+
+userdebug_or_eng(`
+    allow mount_t etc_t:file { create write append };
+')

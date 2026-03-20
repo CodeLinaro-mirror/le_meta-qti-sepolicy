@@ -60,7 +60,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022,2025 Qualcomm Innovation Center, Inc. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 # Systemd policies
@@ -76,24 +76,23 @@ ifdef(`init_systemd',`
         mls_file_downgrade(init_t)
     ')
 
-    # Should be included in later upstream versions
-    #allow init_t {
-    #    init_var_run_t
-    #}:service { status start stop };
-
-    #fs_search_cgroup_dirs(daemon)
-    #allow init_t daemon:unix_stream_socket create_stream_socket_perms;
-    gen_require(`
-        type adbd_system_data_t;
-        type usb_dev_t;
-        type qvr_data_t;
+    optional_policy(`
+        gen_require(`
+            type adbd_system_data_t;
+            type usb_dev_t;
+        ')
+        allow init_t adbd_system_data_t:file write;
+        # allow busybox init to search usb_dev directory
+        allow init_t usb_dev_t:dir search;
     ')
-    allow init_t adbd_system_data_t:file write;
-#allow busybox init to search usb_dev directory
-    allow init_t usb_dev_t:dir search;
-    data_mount_user_dir(init_t)
-    data_mount_volatile_bind(init_t)
-    persist_mount_dir(init_t)
+
+    optional_policy(`
+        data_mount_user_dir(init_t)
+        data_mount_volatile_bind(init_t)
+    ')
+    optional_policy(`
+        persist_mount_dir(init_t)
+    ')
 
     gen_require(`
         type system_data_t;
@@ -103,7 +102,7 @@ ifdef(`init_systemd',`
     allow init_t system_data_t:dir manage_dir_perms;
     allow init_t kernel_t:key manage_key_perms;
 
-#allow modprobe to load kernel modules
+    # allow modprobe to load kernel modules
     allow init_t kmod_t:process2 nnp_transition;
 
     mls_key_write_all_levels(init_t)
@@ -130,7 +129,28 @@ gen_require(`
 #  without a unique context. Please update the file that launches the
 #  service with a unique selinux context before allowing access to these
 #  attributes.
-neverallow initrc_t { user_data -sxr_data_t -qvr_data_t -gst_data_t }:file rw_file_perms;
+attribute initrc_data_rw_exception;
+optional_policy(`
+    gen_require(`
+        type qvr_data_t;
+    ')
+    typeattribute qvr_data_t initrc_data_rw_exception;
+    allow init_t qvr_data_t:dir list_dir_perms;
+    allow init_t qvr_data_t:file {manage_file_perms};
+')
+optional_policy(`
+    gen_require(`
+        type sxr_data_t;
+    ')
+    typeattribute sxr_data_t initrc_data_rw_exception;
+')
+optional_policy(`
+    gen_require(`
+        type gst_data_t;
+    ')
+    typeattribute gst_data_t initrc_data_rw_exception;
+')
+neverallow initrc_t { user_data -initrc_data_rw_exception }:file rw_file_perms;
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 
@@ -144,17 +164,15 @@ allow initrc_t encryption_control_t:file rw_file_perms;
 allow initrc_t encryption_control_t:file { setattr };
 allow initrc_t sysfs_vblank_t:file read_file_perms;
 
-#allowing init process to access overlay
-gen_require(`
-    type overlay_t;
+# allowing init process to access overlay
+optional_policy(`
+    gen_require(`
+        type overlay_t;
+    ')
+    allow init_t overlay_t:dir list_dir_perms;
+    allow init_t overlay_t:chr_file read_chr_file_perms;
 ')
-allow init_t overlay_t:dir list_dir_perms;
-allow init_t qvr_data_t:dir list_dir_perms;
-allow init_t qvr_data_t:file {manage_file_perms};
 
-#userdebug_or_eng(`
-#    reboot_write_fifo_files_reboot_device(init_t)
-#')
 #
 # This is only needed in newer kernel which support
 # nnp_transistion as sepolicy code can get kernel
@@ -164,19 +182,44 @@ allow init_t qvr_data_t:file {manage_file_perms};
 allow init_t initrc_t:process2 nnp_transition;
 allow initrc_t snd_card_state_t:file { getattr setattr };
 
-gen_require(`
-    type initrc_t;
-    type binderfs_t;
-    type hwbinder_device_t;
-    type binder_device_t;
-    type vndbinder_device_t;
-    type gpumodel_t;
-    type servicemanager_t;
+optional_policy(`
+    gen_require(`
+        type binderfs_t;
+        type hwbinder_device_t;
+        type vndbinder_device_t;
+        type binder_device_t;
+    ')
+    allow initrc_t binderfs_t:dir { getattr search };
+    allow initrc_t hwbinder_device_t:chr_file { getattr setattr };
+    allow initrc_t vndbinder_device_t:chr_file { getattr setattr };
+    allow initrc_t binder_device_t:chr_file { getattr setattr };
 ')
 
-allow initrc_t binderfs_t:dir { getattr search };
-allow initrc_t hwbinder_device_t:chr_file { getattr setattr };
-allow initrc_t vndbinder_device_t:chr_file { getattr setattr };
-allow initrc_t binder_device_t:chr_file { getattr setattr };
-allow initrc_t gpumodel_t:file { getattr open read };
-allow initrc_t servicemanager_t:binder call;
+optional_policy(`
+    gen_require(`
+        type gpumodel_t;
+    ')
+    allow initrc_t gpumodel_t:file { getattr open read };
+')
+
+optional_policy(`
+    gen_require(`
+        type servicemanager_t;
+    ')
+    allow initrc_t servicemanager_t:binder call;
+')
+
+optional_policy(`
+    gen_require(`
+        type rfsa_adsp_lib_t;
+    ')
+    allow initrc_t rfsa_adsp_lib_t:dir search_dir_perms;
+')
+
+gen_require(`
+    type binderfs_t;
+    type fsadm_t;
+    type overlay_t;
+')
+allow init_t binderfs_t:dir getattr_dir_perms;
+dontaudit init_t binderfs_t:filesystem remount;
