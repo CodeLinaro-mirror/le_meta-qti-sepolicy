@@ -1,0 +1,10 @@
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type dev_pmsg0_t;
+genfscon sysfs /dev/pmsg0 gen_context(system_u:object_r:device_t,s0)
+dev_associate_sysfs(dev_pmsg0_t)
+
+type image_size_sysfs_t;
+genfscon sysfs /power/image_size gen_context(system_u:object_r:image_size_sysfs_t,s0)
+dev_associate_sysfs(image_size_sysfs_t)

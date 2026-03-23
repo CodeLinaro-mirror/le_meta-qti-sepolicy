@@ -1,0 +1,71 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(qcrosvm, 1.0)
+
+type qcrosvm_t;
+type qcrosvm_exec_t;
+type qcrosvm_boot_t;
+
+type gunyah_device_t;
+
+init_daemon_domain(qcrosvm_t, qcrosvm_exec_t)
+
+gen_require(`
+    type trace_marker_t;
+    type shell_exec_t;
+    type proc_t;
+    type initrc_t;
+    type etc_t;
+    type locale_t;
+')
+
+userdebug_or_eng(`
+    gen_require(`
+        type debugfs_t;
+    ')
+     allow qcrosvm_t debugfs_t:file { read open execute getattr write };
+')
+
+#============= qcrosvm_t ==============
+corenet_rw_tun_tap_dev(qcrosvm_t)
+
+fs_rw_tracefs_files(qcrosvm_t)
+files_rw_tmp_files(qcrosvm_t)
+files_rw_generic_tmp_sockets(qcrosvm_t)
+
+allow qcrosvm_t shell_exec_t:file { read open execute execute_no_trans };
+
+allow qcrosvm_t proc_t:file { getattr read write open };
+
+allow qcrosvm_t trace_marker_t:file { write open };
+
+# connect to /tmp/linux-vm2-disp-skt
+allow qcrosvm_t initrc_t:unix_stream_socket { accept connectto listen };
+
+#AVC avc:  denied  { read } for  pid=1609 comm="qcrosvm" name="localtime" 
+allow qcrosvm_t etc_t:lnk_file { read_lnk_file_perms };
+
+#AVC avc:  denied  { search } for  pid=2982 comm="qcrosvm" name="zoneinfo"
+allow qcrosvm_t locale_t:dir search_dir_perms;
+allow qcrosvm_t locale_t:file { read_file_perms map };
+
+#============= gunyah_device_t ==============
+dev_node(gunyah_device_t)
+rw_chr_files_pattern(qcrosvm_t, device_t, gunyah_device_t)
+
+# ========== local ==========
+allow qcrosvm_t self:lockdown confidentiality;
+
+logging_send_syslog_msg(qcrosvm_t)
+
+allow qcrosvm_t self:tun_socket create;
+allow qcrosvm_t self:udp_socket { create ioctl };
+
+allow qcrosvm_t self:process { getsched sigkill signal };
+
+allow qcrosvm_t self:capability { net_admin dac_override dac_read_search };
+allow qcrosvm_t self:unix_stream_socket { accept connectto listen };
+
+allow qcrosvm_t qcrosvm_boot_t:lnk_file read;
+read_files_pattern(qcrosvm_t, qcrosvm_boot_t, qcrosvm_boot_t)

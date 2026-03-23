@@ -1,0 +1,98 @@
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Changes from Qualcomm Innovation Center are provided under the following license:
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+########################################
+#
+# Declarations
+#
+
+#domain Transition from unconfined_t to weston_t when executing from adb shell
+userdebug_or_eng(`
+    gen_require(`
+        role unconfined_r;
+    ')
+    role unconfined_r types weston_t;
+')
+
+gen_require(`
+ type qmmf_data_file_t;
+ type perf_hal_socket_t;
+ type perf_hal_t;
+ type tuicoreservice_vendor_t;
+ type pmsg_device_t;
+ type initrc_t;
+ type udev_t;
+ type dev_dri_t;
+ type servicemanager_t;
+ type binderfs_t;
+ type binder_device_t;
+ type init_runtime_t;
+ type syslogd_runtime_t;
+ type devlog_t;
+ type syslogd_t;
+ type unreserved_port_t;
+ type node_t;
+')
+
+#For weston-terminal
+allow weston_t user_home_dir_t:dir { add_entry_dir_perms create remove_name };
+allow weston_t user_home_dir_t:file { create mmap_rw_file_perms lock rename };
+allow weston_t self:process { execmem getsched };
+
+#manage binder call
+servicemanager_binder_use(weston_t)
+servicemanager_binder_call(weston_t servicemanager_t)
+allow weston_t binderfs_t:dir search;
+allow weston_t binder_device_t:chr_file { map };
+
+# Weston needs to access buffer fd passed from qmmf-server.
+allow weston_t self:fd use;
+
+userdebug_or_eng(`
+     gen_require(`
+        type adbd_t;
+    ')
+    allow weston_t syslogd_runtime_t:dir search;
+    allow weston_t devlog_t:sock_file write;
+    allow weston_t syslogd_t:unix_dgram_socket sendto;
+    allow weston_t adbd_t:unix_stream_socket { connectto create_stream_socket_perms };
+')
+
+allow weston_t fonts_cache_t:file { map manage_file_perms };
+allow weston_t default_t:file { read_file_perms };
+allow weston_t persist_t:dir getattr;
+allow weston_t self:fifo_file read;
+allow weston_t data_t:file read_file_perms;
+allow weston_t init_runtime_t:dir search;
+
+allow weston_t self:capability dac_read_search;
+allow weston_t unreserved_port_t:tcp_socket name_bind;
+

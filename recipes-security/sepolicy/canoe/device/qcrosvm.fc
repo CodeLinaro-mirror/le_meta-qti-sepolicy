@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/qcrosvm     --     gen_context(system_u:object_r:qcrosvm_exec_t,s0)
+
+/dev/gunyah          -c     gen_context(system_u:object_r:gunyah_device_t,s0)
