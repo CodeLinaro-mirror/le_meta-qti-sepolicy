@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 gen_require(`
-    type cdsprpcd_t;
+    type adsprpcd_t;
     type event_device_t;
 ')
 
-allow cdsprpcd_t event_device_t:chr_file read;
+allow adsprpcd_t event_device_t:chr_file read_chr_file_perms;
+

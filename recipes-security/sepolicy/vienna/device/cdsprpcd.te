@@ -3,7 +3,8 @@
 
 gen_require(`
     type cdsprpcd_t;
-    type event_device_t;
+    type kernel_t;
 ')
 
-allow cdsprpcd_t event_device_t:chr_file read;
+allow cdsprpcd_t kernel_t:unix_dgram_socket sendto;
+

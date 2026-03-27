@@ -1,9 +1,5 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-gen_require(`
-    type cdsprpcd_t;
-    type event_device_t;
-')
+/data/vendor/display(/.*)?       gen_context(system_u:object_r:weston_data_t,s0)
 
-allow cdsprpcd_t event_device_t:chr_file read;

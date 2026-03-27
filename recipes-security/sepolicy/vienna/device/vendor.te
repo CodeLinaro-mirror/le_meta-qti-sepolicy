@@ -9,3 +9,10 @@ allow post_boot_script_t etc_t:file read_file_perms;
 
 type glinkpkt_q6_audio_ctrl_t;
 files_type(glinkpkt_q6_audio_ctrl_t)
+
+type glinkpkt_wm_qsh_device_t;
+dev_node(glinkpkt_wm_qsh_device_t);
+
+# SSR dump file type for crash dumps
+type ssrdump_data_file_t;
+files_type(ssrdump_data_file_t)
