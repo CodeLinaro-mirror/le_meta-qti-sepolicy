@@ -45,3 +45,23 @@ interface(`adsprpcd_files_access',`
     allow $1 adsprpcd_t:file { read open getattr };
     allow $1 adsprpcd_t:dir  { search read open getattr };
 ')
+
+########################################
+## <summary>
+##	Allow the specified domain to read adsprpcd files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`adsprpcd_files_read',`
+    gen_require(`
+        type adsprpcd_t;
+    ')
+
+    allow $1 adsprpcd_t:dir list_dir_perms;
+    allow $1 adsprpcd_t:file read_file_perms;
+')
+

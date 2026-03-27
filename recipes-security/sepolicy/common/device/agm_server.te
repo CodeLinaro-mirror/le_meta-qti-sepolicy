@@ -47,7 +47,15 @@ gen_require(`
         ifdef(`init_systemd', `
             class dbus send_msg;
         ')
-
+    type adsprpcd_t;
+    type system_dmabuf_device_t;
+    type binderfs_t;
+    type binder_device_t;
+    type servicemanager_t;
+    type audio_data_file_t;
+    type tmp_t;
+    type etc_t;
+    type initrc_t;
 ')
 init_vendor_domain(agm_server_t, agm_server_exec_t)
 
@@ -90,3 +98,13 @@ ifdef(`init_systemd', `
     allow agm_server_t self:dbus send_msg;
 ')
 
+allow agm_server_t adsprpcd_t:dir { read open getattr search watch };
+allow agm_server_t system_dmabuf_device_t:chr_file { read write open map ioctl };
+allow agm_server_t binderfs_t:dir { search read write getattr };
+allow agm_server_t binder_device_t:chr_file { read write open map ioctl getattr };
+allow agm_server_t servicemanager_t:binder { call transfer };
+allow agm_server_t audio_data_file_t:dir { search getattr open read };
+allow agm_server_t etc_t:file { read open getattr map };
+allow agm_server_t tmp_t:dir { search getattr write add_name };
+allow initrc_t agm_server_t:binder { call transfer };
+allow agm_server_t tmp_t:file { create open write };

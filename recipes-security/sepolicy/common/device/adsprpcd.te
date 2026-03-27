@@ -77,6 +77,8 @@ gen_require(`
     type device_t;
     type kernel_t;
     type event_device_t;
+    type tmp_t;
+    type agm_server_t;
 ')
 
 allow adsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -147,3 +149,7 @@ mls_file_read_all_levels(adsprpcd_t)
 mls_file_read_to_clearance(adsprpcd_t)
 mls_trusted_object(adsprpcd_t)
 allow adsprpcd_t event_device_t:chr_file read;
+allow adsprpcd_t sysfs_t:dir  { read open getattr search watch };
+allow adsprpcd_t adsprpcd_t:fifo_file { read write open };
+allow agm_server_t adsprpcd_t:dir { read open getattr search watch };
+allow adsprpcd_t tmp_t:dir { read open getattr search watch };

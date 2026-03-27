@@ -117,6 +117,8 @@ gen_require(`
     type wifi_system_data_t;
     type storage_disk_device_t;
     type drm_card_sysfs_t;
+    type dosfs_t;
+    type init_runtime_t;
 ')
 
 mls_trusted_socket(kernel_t)
@@ -244,3 +246,9 @@ allow udev_t proc_psi_t:dir list_dir_perms;
 allow udev_t proc_psi_t:file rw_file_perms;
 allow udev_t drm_card_sysfs_t:dir list_dir_perms;
 allow udev_t drm_card_sysfs_t:file read_file_perms;
+allow systemd_logind_t proc_psi_t:file { read open getattr write };
+allow syslogd_t proc_psi_t:dir { read open getattr search watch };
+allow syslogd_t proc_psi_t:file { read open getattr write };
+allow tftp_server_t dosfs_t:dir { search open read getattr };
+allow tftp_server_t dosfs_t:file { open read getattr };
+allow udev_t init_runtime_t:file { open read getattr };

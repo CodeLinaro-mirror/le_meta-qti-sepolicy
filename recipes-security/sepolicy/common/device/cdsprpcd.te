@@ -48,6 +48,8 @@ gen_require(`
     type overlay_t;
     type syslogd_runtime_t;
     type device_t;
+    type sysfs_t;
+    type tmp_t;
 ')
 
 allow cdsprpcd_t self:unix_dgram_socket { read write create bind listen ioctl connect };
@@ -98,3 +100,9 @@ userdebug_or_eng(`
     allow cdsprpcd_t devlog_t:sock_file write_file_perms;
     allow cdsprpcd_t syslogd_t:unix_dgram_socket sendto;
 ')
+
+allow cdsprpcd_t sysfs_t:dir { getattr watch read search };
+allow cdsprpcd_t sysfs_t:file { write open read getattr };
+allow cdsprpcd_t tmp_t:dir { search getattr add_name remove_name write read watch };
+allow cdsprpcd_t tmp_t:file { create open read write getattr unlink };
+allow cdsprpcd_t self:fifo_file { read write getattr ioctl };
