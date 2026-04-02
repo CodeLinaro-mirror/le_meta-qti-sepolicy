@@ -55,6 +55,7 @@ gen_require(`
     type lib_t;
     type adsprpcd_t;
     type sensors_persist_data_t;
+    type rfsa_adsp_lib_t;
 ')
 
 #allow sscrpcd_t to acces /dev/adsprpcd-smd-secure
