@@ -237,6 +237,7 @@ gen_require(`
 ')
 
 allow NetworkManager_t hostapd_tmp_t:file { rw_file_perms };
+dontaudit NetworkManager_t self:capability { sys_admin };
 
 ###Ezmesh Initscripts###
 type wlan_ezmesh_initrc_exec_t;
