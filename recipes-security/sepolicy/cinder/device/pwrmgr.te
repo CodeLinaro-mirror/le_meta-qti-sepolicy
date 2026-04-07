@@ -1,8 +1,6 @@
 #Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(pwrmgr, 1.0)
-
 type pwrmgr_conf_t;
 
 gen_require(`
