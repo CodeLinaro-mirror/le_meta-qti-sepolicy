@@ -3,7 +3,20 @@
 
 gen_require(`
     type loc_hald_t;
+    type engine_service_t;
+    type edgnss_daemon_t;
 ')
+
+#loc_hald_t
 
 #Allow permission to /sys/power/wake_lock and wake_unlock
 allow loc_hald_t sysfs_t:file { write append };
+
+
+#engine_service_t
+allow engine_service_t self:qipcrtr_socket create_socket_perms;
+leprop_rw_props(engine_service_t)
+
+
+#edgnss_daemon_t
+allow edgnss_daemon_t unreserved_port_t:tcp_socket name_connect;

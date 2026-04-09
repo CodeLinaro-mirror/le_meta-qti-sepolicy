@@ -1,0 +1,11 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Label the smcservice binary so systemd can transition into smcservice_t
+/usr/bin/smcservice        --      gen_context(system_u:object_r:smcservice_exec_t,s0)
+
+# Label the data directory and all contents (recursively)
+/dev/smc_client_dev           -c    gen_context(system_u:object_r:smc_client_dev_t,s0)
+/dev/ttyHS1                   -c    gen_context(system_u:object_r:vendor_uart_hs1_dev,s0)
+/sys/class/coproc/smc_state   --    gen_context(system_u:object_r:vendor_sysfs_smc_state,s0)
+/sys/bus/platform/devices/a98000.serial/hs_uart_operation  -- gen_context(system_u:object_r:vendor_sysfs_smc_uart,s0)
