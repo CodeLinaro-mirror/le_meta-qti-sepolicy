@@ -29,6 +29,7 @@ policy_module(agm_server, 1.0)
 
 type agm_server_t;
 type agm_server_exec_t;
+
 gen_require(`
     type default_t;
     type sound_device_t;
@@ -108,3 +109,7 @@ allow agm_server_t etc_t:file { read open getattr map };
 allow agm_server_t tmp_t:dir { search getattr write add_name };
 allow initrc_t agm_server_t:binder { call transfer };
 allow agm_server_t tmp_t:file { create open write };
+
+
+## for agm test app
+allow unconfined_t agm_server_t:binder { call transfer };
