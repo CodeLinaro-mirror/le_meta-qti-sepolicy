@@ -1,0 +1,15 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type proc_psi_t;
+    type overlay_t;
+    type kernel_t;
+    type init_runtime_t;
+')
+
+allow systemd_modules_load_t kernel_t:process setsched;
+allow systemd_logind_t proc_psi_t:file write_file_perms;
+allow systemd_update_done_t overlay_t:dir rw_dir_perms;
+allow udev_t init_runtime_t:file read_file_perms;
+allow udev_t init_runtime_t:lnk_file read_lnk_file_perms;

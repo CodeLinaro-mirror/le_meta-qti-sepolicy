@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type overlay_t;
+')
+
+allow initrc_t overlay_t:dir manage_dir_perms;
+allow init_t overlay_t:dir manage_dir_perms;
