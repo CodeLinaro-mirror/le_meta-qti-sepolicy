@@ -1,0 +1,138 @@
+# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+policy_module(agm_test, 1.0)
+
+gen_require(`
+    type boot_kpi_values_t;
+    type agm_server_t;
+    type usr_t;
+    type audio_hal_etc_t;
+    type socket_device_t;
+    type sysfs_t;
+    type syslogd_runtime_t;
+    type devlog_t;
+    type system_dmabuf_device_t;
+    type syslogd_t;
+    type adsprpcd_t;
+    type tmp_t;
+    type binderfs_t;
+    type binder_device_t;
+    type debugfs_t;
+    type servicemanager_t;
+    type etc_t;
+    type unconfined_t;
+    type pmsg_device_t;
+')
+
+# agmplay
+type agmplay_t;
+type agmplay_exec_t;
+init_vendor_domain(agmplay_t, agmplay_exec_t)
+
+allow agmplay_t boot_kpi_values_t:file { open write };
+allow agmplay_t agm_server_t:binder { call transfer };
+allow agmplay_t usr_t:file { read open getattr };
+allow agmplay_t audio_hal_etc_t:file { read open getattr };
+allow agmplay_t self:qipcrtr_socket { create bind read write setopt getattr };
+allow agmplay_t socket_device_t:dir { search getattr };
+allow agmplay_t sysfs_t:dir { read search open getattr };
+allow agmplay_t sysfs_t:file { read open getattr };
+allow agmplay_t syslogd_runtime_t:dir { search getattr };
+allow agmplay_t devlog_t:sock_file { write getattr };
+allow agmplay_t system_dmabuf_device_t:chr_file { read write open ioctl getattr };
+allow agmplay_t syslogd_t:unix_dgram_socket sendto;
+allow agmplay_t adsprpcd_t:dir { read open getattr search watch };
+allow agmplay_t tmp_t:dir { search getattr write add_name };
+allow agmplay_t tmp_t:file { create open read write getattr};
+allow agmplay_t binderfs_t:dir { search read write getattr };
+allow agmplay_t binder_device_t:chr_file { read write open map ioctl getattr };
+allow agmplay_t self:process { signal getsched };
+allow agmplay_t debugfs_t:dir { search getattr };
+allow agmplay_t servicemanager_t:binder { call transfer };
+allow agmplay_t etc_t:file { read open getattr map };
+allow agmplay_t self:fifo_file rw_fifo_file_perms;
+allow agmplay_t pmsg_device_t:chr_file { open write getattr };
+domtrans_pattern(unconfined_t, agmplay_exec_t, agmplay_t)
+
+#agmcap
+type agmcap_t;
+type agmcap_exec_t;
+init_vendor_domain(agmcap_t, agmcap_exec_t)
+
+allow agmcap_t agm_server_t:binder { call transfer };
+allow agmcap_t usr_t:file { read open getattr };
+allow agmcap_t audio_hal_etc_t:file { read open getattr };
+allow agmcap_t self:qipcrtr_socket { create bind read write setopt getattr };
+allow agmcap_t socket_device_t:dir { search getattr };
+allow agmcap_t sysfs_t:dir { read search open getattr };
+allow agmcap_t sysfs_t:file { read open getattr };
+allow agmcap_t syslogd_runtime_t:dir { search getattr };
+allow agmcap_t devlog_t:sock_file { write getattr };
+allow agmcap_t system_dmabuf_device_t:chr_file { read write open ioctl getattr };
+allow agmcap_t syslogd_t:unix_dgram_socket sendto;
+allow agmcap_t adsprpcd_t:dir { read open getattr search watch };
+allow agmcap_t tmp_t:dir { search getattr write add_name };
+allow agmcap_t tmp_t:file { create open read write getattr };
+allow agmcap_t binderfs_t:dir { search read write getattr };
+allow agmcap_t binder_device_t:chr_file { read write open map ioctl getattr };
+allow agmcap_t self:process { signal getsched };
+allow agmcap_t debugfs_t:dir { search getattr };
+allow agmcap_t servicemanager_t:binder { call transfer };
+allow agmcap_t etc_t:file { read open getattr map };
+allow agmcap_t self:fifo_file rw_fifo_file_perms;
+allow agmcap_t pmsg_device_t:chr_file { open write getattr };
+domtrans_pattern(unconfined_t, agmcap_exec_t, agmcap_t)
+
+#agmhostless
+type agmhostless_t;
+type agmhostless_exec_t;
+init_vendor_domain(agmhostless_t, agmhostless_exec_t)
+
+allow agmhostless_t agm_server_t:binder { call transfer };
+allow agmhostless_t usr_t:file { read open getattr };
+allow agmhostless_t audio_hal_etc_t:file { read open getattr };
+allow agmhostless_t self:qipcrtr_socket { create bind read write setopt getattr };
+allow agmhostless_t socket_device_t:dir { search getattr };
+allow agmhostless_t sysfs_t:dir { read search open getattr };
+allow agmhostless_t sysfs_t:file { read open getattr };
+allow agmhostless_t syslogd_runtime_t:dir { search getattr };
+allow agmhostless_t devlog_t:sock_file { write getattr };
+allow agmhostless_t system_dmabuf_device_t:chr_file { read write open ioctl getattr };
+allow agmhostless_t syslogd_t:unix_dgram_socket sendto;
+allow agmhostless_t adsprpcd_t:dir { read open getattr search watch };
+allow agmhostless_t tmp_t:dir { search getattr write add_name };
+allow agmhostless_t tmp_t:file { create open read write getattr };
+allow agmhostless_t binderfs_t:dir { search read write getattr };
+allow agmhostless_t binder_device_t:chr_file { read write open map ioctl getattr };
+allow agmhostless_t self:process { signal getsched };
+allow agmhostless_t debugfs_t:dir { search getattr };
+allow agmhostless_t servicemanager_t:binder { call transfer };
+allow agmhostless_t etc_t:file { read open getattr map };
+allow agmhostless_t self:fifo_file rw_fifo_file_perms;
+allow agmhostless_t pmsg_device_t:chr_file { open write getattr };
+domtrans_pattern(unconfined_t, agmhostless_exec_t, agmhostless_t)
