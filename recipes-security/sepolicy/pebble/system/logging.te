@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type proc_psi_t;
+')
+
+allow syslogd_t proc_psi_t:dir search_dir_perms;
+allow syslogd_t proc_psi_t:file rw_file_perms;
