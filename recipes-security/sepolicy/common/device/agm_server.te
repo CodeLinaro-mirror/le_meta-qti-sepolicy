@@ -38,6 +38,7 @@ gen_require(`
     type audio_hal_etc_acdb_t;
     type debugfs_t;
     type audio_device_t;
+    type snd_card_state_t;
     type ion_device_t;
     type proc_t;
     type hal_play_test_t;
@@ -56,6 +57,7 @@ gen_require(`
     type boot_kpi_values_t;
     type audio_data_file_t;
     type tmp_t;
+    type tmpfs_t;
     type etc_t;
 ')
 init_vendor_domain(agm_server_t, agm_server_exec_t)
@@ -77,6 +79,7 @@ allow agm_server_t audio_hal_etc_t:file read_file_perms;
 allow agm_server_t audio_hal_etc_acdb_t:dir list_dir_perms;
 allow agm_server_t audio_hal_etc_acdb_t:file read_file_perms;
 allow agm_server_t audio_device_t:chr_file rw_chr_file_perms;
+allow agm_server_t snd_card_state_t:file rw_file_perms;
 allow agm_server_t ion_device_t:chr_file read_chr_file_perms;
 allow agm_server_t self:{ socket qipcrtr_socket } create_socket_perms;
 allow agm_server_t self:process signal;
@@ -109,3 +112,4 @@ allow agm_server_t audio_data_file_t:dir { search getattr open read };
 allow agm_server_t etc_t:file { read open getattr map };
 allow agm_server_t tmp_t:dir { search getattr write add_name };
 allow agm_server_t tmp_t:file { create open write };
+allow agm_server_t tmpfs_t:dir { search getattr };
