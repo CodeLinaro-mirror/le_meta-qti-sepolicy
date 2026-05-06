@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+#To support ramdump
+/data/vendor/ramdump         -d    gen_context(system_u:object_r:ramdump_data_t,s0)
+/data/vendor/ramdump/.*      --    gen_context(system_u:object_r:ramdump_data_t,s0)

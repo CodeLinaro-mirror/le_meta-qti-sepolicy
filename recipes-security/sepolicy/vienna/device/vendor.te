@@ -3,6 +3,8 @@
 
 gen_require(`
     type etc_t;
+    type ss-ramdump_t;
+    type ramdump_data_t;
 ')
 
 allow post_boot_script_t etc_t:file read_file_perms;
@@ -16,3 +18,5 @@ dev_node(glinkpkt_wm_qsh_device_t);
 # SSR dump file type for crash dumps
 type ssrdump_data_file_t;
 files_type(ssrdump_data_file_t)
+
+allow ss-ramdump_t ramdump_data_t:dir rw_dir_perms;

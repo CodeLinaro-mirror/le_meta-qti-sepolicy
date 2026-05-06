@@ -27,5 +27,3 @@
 
 /usr/bin/btapp                       --      gen_context(system_u:object_r:btapp_exec_t,s0)
 /usr/bin/btproperty                  --      gen_context(system_u:object_r:btprop_exec_t,s0)
-
-/data/misc/bluetooth(/.*)?           --      gen_context(system_u:object_r:bt_data_t,s0)

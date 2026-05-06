@@ -1,0 +1,18 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+        type binderfs_t;
+        type perf_hal_socket_t;
+        type touch_input_device_t;
+        type zs_handle_sysfs_t;
+        type zspage_sysfs_t;
+    ')
+
+    allow unconfined_t binderfs_t:file getattr;
+    allow unconfined_t perf_hal_socket_t:sock_file getattr;
+    allow unconfined_t touch_input_device_t:file getattr;
+    allow unconfined_t zs_handle_sysfs_t:dir list_dir_perms;
+    allow unconfined_t zspage_sysfs_t:dir list_dir_perms;
+')
