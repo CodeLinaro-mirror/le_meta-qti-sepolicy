@@ -33,7 +33,6 @@ gen_require(`
         type fsadm_t;
         type storage_disk_device_t;
         type vendor_dmabuf_qseecom_heap_device_t;
-        type qseecomd_data_t;
 ')
 
 kernel_dontaudit_read_system_state(fbe_service_t)
@@ -71,4 +70,3 @@ allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
 allow fsadm_t self:lockdown integrity;
 allow fbe_service_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t self:process signal;
-allow fbe_service_t qseecomd_data_t:dir search;
