@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type sys_power_sysfs_t;
+genfscon sysfs /power  gen_context(system_u:object_r:sys_power_sysfs_t,s0)
+dev_associate_sysfs(sys_power_sysfs_t);
