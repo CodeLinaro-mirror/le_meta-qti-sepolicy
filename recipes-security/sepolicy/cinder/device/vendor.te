@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 #seems nbd driver need to do
-#need to invistagate check
+#need to investigate check
 gen_require(`
     type mount_t;
     type  kernel_t;
@@ -17,7 +17,7 @@ gen_require(`
 
 type post_boot_data_t, file_type;
 
-#type_transition initrc_t data_t:dir post_boot_data_t "post_boot";
+# set access to post_boot in post-boot-script to write boot message
 allow post_boot_script_t post_boot_data_t:dir { write add_name search getattr};
 allow post_boot_script_t post_boot_data_t:file { create open write };
 
