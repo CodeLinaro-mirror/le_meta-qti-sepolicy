@@ -1,11 +1,22 @@
-diff -ur a/config/appconfig-mls/default_contexts b/config/appconfig-mls/default_contexts
---- a/config/appconfig-mls/default_contexts	2017-05-16 14:06:56.808610711 -0700
-+++ b/config/appconfig-mls/default_contexts	2017-05-17 11:08:04.303255307 -0700
-@@ -1,7 +1,7 @@
- system_r:crond_t:s0		user_r:user_t:s0 staff_r:staff_t:s0 sysadm_r:sysadm_t:s0 unconfined_r:unconfined_t:s0 user_r:cronjob_t:s0 staff_r:cronjob_t:s0 sysadm_r:cronjob_t:s0 system_r:system_cronjob_t:s0 unconfined_r:unconfined_cronjob_t:s0
+From 51dd9303c09e502fc50f80919294e3090b19b9f6 Mon Sep 17 00:00:00 2001
+From: Dennis Cagle <dcagle@codeaurora.org>
+Date: Mon, 18 Dec 2017 15:38:33 -0800
+Subject: [PATCH] selinux: Create meta-qti-sepolicy layer
+
+---
+ config/appconfig-mls/default_contexts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config/appconfig-mls/default_contexts b/config/appconfig-mls/default_contexts
+index de0baa80c..9434d637b 100644
+--- a/config/appconfig-mls/default_contexts
++++ b/config/appconfig-mls/default_contexts
+@@ -2,7 +2,7 @@ system_r:crond_t:s0		user_r:user_t:s0 staff_r:staff_t:s0 sysadm_r:sysadm_t:s0 un
+ system_r:init_t:s0		user_r:user_systemd_t:s0 staff_r:staff_systemd_t:s0 sysadm_r:sysadm_systemd_t:s0 unconfined_r:unconfined_t:s0
  system_r:local_login_t:s0	user_r:user_t:s0 staff_r:staff_t:s0 sysadm_r:sysadm_t:s0 unconfined_r:unconfined_t:s0
  system_r:remote_login_t:s0	user_r:user_t:s0 staff_r:staff_t:s0 unconfined_r:unconfined_t:s0
 -system_r:sshd_t:s0		user_r:user_t:s0 staff_r:staff_t:s0 sysadm_r:sysadm_t:s0 unconfined_r:unconfined_t:s0
 +system_r:sshd_t:s0		sysadm_r:sysadm_t:s0
  system_r:sulogin_t:s0		sysadm_r:sysadm_t:s0
  system_r:xdm_t:s0		user_r:user_t:s0 staff_r:staff_t:s0 sysadm_r:sysadm_t:s0 unconfined_r:unconfined_t:s0
+ 
