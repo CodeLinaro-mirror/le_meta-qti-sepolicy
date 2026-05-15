@@ -11,6 +11,8 @@ gen_require(`
     type perf_hal_data_t;
     type perf_hal_data_scaling_t;
     type ts_hugepage_sysfs_t;
+    type setprop_t;
+    type pmsg_device_t;
 ')
 
 filetrans_pattern(post_boot_script_t, perf_hal_data_t, perf_hal_data_scaling_t, file)
@@ -29,3 +31,4 @@ allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;
 
 allow post_boot_script_t ts_hugepage_sysfs_t:dir add_entry_dir_perms;
 allow post_boot_script_t ts_hugepage_sysfs_t:file { create write_file_perms };
+allow setprop_t pmsg_device_t:chr_file write;

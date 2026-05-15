@@ -4,8 +4,10 @@
 gen_require(`
     type overlay_t;
     type fbe_secure_data_t;
+    type ts_hugepage_sysfs_t;
 ')
 
 allow initrc_t overlay_t:dir manage_dir_perms;
 allow init_t overlay_t:dir manage_dir_perms;
 allow initrc_t fbe_secure_data_t:dir create_dir_perms;
+allow initrc_t ts_hugepage_sysfs_t:dir search;

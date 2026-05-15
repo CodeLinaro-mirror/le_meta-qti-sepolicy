@@ -6,9 +6,14 @@ dontaudit usb_t self:capability { sys_admin dac_override dac_read_search };
 
 gen_require(`
     type overlay_t;
+    type setfiles_t;
+    type usb_dev_t;
+    type usbfs_t;
 ')
 
 allow adbd_initrc_t overlay_t:dir { add_entry_dir_perms setattr };
+allow setfiles_t usb_dev_t:dir search;
+allow setfiles_t usbfs_t:filesystem getattr;
 
 userdebug_or_eng(`
     gen_require(`

@@ -16,6 +16,7 @@ allow mount_copybind_t default_context_t:dir search;
 allow mount_copybind_t file_context_t:dir search;
 allow mount_copybind_t file_context_t:file mmap_read_file_perms;
 allow mount_copybind_t var_spool_t:dir getattr;
+allow mount_copybind_t self:capability sys_admin;
 
 allow mount_t etc_t:dir mounton;
 allow mount_t overlay_t:chr_file unlink;
