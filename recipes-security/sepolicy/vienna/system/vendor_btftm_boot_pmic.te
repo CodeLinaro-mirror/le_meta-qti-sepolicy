@@ -1,0 +1,43 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(vendor_btftm_boot_pmic, 1.0)
+
+type btftm_pmic_t;
+type btftm_pmic_exec_t;
+
+# Dedicated type for btftm persist files under /persist/data/btftm/
+# user_data_files_type assigns the user_data attribute, consistent
+# with how qseecomd_persist_t is declared in qseecomd.te
+type btftm_persist_file_t;
+files_type(btftm_persist_file_t)
+
+init_vendor_domain(btftm_pmic_t, btftm_pmic_exec_t)
+
+gen_require(`
+    type persist_t;
+    type qseecomd_persist_t;
+    type socket_device_t;
+    type smc_client_dev_t;
+    type vendor_uart_hs1_dev;
+    type vendor_sysfs_smc_uart;
+    type vendor_sysfs_smc_state;
+')
+
+# Allow searching /dev/socket directory (needed by liblog for logging)
+allow btftm_pmic_t socket_device_t:dir search;
+
+# Allow the service to Read/Write the device
+allow btftm_pmic_t smc_client_dev_t:chr_file rw_chr_file_perms;
+
+# Allow service to read smc_state
+allow btftm_pmic_t vendor_sysfs_smc_state:file read;
+
+# Allow traversal of /persist mountpoint (labeled persist_t)
+allow btftm_pmic_t persist_t:dir search;
+# Allow traversal of /persist/data/ directory (labeled qseecomd_persist_t)
+allow btftm_pmic_t qseecomd_persist_t:dir search;
+
+# Allow full access to btftm-owned persist files under /persist/data/btftm/
+allow btftm_pmic_t btftm_persist_file_t:dir { create_dir_perms rw_dir_perms };
+allow btftm_pmic_t btftm_persist_file_t:file { create_file_perms rw_file_perms };

@@ -3,8 +3,25 @@
 
 gen_require(`
     type glinkpkt_q6_audio_ctrl_t;
+    type sysfs_t;
+    type socket_device_t;
+    type perf_hal_socket_t;
+    type perf_hal_t;
  ')
 
 allow pulseaudio_t glinkpkt_q6_audio_ctrl_t:chr_file rw_chr_file_perms;
 rw_chr_files_pattern(pulseaudio_t, device_t, glinkpkt_q6_audio_ctrl_t);
 allow glinkpkt_q6_audio_ctrl_t device_t:filesystem associate;
+dontaudit pulseaudio_t sysfs_t:file append;
+files_search_mnt(pulseaudio_t)
+
+allow pulseaudio_t socket_device_t:sock_file write;
+allow pulseaudio_t perf_hal_t:unix_stream_socket connectto;
+allow pulseaudio_t perf_hal_socket_t:sock_file write;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow pulseaudio_t unconfined_t:unix_stream_socket connectto;
+')

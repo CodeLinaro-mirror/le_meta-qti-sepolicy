@@ -37,3 +37,4 @@ allow weston_t weston_data_t:dir manage_dir_perms;
 allow weston_t weston_data_t:file manage_file_perms;
 allow weston_t vendor_clstc_config_t:file read_file_perms;
 allow weston_t default_t:file read_file_perms;
+allow weston_t user_home_t:dir search;
