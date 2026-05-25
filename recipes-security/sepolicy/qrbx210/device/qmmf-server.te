@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type binder_device_t;
+    type gpu_device_t;
+')
+
+allow qmmf_server_t binder_device_t:chr_file map;
+allow qmmf_server_t gpu_device_t:chr_file map;
