@@ -1,0 +1,2 @@
+/data/vendor/wifi/sockets(/.*)?                gen_context(system_u:object_r:cnss_sock_dir_t,s0)
+/data/vendor/wifi/sockets/cnss_user_server     -s gen_context(system_u:object_r:cnss_socket_t,s0)
