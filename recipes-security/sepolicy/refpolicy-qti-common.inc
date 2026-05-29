@@ -1,17 +1,18 @@
 POLICY_TYPE = "mls"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy:"
+SELINUX_LAYER_DIR = "${@d.getVar('COREBASE') + '/meta-selinux' if os.path.isdir(d.getVar('COREBASE') + '/meta-selinux') else d.getVar('COREBASE') + '/../meta-selinux'}"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/files:"
+FILESEXTRAPATHS:prepend := "${SELINUX_LAYER_DIR}/recipes-security/refpolicy:"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy:"
+FILESEXTRAPATHS:prepend := "${SELINUX_LAYER_DIR}/recipes-security/refpolicy/files:"
 
-require ${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy_git.inc
+FILESEXTRAPATHS:prepend := "${SELINUX_LAYER_DIR}/recipes-security/refpolicy/refpolicy:"
+
+require ${SELINUX_LAYER_DIR}/recipes-security/refpolicy/refpolicy_git.inc
 
 FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
-            file://Assign-proc_t-to-proc-dir.patch \
             file://0004-selinux-update-the-getty.te-for-addressing.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
             file://Move-root-user-to-unconfined-context.patch \
@@ -34,13 +35,31 @@ PURGE_POLICY_MODULES += "cgmanager automount xguest amanda portage"
 CONTRIB_MODULES ?= "chronyd networkmanager shutdown gnome dhcp avahi apache minidlna mta dbus pulseaudio ppp dnsmasq ddclient bluetooth tinyproxy hostapd xserver nscd radvd"
 
 def append_policy_file(src_path, dst_path):
-    # Append our policy fragment to the end of the upstream file
+    # Insert our policy fragment before gen_user/user declarations to avoid
+    # checkmodule rejecting require{} after a user statement
     with open(src_path, 'r') as src_file:
-        with open(dst_path, 'a') as dst_file:
-            dst_file.write('\n')
-            for line in src_file.readlines():
-                if not line.startswith('#'):
-                    dst_file.write(line)
+        new_lines = [line for line in src_file.readlines() if not line.startswith('#')]
+
+    # Skip if no actual content to add
+    if not new_lines or all(not l.strip() for l in new_lines):
+        os.remove(src_path)
+        return
+
+    with open(dst_path, 'r') as dst_file:
+        dst_lines = dst_file.readlines()
+
+    # Find insertion point: just before the first gen_user( or user statement
+    insert_at = len(dst_lines)
+    for i, line in enumerate(dst_lines):
+        stripped = line.strip()
+        if stripped.startswith('gen_user(') or stripped.startswith('user '):
+            insert_at = i
+            break
+
+    dst_lines = dst_lines[:insert_at] + ['\n'] + new_lines + dst_lines[insert_at:]
+
+    with open(dst_path, 'w') as dst_file:
+        dst_file.writelines(dst_lines)
     os.remove(src_path)
 
 def copy_policy_file(src_path, dst_path):
@@ -48,16 +67,24 @@ def copy_policy_file(src_path, dst_path):
     os.renames(src_path, dst_path)
 
 def install_device_policy(d, src_root):
-    src_dir = os.path.join(d.getVar("WORKDIR"), src_root)
+    src_dir = os.path.join(d.getVar("UNPACKDIR"), src_root)
     dst_dir = os.path.join(d.getVar("S"), "policy", "modules")
     for root, dirs, files in os.walk(src_dir):
         for file in files:
             policy_file = os.path.relpath(os.path.join(root, file), src_dir)
+            src_path = os.path.join(src_dir, policy_file)
             dst_path = os.path.join(dst_dir, policy_file)
+            # Ensure .fc files have non-comment content — semodule rejects empty filecon sections
+            if file.endswith('.fc'):
+                with open(src_path) as f:
+                    has_content = any(l.strip() and not l.startswith('#') for l in f)
+                if not has_content:
+                    with open(src_path, 'w') as f:
+                        f.write('# no entries\n')
             if os.path.exists(dst_path):
-                append_policy_file(os.path.join(src_dir, policy_file), dst_path)
+                append_policy_file(src_path, dst_path)
             else:
-                copy_policy_file(os.path.join(src_dir, policy_file), dst_path)
+                copy_policy_file(src_path, dst_path)
 
 do_patch:append() {
     install_device_policy(d, "common")
@@ -102,7 +129,7 @@ do_install:append() {
 }
 
 rebuild_policy:append() {
-	policy_version=33
+	policy_version=35
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
 		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
