@@ -2,5 +2,5 @@
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
 # Fault Manager executables
-/usr/bin/pwrmgr       		-- gen_context(system_u:object_r:pwrmgr_exec_t,s0)
+/usr/bin/pwrmgr                 -- gen_context(system_u:object_r:pwrmgr_exec_t,s0)
 /etc/power_manager(/.*)?        -- gen_context(system_u:object_r:pwrmgr_conf_t,s0)
