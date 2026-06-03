@@ -1,0 +1,16 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type init_runtime_t;
+    type initrc_runtime_t;
+    type lib_t;
+    type proc_psi_t;
+    type systemd_logind_t;
+    type udev_t;
+')
+
+allow systemd_logind_t proc_psi_t:file write;
+allow udev_t init_runtime_t:file { open read };
+allow udev_t initrc_runtime_t:lnk_file read;
+allow udev_t lib_t:system module_load;
