@@ -89,6 +89,7 @@ allow ethagent_t  self:udp_socket { create ioctl };
 # Allow ethagent to connect to tlpd's Unix stream socket
 tlpd_use_unix_stream_sockets(ethagent_t)
 kernel_read_system_state(ethagent_t)
+dlt_allow_user_logging(ethagent_t);
 
 type ethagent_initrc_exec_t;
 type ethagent_initrc_t;
