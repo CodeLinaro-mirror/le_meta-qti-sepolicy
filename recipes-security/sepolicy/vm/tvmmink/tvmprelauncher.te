@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(tvmprelauncher, 1.0)
@@ -19,6 +19,7 @@ gen_require(`
 type device_t;
 type smcinvoke_device_t;
 type tvmmink_t;
+type tvmmink_tmpfs_t;
 type tvmroot_t;
 type tvmroot_sock_t;
 ')
@@ -44,6 +45,10 @@ if (allow_minijail_mount) {
     fs_tmpfs_filetrans(tvmprelauncher_t, tvmprelauncher_tmpfs_t, file)
     allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { manage_file_perms mounton };
 }
+
+# For sem
+allow tvmprelauncher_t tvmprelauncher_tmpfs_t:file { map };
+allow tvmprelauncher_t tvmmink_tmpfs_t:file { open getattr map read write };
 
 # Only mink can access the socket for prelauncher
 gen_require(`

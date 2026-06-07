@@ -39,6 +39,7 @@ type smcinvoke_device_t;
 type tuicoreservice_dev_t;
 type tvmprelauncher_t;
 type tvmprelauncher_sock_t;
+type tvmprelauncher_tmpfs_t;
 type tvmroot_t;
 type vendor_dmabuf_ms1_heap_device_t;
 type vendor_dmabuf_ms2_heap_device_t;
@@ -99,6 +100,10 @@ if (allow_minijail_mount) {
     fs_tmpfs_filetrans(tvmmink_t, tvmmink_tmpfs_t, file)
     allow tvmmink_t tvmmink_tmpfs_t:file { manage_file_perms mounton };
 }
+
+# For sem
+allow tvmmink_t tvmmink_tmpfs_t:file { map };
+allow tvmmink_t tvmprelauncher_tmpfs_t:file { open getattr map read write };
 
 allow tvmmink_t smmu_proxy_device_t:chr_file { open read write ioctl getattr };
 
