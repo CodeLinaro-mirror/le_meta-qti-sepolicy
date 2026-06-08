@@ -4,9 +4,24 @@
 gen_require(`
     type kernel_tests_t;
     type kmod_t;
+    type sysfs_cpu_capacity;
+    type cpu_scaling_freq_t;
+
 ')
 
 userdebug_or_eng(`
     allow kmod_t kernel_tests_t:file read_file_perms;
     allow kmod_t kernel_tests_t:system module_load;
 ')
+
+# initrc_t - urm/cat/bash CPU sysfs access
+# -------------------------------------------------------
+allow initrc_t cpu_sysfs_t:dir { rw_dir_perms add_entry_dir_perms };
+allow initrc_t cpu_sysfs_t:file { create_file_perms rw_file_perms };
+allow initrc_t sysfs_cpu_capacity:file { read open };
+allow initrc_t cpu_scaling_freq_t:file { rw_file_perms };
+
+# -------------------------------------------------------
+# initrc_t - bash power sysfs (/sys/power/mem_sleep)
+# -------------------------------------------------------
+allow initrc_t power_sysfs_t:file { write open };
