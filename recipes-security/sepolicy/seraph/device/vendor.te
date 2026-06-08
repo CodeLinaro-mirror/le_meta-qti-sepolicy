@@ -1,0 +1,12 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type kernel_tests_t;
+    type kmod_t;
+')
+
+userdebug_or_eng(`
+    allow kmod_t kernel_tests_t:file read_file_perms;
+    allow kmod_t kernel_tests_t:system module_load;
+')
