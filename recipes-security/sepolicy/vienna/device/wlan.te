@@ -1,0 +1,13 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type wlan_initrc_t;
+    type kernel_t;
+    type wifi_data_t;
+')
+
+allow wlan_initrc_t kernel_t:unix_dgram_socket sendto;
+
+allow wlan_initrc_t wifi_data_t:dir rw_dir_perms;
+allow wlan_initrc_t wifi_data_t:file rw_file_perms;

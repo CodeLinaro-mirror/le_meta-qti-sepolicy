@@ -3,9 +3,15 @@
 
 gen_require(`
     type etc_t;
+    type ss-ramdump_t;
+    type ramdump_data_t;
 ')
 
+type vendor_sysfs_coresight_etr_t;
+files_type(vendor_sysfs_coresight_etr_t)
+
 allow post_boot_script_t etc_t:file read_file_perms;
+allow post_boot_script_t vendor_sysfs_coresight_etr_t:file setattr;
 
 type glinkpkt_q6_audio_ctrl_t;
 files_type(glinkpkt_q6_audio_ctrl_t)
@@ -16,3 +22,5 @@ dev_node(glinkpkt_wm_qsh_device_t);
 # SSR dump file type for crash dumps
 type ssrdump_data_file_t;
 files_type(ssrdump_data_file_t)
+
+allow ss-ramdump_t ramdump_data_t:dir rw_dir_perms;

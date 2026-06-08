@@ -2,6 +2,11 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 genfscon sysfs /devices/platform/soc/17110040.qcom,wcn7750  gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+genfscon sysfs /devices/platform/soc/c0000000.qcom,cnss-cologne  gen_context(system_u:object_r:wlan_hsp_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy3 gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy3/walt gen_context(system_u:object_r:cpu_sysfs_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy3/scaling_min_freq gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
+genfscon sysfs /devices/system/cpu/cpufreq/policy3/scaling_max_freq gen_context(system_u:object_r:cpu_scaling_freq_t,s0)
 
 type ts_hugepage_sysfs_t;
 genfscon sysfs /kernel/mm/transparent_hugepage gen_context(system_u:object_r:ts_hugepage_sysfs_t,s0)
