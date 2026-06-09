@@ -4,6 +4,7 @@
 gen_require(`
     type kernel_tests_t;
     type kmod_t;
+    type lib_t;
     type sysfs_cpu_capacity;
     type cpu_scaling_freq_t;
 
@@ -12,6 +13,7 @@ gen_require(`
 userdebug_or_eng(`
     allow kmod_t kernel_tests_t:file read_file_perms;
     allow kmod_t kernel_tests_t:system module_load;
+    allow kmod_t lib_t:system { module_load };
 ')
 
 # initrc_t - urm/cat/bash CPU sysfs access

@@ -14,3 +14,6 @@ allow systemd_logind_t proc_psi_t:file write;
 allow udev_t init_runtime_t:file { open read };
 allow udev_t initrc_runtime_t:lnk_file read;
 allow udev_t lib_t:system module_load;
+
+allow systemd_modules_load_t initrc_runtime_t:lnk_file { getattr read };
+allow systemd_modules_load_t lib_t:system module_load;
