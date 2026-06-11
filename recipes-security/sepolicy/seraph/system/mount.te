@@ -28,6 +28,9 @@ gen_require(`
     type unconfined_mount_t;
 ')
 
+#TODO: Need to clean/remove this post fixing the permission issue
+permissive mount_t;
+
 allow mount_t adbd_system_data_t:file { open read };
 allow mount_t audio_hal_etc_t:file { getattr open read };
 allow mount_t cache_recovery_t:dir { add_name create read rename reparent setattr write };
