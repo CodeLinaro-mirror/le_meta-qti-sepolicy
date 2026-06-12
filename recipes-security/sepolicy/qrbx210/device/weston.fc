@@ -2,3 +2,4 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /data/vendor/display(/.*)?       gen_context(system_u:object_r:weston_data_t,s0)
+/usr/sbin/initscripts/init_qti_display    gen_context(system_u:object_r:init_exec_t,s0)
