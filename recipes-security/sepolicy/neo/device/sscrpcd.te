@@ -55,6 +55,7 @@ gen_require(`
     type lib_t;
     type adsprpcd_t;
     type sensors_persist_data_t;
+    type rfsa_adsp_lib_t;
 ')
 
 #allow sscrpcd_t to acces /dev/adsprpcd-smd-secure
@@ -82,6 +83,8 @@ allow sscrpcd_t persist_t:dir search_dir_perms;
 allow sscrpcd_t system_dir_t:dir list_dir_perms;
 allow sscrpcd_t system_dir_t:file read_file_perms;
 allow sscrpcd_t sysdevice_sysfs_t:file read_file_perms;
+allow sscrpcd_t rfsa_adsp_lib_t:dir search;
+allow sscrpcd_t rfsa_adsp_lib_t:dir getattr;
 
 files_search_mnt(sscrpcd_t)
 files_search_default(sscrpcd_t)
