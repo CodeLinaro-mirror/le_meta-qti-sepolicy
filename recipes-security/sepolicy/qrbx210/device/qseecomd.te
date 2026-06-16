@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type sys_power_sysfs_t;
+')
+
+#TODO:revisit this when facing any problem with qseecomd
+dontaudit qseecomd_t sys_power_sysfs_t:dir search;
+dontaudit qseecomd_t sys_power_sysfs_t:file { append open };
