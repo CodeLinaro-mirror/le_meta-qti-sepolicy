@@ -4,3 +4,4 @@
 /etc/sensors(/.*)?              gen_context(system_u:object_r:etc_sensors_t,s0)
 /usr/bin/sscrpcd                gen_context(system_u:object_r:sscrpcd_exec_t,s0)
 /vendor/etc/sensors(/.*)?       gen_context(system_u:object_r:vendor_etc_sensors_t,s0)
+/vendor/lib(64)?/camera/.*\.pb  gen_context(system_u:object_r:vendor_camera_config_t,s0)

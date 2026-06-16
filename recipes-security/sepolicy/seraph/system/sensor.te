@@ -26,6 +26,7 @@ gen_require(`
     type etc_sensors_t;
     type rfsa_adsp_lib_t;
     type system_dmabuf_device_t;
+    type vendor_camera_config_t;
 ')
 
 init_daemon_domain(sscrpcd_t, sscrpcd_exec_t)
@@ -50,6 +51,8 @@ read_chr_files_pattern(sscrpcd_t, device_t, system_dmabuf_device_t)
 allow sscrpcd_t default_t:dir search_dir_perms;
 allow sscrpcd_t vendor_etc_sensors_t:dir search_dir_perms;
 allow sscrpcd_t vendor_etc_sensors_t:file read_file_perms;
+allow sscrpcd_t vendor_camera_config_t:dir search_dir_perms;
+allow sscrpcd_t vendor_camera_config_t:file read_file_perms;
 allow sscrpcd_t device_t:dir { getattr watch };
 allow sscrpcd_t event_device_t:chr_file { getattr read };
 
