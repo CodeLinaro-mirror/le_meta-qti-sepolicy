@@ -1,0 +1,24 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+dontaudit pulseaudio_t self:capability sys_admin;
+
+gen_require(`
+    type sys_power_sysfs_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+')
+
+# TODO:revisit this when facing any problem with path-/sys/power/wake_lock
+dontaudit pulseaudio_t sys_power_sysfs_t:file append;
+allow pulseaudio_t sys_power_sysfs_t:dir search;
+allow pulseaudio_t sysctl_vm_t:dir search;
+allow pulseaudio_t sysctl_vm_overcommit_t:file { read open };
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow pulseaudio_t unconfined_t:fd use;
+    allow pulseaudio_t unconfined_t:binder { call transfer };
+')
