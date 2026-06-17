@@ -35,6 +35,7 @@ gen_require(`
  type mnt_t;
  type seatd_t;
  type seatd_socket_t;
+ type user_home_t;
 ')
 
 allow weston_t mnt_t:dir getattr;
@@ -43,5 +44,6 @@ allow weston_t seatd_socket_t:sock_file manage_file_perms;
 allow weston_t seatd_t:unix_stream_socket connectto;
 allow weston_t seatd_t:fd use;
 allow weston_t self:capability dac_read_search;
+allow weston_t user_home_t:dir search;
 allow weston_t weston_data_t:dir manage_dir_perms;
 allow weston_t weston_data_t:file manage_file_perms;
