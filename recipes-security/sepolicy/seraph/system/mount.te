@@ -1,0 +1,59 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type mount_t;
+    type adbd_system_data_t;
+    type audio_hal_etc_t;
+    type cache_recovery_t;
+    type chronyd_conf_t;
+    type dbusd_etc_t;
+    type default_context_t;
+    type etc_t;
+    type file_context_t;
+    type fonts_cache_t;
+    type kernel_t;
+    type leprop_system_data_t;
+    type lib_t;
+    type modules_conf_t;
+    type modules_object_t;
+    type overlay_t;
+    type perf_hal_data_t;
+    type perf_hal_etc_t;
+    type pulseaudio_var_lib_t;
+    type syslog_conf_t;
+    type time_data_t;
+    type udev_rules_t;
+    type var_t;
+    type unconfined_mount_t;
+')
+
+allow mount_t adbd_system_data_t:file { open read };
+allow mount_t audio_hal_etc_t:file { getattr open read };
+allow mount_t cache_recovery_t:dir { add_name create read rename reparent setattr write };
+allow mount_t cache_recovery_t:file { append create getattr open read };
+allow mount_t dbusd_etc_t:dir read;
+allow mount_t dbusd_etc_t:file { getattr open read };
+allow mount_t default_context_t:file { getattr open read };
+allow mount_t etc_t:dir { create setattr };
+allow mount_t etc_t:file write;
+allow mount_t file_context_t:file { open read };
+allow mount_t fonts_cache_t:dir { read add_name create rename reparent setattr write };
+allow mount_t fonts_cache_t:file { create read write getattr open };
+allow mount_t leprop_system_data_t:file { open read write };
+allow mount_t lib_t:filesystem relabelfrom;
+allow mount_t modules_conf_t:dir read;
+allow mount_t modules_object_t:dir mounton;
+allow mount_t overlay_t:dir { add_name remove_name };
+allow mount_t perf_hal_data_t:dir { add_name getattr search write };
+allow mount_t perf_hal_data_t:file { create getattr open write };
+allow mount_t perf_hal_etc_t:file { getattr open read };
+allow mount_t pulseaudio_var_lib_t:dir { add_name remove_name };
+allow mount_t pulseaudio_var_lib_t:file { create open rename write };
+allow mount_t self:capability { fowner fsetid };
+allow mount_t syslog_conf_t:file { getattr open read };
+allow mount_t time_data_t:dir search;
+allow mount_t udev_rules_t:dir read;
+allow mount_t udev_rules_t:file { getattr open read };
+allow mount_t var_t:dir { add_name remove_name };
+allow unconfined_mount_t kernel_t:process setsched;
