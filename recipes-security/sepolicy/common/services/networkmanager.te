@@ -226,6 +226,7 @@ dontaudit wpa_cli_t kmsg_device_t:chr_file { write_file_perms };
 dontaudit wpa_cli_t self:capability { setgid setpcap };
 allow wpa_cli_t self:capability { setuid };
 allow wpa_cli_t self:process { getcap setcap };
+allow wpa_cli_t self:process { signal };
 allow wpa_cli_t self:unix_stream_socket { create_stream_socket_perms };
 allow wpa_cli_t hostapd_t:unix_dgram_socket { sendto };
 corecmd_exec_shell(wpa_cli_t)
