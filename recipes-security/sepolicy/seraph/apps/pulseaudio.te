@@ -1,0 +1,15 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type socket_device_t;
+ ')
+
+allow pulseaudio_t socket_device_t:sock_file write;
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow pulseaudio_t unconfined_t:unix_stream_socket connectto;
+')
