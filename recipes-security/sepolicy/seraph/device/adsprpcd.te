@@ -4,6 +4,8 @@
 gen_require(`
     type adsprpcd_t;
     type event_device_t;
+    type rfsa_adsp_lib_t;
 ')
 
 allow adsprpcd_t event_device_t:chr_file getattr;
+allow adsprpcd_t rfsa_adsp_lib_t:file { getattr open read };
