@@ -31,6 +31,7 @@ gen_require(`
 #TODO: Need to clean/remove this post fixing the permission issue
 permissive mount_t;
 
+allow mount_t etc_t:dir mounton;
 allow mount_t adbd_system_data_t:file { open read };
 allow mount_t audio_hal_etc_t:file { getattr open read };
 allow mount_t cache_recovery_t:dir { add_name create read rename reparent setattr write };
@@ -39,7 +40,7 @@ allow mount_t dbusd_etc_t:dir read;
 allow mount_t dbusd_etc_t:file { getattr open read };
 allow mount_t default_context_t:file { getattr open read };
 allow mount_t etc_t:dir { create setattr };
-allow mount_t etc_t:file write;
+allow mount_t etc_t:file { create write append };
 allow mount_t file_context_t:file { open read };
 allow mount_t fonts_cache_t:dir { read add_name create rename reparent setattr write };
 allow mount_t fonts_cache_t:file { create read write getattr open };
@@ -47,7 +48,9 @@ allow mount_t leprop_system_data_t:file { open read write };
 allow mount_t lib_t:filesystem relabelfrom;
 allow mount_t modules_conf_t:dir read;
 allow mount_t modules_object_t:dir mounton;
-allow mount_t overlay_t:dir { add_name remove_name };
+allow mount_t overlay_t:chr_file unlink;
+allow mount_t overlay_t:dir manage_dir_perms;
+allow mount_t overlay_t:file manage_file_perms;
 allow mount_t perf_hal_data_t:dir { add_name getattr search write };
 allow mount_t perf_hal_data_t:file { create getattr open write };
 allow mount_t perf_hal_etc_t:file { getattr open read };
