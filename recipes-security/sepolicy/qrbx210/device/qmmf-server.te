@@ -4,7 +4,12 @@
 gen_require(`
     type binder_device_t;
     type gpu_device_t;
+    type user_runtime_root_t;
+    type weston_runtime_t;
 ')
 
 allow qmmf_server_t binder_device_t:chr_file map;
 allow qmmf_server_t gpu_device_t:chr_file map;
+allow qmmf_server_t self:process getsched;
+allow qmmf_server_t user_runtime_root_t:dir search;
+manage_sock_files_pattern(qmmf_server_t, weston_runtime_t, weston_runtime_t)
