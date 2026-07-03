@@ -1,0 +1,20 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type binder_device_t;
+    type adsprpcd_t;
+    type fs_t;
+    type soc0_gpu_sysfs_t;
+    type perf_hal_socket_t;
+    type perf_hal_t;
+    type gpu_device_t;
+')
+
+allow qmmf_server_t binder_device_t:chr_file map;
+allow qmmf_server_t adsprpcd_t:file read_file_perms;
+allow qmmf_server_t fs_t:filesystem getattr;
+allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
+allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
+allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
+allow qmmf_server_t gpu_device_t:chr_file map;
