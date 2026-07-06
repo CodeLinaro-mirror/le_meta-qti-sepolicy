@@ -30,6 +30,9 @@ gen_require(`
     type system_dbusd_var_run_t;
     type unconfined_t;
     type pwrmgr_t;
+    type removable_device_t;
+    type sysctl_t;
+    type sysctl_kernel_t;
 	class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -49,8 +52,18 @@ allow faultmgr_t etc_t:file { read open };                  #/etc/
 allow faultmgr_t faultmgr_conf_t:file {read write open getattr};          #/etc/fault_manager/public/
 allow faultmgr_t syslogd_t:unix_dgram_socket sendto;             #/run/systemd/journal/dev-log 
 allow faultmgr_t devlog_t:sock_file write;
-allow faultmgr_t sysfs_t:file { read open getattr };       #/sys/devices/soc0/soc_id
+
+# write is needed to pwrite-clear the PMIC power-off reason flag back to spmi_sdam1/nvmem after reading it
+allow faultmgr_t sysfs_t:file { read write open getattr }; #/sys/devices/soc0/soc_id, /sys/bus/nvmem/devices/spmi_sdam1/nvmem
+
+# /sys/bus/nvmem/devices/spmi_sdam1 is a symlink to the actual device node, so resolving the nvmem path requires lnk_file read on it
+allow faultmgr_t sysfs_t:lnk_file read;                    # /sys/bus/nvmem/devices/spmi_sdam1 (bus symlink)
 allow faultmgr_t sysfs_t:dir read;                         # /sys/kernel/reset_reason/
+
+# sysctl_t/sysctl_kernel_t traversal + boot_id read let faultmgr check /proc/sys/kernel/random/boot_id to detect whether the QRU has restarted
+allow faultmgr_t sysctl_t:dir search;                      # traverse /proc/sys
+allow faultmgr_t sysctl_kernel_t:dir search;               # traverse /proc/sys/kernel[/random]
+allow faultmgr_t sysctl_kernel_t:file { getattr open read };  #/proc/sys/kernel/random/boot_id
 allow faultmgr_t var_log_t:file { read write open getattr setattr create rename unlink};
 allow faultmgr_t var_log_t:dir {search read write add_name remove_name};
 allow faultmgr_t pmsg0_t:chr_file { write open};
@@ -67,8 +80,13 @@ allow faultmgr_t thermal_sock_t:sock_file write;
 allow initrc_t faultmgr_conf_t:file read;
 allow initrc_t unconfined_t:dbus send_msg;
 allow faultmgr_t pwrmgr_t:dbus send_msg;
-allow faultmgr_t faultmgr_data_t:dir { read write open getattr append create search rename };
-allow faultmgr_t faultmgr_data_t:file { read write open getattr append};
+
+# add_name/remove_name/rename/create/unlink let faultmgr create, rename, and delete files/dirs under /data/fmgr (e.g. reset_cause_log.bin, history file)
+allow faultmgr_t faultmgr_data_t:dir { read write open getattr append create search rename add_name remove_name };
+allow faultmgr_t faultmgr_data_t:file { read write open getattr append create rename unlink };
+
+# removable_device_t:blk_file access supports abctl APIs (removable_device_t) to support A/B slot switch detection
+allow faultmgr_t removable_device_t:blk_file { read write open getattr append };
 allow faultmgr_t var_log_t:lnk_file read;
 dontaudit faultmgr_t default_t:dir search;
 
