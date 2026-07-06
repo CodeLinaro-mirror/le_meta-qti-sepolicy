@@ -35,5 +35,5 @@
 /etc/qwesd.rc                           gen_context(system_u:object_r:qwes_config_etc_t,s0)
 /dev/socket/qwes(/.*)?                  gen_context(system_u:object_r:qwes_mink_socket_t,s0)
 /dev/socket/qwes/qwes_ipc               gen_context(system_u:object_r:qwes_mink_socket_t,s0)
-/etc/initscripts/qwes_license_store  -- gen_context(system_u:object_r:qwes_license_store_setup_exec_t,s0)
-/etc/initscripts/create_qwes_ipc     -- gen_context(system_u:object_r:qwes_ipc_setup_exec_t,s0)
+/usr/bin/qwes_license_store   -- gen_context(system_u:object_r:qwes_license_store_setup_exec_t,s0)
+/usr/bin/create_qwes_ipc      -- gen_context(system_u:object_r:qwes_ipc_setup_exec_t,s0)
