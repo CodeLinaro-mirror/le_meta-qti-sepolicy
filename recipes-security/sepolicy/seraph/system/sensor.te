@@ -1,0 +1,74 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(sensor, 1.0)
+
+type etc_sensors_t;
+files_type(etc_sensors_t);
+
+type sscrpcd_t;
+type sscrpcd_exec_t;
+
+type vendor_etc_sensors_t;
+files_type(vendor_etc_sensors_t);
+
+files_type(sscrpcd_exec_t);
+
+gen_require(`
+    type etc_t;
+    type mount_t;
+    type mnt_t;
+    type device_t;
+    type default_t;
+    type adsprpcd_t;
+    type xdsp_device_t;
+    type event_device_t;
+    type etc_sensors_t;
+    type rfsa_adsp_lib_t;
+    type system_dmabuf_device_t;
+    type vendor_camera_config_t;
+')
+
+init_daemon_domain(sscrpcd_t, sscrpcd_exec_t)
+
+allow sscrpcd_t mnt_t:dir search_dir_perms;
+
+allow mount_t etc_sensors_t:dir manage_dir_perms;
+allow mount_t etc_sensors_t:file manage_file_perms;
+
+allow sscrpcd_t etc_sensors_t:dir manage_dir_perms;
+allow sscrpcd_t etc_sensors_t:file manage_file_perms;
+
+allow sscrpcd_t adsprpcd_t:dir { watch list_dir_perms };
+allow sscrpcd_t adsprpcd_t:file read_file_perms;
+
+allow sscrpcd_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
+allow sscrpcd_t rfsa_adsp_lib_t:file read_file_perms;
+
+read_chr_files_pattern(sscrpcd_t, device_t, xdsp_device_t)
+read_chr_files_pattern(sscrpcd_t, device_t, system_dmabuf_device_t)
+
+allow sscrpcd_t default_t:dir search_dir_perms;
+allow sscrpcd_t vendor_etc_sensors_t:dir search_dir_perms;
+allow sscrpcd_t vendor_etc_sensors_t:file read_file_perms;
+allow sscrpcd_t vendor_camera_config_t:dir search_dir_perms;
+allow sscrpcd_t vendor_camera_config_t:file read_file_perms;
+allow sscrpcd_t device_t:dir { getattr watch };
+allow sscrpcd_t event_device_t:chr_file { getattr read };
+
+
+# permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(sscrpcd_t)
+
+userdebug_or_eng(`
+    gen_require(`
+         type debugfs_t;
+     ')
+
+    allow sscrpcd_t debugfs_t:dir search_dir_perms;
+')
+
+logging_send_syslog_msg(sscrpcd_t)
+mls_file_read_all_levels(sscrpcd_t)
+mls_file_read_to_clearance(sscrpcd_t)
+mls_trusted_object(sscrpcd_t)

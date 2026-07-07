@@ -3,10 +3,17 @@
 
 policy_module(gstreamer, 1.0)
 
+type gstd_t;
+type gstd_exec_t;
+init_vendor_domain(gstd_t, gstd_exec_t)
+
 gen_require(`
-    type initrc_t;
     type gst_data_t;
 ')
 
-# Allow initrc_t map gstreamer cache files
-allow initrc_t gst_data_t:file map;
+# Keep gstd data access scoped to the dedicated gst_data_t label.
+manage_user_data_files(gstd_t, gst_data_t)
+allow gstd_t gst_data_t:file map;
+
+# Restrict execmem to gstd domain instead of broad initrc_t.
+allow gstd_t self:process execmem;

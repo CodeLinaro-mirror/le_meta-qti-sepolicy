@@ -7,7 +7,11 @@ gen_require(`
     type ramdump_data_t;
 ')
 
+type vendor_sysfs_coresight_etr_t;
+files_type(vendor_sysfs_coresight_etr_t)
+
 allow post_boot_script_t etc_t:file read_file_perms;
+allow post_boot_script_t vendor_sysfs_coresight_etr_t:file setattr;
 
 type glinkpkt_q6_audio_ctrl_t;
 files_type(glinkpkt_q6_audio_ctrl_t)
