@@ -9,6 +9,9 @@ gen_require(`
     type perf_hal_socket_t;
     type perf_hal_t;
     type gpu_device_t;
+    type ashmem_devices_t;
+    type fastrpc_sysfs_t;
+    type gpumodel_t;
 ')
 
 allow qmmf_server_t binder_device_t:chr_file map;
@@ -18,3 +21,7 @@ allow qmmf_server_t soc0_gpu_sysfs_t:file read_file_perms;
 allow qmmf_server_t perf_hal_socket_t:sock_file write_sock_file_perms;
 allow qmmf_server_t perf_hal_t:unix_stream_socket connectto;
 allow qmmf_server_t gpu_device_t:chr_file map;
+allow qmmf_server_t ashmem_devices_t:chr_file map;
+allow qmmf_server_t fastrpc_sysfs_t:dir list_dir_perms;
+allow qmmf_server_t fastrpc_sysfs_t:file read_file_perms;
+allow qmmf_server_t gpumodel_t:file read_file_perms;
