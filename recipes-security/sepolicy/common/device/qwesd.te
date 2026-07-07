@@ -37,6 +37,10 @@ type qwes_data_t;
 type qwes_config_etc_t;
 type qwes_mink_socket_t;
 
+# Domains that may write qwes_data_t files; assign via typeattribute to exempt
+# from the neverallow below without modifying this file.
+attribute qwes_data_writer;
+
 files_type(qwes_mink_socket_t)
 files_type(qwes_config_etc_t)
 
@@ -94,11 +98,11 @@ data_filetrans(qwesd_t, qwes_data_t, { file dir })
 manage_user_data_files(qwesd_t, qwes_data_t)
 
 ifdef(`user_build',`
-neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t } qwes_data_t:file { write };
+neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -qwes_data_writer } qwes_data_t:file { write };
 ')
 
 ifndef(`user_build',`
-neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t } qwes_data_t:file { write };
+neverallow { domain -qwesd_t -adbd_t -qwes_license_store_setup_t -systemd_tmpfiles_t -unconfined_t -qwes_data_writer } qwes_data_t:file { write };
 ')
 # allow qwesd to read/write to /var/run/qwes_ipc minksocket file.
 files_runtime_file(qwes_mink_socket_t)
