@@ -4,11 +4,16 @@
 userdebug_or_eng(`
     gen_require(`
         type binderfs_t;
+        type brightness_t;
+        type drm_card_sysfs_t;
         type perf_hal_socket_t;
         type power_sysfs_t;
         type sysfs_devcoredump_t;
     ')
     allow unconfined_t binderfs_t:file getattr;
+    allow unconfined_t brightness_t:file write;
+    allow unconfined_t drm_card_sysfs_t:dir { search getattr read open };
+    allow unconfined_t drm_card_sysfs_t:file { getattr read open };
     allow unconfined_t perf_hal_socket_t:sock_file getattr;
     allow unconfined_t power_sysfs_t:file getattr;
     allow unconfined_t sysfs_devcoredump_t:dir search;

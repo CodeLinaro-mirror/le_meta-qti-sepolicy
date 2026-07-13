@@ -26,11 +26,11 @@ allow wlan_initrc_t kernel_t:unix_dgram_socket sendto;
 allow wlan_initrc_t wifi_data_t:dir rw_dir_perms;
 allow wlan_initrc_t wifi_data_t:file rw_file_perms;
 
-# Dir permissions needed to create a socket file
-allow wlan_initrc_t cnss_sock_dir_t:dir { write add_name search };
+# Dir permissions needed to create/remove a socket file
+allow wlan_initrc_t cnss_sock_dir_t:dir { write add_name remove_name search };
 
-# Only allow socket creation (no broad dir write rules)
-allow wlan_initrc_t cnss_socket_t:sock_file { create getattr };
+# Allow socket creation and removal (unlink needed on reboot when stale socket persists)
+allow wlan_initrc_t cnss_socket_t:sock_file { create getattr unlink };
 
 # Restrict transition only to this socket name (after restorecon labels dir as cnss_sock_dir_t)
 type_transition wlan_initrc_t cnss_sock_dir_t:sock_file cnss_socket_t "cnss_user_server";
