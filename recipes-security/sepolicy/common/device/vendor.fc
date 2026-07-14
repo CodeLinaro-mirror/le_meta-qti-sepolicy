@@ -103,7 +103,7 @@
 /dev/qti_virtio_mem       -c gen_context(system_u:object_r:vendor_virtio_mem_device_t,s0)
 
 ### Touch script ###
-/etc/initscripts/start_touch_le -- gen_context(system_u:object_r:touch_script_exec_t,s0)
+/usr/sbin/initscripts/start_touch_le -- gen_context(system_u:object_r:touch_script_exec_t,s0)
 
 # dev node
 /dev/ashmem       gen_context(system_u:object_r:ashmem_devices_t,s0)

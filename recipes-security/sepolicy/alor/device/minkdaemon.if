@@ -1,8 +1,4 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-gen_require(`
-    type event_device_t;
-')
-
-allow adsprpcd_t event_device_t:chr_file read_chr_file_perms;
+## <summary>minkdaemon</summary>
