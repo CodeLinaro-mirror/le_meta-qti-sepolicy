@@ -1,0 +1,11 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type tmp_t;
+    type fastrpc_sysfs_t;
+')
+
+allow adsprpcd_t tmp_t:dir list_dir_perms;
+allow adsprpcd_t fastrpc_sysfs_t:dir list_dir_perms;
+allow adsprpcd_t fastrpc_sysfs_t:file read_file_perms;
