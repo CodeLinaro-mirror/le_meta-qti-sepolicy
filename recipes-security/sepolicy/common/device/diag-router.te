@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(diag-router, 1.0)
 
@@ -45,7 +49,9 @@ userdebug_or_eng(`
     type unconfined_t;
     type boot_kpi_values_t;
     type overlay_t;
+    type usb_dev_t;
     type usbfs_t;
+    type sysfs_t;
   ')
 
   allow diag-router_t self:qipcrtr_socket create_socket_perms;
@@ -70,6 +76,12 @@ userdebug_or_eng(`
   allow unconfined_t boot_kpi_values_t:file { getattr open read };
   allow diag-router_t boot_kpi_values_t:file { open write };
   allow diag-router_t overlay_t:dir search;
+  allow diag-router_t usb_dev_t:dir { read open search };
   allow diag-router_t usbfs_t:dir { open read search };
   allow diag-router_t usbfs_t:file rw_file_perms;
+
+# Need access to coresight device nodes
+  allow diag-router_t sysfs_t:file { open read write getattr };
+  allow diag-router_t sysfs_t:lnk_file { read getattr };
+  allow diag-router_t sysfs_t:dir { search read open getattr };
 ')
