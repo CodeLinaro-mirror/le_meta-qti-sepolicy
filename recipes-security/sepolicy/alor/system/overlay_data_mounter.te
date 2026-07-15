@@ -22,9 +22,6 @@ type overlay_mounter_exec_t;
 # overlay_mounter_exec_t file label.
 init_daemon_domain(overlay_data_mounter_t, overlay_mounter_exec_t)
 
-# Temporary: kept permissive until test team validates no runtime permission gaps.
-# Remove this line once sanity testing confirms full coverage.
-permissive overlay_data_mounter_t;
 
 ########################################
 #
