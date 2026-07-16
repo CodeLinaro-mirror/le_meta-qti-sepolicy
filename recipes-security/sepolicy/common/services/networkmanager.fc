@@ -35,7 +35,6 @@
 /etc/libnl(/.*)?                gen_context(system_u:object_r:wifi_data_t,s0)
 
 /etc/rc\.d/init\.d/wlan         gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
-/etc/initscripts/wlan           gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 /usr/sbin/initscripts/wlan      gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 /etc/init\.d/wlan               gen_context(system_u:object_r:wlan_initrc_exec_t,s0)
 
