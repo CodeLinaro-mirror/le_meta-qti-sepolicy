@@ -10,8 +10,14 @@ gen_require(`
     type overlay_t;
     type modules_object_t;
     type power_sysfs_t;
+    type sysfs_t;
     type perf_hal_data_t;
     type perf_hal_data_scaling_t;
+    type init_runtime_t;
+    type syslogd_runtime_t;
+    type devlog_t;
+    type system_dbusd_runtime_t;
+    type cgroup_t;
 ')
 
 allow post_boot_script_t etc_t:file read_file_perms;
@@ -19,5 +25,24 @@ allow touch_script_t modules_object_t:dir search;
 allow touch_script_t modules_object_t:file getattr;
 allow touch_script_t overlay_t:dir search;
 allow post_boot_script_t power_sysfs_t:file write_file_perms;
-allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
+allow post_boot_script_t sysfs_t:dir { write add_name };
+allow post_boot_script_t sysfs_t:file { create };
+allow post_boot_script_t perf_hal_data_t:dir { add_entry_dir_perms remove_name };
 allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;
+allow post_boot_script_t self:capability net_admin;
+allow post_boot_script_t init_runtime_t:dir search;
+allow post_boot_script_t init_runtime_t:sock_file write;
+allow post_boot_script_t syslogd_runtime_t:dir search;
+allow post_boot_script_t devlog_t:sock_file write;
+allow post_boot_script_t kernel_t:unix_dgram_socket sendto;
+allow post_boot_script_t proc_t:filesystem getattr;
+allow post_boot_script_t system_dbusd_runtime_t:dir search;
+allow post_boot_script_t init_t:dir search;
+allow post_boot_script_t init_t:lnk_file read;
+allow post_boot_script_t init_t:file read_file_perms;
+allow post_boot_script_t init_t:unix_stream_socket connectto;
+init_get_generic_units_status(post_boot_script_t)
+init_start_generic_units(post_boot_script_t)
+allow post_boot_script_t cgroup_t:dir search;
+allow post_boot_script_t cgroup_t:file write_file_perms;
+corecmd_exec_bin(post_boot_script_t)
