@@ -6,6 +6,8 @@ Subject: [PATCH] selinux: update the getty.te for addressing the denial
 type=1400 audit(17474.349:98): avc:  denied  { read write  pid=1303 comm="agetty"
 path="socket:[17094]" dev="sockfs" ino=17094 scontext=system_u:system_r:getty_t:s0-s15:c0.c1023
 tcontext=system_u:system_r:init_t:s0-s15:c0.c1023 tclass=unix_stream_socket permissive=1
+
+Upstream-Status: Pending
 ---
  policy/modules/system/getty.te | 2 ++
  1 file changed, 2 insertions(+)

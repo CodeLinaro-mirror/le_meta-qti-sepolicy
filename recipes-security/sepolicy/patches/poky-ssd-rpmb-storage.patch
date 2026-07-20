@@ -2,6 +2,7 @@ From 68ed58c77cbf1fd7b7eb6881aa9de8931570f63f Mon Sep 17 00:00:00 2001
 From: Jiten Patel <quic_jitepate@quicinc.com>
 Date: Mon, 29 Nov 2021 16:43:10 +0530
 Subject: [PATCH] modify rpmb and ssd tag
+Upstream-Status: Pending
 
 Signed-off-by: Jiten Patel <quic_jitepate@quicinc.com>
 ---

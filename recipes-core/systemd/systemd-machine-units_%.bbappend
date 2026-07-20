@@ -27,7 +27,7 @@ do_install:append() {
         label_file=label-data.service
         if [ -e $mount_file ]; then
             append_selinux_mount_option $mount_file rootcontext=system_u:object_r:data_t:s0
-            install -m 0644 ${WORKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
+            install -m 0644 ${UNPACKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
             ln -sf  ../${label_file}  ${D}${systemd_system_unitdir}/local-fs.target.wants/${label_file}
         fi
 
@@ -41,7 +41,7 @@ do_install:append() {
         label_file=label-cache.service
         if [ -e $mount_file ]; then
             append_selinux_mount_option $mount_file rootcontext=system_u:object_r:cache_t:s0
-            install -m 0644 ${WORKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
+            install -m 0644 ${UNPACKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
             ln -sf  ../${label_file}  ${D}${systemd_system_unitdir}/multi-user.target.wants/${label_file}
         fi
 
@@ -49,7 +49,7 @@ do_install:append() {
         label_file=label-persist.service
         if [ -e $mount_file ]; then
             append_selinux_mount_option $mount_file rootcontext=system_u:object_r:persist_t:s0
-            install -m 0644 ${WORKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
+            install -m 0644 ${UNPACKDIR}/${label_file} ${D}${systemd_system_unitdir}/${label_file}
             ln -sf  ../${label_file}  ${D}${systemd_system_unitdir}/multi-user.target.wants/${label_file}
         fi
 

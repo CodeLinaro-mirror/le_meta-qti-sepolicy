@@ -2,6 +2,7 @@ From b0452d8772e62e339e90a3b09eeb69bdb68a98ea Mon Sep 17 00:00:00 2001
 From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Mon, 18 Dec 2017 15:38:33 -0800
 Subject: [PATCH] selinux: Create meta-qti-sepolicy layer
+Upstream-Status: Pending
 
 ---
  config/appconfig-mls/default_contexts | 2 +-

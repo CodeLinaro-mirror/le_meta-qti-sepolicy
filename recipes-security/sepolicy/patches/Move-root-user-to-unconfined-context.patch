@@ -2,8 +2,13 @@ From 1ab31c0e26acd8d648effff16e53d5d569ca9cdf Mon Sep 17 00:00:00 2001
 From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Fri, 2 Nov 2018 17:03:28 -0700
 Subject: [PATCH] Move root user to unconfined context
+Upstream-Status: Pending
 
-Start the root user in unconfined context instead of sysadm
+Start the root user in unconfined context instead of sysadm.
+unconfined_r is not added to gen_user roles list since it is declared
+in the unconfined loadable module and cannot be referenced in base
+policy user statements. the role association is established at module
+load time.
 
 Change-Id: I27216a10609a02fc11f4e437fefd66a3ea774298
 ---
@@ -19,8 +24,9 @@ index ca203758c..a473dfa7e 100644
  #
  ifdef(`direct_sysadm_daemon',`
 -	gen_user(root, sysadm, sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r') system_r, s0, s0 - mls_systemhigh, mcs_allcats)
-+	gen_user(root, unconfined, unconfined_r sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r') system_r, s0, s0 - mls_systemhigh, mcs_allcats)
++	gen_user(root, unconfined, sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r') system_r, s0, s0 - mls_systemhigh, mcs_allcats)
  ',`
 -	gen_user(root, sysadm, sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r'), s0, s0 - mls_systemhigh, mcs_allcats)
-+	gen_user(root, unconfined, unconfined_r sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r'), s0, s0 - mls_systemhigh, mcs_allcats)
++	gen_user(root, unconfined, sysadm_r staff_r ifdef(`enable_mls',`secadm_r auditadm_r'), s0, s0 - mls_systemhigh, mcs_allcats)
  ')
+

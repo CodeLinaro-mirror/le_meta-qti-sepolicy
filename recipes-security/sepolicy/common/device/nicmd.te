@@ -1,0 +1,96 @@
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(nicmd, 1.0)
+
+type nicmd_t;
+type nicmd_exec_t;
+type nicmd_data_t;
+type nicmd_socket_t;
+
+gen_require(`
+    type proc_net_t;
+    type socket_device_t;
+    type kernel_t;
+    type qcmap_cm_t;
+    type qcmap_etc_data_t;
+    type diag-router_t;
+    type locale_t;
+    type cert_t;
+    type sysfs_t;
+    type sysctl_vm_t;
+    type sysctl_vm_overcommit_t;
+    type ifconfig_exec_t;
+')
+
+init_vendor_domain(nicmd_t, nicmd_exec_t)
+logging_send_syslog_msg(nicmd_t)
+
+user_data_files_type(nicmd_data_t)
+manage_user_data_files(nicmd_t, nicmd_data_t)
+
+files_type(nicmd_socket_t)
+dev_node(nicmd_socket_t)
+
+dev_read_sysfs(nicmd_t)
+
+allow nicmd_t self:capability { net_admin net_raw setgid setpcap setuid kill };
+
+allow nicmd_t nicmd_socket_t:dir { getattr search open read write create add_name remove_name };
+allow nicmd_t nicmd_socket_t:sock_file { create setattr unlink write open getattr };
+filetrans_pattern(nicmd_t, socket_device_t, nicmd_socket_t, { sock_file dir })
+
+allow nicmd_t self:netlink_xfrm_socket { create getattr write read setopt nlmsg_read nlmsg_write };
+allow nicmd_t self:netlink_generic_socket { create getattr write read setopt };
+allow nicmd_t self:netlink_route_socket { setopt write getattr read bind create nlmsg_read nlmsg_write };
+allow nicmd_t self:netlink_socket { create getattr write read setopt };
+
+allow nicmd_t self:socket create_socket_perms;
+allow nicmd_t self:qipcrtr_socket { create getattr write read setopt };
+allow nicmd_t self:tipc_socket { listen accept create_socket_perms };
+
+allow nicmd_t self:{ socket udp_socket } ioctl;
+
+kernel_request_load_module(nicmd_t)
+
+allow nicmd_t proc_net_t:file { getattr open read write ioctl lock append };
+
+allow nicmd_t self:capability2 block_suspend;
+
+allow nicmd_t self:process getcap;
+allow nicmd_t kernel_t:system module_request;
+
+allow nicmd_t self:tipc_socket { bind connect sendto recvfrom read write getopt setopt shutdown };
+allow nicmd_t self:unix_dgram_socket create;
+allow nicmd_t self:unix_stream_socket create;
+allow nicmd_t self:udp_socket create;
+allow nicmd_t self:fifo_file { getattr open read write };
+
+allow nicmd_t qcmap_cm_t:dir search;
+allow nicmd_t qcmap_cm_t:file { getattr open read };
+
+read_system_data_files(nicmd_t, qcmap_etc_data_t)
+
+allow nicmd_t cert_t:dir search;
+allow nicmd_t cert_t:file { getattr open read };
+
+allow nicmd_t sysctl_vm_t:dir search;
+allow nicmd_t sysctl_vm_overcommit_t:file { getattr open read };
+
+allow nicmd_t diag-router_t:unix_stream_socket connectto;
+
+allow nicmd_t locale_t:dir search;
+allow nicmd_t locale_t:file { open read getattr map };
+
+allow nicmd_t ifconfig_exec_t:file { getattr open read execute execute_no_trans map };
+
+# Silence forbidden sysfs modification attempts (vendor restriction)
+dontaudit nicmd_t sysfs_t:dir { add_name };
+dontaudit nicmd_t sysfs_t:file { create write };
+
+dontaudit nicmd_t self:capability sys_module;
+
+kernel_rw_net_sysctls(nicmd_t)
+kernel_read_vm_overcommit_sysctl(nicmd_t)
+
+kernel_dontaudit_request_load_module(nicmd_t);
