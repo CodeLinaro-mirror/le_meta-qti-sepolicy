@@ -32,7 +32,7 @@ gen_require(`
 ')
 
 #============= shutdown_logs_t ==============
-allow shutdown_logs_t abupdater_log_t:dir search;
+allow shutdown_logs_t abupdater_log_t:dir { getattr read open search };
 allow shutdown_logs_t abupdater_log_t:file { getattr open read };
 allow shutdown_logs_t debugfs_t:dir search;
 allow shutdown_logs_t debugfs_t:file { getattr open read };
