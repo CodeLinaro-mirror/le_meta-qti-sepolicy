@@ -69,6 +69,11 @@ userdebug_or_eng(`
     allow domain data_t:dir search_dir_perms;
     allow { domain -initrc_t } coredump_data_t:dir manage_dir_perms;
     allow { domain -initrc_t } coredump_data_t:file manage_file_perms;
+
+    # qcvirtio-gpu-op has no dedicated domain and runs under initrc_t; it writes its
+    # own core dump directly, so grant the exact perms observed instead of full manage_*.
+    allow initrc_t coredump_data_t:dir { search write add_name };
+    allow initrc_t coredump_data_t:file { create write open };
 ')
 
 type sdcard_data_t;

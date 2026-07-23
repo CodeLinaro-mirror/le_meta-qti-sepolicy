@@ -198,6 +198,11 @@ sysnet_dns_name_resolve(qcmap_cm_t)
 kernel_read_rpc_sysctls(qcmap_cm_t)
 kernel_getattr_proc(qcmap_cm_t)
 
+gen_require(`
+    type dhcpc_runtime_t;
+')
+allow qcmap_cm_t dhcpc_runtime_t:dir { read watch };
+
 networkmanager_domtrans(qcmap_cm_t)
 corenet_tcp_bind_dns_port(qcmap_cm_t)
 corenet_udp_bind_dns_port(qcmap_cm_t)

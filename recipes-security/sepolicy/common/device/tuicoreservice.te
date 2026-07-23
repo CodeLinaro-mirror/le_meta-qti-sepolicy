@@ -114,7 +114,7 @@ allow tuicoreservice_t brightness_t:file { read write open };
 dev_rw_sysfs(tuicoreservice_t)
 
 #give udev permission to relabel dev nodes
-allow udev_t tuicoreservice_dev_t:chr_file { relabelto write getattr relabelfrom};
+allow udev_t tuicoreservice_dev_t:chr_file { relabelto write getattr relabelfrom setattr};
 allow udev_t wlan_hsp_sysfs_t:dir { getattr search_dir_perms };
 allow udev_t wlan_hsp_sysfs_t:file { create rw_file_perms };
 allow tuicoreservice_dev_t device_t:filesystem associate;

@@ -150,7 +150,39 @@ optional_policy(`
     ')
     typeattribute gst_data_t initrc_data_rw_exception;
 ')
+optional_policy(`
+    gen_require(`
+        type coredump_data_t;
+    ')
+    typeattribute coredump_data_t initrc_data_rw_exception;
+')
 neverallow initrc_t { user_data -initrc_data_rw_exception }:file rw_file_perms;
+
+optional_policy(`
+    gen_require(`
+        type sfs_config_initrc_t;
+    ')
+    qseecomd_setattr_data_dirs(sfs_config_initrc_t)
+')
+
+# sfs_config needs to chmod /data/misc (data_t) via sfs_config_initrc_t
+optional_policy(`
+    gen_require(`
+        type sfs_config_initrc_t;
+        type data_t;
+    ')
+    allow sfs_config_initrc_t data_t:dir { setattr create add_name write };
+')
+
+# sfs_config needs to chmod /persist/data (qseecomd_persist_t) via sfs_config_initrc_t
+optional_policy(`
+    gen_require(`
+        type sfs_config_initrc_t;
+        type qseecomd_persist_t;
+    ')
+    allow sfs_config_initrc_t qseecomd_persist_t:dir { setattr };
+')
+
 neverallow initrc_t system_data:file rw_file_perms;
 allow initrc_t sysdevice_sysfs_t:file { getattr open read };
 

@@ -64,6 +64,9 @@ allow qcrosvm_t self:udp_socket { create ioctl };
 
 allow qcrosvm_t self:process { getsched sigkill signal };
 
+# io_uring anon_inode used by crosvm's async I/O worker threads
+allow qcrosvm_t self:anon_inode { create map read write };
+
 allow qcrosvm_t self:capability { net_admin dac_override dac_read_search };
 allow qcrosvm_t self:unix_stream_socket { accept connectto listen };
 

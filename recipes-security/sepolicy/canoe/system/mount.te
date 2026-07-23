@@ -46,6 +46,9 @@ gen_require(`
     type wifi_data_t;
     type systemd_unit_t;
     type weston_runtime_t;
+    type storage_disk_device_t;
+    type udev_rules_t;
+    type fixed_disk_device_t;
 ')
 
 #for overlayfs
@@ -62,11 +65,14 @@ allow mount_t self:capability { fsetid dac_read_search fowner };
 allow mount_t data_t:fifo_file { create_fifo_file_perms read setattr };
 allow mount_t data_t:sock_file { create_sock_file_perms unlink };
 allow mount_t net_conf_t:lnk_file read_lnk_file_perms;
-allow mount_t overlay_t:chr_file { unlink };
-allow mount_t system_dbusd_var_lib_t:lnk_file { create_lnk_file_perms read };
+allow mount_t overlay_t:chr_file { create link rename unlink };
+allow mount_t system_dbusd_var_lib_t:lnk_file { create_lnk_file_perms read relabelfrom relabelto };
 allow mount_t binderfs_t:filesystem { mount };
 allow mount_t var_t:chr_file { unlink };
 allow mount_t wifi_data_t:sock_file manage_sock_file_perms;
 allow mount_t systemd_unit_t:lnk_file getattr;
-allow mount_t weston_runtime_t:dir { manage_dir_perms reparent };
+allow mount_t weston_runtime_t:dir { manage_dir_perms reparent relabelfrom relabelto };
 allow mount_t weston_runtime_t:file { rw_file_perms create };
+allow mount_t storage_disk_device_t:blk_file rw_blk_file_perms;
+allow mount_t udev_rules_t:lnk_file read_lnk_file_perms;
+allow unconfined_mount_t fixed_disk_device_t:blk_file getattr;

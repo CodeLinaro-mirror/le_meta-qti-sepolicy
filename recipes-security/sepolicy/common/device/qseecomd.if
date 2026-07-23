@@ -27,3 +27,21 @@
 
 ## <summary>qseecomd daemon</summary>
 
+########################################
+## <summary>
+##     Set attribute to qseecomd data directories.
+## </summary>
+## <param name="domain">
+##     <summary>
+##     Domain allowed access.
+##     </summary>
+## </param>
+#
+interface(`qseecomd_setattr_data_dirs',`
+    gen_require(`
+        type qseecomd_data_t;
+    ')
+
+    setattr_dirs_pattern($1, qseecomd_data_t, qseecomd_data_t)
+')
+

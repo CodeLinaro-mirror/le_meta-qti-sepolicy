@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type loc_hald_t;
+')
+
+#Allow permission to /sys/power/wake_lock and wake_unlock
+allow loc_hald_t sysfs_t:file { write append };

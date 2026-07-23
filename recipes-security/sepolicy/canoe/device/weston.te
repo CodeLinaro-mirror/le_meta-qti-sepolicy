@@ -76,6 +76,15 @@ allow weston_t binder_device_t:chr_file { map };
 # Weston needs to access buffer fd passed from qmmf-server.
 allow weston_t self:fd use;
 
+# connect to /run/seatd.sock
+gen_require(`
+    type seatd_t;
+    type seatd_socket_t;
+')
+allow weston_t seatd_socket_t:sock_file manage_file_perms;
+allow weston_t seatd_t:unix_stream_socket connectto;
+allow weston_t seatd_t:fd use;
+
 userdebug_or_eng(`
      gen_require(`
         type adbd_t;

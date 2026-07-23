@@ -91,6 +91,12 @@ ifdef(`init_systemd',`
     ')
     allow systemd_tmpfiles_t persist_t:dir { getattr search read write add_name };
 
+    # /data/vendor/display is relabeled to weston_runtime_t by tmpfiles.d rules
+    gen_require(`
+        type weston_runtime_t;
+    ')
+    allow systemd_tmpfiles_t weston_runtime_t:dir { getattr relabelfrom relabelto setattr };
+
     dev_read_sysfs(systemd_tmpfiles_t);
 ')
 
@@ -182,6 +188,7 @@ allow systemd_modules_load_t modules_object_t:dir search;
 allow systemd_modules_load_t init_var_run_t:dir search;
 allow systemd_modules_load_t proc_t:file read_file_perms;
 allow systemd_modules_load_t kernel_t:key manage_key_perms;
+allow systemd_modules_load_t kernel_t:process setsched;
 allow systemd_modules_load_t sysctl_t:dir search;
 allow systemd_modules_load_t init_t:dir search;
 allow systemd_modules_load_t init_t:file read_file_perms;

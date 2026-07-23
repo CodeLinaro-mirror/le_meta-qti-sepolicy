@@ -35,9 +35,15 @@ gen_require(`
   type qseecomd_data_t;
   type qseecomd_persist_t;
   type data_t;
+  type initrc_t;
 ')
 
 init_script_domain(sfs_config_initrc_t, sfs_config_initrc_exec_t)
+
+# sfs_config is invoked via `sh` directly under initrc_t
+allow initrc_t sfs_config_initrc_exec_t:file entrypoint;
+allow initrc_t qseecomd_persist_t:dir { getattr setattr };
+allow initrc_t qseecomd_data_t:dir { getattr setattr };
 
 data_filetrans(sfs_config_initrc_t, qseecomd_data_t, { file dir })
 manage_user_data_files(sfs_config_initrc_t, qseecomd_data_t)

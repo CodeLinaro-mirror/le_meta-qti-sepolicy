@@ -149,6 +149,13 @@ allow usb_t self:unix_stream_socket create_socket_perms;
 dev_write_kmsg(usb_t)
 allow usb_t self:fifo_file rw_fifo_file_perms;
 
+# /etc/usb (overlay-backed) is written by start_usb
+gen_require(`
+    type etc_t;
+')
+allow usb_t etc_t:dir { write add_name };
+allow usb_t etc_t:file create;
+
 # TODO: Move to /var
 type usb_var_lock_t;
 user_data_files_type(usb_var_lock_t)

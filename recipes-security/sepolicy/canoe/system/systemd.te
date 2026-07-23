@@ -49,4 +49,4 @@ allow systemd_modules_load_t self:key write;
 allow udev_t net_conf_t:lnk_file read;
 allow udev_t sdcard_t:dir getattr;
 allow udev_t dev_dri_t:dir { create_dir_perms search write add_name remove_name };
-allow udev_t dev_dri_t:lnk_file { create rename unlink };
+allow udev_t dev_dri_t:lnk_file { create rename unlink read };
