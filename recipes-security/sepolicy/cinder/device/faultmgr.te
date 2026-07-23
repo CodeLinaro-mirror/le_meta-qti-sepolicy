@@ -33,6 +33,7 @@ gen_require(`
     type removable_device_t;
     type sysctl_t;
     type sysctl_kernel_t;
+    type ab_updater_t;
 	class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -89,6 +90,7 @@ allow faultmgr_t faultmgr_data_t:file { read write open getattr append create re
 allow faultmgr_t removable_device_t:blk_file { read write open getattr append };
 allow faultmgr_t var_log_t:lnk_file read;
 dontaudit faultmgr_t default_t:dir search;
+allow faultmgr_t ab_updater_t:dbus send_msg;
 
 #Manage Dbus sockets
 ifdef(`init_systemd',`
