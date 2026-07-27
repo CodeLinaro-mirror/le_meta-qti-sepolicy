@@ -8,6 +8,7 @@ gen_require(`
     type perf_hal_socket_t;
     type perf_hal_t;
     type csr_bt_t;
+    type bt_ipc_sock_t;
  ')
 
 allow pulseaudio_t glinkpkt_q6_audio_ctrl_t:chr_file rw_chr_file_perms;
@@ -28,3 +29,4 @@ userdebug_or_eng(`
 ')
 
 allow pulseaudio_t csr_bt_t:unix_stream_socket connectto;
+allow pulseaudio_t bt_ipc_sock_t:sock_file write;
