@@ -10,7 +10,9 @@ policy_module(fbe-service, 1.0)
 
 type fbe_service_t;
 type fbe_service_exec_t;
+type install_evict_t;
 type fbe_secure_data_t;
+files_type(fbe_secure_data_t)
 
 init_daemon_domain(fbe_service_t, fbe_service_exec_t)
 
@@ -32,7 +34,6 @@ gen_require(`
         type fsadm_t;
         type storage_disk_device_t;
         type vendor_dmabuf_qseecom_heap_device_t;
-        type hwfde_conf_file_t;
         type qseecomd_data_t;
         type cert_t;
         type pmsg_device_t;
@@ -70,7 +71,6 @@ allow fbe_service_t fbe_secure_data_t:file { create };
 allow fbe_service_t firmware_t:dir search_dir_perms;
 allow fbe_service_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t self:process signal;
-allow fbe_service_t hwfde_conf_file_t:file read_file_perms;
 allow fbe_service_t cert_t:dir search_dir_perms;
 allow fbe_service_t cert_t:file read_file_perms;
 allow fbe_service_t pmsg_device_t:chr_file write_file_perms;
