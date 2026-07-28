@@ -28,9 +28,6 @@ gen_require(`
 ')
 allow overlay_cache_mounter_t overlay_mounter_exec_t:file { entrypoint mmap_exec_file_perms };
 
-# Temporary: kept permissive until test team validates no runtime permission gaps.
-# Remove this line once sanity testing confirms full coverage.
-permissive overlay_cache_mounter_t;
 
 # overlay_t is user_data_files_type; the neverallow in data.te requires
 # membership in these attributes.
