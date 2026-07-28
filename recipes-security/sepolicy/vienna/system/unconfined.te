@@ -38,8 +38,10 @@ userdebug_or_eng(`
         type rfsa_adsp_lib_t;
         type uwb_t;
         type sysfs_devcoredump_t;
+        type power_sysfs_t;
     ')
 
+    allow unconfined_t power_sysfs_t:file rw_file_perms;
     allow unconfined_t rfsa_adsp_lib_t:dir rw_dir_perms;
     allow unconfined_t rfsa_adsp_lib_t:dir watch;
     allow unconfined_t rfsa_adsp_lib_t:file rw_file_perms;
