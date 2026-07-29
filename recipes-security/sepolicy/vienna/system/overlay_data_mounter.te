@@ -35,6 +35,7 @@ gen_require(`
     attribute qwes_data_writer;
     type fs_t;
     type bt_data_t;
+    type ssrdump_data_file_t;
     type gst_data_t;
     type qseecomd_data_t;
     type tombstone_data_t;
@@ -80,12 +81,13 @@ allow overlay_data_mounter_t { bt_data_t gst_data_t qseecomd_data_t
                                tombstone_data_t tombstone_rfs_data_t
                                time_data_t qmmf_data_file_t
                                wifi_data_t chg-policy-persist_data_t
-                               sensors_persist_data_t
+                               sensors_persist_data_t ssrdump_data_file_t
                                audio_data_file_t perf_hal_data_t
                                perf_hal_data_scaling_t }:dir { manage_dir_perms relabel_dir_perms };
 
 allow overlay_data_mounter_t { chg-policy-persist_data_t sensors_persist_data_t
                                audio_data_file_t perf_hal_data_t
+                               bt_data_t ssrdump_data_file_t
                                perf_hal_data_scaling_t }:file { manage_file_perms relabel_file_perms };
 
 mls_file_read_all_levels(overlay_data_mounter_t)
