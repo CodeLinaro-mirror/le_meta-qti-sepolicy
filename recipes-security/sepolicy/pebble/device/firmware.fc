@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/lib/firmware/dcp(/.*)?  gen_context(system_u:object_r:firmware_t,s0)
