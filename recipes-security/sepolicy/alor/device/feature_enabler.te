@@ -1,0 +1,53 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(feature_enabler, 1.0)
+
+type feature_enabler_t;
+type feature_enabler_exec_t;
+
+init_vendor_domain(feature_enabler_t, feature_enabler_exec_t)
+logging_send_syslog_msg(feature_enabler_t)
+
+mls_file_read_all_levels(feature_enabler_t)
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    domtrans_pattern(unconfined_t, feature_enabler_exec_t, feature_enabler_t)
+    allow unconfined_t feature_enabler_t:binder { call };
+')
+
+gen_require(`
+    type qseecomd_persist_t;
+    type persist_t;
+    type binderfs_t;
+    type pmsg_device_t;
+    type socket_device_t;
+    type debugfs_t;
+    type smcinvoke_device_t;
+    type vendor_dmabuf_qseecom_heap_device_t;
+    type device_t;
+    type dri_device_t;
+    type firmware_t;
+    type overlay_t;
+')
+
+allow feature_enabler_t persist_t:dir { search };
+allow feature_enabler_t qseecomd_persist_t:dir { search read open watch };
+allow feature_enabler_t binderfs_t:dir { search };
+allow feature_enabler_t pmsg_device_t:chr_file write_chr_file_perms;
+allow feature_enabler_t socket_device_t:dir { search };
+allow feature_enabler_t binder_device_t:chr_file { map };
+allow feature_enabler_t self:process { signal };
+dontaudit feature_enabler_t self:capability { sys_admin };
+allow feature_enabler_t debugfs_t:dir { search };
+allow feature_enabler_t smcinvoke_device_t:chr_file rw_chr_file_perms;
+allow feature_enabler_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
+servicemanager_binder_use(feature_enabler_t)
+allow feature_enabler_t device_t:dir { getattr search };
+allow feature_enabler_t dri_device_t:chr_file rw_chr_file_perms;
+allow feature_enabler_t firmware_t:dir { search };
+allow feature_enabler_t firmware_t:file read_file_perms;
+allow feature_enabler_t overlay_t:dir { search };
