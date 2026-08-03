@@ -75,7 +75,6 @@ gen_require(`
     type minkdaemon_etc_ta_config_t;
     type bluetooth_conf_t;
     type selinux_config_t;
-    type shadow_t;
     type default_context_t;
     type file_context_t;
     type systemd_update_run_t;
@@ -134,8 +133,11 @@ allow overlay_etc_mounter_t selinux_config_t:dir list_dir_perms;
 allow overlay_etc_mounter_t selinux_config_t:file read_file_perms;
 allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:file read_file_perms;
 
-# authlogin neverallow prohibits read on shadow_t:file; getattr is the maximum allowed.
-allow overlay_etc_mounter_t shadow_t:file getattr;
+# The overlayfs stashed-credential second-check uses overlay_etc_mounter_t when any
+# process opens /etc/shadow through the /etc overlay.  auth_read_shadow() adds this
+# domain to can_read_shadow_passwords and grants read_file_perms, satisfying the
+# kernel second-check without violating the authlogin neverallow.
+auth_read_shadow(overlay_etc_mounter_t)
 
 # Second-check for udev helper scripts in /etc/udev/scripts/.
 # copy-up only reads the lower file; read_file_perms is sufficient.
@@ -151,4 +153,3 @@ mls_file_write_all_levels(overlay_etc_mounter_t)
 mls_file_downgrade(overlay_etc_mounter_t)
 mls_file_upgrade(overlay_etc_mounter_t)
 
-dontaudit overlay_etc_mounter_t shadow_t:file { read open };
