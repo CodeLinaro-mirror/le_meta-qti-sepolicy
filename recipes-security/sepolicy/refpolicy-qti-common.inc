@@ -133,7 +133,10 @@ rebuild_policy:append() {
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
 		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
-		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+                if [ ! -f ${policy_dir}/policy.${policy_version} ]; then
+                    bbwarn "policy.${policy_version} not found in ${policy_dir}, cannot create recovery policy"
+                fi
+                cp -f ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
 	fi
 
 	if ${@bb.utils.contains('COMBINED_FEATURES', 'qti-ab-boot', 'false', 'true', d)}; then
