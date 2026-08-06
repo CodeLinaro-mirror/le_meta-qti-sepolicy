@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#Changes from Qualcomm Technologies, Inc. are provided under the following license:
+#Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(qcmap_cm, 1.0)
 
@@ -72,6 +76,7 @@ gen_require(`
   type unreserved_port_t;
   type minidlna_initrc_exec_t;
   type debugfs_t;
+  type ifconfig_t;
 ')
 
 userdebug_or_eng(`
@@ -96,6 +101,8 @@ allow qcmap_cm_t lib_t:file { execute_no_trans };
 allow qcmap_cm_t self:tcp_socket connected_stream_socket_perms;
 allow qcmap_cm_t self:socket connected_stream_socket_perms;
 allow qcmap_cm_t self:socket create_socket_perms;
+allow qcmap_cm_t self:unix_stream_socket connectto;
+allow ifconfig_t qcmap_cm_t:unix_stream_socket { read write };
 allow qcmap_cm_t self:unix_dgram_socket { sendto create_socket_perms };
 allow qcmap_cm_t var_t:file { create write open read getattr unlink append };
 allow qcmap_cm_t self:udp_socket { create ioctl setopt bind write read };
