@@ -112,7 +112,7 @@ allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
                               iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t }:dir list_dir_perms;
 allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
-                              dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
+                              systemd_unit_t dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
                               thermal_etc_t perf_hal_etc_t cert_t syslog_conf_t
                               audio_hal_etc_t audio_hal_etc_acdb_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
