@@ -140,12 +140,14 @@ allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t 
 auth_read_shadow(overlay_etc_mounter_t)
 
 # Second-check for udev helper scripts in /etc/udev/scripts/.
-# copy-up only reads the lower file; read_file_perms is sufficient.
+# read_file_perms covers copy-up; execute and map are also needed because
+# ovl_permission() mirrors the caller's MAY_EXEC check using the mounter's
+# stashed credentials when udev_t executes a helper via execve(2).
 optional_policy(`
     gen_require(`
         type udev_helper_exec_t;
     ')
-    allow overlay_etc_mounter_t udev_helper_exec_t:file read_file_perms;
+    allow overlay_etc_mounter_t udev_helper_exec_t:file { read_file_perms execute map };
 ')
 
 mls_file_read_all_levels(overlay_etc_mounter_t)
