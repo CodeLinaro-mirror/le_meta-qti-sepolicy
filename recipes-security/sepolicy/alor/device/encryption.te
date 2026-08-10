@@ -20,4 +20,8 @@ gen_require(`
 # allow fbe-service to read metadata from media-encryption.conf file
 allow fbe_service_t fbe_conf_file_t:file read_file_perms;
 
+allow fbe_service_t qseecom_device_t:chr_file read_chr_file_perms;
+auditallow fbe_service_t qseecom_device_t:chr_file write;
+allow fbe_service_t qseecom_device_t:chr_file write_chr_file_perms;
+
 rw_chr_files_pattern(fbe_service_t, device_t, qseecom_device_t);

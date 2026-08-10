@@ -17,24 +17,36 @@ init_daemon_domain(fbe_service_t, fbe_service_exec_t)
 
 gen_require(`
         type urandom_device_t;
+        type init_var_run_t;
         type overlay_t;
         type fs_t;
         type devlog_t;
         type smcinvoke_device_t;
+        type proc_t;
+        type socket_device_t;
+        type ion_device_t;
+        type firmware_t;
         type vendor_dmabuf_qseecom_heap_device_t;
         type fbe_conf_file_t;
         type qseecomd_data_t;
         type cert_t;
         type pmsg_device_t;
 ')
+
+kernel_dontaudit_read_system_state(fbe_service_t)
 logging_send_syslog_msg(fbe_service_t)
 
 mls_file_read_all_levels(fbe_service_t);
+mls_file_write_all_levels(fbe_service_t);
 
 fs_mount_xattr_fs(fbe_service_t)
 files_polyinstantiate_all(fbe_service_t)
 overlay_mount_user_dir(fbe_service_t)
 leprop_rw_props(fbe_service_t)
+dontaudit fbe_service_t kernel_t:system module_request;
+
+#Allow fbe_service_t to access /dev/ion node for loading keymaster TA using qseecom
+read_chr_files_pattern(fbe_service_t, device_t, ion_device_t);
 
 #  Allow creation of /unencrypted dir inside /overlay.
 allow fbe_secure_data_t fs_t:filesystem  { associate };
@@ -44,15 +56,19 @@ allow fbe_service_t overlay_t:dir manage_dir_perms;
 
 # Core FBE functionality permissions
 allow fbe_service_t urandom_device_t:chr_file read_chr_file_perms;
+allow fbe_service_t init_var_run_t:dir search_dir_perms;
+allow fbe_service_t proc_t:file read_file_perms;
 allow fbe_service_t fbe_secure_data_t:dir manage_dir_perms;
-allow fbe_service_t fbe_secure_data_t:file rw_file_perms;
+allow fbe_service_t fbe_secure_data_t:file { rw_file_perms  create };
 allow fbe_service_t fbe_service_t:key { search };
 allow fbe_service_t fbe_conf_file_t:file read_file_perms;
 
 # Secure world communication for encryption operations
 allow fbe_service_t smcinvoke_device_t:chr_file rw_chr_file_perms;
+allow fbe_service_t socket_device_t:dir search_dir_perms;
+allow fbe_service_t firmware_t:dir search_dir_perms;
 allow fbe_service_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
-
+allow fbe_service_t self:process signal;
 # Certificate access for secure operations
 allow fbe_service_t cert_t:dir search_dir_perms;
 allow fbe_service_t cert_t:file read_file_perms;
@@ -60,10 +76,6 @@ allow fbe_service_t cert_t:file read_file_perms;
 # Logging permissions
 allow fbe_service_t devlog_t:sock_file write_sock_file_perms;
 allow fbe_service_t pmsg_device_t:chr_file write_file_perms;
-
 # Allow read/write to /data/vendor/tzstorage path.
 data_filetrans(fbe_service_t, qseecomd_data_t, { file dir })
 manage_user_data_files(fbe_service_t, qseecomd_data_t)
-
-# Suppress audit noise
-dontaudit fbe_service_t kernel_t:system module_request;
