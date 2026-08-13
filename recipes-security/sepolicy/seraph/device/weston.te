@@ -1,0 +1,16 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type weston_data_t;
+user_data_files_type(weston_data_t)
+
+gen_require(`
+    type seatd_t;
+    type seatd_socket_t;
+')
+
+allow weston_t seatd_socket_t:sock_file manage_file_perms;
+allow weston_t seatd_t:unix_stream_socket connectto;
+allow weston_t seatd_t:fd use;
+allow weston_t weston_data_t:dir manage_dir_perms;
+allow weston_t weston_data_t:file manage_file_perms;
