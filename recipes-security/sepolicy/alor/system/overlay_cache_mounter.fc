@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# No file context entries: /usr/libexec/overlay-mounter is labeled
+# overlay_mounter_exec_t in overlay_data_mounter.fc.  This domain is
+# entered via SELinuxContext= in overlay-cache-mounter.service.

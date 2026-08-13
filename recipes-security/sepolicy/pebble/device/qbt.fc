@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/dev/bt.*                      -c  gen_context(system_u:object_r:bt_device_t,s0)
+/data/misc/bluetooth(/.*)?         gen_context(system_u:object_r:bt_data_t,s0)
+/data/vendor/bluetooth(/.*)?       gen_context(system_u:object_r:bt_data_t,s0)

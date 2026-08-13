@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+allow thermal-engine_t self:capability sys_admin;
+allow thermal-engine_t self:capability sys_boot;
+allow thermal-engine_t thermal_etc_t:file read_file_perms;

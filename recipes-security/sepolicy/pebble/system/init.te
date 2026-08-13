@@ -3,7 +3,9 @@
 
 gen_require(`
     type overlay_t;
+    type wlan_hsp_sysfs_t;
 ')
 
 allow initrc_t overlay_t:dir manage_dir_perms;
 allow init_t overlay_t:dir manage_dir_perms;
+allow init_t wlan_hsp_sysfs_t:dir getattr;

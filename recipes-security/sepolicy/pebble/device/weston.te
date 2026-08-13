@@ -1,0 +1,46 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+type var_cache_t;
+files_type(var_cache_t);
+
+type weston_data_t;
+user_data_files_type(weston_data_t)
+
+type vendor_clstc_config_t;
+files_type(vendor_clstc_config_t)
+
+allow weston_t self:capability dac_read_search;
+
+gen_require(`
+    type var_t;
+    type fonts_cache_t;
+    type user_home_t;
+    type seatd_t;
+    type seatd_socket_t;
+    type binder_device_t;
+    type servicemanager_t;
+    type binderfs_t;
+    type qmmf_data_file_t;
+')
+
+allow weston_t fonts_cache_t:dir manage_dir_perms;
+allow weston_t var_cache_t:dir manage_dir_perms;
+allow weston_t var_cache_t:file manage_file_perms;
+allow weston_t user_home_t:file read;
+allow weston_t seatd_socket_t:sock_file manage_file_perms;
+allow weston_t seatd_t:unix_stream_socket connectto;
+allow weston_t seatd_t:fd use;
+allow weston_t binder_device_t:chr_file { rw_chr_file_perms map };
+allow weston_t servicemanager_t:binder { call transfer };
+allow weston_t binderfs_t:dir search;
+allow weston_t weston_data_t:dir manage_dir_perms;
+allow weston_t weston_data_t:file manage_file_perms;
+allow weston_t vendor_clstc_config_t:file read_file_perms;
+allow weston_t default_t:file read_file_perms;
+# /data  read only
+allow weston_t data_t:file read_file_perms;
+# qmmf_data_file_t /data/misc/display
+allow weston_t qmmf_data_file_t:dir manage_dir_perms;
+allow weston_t qmmf_data_file_t:file manage_file_perms;
+allow weston_t user_home_t:dir search;

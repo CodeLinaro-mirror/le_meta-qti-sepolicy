@@ -6,3 +6,6 @@ genfscon sysfs /devices/platform/soc/17010040.qcom,wcn7750  gen_context(system_u
 genfscon sysfs /devices/platform/soc/9800000.qcom,mdss_mdp/backlight/panel0-backlight/max_brightness gen_context(system_u:object_r:brightness_t,s0)
 genfscon sysfs /devices/platform/soc/9800000.qcom,mdss_mdp/backlight/panel0-backlight/brightness     gen_context(system_u:object_r:brightness_t,s0)
 
+type fastrpc_sysfs_t;
+genfscon sysfs /kernel/fastrpc gen_context(system_u:object_r:fastrpc_sysfs_t,s0)
+dev_associate_sysfs(fastrpc_sysfs_t)

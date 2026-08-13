@@ -1,0 +1,26 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type perf_hal_socket_t;
+    type perf_hal_t;
+    type sysfs_t;
+    type unconfined_t;
+    type btapp_t;
+    type bt_data_t;
+')
+
+dontaudit pulseaudio_t self:capability sys_admin;
+#TODO:revisit this when facing any problem with path-/sys/power/wake_lock
+dontaudit pulseaudio_t sysfs_t:file append;
+
+allow pulseaudio_t perf_hal_socket_t:sock_file write_sock_file_perms;
+allow pulseaudio_t perf_hal_t:unix_stream_socket connectto;
+# allow pulseaudio connect to BT a2dp sockets
+allow pulseaudio_t btapp_t:unix_stream_socket connectto;
+allow pulseaudio_t bt_data_t:sock_file rw_sock_file_perms;
+
+userdebug_or_eng(`
+    allow pulseaudio_t unconfined_t:fd use;
+    allow pulseaudio_t unconfined_t:binder { call transfer };
+')

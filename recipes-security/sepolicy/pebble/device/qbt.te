@@ -1,0 +1,71 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+########################################
+#
+# Declarations
+#
+type bt_device_t;
+dev_node(bt_device_t)
+gen_require(`
+    type btapp_exec_t;
+    type btapp_t;
+    type bt_data_t;
+    type bluetooth_conf_t;
+    type default_t;
+    type pmsg_device_t;
+    type socket_device_t;
+    type node_t;
+    type syslogd_t;
+    type sysfs_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type firmware_t;
+    type qcmap_cm_t;
+    type tty_device_t;
+    type urandom_device_t;
+    type uhid_device_t;
+    type pulseaudio_runtime_t;
+    type pulseaudio_t;
+')
+
+# btapp_t is running as test app from shell
+# baseline Perf build runs ADB shell as 'unconfined_t' may fail A2DP as well
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    domtrans_pattern(unconfined_t, btapp_exec_t, btapp_t)
+')
+
+manage_dirs_pattern(btapp_t, bluetooth_conf_t, bluetooth_conf_t)
+manage_files_pattern(btapp_t, bluetooth_conf_t, bluetooth_conf_t)
+manage_user_data_files(btapp_t, bt_data_t)
+read_user_data_files(btapp_t, bt_data_t)
+search_dirs_pattern(btapp_t, firmware_t, firmware_t)
+read_files_pattern(btapp_t, firmware_t, firmware_t)
+search_dirs_pattern(btapp_t, qcmap_cm_t, qcmap_cm_t)
+read_files_pattern(btapp_t, qcmap_cm_t, qcmap_cm_t)
+search_dirs_pattern(btapp_t, socket_device_t, socket_device_t)
+search_dirs_pattern(btapp_t, syslogd_t, syslogd_t)
+search_dirs_pattern(btapp_t, pulseaudio_runtime_t, pulseaudio_runtime_t)
+search_dirs_pattern(btapp_t, default_t, default_t)
+logging_send_syslog_msg(btapp_t)
+corenet_tcp_bind_all_unreserved_ports(btapp_t)
+allow btapp_t bt_device_t:chr_file rw_chr_file_perms;
+allow btapp_t tty_device_t:chr_file rw_chr_file_perms;
+allow btapp_t uhid_device_t:chr_file rw_chr_file_perms;
+allow btapp_t urandom_device_t:chr_file read_chr_file_perms;
+allow btapp_t pmsg_device_t:chr_file write_chr_file_perms;
+allow btapp_t self:fifo_file rw_fifo_file_perms;
+allow btapp_t self:qipcrtr_socket create_socket_perms;
+allow btapp_t self:tcp_socket create_stream_socket_perms;
+#permissions for /sys/power/wake_lock /sys/power/wake_unlock
+dev_rw_sysfs(btapp_t)
+allow btapp_t syslogd_t:file read_file_perms;
+allow btapp_t leprop_sock_t:sock_file write_sock_file_perms;
+allow btapp_t leprop_t:unix_stream_socket connectto;
+allow btapp_t pulseaudio_runtime_t:sock_file  write_sock_file_perms;
+allow btapp_t pulseaudio_t:unix_stream_socket connectto;
+allow btapp_t node_t:tcp_socket node_bind;
+allow btapp_t self:process { getsched setsched signal sigkill };

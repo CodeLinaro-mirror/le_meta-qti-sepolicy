@@ -1,0 +1,23 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(encryption, 1.0)
+
+########################################
+#
+# Declarations
+#
+
+type fbe_conf_file_t;
+files_type(fbe_conf_file_t)
+
+gen_require(`
+    type qseecom_device_t;
+    type fbe_service_t;
+    type device_t;
+')
+
+# allow fbe-service to read metadata from media-encryption.conf file
+allow fbe_service_t fbe_conf_file_t:file read_file_perms;
+
+rw_chr_files_pattern(fbe_service_t, device_t, qseecom_device_t);

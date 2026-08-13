@@ -1,0 +1,8 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type storage_disk_device_t;
+')
+
+allow fsadm_t storage_disk_device_t:blk_file rw_blk_file_perms;
