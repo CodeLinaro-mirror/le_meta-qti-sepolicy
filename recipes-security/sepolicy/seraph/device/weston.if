@@ -1,4 +1,4 @@
-# Copyright (c) 2019, The Linux Foundation. All rights reserved.
+# Copyright (c) 2021, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -25,5 +25,9 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-/usr/sbin/sfs_config                --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
-/usr/sbin/initscripts/sfs_config    --    gen_context(system_u:object_r:sfs_config_initrc_exec_t,s0)
+## <summary>weston daemon</summary>
+
+########################################
+## <summary>
+##      All permissions for weston service.
+## </summary>
