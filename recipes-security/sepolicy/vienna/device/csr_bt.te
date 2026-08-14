@@ -1,0 +1,92 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(csr_bt, 1.0)
+
+gen_require(`
+    type bt_data_t;
+    type pulseaudio_runtime_t;
+    type tmp_t;
+    type default_t;
+    type firmware_t;
+    type leprop_sock_t;
+    type leprop_t;
+    type proc_t;
+    type pulseaudio_t;
+    type ssrdump_data_file_t;
+    type perf_hal_t;
+    type ptmx_t;
+    type perf_hal_socket_t;
+ ')
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_t;
+    ')
+    allow unconfined_t perf_hal_socket_t:sock_file getattr;
+    domtrans_pattern(unconfined_t, csr_bt_app_exec_t, csr_bt_t)
+')
+
+type bt_tmp_t;
+files_type(bt_tmp_t);
+
+type bt_ipc_sock_t;
+files_type(bt_ipc_sock_t);
+dev_node(bt_ipc_sock_t)
+# Allow csr_bt_t to manage the Bluetooth IPC control socket file.
+device_manage_socket_file(csr_bt_t, bt_ipc_sock_t, "bt_ipc_ctrl")
+
+type csr_bt_t;
+type csr_bt_app_exec_t;
+init_daemon_domain(csr_bt_t, csr_bt_app_exec_t)
+
+allow csr_bt_t pulseaudio_runtime_t:dir search_dir_perms;
+allow csr_bt_t pulseaudio_runtime_t:sock_file write_sock_file_perms;
+allow csr_bt_t pulseaudio_t:unix_stream_socket connectto;
+
+# Create bt_tmp_t for csr_bt_t temporary files under /tmp and allow file access.
+type_transition csr_bt_t tmp_t:file bt_tmp_t;
+allow csr_bt_t tmp_t:dir rw_dir_perms;
+allow csr_bt_t bt_tmp_t:dir rw_dir_perms;
+allow csr_bt_t bt_tmp_t:file manage_file_perms;
+
+manage_user_data_files(csr_bt_t, bt_data_t)
+read_user_data_files(csr_bt_t, bt_data_t)
+
+manage_user_data_files(csr_bt_t, ssrdump_data_file_t)
+read_user_data_files(csr_bt_t, ssrdump_data_file_t)
+
+allow csr_bt_t default_t:dir search_dir_perms;
+allow csr_bt_t firmware_t:dir search_dir_perms;
+allow csr_bt_t firmware_t:file read_file_perms;
+allow csr_bt_t leprop_sock_t:sock_file write_sock_file_perms;
+allow csr_bt_t leprop_t:unix_stream_socket connectto;
+allow csr_bt_t proc_t:file read_file_perms;
+allow csr_bt_t ptmx_t:chr_file rw_chr_file_perms;
+
+allow csr_bt_t self:fifo_file rw_inherited_fifo_file_perms;
+allow csr_bt_t self:capability2 block_suspend;
+allow csr_bt_t self:qipcrtr_socket create;
+allow csr_bt_t self:capability { chown fowner };
+allow csr_bt_t self:process { signal sigkill };
+allow csr_bt_t self:unix_stream_socket { connectto create_stream_socket_perms };
+allow csr_bt_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
+allow csr_bt_t self:netlink_generic_socket create_socket_perms;
+allow csr_bt_t self:netlink_audit_socket create_netlink_socket_perms;
+
+allow csr_bt_t bt_ipc_sock_t:dir list_dir_perms;
+allow csr_bt_t bt_ipc_sock_t:sock_file manage_sock_file_perms;
+allow csr_bt_t bt_ipc_sock_t:unix_stream_socket { connectto create_stream_socket_perms };
+
+type bt_hal_device_t;
+files_type(bt_hal_device_t);
+dev_node(bt_hal_device_t)
+allow csr_bt_t bt_hal_device_t:chr_file manage_chr_file_perms;
+
+type glink_pkt_device_t;
+dev_node(glink_pkt_device_t)
+allow csr_bt_t glink_pkt_device_t:chr_file manage_chr_file_perms;
+
+type spibt_device_t;
+dev_node(spibt_device_t)
+allow csr_bt_t spibt_device_t:chr_file manage_chr_file_perms;

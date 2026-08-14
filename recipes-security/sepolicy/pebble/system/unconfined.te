@@ -15,4 +15,22 @@ userdebug_or_eng(`
     allow unconfined_t touch_input_device_t:file getattr;
     allow unconfined_t zs_handle_sysfs_t:dir list_dir_perms;
     allow unconfined_t zspage_sysfs_t:dir list_dir_perms;
+
+    # Allow getenforce and libselinux to read /etc/selinux/config so that
+    # is_selinux_enabled() returns the correct result instead of "Disabled".
+    seutil_read_config(unconfined_t)
+')
+
+userdebug_or_eng(`
+    gen_require(`
+        type unconfined_mount_t;
+        type kernel_t;
+    ')
+
+    # Allow manual mount commands on fixed block devices (e.g. /dev/sdi1).
+    storage_getattr_fixed_disk_dev(unconfined_mount_t)
+    storage_raw_read_fixed_disk(unconfined_mount_t)
+
+    # overlay mount triggers sched_setscheduler() check against kernel worker threads.
+    allow unconfined_mount_t kernel_t:process setsched;
 ')

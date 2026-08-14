@@ -31,6 +31,6 @@ userdebug_or_eng(`
     storage_getattr_fixed_disk_dev(unconfined_mount_t)
     storage_raw_read_fixed_disk(unconfined_mount_t)
 
-    # mount attempts to adjust kernel thread scheduling; suppress audit noise.
-    dontaudit unconfined_mount_t kernel_t:process setsched;
+    # overlay mount triggers sched_setscheduler() check against kernel worker threads.
+    allow unconfined_mount_t kernel_t:process setsched;
 ')
