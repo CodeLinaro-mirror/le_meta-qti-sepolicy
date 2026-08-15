@@ -6,8 +6,21 @@ gen_require(`
     type fs_t;
     type removable_device_t;
     type shell_exec_t;
+    type etc_t;
+    type data_t;
+    type proc_t;
 ')
 
 allow ss-ramdump_t removable_device_t:blk_file { read open };
 allow ss-ramdump_t fs_t:filesystem getattr;
 allow ss-ramdump_t shell_exec_t:file { execute read open execute_no_trans map };
+
+# Allow ss-ramdump to delete old ramdump to store latest one on low-storage-device
+allow ss-ramdump_t self:fifo_file { getattr read write ioctl };
+allow ss-ramdump_t etc_t:file { read open getattr map };
+allow ss-ramdump_t self:capability chown;
+allow ss-ramdump_t proc_t:file { open read };
+
+# when the space is occupied with files other than ramdump, ss-ramdump is
+# failing to collect full dump, hence allow ss-ramdump to delete other files
+allow ss-ramdump_t data_t:file { getattr unlink };

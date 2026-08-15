@@ -1,13 +1,7 @@
 #Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
-policy_module(pwrmgr, 1.0)
-
-type pwrmgr_t;
-type pwrmgr_exec_t;
 type pwrmgr_conf_t;
-
-init_vendor_domain(pwrmgr_t, pwrmgr_exec_t)
 
 gen_require(`
     type pwrmgr_data_t;
@@ -31,6 +25,10 @@ gen_require(`
     type power_unit_t;
     type sysctl_kernel_t;
     type removable_device_t;
+    type pwrmgr_t;
+    type pwrmgr_exec_t;
+    type rfs_persist_t;
+    type mpss_persist_t;
     class dbus send_msg;
     class service { start status stop reload };
 ')
@@ -38,6 +36,7 @@ gen_require(`
 userdebug_or_eng(`
      allow unconfined_t pwrmgr_exec_t:service { start stop status };
      allow initrc_t unconfined_t:dbus send_msg;
+     allow unconfined_t mpss_persist_t:file rw_inherited_file_perms;
 ')
 
 allow pwrmgr_t pwrmgr_t:fifo_file { read open write };
@@ -73,6 +72,9 @@ allow pwrmgr_t pwrmgr_data_t:file manage_file_perms;
 allow pwrmgr_t qfhlog_data_t:dir manage_dir_perms;
 allow pwrmgr_t qfhlog_data_t:file manage_file_perms;
 allow pwrmgr_t removable_device_t:blk_file { read write open getattr append};
+allow pwrmgr_t rfs_persist_t:dir search;
+allow pwrmgr_t mpss_persist_t:dir rw_dir_perms;
+allow pwrmgr_t mpss_persist_t:file manage_file_perms;
 dontaudit pwrmgr_t default_t:dir search;
 
 #Manage Dbus sockets
