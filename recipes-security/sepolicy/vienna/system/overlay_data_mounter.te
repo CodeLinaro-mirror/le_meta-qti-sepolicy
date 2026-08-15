@@ -1,0 +1,98 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(overlay_data_mounter, 1.0)
+
+########################################
+#
+# Declarations
+#
+########################################
+
+type overlay_data_mounter_t;
+type overlay_data_mounter_exec_t;
+
+# overlay_mounter_exec_t: shared exec label for /usr/libexec/overlay-mounter.
+# All three mounter domains enter through this binary; systemd service units
+# use SELinuxContext= to select the correct domain at launch.
+type overlay_mounter_exec_t;
+
+# Primary domain transition: direct exec of the binary (no SELinuxContext=)
+# lands in overlay_data_mounter_t and grants init_t execute on the shared
+# overlay_mounter_exec_t file label.
+init_daemon_domain(overlay_data_mounter_t, overlay_mounter_exec_t)
+
+
+########################################
+#
+# overlay_data_mounter_t policy
+#
+########################################
+
+gen_require(`
+    type overlay_t;
+    type data_t;
+    attribute qwes_data_writer;
+    type fs_t;
+    type bt_data_t;
+    type ssrdump_data_file_t;
+    type gst_data_t;
+    type qseecomd_data_t;
+    type tombstone_data_t;
+    type tombstone_rfs_data_t;
+    type time_data_t;
+    type qmmf_data_file_t;
+    type wifi_data_t;
+    type chg-policy-persist_data_t;
+    type leprop_system_data_t;
+    type adbd_system_data_t;
+    type sensors_persist_data_t;
+    type audio_data_file_t;
+    type perf_hal_data_t;
+    type perf_hal_data_scaling_t;
+')
+
+typeattribute overlay_data_mounter_t qwes_data_writer;
+
+########################################
+# Phase 1: mount(2) syscall
+########################################
+
+allow overlay_data_mounter_t self:capability { sys_admin chown fowner dac_override dac_read_search fsetid };
+allow overlay_data_mounter_t fs_t:filesystem { mount getattr relabelfrom };
+allow overlay_data_mounter_t data_t:dir { mounton list_dir_perms relabelfrom relabelto };
+allow overlay_data_mounter_t data_t:filesystem { mount relabelfrom relabelto };
+allow overlay_data_mounter_t overlay_t:dir manage_dir_perms;
+allow overlay_data_mounter_t overlay_t:file manage_file_perms;
+allow overlay_data_mounter_t overlay_t:chr_file manage_chr_file_perms;
+
+########################################
+# Phase 2: copy-up (stashed credential second-check)
+########################################
+
+data_manage_generic_user_files(overlay_data_mounter_t)
+
+# Direct data_t:file rule — attribute-based allow from
+# data_manage_generic_user_files does not generate a matching kernel rule for
+# data_t at runtime.  Direct type rule is required for copy-up in enforcing mode.
+allow overlay_data_mounter_t data_t:file { manage_file_perms relabel_file_perms };
+
+allow overlay_data_mounter_t { bt_data_t gst_data_t qseecomd_data_t
+                               tombstone_data_t tombstone_rfs_data_t
+                               time_data_t qmmf_data_file_t
+                               wifi_data_t chg-policy-persist_data_t
+                               sensors_persist_data_t ssrdump_data_file_t
+                               audio_data_file_t perf_hal_data_t
+                               perf_hal_data_scaling_t }:dir { manage_dir_perms relabel_dir_perms };
+
+allow overlay_data_mounter_t { chg-policy-persist_data_t sensors_persist_data_t
+                               audio_data_file_t perf_hal_data_t
+                               bt_data_t ssrdump_data_file_t
+                               perf_hal_data_scaling_t }:file { manage_file_perms relabel_file_perms };
+
+mls_file_read_all_levels(overlay_data_mounter_t)
+mls_file_write_all_levels(overlay_data_mounter_t)
+mls_file_downgrade(overlay_data_mounter_t)
+mls_file_upgrade(overlay_data_mounter_t)
+
+dontaudit overlay_data_mounter_t { leprop_system_data_t adbd_system_data_t }:file { manage_file_perms relabel_file_perms };

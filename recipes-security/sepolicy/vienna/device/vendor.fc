@@ -1,10 +1,8 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
-
+/usr/sbin/init.post_boot.sh  --  gen_context(system_u:object_r:post_boot_script_exec_t,s0)
 /dev/glinkpkt_q6_audio_ctrl       gen_context(system_u:object_r:glinkpkt_q6_audio_ctrl_t,s0)
 /dev/glinkpkt_wm_qsh_.*     -c    gen_context(system_u:object_r:glinkpkt_wm_qsh_device_t,s0)
-/data/vendor/ssrdump    -d    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
-/data/vendor/ssrdump/.*    --    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
 /dev/fastrpc-adsp            -c  gen_context(system_u:object_r:qdsp_device_t,s0)
 /dev/fastrpc-adsp-secure            -c  gen_context(system_u:object_r:xdsp_device_t,s0)
 /dev/diag_am_cntl      -c      gen_context(system_u:object_r:diag_device_router_t,s0)

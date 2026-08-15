@@ -40,8 +40,6 @@ type csr_bt_t;
 type csr_bt_app_exec_t;
 init_daemon_domain(csr_bt_t, csr_bt_app_exec_t)
 
-allow csr_bt_t bt_data_t:dir rw_dir_perms;
-allow csr_bt_t bt_data_t:file manage_file_perms;
 allow csr_bt_t pulseaudio_runtime_t:dir search_dir_perms;
 allow csr_bt_t pulseaudio_runtime_t:sock_file write_sock_file_perms;
 allow csr_bt_t pulseaudio_t:unix_stream_socket connectto;
@@ -55,19 +53,22 @@ allow csr_bt_t bt_tmp_t:file manage_file_perms;
 manage_user_data_files(csr_bt_t, bt_data_t)
 read_user_data_files(csr_bt_t, bt_data_t)
 
+manage_user_data_files(csr_bt_t, ssrdump_data_file_t)
+read_user_data_files(csr_bt_t, ssrdump_data_file_t)
+
 allow csr_bt_t default_t:dir search_dir_perms;
 allow csr_bt_t firmware_t:dir search_dir_perms;
 allow csr_bt_t firmware_t:file read_file_perms;
 allow csr_bt_t leprop_sock_t:sock_file write_sock_file_perms;
 allow csr_bt_t leprop_t:unix_stream_socket connectto;
 allow csr_bt_t proc_t:file read_file_perms;
-allow csr_bt_t ssrdump_data_file_t:dir rw_dir_perms;
 allow csr_bt_t ptmx_t:chr_file rw_chr_file_perms;
 
 allow csr_bt_t self:fifo_file rw_inherited_fifo_file_perms;
 allow csr_bt_t self:capability2 block_suspend;
 allow csr_bt_t self:qipcrtr_socket create;
 allow csr_bt_t self:capability { chown fowner };
+allow csr_bt_t self:process { signal sigkill };
 allow csr_bt_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow csr_bt_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;
 allow csr_bt_t self:netlink_generic_socket create_socket_perms;
@@ -76,8 +77,6 @@ allow csr_bt_t self:netlink_audit_socket create_netlink_socket_perms;
 allow csr_bt_t bt_ipc_sock_t:dir list_dir_perms;
 allow csr_bt_t bt_ipc_sock_t:sock_file manage_sock_file_perms;
 allow csr_bt_t bt_ipc_sock_t:unix_stream_socket { connectto create_stream_socket_perms };
-
-allow csr_bt_t bt_ipc_sock_t:sock_file write_sock_file_perms;
 
 type bt_hal_device_t;
 files_type(bt_hal_device_t);
