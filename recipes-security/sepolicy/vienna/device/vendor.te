@@ -6,16 +6,17 @@ dontaudit post_boot_script_t self:capability dac_override;
 filetrans_pattern(post_boot_script_t, perf_hal_data_t, perf_hal_data_scaling_t, file)
 
 gen_require(`
+    type configfs_t;
     type etc_t;
     type ss-ramdump_t;
     type ramdump_data_t;
     type power_sysfs_t;
     type perf_hal_data_t;
     type perf_hal_data_scaling_t;
+    type tracefs_t;
+    type vendor_sysfs_coresight_etr_t;
+    type vendor_sysfs_dcc_t;
 ')
-
-type vendor_sysfs_coresight_etr_t;
-files_type(vendor_sysfs_coresight_etr_t)
 
 allow post_boot_script_t etc_t:file read_file_perms;
 allow post_boot_script_t vendor_sysfs_coresight_etr_t:file setattr;
@@ -34,3 +35,16 @@ allow ss-ramdump_t ramdump_data_t:dir rw_dir_perms;
 
 allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
 allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;
+
+# init.post_boot.sh adjusts device attributes and CoreSight configfs nodes
+# during late boot on Vienna.  The configfs create/add_name checks are for STP
+# policy instance creation under /sys/kernel/config.
+allow post_boot_script_t configfs_t:dir { search write add_name create getattr setattr };
+allow post_boot_script_t configfs_t:file { create open write };
+
+userdebug_or_eng(`
+    allow post_boot_script_t vendor_sysfs_dcc_t:dir { write add_name };
+    allow post_boot_script_t vendor_sysfs_dcc_t:file create;
+    allow post_boot_script_t tracefs_t:dir { getattr search write add_name create };
+    allow post_boot_script_t tracefs_t:file { getattr open write };
+')
