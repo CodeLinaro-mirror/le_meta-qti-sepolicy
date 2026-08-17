@@ -1,0 +1,28 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+    type rebootd_t;
+    type syslogd_runtime_t;
+    type kmsg_device_t;
+    type proc_t;
+    type system_dbusd_runtime_t;
+    type devlog_t;
+    type overlay_t;
+    type system_dbusd_t;
+    ')
+    allow rebootd_t overlay_t:dir search_dir_perms;
+    # Allow rebootd to search syslogd runtime directories (journal)
+    allow rebootd_t syslogd_runtime_t:dir search;
+    # Allow rebootd to write to kmsg device
+    allow rebootd_t kmsg_device_t:chr_file write_chr_file_perms;
+    # Allow rebootd to getattr on proc filesystem
+    allow rebootd_t proc_t:filesystem getattr;
+    # Allow rebootd to write to system dbus socket
+    allow rebootd_t system_dbusd_runtime_t:sock_file write_sock_file_perms;
+    # Allow rebootd to write to devlog socket
+    allow rebootd_t devlog_t:sock_file write_sock_file_perms;
+    # Allow rebootd to connect to system dbus daemon
+    allow rebootd_t system_dbusd_t:unix_stream_socket connectto;
+')

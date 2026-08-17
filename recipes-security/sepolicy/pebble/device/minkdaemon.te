@@ -1,0 +1,97 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(minkdaemon, 1.0)
+
+type minkdaemon_t;
+type minkdaemon_exec_t;
+type minkdaemon_post_script_exec_t;
+type minkdaemon_etc_ta_config_t;
+type minkdaemon_sock_t;
+type minkdaemon_tzd_sock_t;
+
+files_type(minkdaemon_sock_t)
+files_type(minkdaemon_tzd_sock_t)
+
+device_manage_socket_file(minkdaemon_t, minkdaemon_sock_t, "hlos_mink_opener")
+device_manage_socket_file(minkdaemon_t, minkdaemon_tzd_sock_t, "ssgtzd")
+
+init_vendor_domain(minkdaemon_t, minkdaemon_exec_t)
+domain_entry_file(minkdaemon_t, minkdaemon_post_script_exec_t)
+
+gen_require(`
+        type smcinvoke_device_t;
+        type device_t;
+        type socket_device_t;
+        type firmware_t;
+        type proc_t;
+        type vendor_dmabuf_qseecom_heap_device_t;
+        type tmp_t;
+        type unconfined_t;
+        type default_t;
+        type etc_t;
+        type mount_t;
+        class service { start status };
+')
+
+# ============================================================
+# minkdaemon_t
+# ============================================================
+
+# Basic daemon self permissions
+allow minkdaemon_t self:fifo_file rw_inherited_fifo_file_perms;
+allow minkdaemon_t self:process signal;
+
+# Allow minkdaemon to access /dev/smcinvoke
+rw_chr_files_pattern(minkdaemon_t, device_t, smcinvoke_device_t);
+
+# Allow socket file types to be associated with device_t filesystem
+allow minkdaemon_sock_t device_t:filesystem associate;
+allow minkdaemon_tzd_sock_t device_t:filesystem associate;
+
+#Allow minkdaemon to search/write in /dev/socket (socket_device_t parent dir)
+allow minkdaemon_t socket_device_t:dir rw_dir_perms;
+
+# minkdaemon is a UNIX domain socket server:
+allow minkdaemon_t self:unix_stream_socket server_stream_socket_perms;
+
+# QRTR / QIPCRTR access
+allow minkdaemon_t self:qipcrtr_socket { connected_socket_perms connect };
+
+# Logging
+logging_send_syslog_msg(minkdaemon_t);
+allow minkdaemon_t etc_t:file read_file_perms;
+
+# TA autoload reads config under /etc/taconfig
+allow minkdaemon_t minkdaemon_etc_ta_config_t:dir search_dir_perms;
+allow minkdaemon_t minkdaemon_etc_ta_config_t:file read_file_perms;
+
+# firmware access — loading /firmware/image files
+allow minkdaemon_t firmware_t:dir search_dir_perms;
+allow minkdaemon_t firmware_t:file read_file_perms;
+
+# DMA heap access for TA loading
+allow minkdaemon_t vendor_dmabuf_qseecom_heap_device_t:chr_file read_chr_file_perms;
+
+# Proc access — also needed by busybox/chmod in post script reading /proc/filesystems
+allow minkdaemon_t proc_t:file read_file_perms;
+
+# Tmp file access
+allow minkdaemon_t tmp_t:dir rw_dir_perms;
+allow minkdaemon_t tmp_t:file manage_file_perms;
+
+# Allow mount_t to access taconfig
+allow mount_t minkdaemon_etc_ta_config_t:dir search_dir_perms;
+allow mount_t minkdaemon_etc_ta_config_t:file getattr_file_perms;
+
+userdebug_or_eng(`
+    # unconfined_t - shell/ls access to /etc/taconfig
+    allow unconfined_t minkdaemon_etc_ta_config_t:dir list_dir_perms;
+    allow unconfined_t minkdaemon_etc_ta_config_t:file read_file_perms;
+
+    # Service control
+    allow unconfined_t minkdaemon_exec_t:service { start status };
+')
+
+# Suppress /vendor search noise
+dontaudit minkdaemon_t default_t:dir search_dir_perms;

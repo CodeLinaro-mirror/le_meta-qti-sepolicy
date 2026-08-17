@@ -1,0 +1,11 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/csr_bt_app_default_hci                       --      gen_context(system_u:object_r:csr_bt_app_exec_t,s0)
+/data/vendor/bluetooth(/.*)?       gen_context(system_u:object_r:bt_data_t,s0)
+/dev/glink_pkt_bt_socket_hal_chnl      -c      gen_context(system_u:object_r:glink_pkt_device_t,s0)
+/dev/glink_pkt_bt_gatt_offload_chnl      -c      gen_context(system_u:object_r:glink_pkt_device_t,s0)
+/dev/glink_pkt_hci_arbiter_chnl      -c      gen_context(system_u:object_r:glink_pkt_device_t,s0)
+/dev/spibt      -c      gen_context(system_u:object_r:spibt_device_t,s0)
+/tmp/btsnoop_log.log    --    gen_context(system_u:object_r:bt_tmp_t,s0)
+/tmp/pcap_log.pcap    --    gen_context(system_u:object_r:bt_tmp_t,s0)

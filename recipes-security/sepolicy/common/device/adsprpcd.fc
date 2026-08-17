@@ -35,6 +35,6 @@
 
 /usr/bin/adsprpcd                       gen_context(system_u:object_r:adsprpcd_exec_t,s0)
 /usr/bin/sensors\.qti                   gen_context(system_u:object_r:sensors_qti_exec_t,s0)
-/etc/initscripts/chgrp-sensors-see      gen_context(system_u:object_r:sensors_initrc_exec_t,s0)
+/usr/sbin/chgrp-sensors-see             gen_context(system_u:object_r:sensors_initrc_exec_t,s0)
 
 /usr/lib/rfsa/adsp(/.*)?                gen_context(system_u:object_r:rfsa_adsp_lib_t,s0)

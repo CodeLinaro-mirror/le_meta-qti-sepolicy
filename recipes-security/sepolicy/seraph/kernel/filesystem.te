@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# seraph's mdss_mdp block sits at a different bus address than the one
+# hardcoded in common/kernel/filesystem.te (ae00000.qcom,mdss_mdp), so
+# power/control falls back to the default sysfs_t label there. Re-label
+# it here for seraph's actual address so qseecomd's allow rule in
+# device/qseecomd.te applies.
+genfscon sysfs /devices/platform/soc/9800000.qcom,mdss_mdp/power/control gen_context(system_u:object_r:power_control_t,s0)

@@ -1,0 +1,258 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(overlay_mounter, 1.0)
+
+########################################
+#
+# Declarations
+#
+########################################
+
+type overlay_mounter_t;
+type overlay_mounter_exec_t;
+
+init_daemon_domain(overlay_mounter_t, overlay_mounter_exec_t)
+
+# Temporary: kept permissive until test team validates no runtime permission gaps.
+# Remove this line once sanity testing confirms full coverage.
+permissive overlay_mounter_t;
+
+########################################
+#
+# overlay_mounter_t policy
+#
+########################################
+
+gen_require(`
+    type overlay_t;
+    type data_t;
+    type etc_t;
+    attribute qwes_data_writer;
+    type init_var_lib_t;
+    type systemd_logind_var_lib_t;
+    type var_lib_t;
+    type pulseaudio_var_lib_t;
+    type fonts_cache_t;
+    type fs_t;
+    type udev_rules_t;
+    type modules_conf_t;
+    type net_conf_t;
+    type systemd_unit_t;
+    type dbusd_etc_t;
+    type cert_t;
+    type etc_runtime_t;
+    type dnsmasq_etc_t;
+    type chronyd_conf_t;
+    type thermal_etc_t;
+    type sensors_persist_data_t;
+    type syslog_conf_t;
+    type perf_hal_etc_t;
+    type leprop_system_data_t;
+    type adbd_system_data_t;
+    type wifi_system_data_t;
+    type cache_t;
+    type cache_recovery_t;
+    type systemd_update_run_t;
+    type chronyd_var_lib_t;
+    type systemd_coredump_var_lib_t;
+    type audio_data_file_t;
+    type perf_hal_data_t;
+    type bluetooth_conf_t;
+    type selinux_config_t;
+    type shadow_t;
+    type audio_hal_etc_t;
+    type audio_hal_etc_acdb_t;
+    type qwes_config_etc_t;
+    type qmi_sec_config_t;
+    type fbe_conf_file_t;
+    type iotd_etc_t;
+    type loc_etc_t;
+    type bt_data_t;
+    type gst_data_t;
+    type qseecomd_data_t;
+    type tombstone_data_t;
+    type tombstone_rfs_data_t;
+    type time_data_t;
+    type qmmf_data_file_t;
+    type wifi_data_t;
+    type chg-policy-persist_data_t;
+    type default_context_t;
+    type file_context_t;
+')
+
+# overlay_mounter_t stashes credentials for the overlayfs kernel second-check;
+# copy-up of qwes_data_t files through /data overlay requires write access.
+typeattribute overlay_mounter_t qwes_data_writer;
+
+########################################
+# Phase 1: mount(2) syscall
+#
+# Permissions checked while the overlay-mounter process is alive and calling
+# mount(2).  The process exits after mount returns; the kernel retains the
+# credential as the "stashed mounter credential" for subsequent copy-ups.
+########################################
+
+# sys_admin: Phase 1 only — required for the mount(2) syscall itself.
+# chown/fowner/dac_override/dac_read_search/fsetid: Phase 2 also — copy-up
+# needs them to set ownership of upper files, read lower files not owned by
+# the mounter, and preserve setuid/setgid bits.
+allow overlay_mounter_t self:capability { sys_admin chown fowner dac_override dac_read_search fsetid };
+
+# SELinux checks filesystem { mount } on the ext4 superblock (fs_t) of the
+# filesystem where the mountpoint lives.
+allow overlay_mounter_t fs_t:filesystem { mount getattr relabelfrom };
+
+# /data, /etc, and /cache as overlayfs mountpoints.
+# mounton:      Phase 1 only — the mount(2) call places the overlay here.
+# list_dir_perms: Phase 2 also — kernel traverses the lower-layer path to
+#                 locate the source inode during copy-up.
+# relabelfrom:  Phase 1 (rootcontext= labels inodes at mount time) and
+#               Phase 2 (systemd-tmpfiles restorecon reads current label).
+# relabelto:    Phase 2 only — systemd-tmpfiles restorecon writes new label
+#               (e.g. relabeling /data/misc back to data_t).
+allow overlay_mounter_t { data_t etc_t cache_t }:dir { mounton list_dir_perms relabelfrom relabelto };
+
+# rootcontext= requires filesystem relabel permission on the target type.
+allow overlay_mounter_t { data_t etc_t cache_t }:filesystem { mount relabelfrom relabelto };
+
+# /overlay partition holds upperdir and workdir.
+# Phase 1: kernel verifies upperdir/workdir paths are accessible during mount(2).
+# Phase 2: copy-up writes new file content into the upper layer.
+allow overlay_mounter_t overlay_t:dir manage_dir_perms;
+allow overlay_mounter_t overlay_t:file manage_file_perms;
+allow overlay_mounter_t overlay_t:chr_file manage_chr_file_perms;
+
+########################################
+# Phase 2: copy-up (stashed credential second-check)
+#
+# The overlay-mounter process has already exited.  Whenever another process
+# first modifies a file visible in the overlay, the kernel performs all
+# copy-up I/O under the stashed overlay_mounter_t credential, requiring the
+# permissions below.
+########################################
+
+# /data overlay: copy-up carries original lower label (user_data attribute
+# covers data_t, gst_data_t, wifi_data_t, etc.)
+data_manage_generic_user_files(overlay_mounter_t)
+
+# /data overlay: explicit data_t:file rule — the attribute-based allow from
+# data_manage_generic_user_files does not generate a matching kernel rule for
+# data_t at runtime (observed create denial with permissive=1).  Direct type
+# rule is required for copy-up to succeed in enforcing mode.
+allow overlay_mounter_t data_t:file { manage_file_perms relabel_file_perms };
+
+# /data overlay: relabelfrom/relabelto for systemd-tmpfiles restorecon over
+# user_data types; data_manage_generic_user_files() grants manage but not relabel.
+allow overlay_mounter_t { bt_data_t gst_data_t qseecomd_data_t
+                          tombstone_data_t tombstone_rfs_data_t
+                          time_data_t qmmf_data_file_t
+                          wifi_data_t chg-policy-persist_data_t }:dir { manage_dir_perms relabel_dir_perms };
+
+# /data overlay: systemd-tmpfiles also relabels chg-policy config files.
+allow overlay_mounter_t chg-policy-persist_data_t:file { manage_file_perms relabel_file_perms };
+
+# /etc and /var overlay: full manage on copy-up target directories.
+# relabel_dir_perms covers systemd-tmpfiles restorecon through the overlay.
+allow overlay_mounter_t { etc_t
+                          init_var_lib_t systemd_logind_var_lib_t var_lib_t
+                          pulseaudio_var_lib_t fonts_cache_t
+                          sensors_persist_data_t
+                          cache_t cache_recovery_t
+                          wifi_system_data_t
+                          chronyd_var_lib_t systemd_coredump_var_lib_t
+                          audio_data_file_t perf_hal_data_t }:dir { manage_dir_perms relabel_dir_perms };
+
+# /etc and /var overlay: full manage on copy-up target files.
+# relabel_file_perms covers systemd-tmpfiles restorecon through the overlay.
+allow overlay_mounter_t etc_t:file { manage_file_perms relabel_file_perms };
+allow overlay_mounter_t { pulseaudio_var_lib_t fonts_cache_t
+                          sensors_persist_data_t
+                          cache_t cache_recovery_t
+                          etc_runtime_t systemd_update_run_t
+                          audio_data_file_t perf_hal_data_t }:file { manage_file_perms relabel_file_perms };
+
+# /etc and /cache overlay: full manage on symlinks.
+allow overlay_mounter_t { etc_t cache_t }:lnk_file manage_lnk_file_perms;
+
+# /etc overlay: lower-inode permission checks triggered when other processes
+# first access or write these file types through the overlay.
+allow overlay_mounter_t { udev_rules_t modules_conf_t net_conf_t
+                          systemd_unit_t dbusd_etc_t dnsmasq_etc_t
+                          cert_t }:dir list_dir_perms;
+allow overlay_mounter_t { udev_rules_t modules_conf_t net_conf_t
+                          dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
+                          thermal_etc_t perf_hal_etc_t cert_t
+                          syslog_conf_t }:file read_file_perms;
+allow overlay_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
+
+# /etc overlay: second-check for service config file reads through the overlay.
+# Triggered when services (audio HAL, location, etc.) first open their
+# /etc config files; the kernel path-lookup checks the stashed credential.
+allow overlay_mounter_t { audio_hal_etc_t audio_hal_etc_acdb_t
+                          qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
+                          iotd_etc_t loc_etc_t }:dir list_dir_perms;
+allow overlay_mounter_t { audio_hal_etc_t audio_hal_etc_acdb_t
+                          qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
+                          iotd_etc_t loc_etc_t }:file read_file_perms;
+
+# /etc/alsa/ config reads; alsa_etc_t declared in upstream refpolicy.
+optional_policy(`
+    gen_require(`
+        type alsa_etc_t;
+    ')
+    allow overlay_mounter_t alsa_etc_t:dir list_dir_perms;
+    allow overlay_mounter_t alsa_etc_t:file read_file_perms;
+')
+
+# /etc overlay: second-check for /etc/bluetooth/ directory traversal and
+# config file reads (bt_app.conf) by bluetoothd.
+allow overlay_mounter_t bluetooth_conf_t:dir search_dir_perms;
+allow overlay_mounter_t bluetooth_conf_t:file read_file_perms;
+
+# /etc overlay: second-check for /etc/selinux/ directory listing.
+allow overlay_mounter_t selinux_config_t:dir list_dir_perms;
+
+# /etc overlay: second-check for SELinux context file reads during restorecon
+# (/selinux resolves to /etc/selinux on this platform via /etc overlay).
+# search_dir_perms (getattr+search) needed by login and systemd services.
+allow overlay_mounter_t default_context_t:dir search_dir_perms;
+allow overlay_mounter_t file_context_t:dir search_dir_perms;
+allow overlay_mounter_t file_context_t:file read_file_perms;
+# default_context_t files (dbus_contexts, users/root) accessed by dbus-daemon
+# and login via /etc overlay.
+allow overlay_mounter_t default_context_t:file read_file_perms;
+
+# /etc overlay: second-check when unix_chkpwd accesses /etc/shadow.
+# authlogin neverallow prohibits read on shadow_t:file; getattr is the maximum
+# allowed.  unix_chkpwd read/open denials are harmless copy-up failures (the
+# process holds its own credential), so suppress audit noise with dontaudit.
+allow overlay_mounter_t shadow_t:file getattr;
+
+# /etc overlay: second-check for udev helper scripts in /etc/udev/scripts/;
+# udev_helper_exec_t declared in upstream refpolicy.
+optional_policy(`
+    gen_require(`
+        type udev_helper_exec_t;
+    ')
+    allow overlay_mounter_t udev_helper_exec_t:file exec_file_perms;
+')
+
+# MLS: copy-up reads lower files and writes upper files across all sensitivity
+# levels using the stashed mounter credential.
+mls_file_read_all_levels(overlay_mounter_t)
+mls_file_write_all_levels(overlay_mounter_t)
+# MLS: the create mlsconstrain has no mlsfilewrite escape; use upgrade/downgrade
+# to allow copy-up to create upper-layer files at any sensitivity level.
+mls_file_downgrade(overlay_mounter_t)
+mls_file_upgrade(overlay_mounter_t)
+
+# These files are labeled as system data types; neverallow prevents granting
+# overlay_mounter_t access to them.  The denials are harmless (copy-up failure
+# does not affect the accessing process, which holds its own credentials), so
+# suppress the audit noise with dontaudit.
+dontaudit overlay_mounter_t leprop_system_data_t:file { manage_file_perms relabel_file_perms };
+dontaudit overlay_mounter_t adbd_system_data_t:file { manage_file_perms relabel_file_perms };
+# authlogin neverallow prevents granting read on shadow_t:file; suppress
+# unix_chkpwd copy-up denial noise.
+dontaudit overlay_mounter_t shadow_t:file { read open };
