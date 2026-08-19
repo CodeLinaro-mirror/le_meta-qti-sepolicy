@@ -1,0 +1,7 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Based on the upstream restriction added @
+#https://patch.msgid.link/20241022155147.463475-3-daniel.lezcano@linaro.org we need sys_admin
+#sys_boot is required to allow thermal-engine to trigger emergency reboot on critical thermal events
+allow thermal-engine_t self:capability { sys_admin sys_boot };
