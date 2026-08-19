@@ -93,10 +93,10 @@ allow overlay_etc_mounter_t overlay_t:chr_file manage_chr_file_perms;
 ########################################
 # /etc overlay: full manage + relabel on copy-up target directories.
 allow overlay_etc_mounter_t { etc_t wifi_system_data_t adbd_system_data_t
-                              systemd_update_run_t bluetooth_conf_t leprop_system_data_t etc_sensors_t audio_hal_etc_t }:dir { manage_dir_perms relabel_dir_perms };
+                              systemd_update_run_t bluetooth_conf_t leprop_system_data_t etc_sensors_t audio_hal_etc_t thermal_etc_t }:dir { manage_dir_perms relabel_dir_perms };
 # /etc overlay: full manage + relabel on copy-up target files.
 allow overlay_etc_mounter_t { etc_t etc_runtime_t systemd_update_run_t leprop_system_data_t etc_sensors_t
-                              bluetooth_conf_t adbd_system_data_t audio_hal_etc_t }:file { manage_file_perms relabel_file_perms };
+                              bluetooth_conf_t adbd_system_data_t audio_hal_etc_t thermal_etc_t }:file { manage_file_perms relabel_file_perms };
 # /etc overlay: execute init scripts through overlay
 allow overlay_etc_mounter_t etc_t:file execute;
 # /etc overlay: symlink management
@@ -116,7 +116,8 @@ allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               thermal_etc_t perf_hal_etc_t cert_t dhcp_etc_t
                               syslog_conf_t alsa_etc_t
                               default_context_t file_context_t
-                              fbe_conf_file_t }:file read_file_perms;
+                              fbe_conf_file_t systemd_unit_t }:file read_file_perms;
+
 # /etc overlay: net_conf_t symlink reads
 allow overlay_etc_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
 # /etc/selinux overlay: directory listing
