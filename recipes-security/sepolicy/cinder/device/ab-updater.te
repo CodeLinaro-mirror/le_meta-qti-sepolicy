@@ -20,6 +20,8 @@ gen_require(`
     type init_t;
     type system_dbusd_var_run_t;
     type system_dbusd_t;
+    type shell_exec_t;
+    type faultmgr_t;
     type bin_t;
     type adbd_initrc_exec_t;
     type usb_exec_t;
@@ -36,6 +38,7 @@ gen_require(`
     type sysctl_kernel_t;
     type sysctl_t;
     class service { start status stop reload };
+    class dbus { send_msg acquire_svc };
 ')
 
 userdebug_or_eng(`
@@ -46,6 +49,7 @@ userdebug_or_eng(`
 # self rules
 allow ab_updater_t self:tcp_socket { create bind read name_bind node_bind listen accept };
 allow ab_updater_t self:capability { sys_boot };
+allow ab_updater_t self:qipcrtr_socket { create bind connect read write getattr getopt setattr };
 allow ab_updater_t unreserved_port_t:tcp_socket { name_bind };
 allow ab_updater_t node_t:tcp_socket { node_bind };
 allow ab_updater_t tmpfs_t:filesystem { getattr };
@@ -58,6 +62,9 @@ allow ab_updater_t system_dbusd_t:unix_stream_socket { connectto };
 allow ab_updater_t ab_updater_conf_t:file { read write open getattr };
 allow ab_updater_t proc_t:file { read getattr open };
 allow ab_updater_t removable_device_t:blk_file { read open write };
+allow ab_updater_t shell_exec_t:file { open read execute getattr map execute_no_trans };
+allow ab_updater_t faultmgr_t:dbus { send_msg acquire_svc };
+allow ab_updater_t system_dbusd_t:dbus acquire_svc;
 
 allow mount_copybind_t ab_updater_conf_t:file { getattr read open create write setattr };
 allow mount_t ab_updater_conf_t:file { getattr mounton };

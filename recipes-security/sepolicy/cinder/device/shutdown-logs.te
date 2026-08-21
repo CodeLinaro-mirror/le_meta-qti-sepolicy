@@ -27,6 +27,8 @@ gen_require(`
     type systemd_journal_t;
     type persist_t;
     type qnetcfgmgr_persist_qncm_t;
+    type tmp_t;
+    type mplane_app_tmp_t;
 ')
 
 #============= shutdown_logs_t ==============
@@ -61,6 +63,9 @@ allow shutdown_logs_t sysctl_t:dir search;
 allow shutdown_logs_t systemd_journal_t:dir { getattr open read search };
 allow shutdown_logs_t systemd_journal_t:file { getattr map open read };
 allow shutdown_logs_t tmpfs_t:filesystem getattr;
+allow shutdown_logs_t tmp_t:dir { search };
+allow shutdown_logs_t mplane_app_tmp_t:dir { getattr read open search };
+allow shutdown_logs_t mplane_app_tmp_t:file { getattr open read };
 
 allow shutdown_logs_t systemd_journal_t:file { getattr read };
 mls_file_read_all_levels(shutdown_logs_t)
