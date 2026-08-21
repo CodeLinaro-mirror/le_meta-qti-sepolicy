@@ -74,6 +74,11 @@ userdebug_or_eng(`
 ')
 dev_rw_null(NetworkManager_t)
 
+gen_require(`
+    type socket_device_t;
+')
+allow NetworkManager_t socket_device_t:dir search;
+
 manage_user_data_files(wpa_cli_t, wifi_data_t)
 manage_user_data_files(dhcpc_t, wifi_data_t)
 
