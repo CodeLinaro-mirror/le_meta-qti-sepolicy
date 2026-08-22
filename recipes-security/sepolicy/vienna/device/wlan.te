@@ -8,6 +8,8 @@ gen_require(`
     type mount_t;
     type initrc_t;
     type data_t;
+    type perf_hal_socket_t;
+    type perf_hal_t;
 ')
 
 type cnss_socket_t;
@@ -18,6 +20,12 @@ files_type(cnss_sock_dir_t)
 
 type cnss_diag_conf_t;
 files_type(cnss_diag_conf_t)
+
+type qsahara_log_data_t;
+files_type(qsahara_log_data_t)
+
+type qsahara_dump_data_t;
+files_type(qsahara_dump_data_t)
 
 init_daemon_domain(wlan_initrc_t, wlan_initrc_exec_t)
 
@@ -36,7 +44,7 @@ allow wlan_initrc_t cnss_socket_t:sock_file { create getattr unlink };
 type_transition wlan_initrc_t cnss_sock_dir_t:sock_file cnss_socket_t "cnss_user_server";
 
 # cnss_daemon runs as mount_t; allow it to create and access cnss_socket_t sock_files
-allow mount_t cnss_sock_dir_t:dir { write add_name search };
+allow mount_t cnss_sock_dir_t:dir { write add_name search read };
 allow mount_t cnss_socket_t:sock_file { create getattr };
 
 # explicit process transition
@@ -56,3 +64,22 @@ allow mount_t cnss_diag_conf_t:file { create open read write append getattr seta
 
 # wlan_initrc_t (cnss_diag) needs to read/append to cnss_diag.conf
 allow wlan_initrc_t cnss_diag_conf_t:file { read append open getattr };
+
+# initrc_t path for QSahara.log (qsaharaserver redirects stdout/stderr here)
+type_transition initrc_t data_t:file qsahara_log_data_t "QSahara.log";
+allow initrc_t qsahara_log_data_t:file { create write open getattr append };
+
+# initrc_t path for FW dump files
+type_transition initrc_t data_t:file qsahara_dump_data_t "meson_core.bin";
+type_transition initrc_t data_t:file qsahara_dump_data_t "meson_mwss.bin";
+type_transition initrc_t data_t:file qsahara_dump_data_t "meson_cmem.bin";
+type_transition initrc_t data_t:file qsahara_dump_data_t "meson_dram.bin";
+type_transition initrc_t data_t:file qsahara_dump_data_t "meson_iram.bin";
+allow initrc_t qsahara_dump_data_t:file { create write open getattr append };
+
+# cnss_daemon (wlan_initrc_t) reads FW dump files QSaharaServer creates
+allow wlan_initrc_t qsahara_dump_data_t:file { read open getattr };
+
+# cnss_daemon (wlan_initrc_t) writes to the perf HAL socket "perfservice"
+allow wlan_initrc_t perf_hal_socket_t:sock_file write;
+allow wlan_initrc_t perf_hal_t:unix_stream_socket connectto;
