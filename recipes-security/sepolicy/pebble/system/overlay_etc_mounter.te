@@ -128,10 +128,14 @@ optional_policy(`
     allow overlay_etc_mounter_t alsa_etc_t:file read_file_perms;
 ')
 
-allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:dir search_dir_perms;
+# /etc/bluetooth/ is writable at runtime; reparent covers copy-up dir rename
+# from workdir to upper, link covers atomic file install via vfs_link().
+allow overlay_etc_mounter_t { default_context_t file_context_t }:dir list_dir_perms;
+allow overlay_etc_mounter_t bluetooth_conf_t:dir { manage_dir_perms reparent };
 allow overlay_etc_mounter_t selinux_config_t:dir list_dir_perms;
 allow overlay_etc_mounter_t selinux_config_t:file read_file_perms;
-allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:file read_file_perms;
+allow overlay_etc_mounter_t { default_context_t file_context_t }:file read_file_perms;
+allow overlay_etc_mounter_t bluetooth_conf_t:file { manage_file_perms link };
 
 # The overlayfs stashed-credential second-check uses overlay_etc_mounter_t when any
 # process opens /etc/shadow through the /etc overlay.  auth_read_shadow() adds this
