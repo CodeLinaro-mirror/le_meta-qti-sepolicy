@@ -97,11 +97,12 @@ allow overlay_etc_mounter_t overlay_t:chr_file manage_chr_file_perms;
 # Phase 2: copy-up (stashed credential second-check)
 ########################################
 
-allow overlay_etc_mounter_t { etc_t
+allow overlay_etc_mounter_t { etc_t adbd_system_data_t
                               wifi_system_data_t }:dir { manage_dir_perms relabel_dir_perms };
 
 allow overlay_etc_mounter_t { etc_t etc_runtime_t systemd_update_run_t
-                              leprop_system_data_t adbd_system_data_t }:file { manage_file_perms relabel_file_perms };
+                              leprop_system_data_t adbd_system_data_t
+                              uwb_etc_t }:file { manage_file_perms relabel_file_perms };
 
 allow overlay_etc_mounter_t etc_t:lnk_file manage_lnk_file_perms;
 
