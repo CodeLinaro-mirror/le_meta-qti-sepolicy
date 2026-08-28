@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
@@ -368,6 +368,7 @@ type touch_script_t;
 type touch_script_exec_t;
 gen_require(`
     type touch_input_device_t;
+    type modules_object_t;
 ')
 files_type(touch_script_exec_t)
 init_script_domain(touch_script_t, touch_script_exec_t)
@@ -383,6 +384,8 @@ kernel_read_system_state(touch_script_t);
 allow touch_script_t self:capability { chown };
 allow touch_script_t touch_input_device_t:file { getattr setattr };
 corecmd_exec_shell(touch_script_t)
+allow touch_script_t modules_object_t:dir search_dir_perms;
+allow touch_script_t modules_object_t:file getattr_file_perms;
 
 gen_require(`
     type cpu_sysfs_t;
