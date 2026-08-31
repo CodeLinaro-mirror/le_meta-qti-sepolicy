@@ -1,10 +1,17 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
+dontaudit post_boot_script_t self:capability dac_override;
+
+filetrans_pattern(post_boot_script_t, perf_hal_data_t, perf_hal_data_scaling_t, file)
+
 gen_require(`
     type etc_t;
     type ss-ramdump_t;
     type ramdump_data_t;
+    type power_sysfs_t;
+    type perf_hal_data_t;
+    type perf_hal_data_scaling_t;
 ')
 
 type vendor_sysfs_coresight_etr_t;
@@ -24,3 +31,6 @@ type ssrdump_data_file_t;
 files_type(ssrdump_data_file_t)
 
 allow ss-ramdump_t ramdump_data_t:dir rw_dir_perms;
+
+allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
+allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;

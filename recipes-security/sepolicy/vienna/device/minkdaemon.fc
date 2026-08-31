@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/etc/taconfig(/.*)?                             gen_context(system_u:object_r:minkdaemon_etc_ta_config_t,s0)

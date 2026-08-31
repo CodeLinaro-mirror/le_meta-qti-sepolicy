@@ -28,8 +28,6 @@ gen_require(`
     type unconfined_mount_t;
 ')
 
-#TODO: Need to clean/remove this post fixing the permission issue
-permissive mount_t;
 
 allow mount_t etc_t:dir mounton;
 allow mount_t adbd_system_data_t:file { open read };

@@ -1,0 +1,140 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+policy_module(overlay_mounter, 1.0)
+########################################
+#
+# Declarations
+#
+########################################
+type overlay_mounter_t;
+type overlay_mounter_exec_t;
+init_daemon_domain(overlay_mounter_t, overlay_mounter_exec_t)
+# Temporary: kept permissive until test team validates no runtime permission gaps.
+# Remove this line once sanity testing confirms full coverage.
+permissive overlay_mounter_t;
+########################################
+#
+# overlay_mounter_t policy
+#
+########################################
+gen_require(`
+    type overlay_t;
+    type data_t;
+    type etc_t;
+    type fs_t;
+    type cache_t;
+    type net_conf_t;
+    type systemd_unit_t;
+    type udev_rules_t;
+    type dbusd_etc_t;
+    type dnsmasq_etc_t;
+    type chronyd_conf_t;
+    type cert_t;
+    type etc_runtime_t;
+    type modules_conf_t;
+    type perf_hal_etc_t;
+    type perf_hal_data_t;
+    type default_context_t;
+    type file_context_t;
+    type wifi_data_t;
+    type wifi_system_data_t;
+    type time_data_t;
+    type tombstone_data_t;
+    type tombstone_rfs_data_t;
+    type bluetooth_conf_t;
+    type selinux_config_t;
+    type shadow_t;
+    type dhcp_etc_t;
+    type reboot_cookie_data_t;
+    type etc_sensors_t;
+    type leprop_system_data_t;
+    type adbd_system_data_t;
+    type policy_config_t;
+    type alsa_etc_t;
+    type post_boot_script_exec_t;
+    type wlan_initrc_exec_t;
+    type sfs_config_initrc_exec_t;
+    type audio_hal_etc_t;
+    type thermal_etc_t;
+    type syslog_conf_t;
+    type audio_data_file_t;
+    type qseecomd_data_t;
+    type cache_recovery_t;
+    type systemd_update_run_t;
+    attribute domain_can_read_userdata;
+    attribute domain_can_write_userdata;
+')
+# Neverallow exception attributes for user_data access
+typeattribute overlay_mounter_t domain_can_read_userdata;
+typeattribute overlay_mounter_t domain_can_write_userdata;
+########################################
+# Phase 1: mount(2) syscall and capabilities
+########################################
+allow overlay_mounter_t self:capability { sys_admin chown fowner dac_override dac_read_search fsetid };
+allow overlay_mounter_t fs_t:filesystem { mount getattr relabelfrom };
+# Overlay mountpoints: /data, /etc, /cache
+allow overlay_mounter_t { data_t etc_t cache_t }:dir { mounton list_dir_perms relabelfrom relabelto };
+allow overlay_mounter_t { data_t etc_t cache_t }:filesystem { mount relabelfrom relabelto };
+# /overlay partition: upperdir and workdir
+allow overlay_mounter_t overlay_t:dir manage_dir_perms;
+allow overlay_mounter_t overlay_t:file manage_file_perms;
+allow overlay_mounter_t overlay_t:chr_file manage_chr_file_perms;
+########################################
+# Phase 2: copy-up (stashed credential)
+########################################
+# /data overlay: direct data_t file and symlink access
+allow overlay_mounter_t data_t:file { manage_file_perms relabel_file_perms };
+allow overlay_mounter_t data_t:dir manage_dir_perms;
+allow overlay_mounter_t data_t:lnk_file manage_lnk_file_perms;
+# /data and /etc overlay: full manage + relabel on copy-up target directories.
+allow overlay_mounter_t { etc_t cache_t cache_recovery_t
+                          wifi_data_t wifi_system_data_t time_data_t
+                          tombstone_data_t tombstone_rfs_data_t
+                          audio_data_file_t perf_hal_data_t
+                          etc_sensors_t qseecomd_data_t
+                          systemd_update_run_t bluetooth_conf_t }:dir { manage_dir_perms relabel_dir_perms };
+# /data and /etc overlay: full manage + relabel on copy-up target files.
+allow overlay_mounter_t { etc_t cache_t cache_recovery_t
+                          etc_runtime_t systemd_update_run_t
+                          wifi_data_t audio_data_file_t perf_hal_data_t
+                          etc_sensors_t qseecomd_data_t
+                          reboot_cookie_data_t bluetooth_conf_t }:file { manage_file_perms relabel_file_perms };
+# /etc overlay: execute init scripts through overlay
+allow overlay_mounter_t etc_t:file execute;
+# /etc and /cache overlay: symlink management
+allow overlay_mounter_t { etc_t cache_t }:lnk_file manage_lnk_file_perms;
+# /data/wifi overlay: cnss_daemon socket operations
+allow overlay_mounter_t wifi_data_t:sock_file { create getattr unlink };
+# /etc overlay: lower-inode directory traversal (second-check)
+allow overlay_mounter_t { udev_rules_t modules_conf_t net_conf_t
+                          systemd_unit_t dbusd_etc_t dnsmasq_etc_t
+                          cert_t audio_hal_etc_t alsa_etc_t }:dir list_dir_perms;
+# /etc overlay: lower-inode file reads (second-check)
+allow overlay_mounter_t { udev_rules_t modules_conf_t net_conf_t
+                          dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
+                          thermal_etc_t perf_hal_etc_t cert_t dhcp_etc_t
+                          syslog_conf_t audio_hal_etc_t alsa_etc_t
+                          default_context_t file_context_t }:file read_file_perms;
+# /etc overlay: net_conf_t symlink reads
+allow overlay_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
+# /etc/selinux overlay: directory listing
+allow overlay_mounter_t selinux_config_t:dir list_dir_perms;
+# /etc overlay: SELinux context directory traversal
+allow overlay_mounter_t { default_context_t file_context_t }:dir search_dir_perms;
+# /etc overlay: shadow_t getattr
+allow overlay_mounter_t shadow_t:file getattr;
+# /etc/initscripts overlay: WLAN and sfs_config init script execution
+allow overlay_mounter_t { wlan_initrc_exec_t sfs_config_initrc_exec_t }:file { getattr execute read open };
+########################################
+# Dontaudit: suppress harmless noise
+########################################
+# system_data types: neverallow prevents granting access; denials are harmless
+dontaudit overlay_mounter_t leprop_system_data_t:file { manage_file_perms relabel_file_perms };
+dontaudit overlay_mounter_t adbd_system_data_t:file { manage_file_perms relabel_file_perms };
+# shadow_t: authlogin neverallow; suppress read/open noise
+dontaudit overlay_mounter_t shadow_t:file { read open };
+# policy_config_t: interactive shell browsing noise
+dontaudit overlay_mounter_t policy_config_t:dir { getattr search read open };
+dontaudit overlay_mounter_t policy_config_t:file { getattr read open };
+# post_boot_script_exec_t: ls getattr noise
+dontaudit overlay_mounter_t post_boot_script_exec_t:file { getattr };
