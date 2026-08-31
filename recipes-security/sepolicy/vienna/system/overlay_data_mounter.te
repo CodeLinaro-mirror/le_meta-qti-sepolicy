@@ -52,6 +52,8 @@ gen_require(`
     type audio_data_file_t;
     type perf_hal_data_t;
     type perf_hal_data_scaling_t;
+    type ramdump_data_t;
+    type uwb_data_file_t;
     type cnss_socket_t;
     type qsahara_dump_data_t;
 ')
@@ -89,6 +91,7 @@ allow overlay_data_mounter_t { bt_data_t gst_data_t qseecomd_data_t
                                wifi_data_t chg-policy-persist_data_t
                                sensors_persist_data_t ssrdump_data_file_t
                                audio_data_file_t perf_hal_data_t
+                               ramdump_data_t uwb_data_file_t
                                perf_hal_data_scaling_t cnss_sock_dir_t }:dir { manage_dir_perms relabel_dir_perms };
 
 allow overlay_data_mounter_t { chg-policy-persist_data_t sensors_persist_data_t
