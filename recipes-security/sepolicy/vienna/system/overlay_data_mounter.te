@@ -52,6 +52,8 @@ gen_require(`
     type audio_data_file_t;
     type perf_hal_data_t;
     type perf_hal_data_scaling_t;
+    type cnss_socket_t;
+    type qsahara_dump_data_t;
 ')
 
 typeattribute overlay_data_mounter_t qwes_data_writer;
@@ -79,21 +81,21 @@ data_manage_generic_user_files(overlay_data_mounter_t)
 # data_t at runtime.  Direct type rule is required for copy-up in enforcing mode.
 allow overlay_data_mounter_t data_t:file { manage_file_perms relabel_file_perms };
 
+allow overlay_data_mounter_t cnss_socket_t:sock_file manage_sock_file_perms;
+
 allow overlay_data_mounter_t { bt_data_t gst_data_t qseecomd_data_t
                                tombstone_data_t tombstone_rfs_data_t
                                time_data_t qmmf_data_file_t
                                wifi_data_t chg-policy-persist_data_t
                                sensors_persist_data_t ssrdump_data_file_t
                                audio_data_file_t perf_hal_data_t
-                               perf_hal_data_scaling_t }:dir { manage_dir_perms relabel_dir_perms };
+                               perf_hal_data_scaling_t cnss_sock_dir_t }:dir { manage_dir_perms relabel_dir_perms };
 
 allow overlay_data_mounter_t { chg-policy-persist_data_t sensors_persist_data_t
                                audio_data_file_t perf_hal_data_t
                                bt_data_t ssrdump_data_file_t
-                               cnss_diag_conf_t
-                               perf_hal_data_scaling_t }:file { manage_file_perms relabel_file_perms };
-
-allow overlay_data_mounter_t cnss_sock_dir_t:dir relabel_dir_perms;
+                               perf_hal_data_scaling_t cnss_diag_conf_t
+                               qsahara_dump_data_t }:file { manage_file_perms relabel_file_perms };
 
 mls_file_read_all_levels(overlay_data_mounter_t)
 mls_file_write_all_levels(overlay_data_mounter_t)
