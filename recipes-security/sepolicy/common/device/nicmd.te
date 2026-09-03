@@ -28,6 +28,7 @@ logging_send_syslog_msg(nicmd_t)
 
 user_data_files_type(nicmd_data_t)
 manage_user_data_files(nicmd_t, nicmd_data_t)
+data_filetrans(nicmd_t, nicmd_data_t, file)
 
 files_type(nicmd_socket_t)
 dev_node(nicmd_socket_t)

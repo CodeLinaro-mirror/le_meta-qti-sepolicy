@@ -2,3 +2,4 @@
 #SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/nicmd          --      gen_context(system_u:object_r:nicmd_exec_t,s0)
+/data/misc/nicmd\.log[0-9]* -- gen_context(system_u:object_r:nicmd_data_t,s0)
