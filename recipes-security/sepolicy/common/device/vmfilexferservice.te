@@ -31,6 +31,15 @@ manage_user_data_files(vmfilexferservice_t, persist_display_t);
 corecmd_exec_shell(vmfilexferservice_t);
 corecmd_exec_bin(vmfilexferservice_t);
 
+# cryptinit.sh needs to update permissions on OTA, and is confirmed to not
+# launch binaries that would otherwise be unlabeled
+gen_require(`
+    type initrc_t;
+    attribute initrc_data_rw_exception;
+')
+typeattribute persist_display_t initrc_data_rw_exception;
+manage_user_data_files(initrc_t, persist_display_t);
+
 ### persistcheck.sh
 type persistcheck_script_t;
 type persistcheck_script_exec_t;
