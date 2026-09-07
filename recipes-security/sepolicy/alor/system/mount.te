@@ -1,16 +1,45 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
-permissive mount_t;
 
 gen_require(`
+    type adbd_system_data_t;
+    type audio_data_file_t;
+    type audio_hal_etc_t;
+    type bt_data_t;
+    type cache_recovery_t;
+    type camera_data_t;
+    type chg-policy-persist_data_t;
+    type chronyd_conf_t;
+    type chronyd_var_lib_t;
+    type data_t;
+    type dbusd_etc_t;
     type default_context_t;
+    type dnsmasq_etc_t;
+    type etc_t;
     type file_context_t;
-    type overlay_t;
+    type fonts_cache_t;
+    type init_var_lib_t;
+    type leprop_system_data_t;
+    type modules_conf_t;
+    type perf_hal_etc_t;
+    type pulseaudio_var_lib_t;
+    type sensors_persist_data_t;
+    type syslog_conf_t;
+    type system_dbusd_var_lib_t;
+    type systemd_coredump_var_lib_t;
+    type systemd_logind_var_lib_t;
+    type systemd_unit_t;
+    type systemd_update_run_t;
+    type thermal_etc_t;
+    type tombstone_data_t;
+    type tombstone_rfs_data_t;
+    type udev_rules_t;
+    type var_lib_t;
     type var_spool_t;
     type var_t;
-    type wlan_initrc_exec_t;
-    type wifi_data_t;
+    type weston_data_t;
+    type unlabeled_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
@@ -18,24 +47,63 @@ allow mount_copybind_t file_context_t:dir search;
 allow mount_copybind_t file_context_t:file mmap_read_file_perms;
 allow mount_copybind_t var_spool_t:dir getattr;
 
-allow mount_t overlay_t:chr_file unlink;
-allow mount_t var_t:chr_file unlink;
-allow mount_t var_spool_t:dir mounton;
+# update_engine runs as mount_t on this platform and needs access to /cache/recovery.
+allow mount_t cache_recovery_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t cache_recovery_t:file manage_file_perms;
 
-#TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
-allow mount_t var_t:dir manage_dir_perms;
+# systemd-tmpfiles manages the dbus var/lib directory and symlinks.
+allow mount_t system_dbusd_var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t system_dbusd_var_lib_t:lnk_file { manage_lnk_file_perms relabel_lnk_file_perms };
+
+# systemd-logind and systemd-tmpfiles create dirs under /var/lib/systemd during startup.
+allow mount_t init_var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t init_var_lib_t:file manage_file_perms;
+
+# PulseAudio setup script creates /var/lib/pulse through mount_t.
+allow mount_t var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+
+# weston (weston-keyboard, weston-desktop-shell) runs as mount_t on this platform
+# and directly reads and updates the fontconfig cache directory.
+allow mount_t fonts_cache_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t fonts_cache_t:file manage_file_perms;
+
+# mount_t boot-time setup on non-overlay system paths.
+allow mount_t var_t:chr_file unlink;
+allow mount_t var_spool_t:dir { mounton_dir_perms relabel_dir_perms };
+allow mount_t self:capability { chown fowner fsetid };
+
+allow mount_t etc_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t var_t:dir { manage_dir_perms relabel_dir_perms };
 allow mount_t var_t:file manage_file_perms;
 
-#TODO: Restrict to required minimum permissions rather than manage_dir_perms/manage_file_perms.
-allow mount_t overlay_t:dir manage_dir_perms;
-allow mount_t overlay_t:file manage_file_perms;
+# Comprehensive var/lib and /data directory management for systemd, pulseaudio,
+# chrony, bt, coredump, tombstone, and sensors bootstrap operations.
+allow mount_t { chronyd_var_lib_t audio_data_file_t
+                pulseaudio_var_lib_t systemd_logind_var_lib_t
+                bt_data_t systemd_coredump_var_lib_t
+                tombstone_data_t tombstone_rfs_data_t
+                sensors_persist_data_t data_t }:dir { manage_dir_perms relabel_dir_perms };
 
-allow mount_t wifi_data_t:dir search;
+allow mount_t { systemd_update_run_t pulseaudio_var_lib_t
+                chronyd_var_lib_t }:file manage_file_perms;
 
-allow mount_t {
-    wifi_data_t
-}:file read_file_perms;
+allow mount_t leprop_system_data_t:file { relabel_file_perms link };
+allow mount_t { sensors_persist_data_t fonts_cache_t }:file link;
+allow mount_t adbd_system_data_t:file read_file_perms;
+allow mount_t { file_context_t default_context_t }:file read_file_perms;
 
-allow mount_t {
-    wlan_initrc_exec_t
-}:file { read_file_perms execute };
+# Legacy compatibility: minimal read/search for paths still resolved to lowerdir labels.
+allow mount_t chg-policy-persist_data_t:dir search;
+allow mount_t chg-policy-persist_data_t:file read_file_perms;
+allow mount_t weston_data_t:dir search;
+allow mount_t systemd_unit_t:dir list_dir_perms;
+allow mount_t systemd_unit_t:lnk_file read_lnk_file_perms;
+
+# /etc read-only lower-inode access for restorecon and relabeling boot operations.
+allow mount_t { udev_rules_t modules_conf_t dbusd_etc_t dnsmasq_etc_t camera_data_t }:dir list_dir_perms;
+allow mount_t { udev_rules_t modules_conf_t dbusd_etc_t dnsmasq_etc_t
+                audio_hal_etc_t chronyd_conf_t syslog_conf_t perf_hal_etc_t
+                thermal_etc_t }:file read_file_perms;
+
+# Filesystem relabel for volumes not yet labeled at mount time.
+allow mount_t unlabeled_t:filesystem relabelfrom;

@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/lefbe_service            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
+/overlay/unencrypted(/.*)? -d gen_context(system_u:object_r:fbe_secure_data_t,s0)
+

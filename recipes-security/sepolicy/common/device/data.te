@@ -91,6 +91,9 @@ neverallow ~{
 attribute system_data;
 attribute domain_can_read_systemdata;
 attribute domain_can_write_systemdata;
+# OverlayFS mounter domains need getattr on system_data for the stashed-credential
+# second-check; functionally equivalent to mount_t for this purpose.
+attribute overlay_stash_mounter;
 
 type system_data_t;
 typeattribute system_data_t mountpoint;  # Can't use files_mountpoint here
@@ -102,11 +105,13 @@ neverallow ~{
     domain_can_write_systemdata
     mount_t
     init_t
+    overlay_stash_mounter
 } system_data:file read_file_perms;
 neverallow ~{
     domain_can_write_systemdata
     mount_t
     init_t
+    overlay_stash_mounter
 } system_data:file { create setattr write append rename link unlink };
 
 # Disallow execution from any writable partition (except from unconfined context)

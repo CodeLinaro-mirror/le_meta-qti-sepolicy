@@ -1,0 +1,33 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+policy_module(seatd, 1.0)
+
+type seatd_t;
+type seatd_exec_t;
+init_vendor_domain(seatd_t, seatd_exec_t)
+
+type seatd_socket_t;
+files_type(seatd_socket_t);
+
+allow seatd_t self:capability sys_tty_config;
+mls_file_read_all_levels(seatd_t);
+mls_file_write_all_levels(seatd_t);
+
+gen_require(`
+    type var_run_t;
+    type overlay_t;
+    type device_t;
+    type event_device_t;
+    type tty_device_t;
+')
+
+filetrans_pattern(seatd_t, var_run_t, seatd_socket_t, sock_file)
+allow seatd_t overlay_t:dir search;
+allow seatd_t var_run_t:dir manage_dir_perms;
+allow seatd_t seatd_socket_t:sock_file create;
+allow seatd_t seatd_socket_t:sock_file delete_sock_file_perms;
+allow seatd_t device_t:dir search;
+allow seatd_t event_device_t:chr_file { read_file_perms write_file_perms };
+allow seatd_t tty_device_t:chr_file manage_chr_file_perms; #/dev/tty*
+allow seatd_t self:fifo_file { read write };
+

@@ -1,0 +1,99 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+files_read_config_files(btapp_t);
+
+gen_require(`
+  type system_dbusd_runtime_t;
+  type system_dbusd_t;
+  type pmsg_device_t;
+  type socket_device_t;
+  type leprop_sock_t;
+  type leprop_t;
+  type syslogd_runtime_t;
+  type syslogd_t;
+  type bluetooth_conf_t;
+  type pulseaudio_t;
+  type pulseaudio_runtime_t;
+  type device_t;
+  type unreserved_port_t;
+  type firmware_t;
+  type node_t;
+  type mount_t;
+  type bt_data_t;
+  type default_t;
+')
+
+### Seraph-specific BT hardware device nodes
+
+# /dev/bt* power control character device
+type bt_device_t;
+dev_node(bt_device_t);
+rw_chr_files_pattern(btapp_t, device_t, bt_device_t);
+
+# /dev/ttyHS0 - High-Speed UART serial link to BT chip
+type ttyHS0_device_t;
+dev_node(ttyHS0_device_t);
+allow btapp_t ttyHS0_device_t:chr_file rw_chr_file_perms;
+
+# /dev/socket/ble_gap_socket, /dev/socket/ble_wbds_socket
+type bt_app_sock_t;
+dev_node(bt_app_sock_t);
+manage_sock_files_pattern(btapp_t, bt_app_sock_t, bt_app_sock_t);
+
+### Firmware
+read_files_pattern(btapp_t, firmware_t, firmware_t);
+
+### Socket access
+search_dirs_pattern(btapp_t, socket_device_t, socket_device_t)
+
+### PulseAudio runtime socket
+rw_sock_files_pattern(btapp_t, pulseaudio_runtime_t, pulseaudio_runtime_t);
+
+### System state and properties
+kernel_read_system_state(btapp_t);
+leprop_rw_props(btapp_t);
+
+### Network (BT PAN / tethering)
+corenet_tcp_bind_all_unreserved_ports(btapp_t);
+corenet_tcp_bind_generic_node(btapp_t);
+allow btapp_t self:tcp_socket create_stream_socket_perms;
+allow btapp_t self:unix_stream_socket { accept listen };
+allow btapp_t node_t:tcp_socket node_bind;
+
+### QRTR socket (QMI over IPC Router)
+allow btapp_t self:qipcrtr_socket create_socket_perms;
+
+### D-Bus system bus
+allow btapp_t system_dbusd_runtime_t:dir search;
+allow btapp_t system_dbusd_runtime_t:sock_file write;
+allow btapp_t system_dbusd_t:unix_stream_socket connectto;
+
+ifdef(`init_systemd', `
+    dbus_connect_system_bus(btapp_t)
+    dbus_send_system_bus(btapp_t)
+')
+
+### Bluetooth config files (/etc/bluetooth/)
+manage_dirs_pattern(btapp_t, bluetooth_conf_t, bluetooth_conf_t)
+manage_files_pattern(btapp_t, bluetooth_conf_t, bluetooth_conf_t)
+allow btapp_t bluetooth_conf_t:sock_file { create unlink write };
+
+### PulseAudio audio streaming (A2DP / HFP)
+allow btapp_t pulseaudio_t:unix_stream_socket { connectto sendto };
+allow btapp_t pulseaudio_runtime_t:sock_file write_sock_file_perms;
+
+### Syslog and journal access
+allow btapp_t syslogd_runtime_t:dir search;
+logging_send_syslog_msg(btapp_t)
+
+### vendor directory access
+allow btapp_t default_t:dir search;
+
+### BT data files (/data/misc/bluetooth/)
+allow btapp_t bt_data_t:file { open read write getattr };
+allow btapp_t bt_data_t:dir { search };
+allow btapp_t bt_data_t:sock_file { create unlink write };
+data_filetrans(btapp_t, bt_data_t, { file dir })
+manage_user_data_files(btapp_t, bt_data_t)
+allow mount_t bt_data_t:sock_file manage_sock_file_perms;

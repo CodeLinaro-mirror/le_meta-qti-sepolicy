@@ -1,71 +1,131 @@
 # Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
+
 gen_require(`
+    type adsp_persist_t;
+    type adbd_system_data_t;
+    type audio_data_file_t;
+    type audio_hal_etc_t;
+    type bt_data_t;
+    type cache_recovery_t;
+    type camera_data_t;
+    type chg-policy-persist_data_t;
+    type chronyd_conf_t;
+    type chronyd_var_lib_t;
+    type data_t;
+    type dbusd_etc_t;
     type default_context_t;
-    type file_context_t;
+    type dnsmasq_etc_t;
     type etc_t;
-    type overlay_t;
+    type file_context_t;
+    type fonts_cache_t;
+    type init_var_lib_t;
+    type leprop_system_data_t;
+    type modules_conf_t;
+    type perf_hal_etc_t;
+    type pulseaudio_var_lib_t;
+    type qseecomd_persist_t;
+    type qwes_data_t;
+    type rfs_persist_t;
+    type sensors_persist_data_t;
+    type syslog_conf_t;
+    type system_dbusd_var_lib_t;
+    type systemd_coredump_var_lib_t;
+    type systemd_logind_var_lib_t;
+    type systemd_unit_t;
+    type systemd_update_run_t;
+    type thermal_etc_t;
+    type tombstone_data_t;
+    type tombstone_rfs_data_t;
+    type udev_rules_t;
+    type unlabeled_t;
+    type alsa_var_lib_t;
+    type kernel_t;
+    type unconfined_mount_t;
+    type var_lib_t;
     type var_spool_t;
     type var_t;
-    type modules_conf_t;
-    type udev_rules_t;
-    type systemd_logind_var_lib_t;
-    type dbusd_etc_t;
-    type post_boot_script_exec_t;
-    type leprop_system_data_t;
-    type adbd_system_data_t;
-    type thermal_etc_t;
-    type shadow_t;
 ')
 
 allow mount_copybind_t default_context_t:dir search;
-allow mount_t default_context_t:file { getattr open read };
-allow mount_t file_context_t:file read_file_perms;
 allow mount_copybind_t file_context_t:dir search;
 allow mount_copybind_t file_context_t:file mmap_read_file_perms;
 allow mount_copybind_t var_spool_t:dir getattr;
 
-allow mount_t etc_t:dir mounton;
-allow mount_t var_spool_t:dir mounton;
+# update_engine runs as mount_t on this platform and needs access to /cache/recovery.
+allow mount_t cache_recovery_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t cache_recovery_t:file manage_file_perms;
 
-allow mount_t modules_conf_t:dir read;
-allow mount_t udev_rules_t:dir read;
-allow mount_t systemd_logind_var_lib_t:dir { create read };
+# systemd-tmpfiles manages the dbus var/lib directory and symlinks.
+allow mount_t system_dbusd_var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t system_dbusd_var_lib_t:lnk_file { manage_lnk_file_perms relabel_lnk_file_perms };
 
-allow mount_t dbusd_etc_t:file { getattr open read };
-allow mount_t modules_conf_t:file { getattr open read };
-allow mount_t udev_rules_t:file { getattr open read };
-allow mount_t post_boot_script_exec_t:file { open read getattr };
-allow mount_t overlay_t:chr_file unlink;
+# systemd-logind and systemd-tmpfiles create dirs under /var/lib/systemd during startup.
+allow mount_t init_var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t init_var_lib_t:file manage_file_perms;
 
+# PulseAudio setup script creates /var/lib/pulse through mount_t.
+allow mount_t var_lib_t:dir { manage_dir_perms relabel_dir_perms };
 
-allow mount_t overlay_t:dir manage_dir_perms;
-allow mount_t overlay_t:file manage_file_perms;
+# weston (weston-keyboard, weston-desktop-shell) runs as mount_t on this platform
+# and directly reads and updates the fontconfig cache directory.
+allow mount_t fonts_cache_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t fonts_cache_t:file manage_file_perms;
 
-allow mount_t var_t:dir manage_dir_perms;
+# mount_t boot-time setup on non-overlay system paths.
+allow mount_t var_t:chr_file unlink;
+allow mount_t var_spool_t:dir { mounton_dir_perms relabel_dir_perms };
+allow mount_t self:capability { chown fowner fsetid };
+
+allow mount_t etc_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t var_t:dir { manage_dir_perms relabel_dir_perms };
 allow mount_t var_t:file manage_file_perms;
 
-auth_read_shadow(mount_t)
-allow mount_t leprop_system_data_t:file read_file_perms;
-allow mount_t dbusd_etc_t:dir read;
+# Comprehensive var/lib and /data directory management for systemd, pulseaudio,
+# chrony, bt, coredump, tombstone, and sensors bootstrap operations.
+allow mount_t { audio_data_file_t bt_data_t
+                chronyd_var_lib_t data_t
+                pulseaudio_var_lib_t sensors_persist_data_t
+                systemd_coredump_var_lib_t systemd_logind_var_lib_t
+                tombstone_data_t tombstone_rfs_data_t }:dir { manage_dir_perms relabel_dir_perms };
+
+allow mount_t { chronyd_var_lib_t pulseaudio_var_lib_t
+                systemd_update_run_t }:file manage_file_perms;
+
+# /data/persist/rfs copy-up runs through mount_t stashed creds during WLAN init.
+allow mount_t rfs_persist_t:dir { manage_dir_perms relabel_dir_perms search };
+allow mount_t rfs_persist_t:file { manage_file_perms relabel_file_perms read_file_perms };
+
+allow mount_t leprop_system_data_t:file { relabel_file_perms link };
+allow mount_t { fonts_cache_t sensors_persist_data_t }:file link;
 allow mount_t adbd_system_data_t:file read_file_perms;
-allow mount_t thermal_etc_t:file read_file_perms;
+allow mount_t { default_context_t file_context_t }:file read_file_perms;
 
-# The /etc partition is read-only and reserved for sensitive configuration files.
-# Typically, a volatile bind mechanism is used, where the framework copies /etc
-# into a writable partition such as systemrw. However, on the Aspen target, the
-# systemrw partition is not available, so this approach cannot be applied. To
-# handle writable files under /etc, Aspen uses an overlay filesystem, with the
-# mount service directing writes to /overlay/etc. Type transition rules are not
-# functioning as expected because the test binaries, such as ssc_sensor_info etc,
-# run under the bin_t domain. As a result, we are providing permissions to the
-# generic etc_t type to allow file creation inside /etc for debugging purposes.
-# Adding policies in userdebug flag only for this particular target.
-#
-# Importantly, this does not mean full access is given to etc_t; only minimal
-# permissions required for debugging are provided.
+# Legacy compatibility: minimal read/search for paths still resolved to lowerdir labels.
+allow mount_t chg-policy-persist_data_t:dir search;
+allow mount_t chg-policy-persist_data_t:file read_file_perms;
+allow mount_t systemd_unit_t:dir list_dir_perms;
+allow mount_t systemd_unit_t:lnk_file read_lnk_file_perms;
 
-userdebug_or_eng(`
-    allow mount_t etc_t:file { create write append };
-')
+# /etc read-only lower-inode access for restorecon and relabeling boot operations.
+allow mount_t { camera_data_t dbusd_etc_t dnsmasq_etc_t modules_conf_t udev_rules_t }:dir list_dir_perms;
+allow mount_t { audio_hal_etc_t chronyd_conf_t dbusd_etc_t dnsmasq_etc_t
+                modules_conf_t perf_hal_etc_t syslog_conf_t thermal_etc_t
+                udev_rules_t }:file read_file_perms;
+
+# Boot-time setup scripts also touch qwes and persist paths via mount_t.
+allow mount_t adsp_persist_t:dir { getattr search };
+allow mount_t qseecomd_persist_t:dir { manage_dir_perms relabel_dir_perms search };
+allow mount_t qseecomd_persist_t:file manage_file_perms;
+allow mount_t qwes_data_t:dir search_dir_perms;
+allow mount_t qwes_data_t:file read_file_perms;
+
+# ALSA restore probes /var/lib/alsa state via mount_t second-check.
+allow mount_t alsa_var_lib_t:file read_file_perms;
+
+# Filesystem relabel for volumes not yet labeled at mount time.
+allow mount_t unlabeled_t:filesystem relabelfrom;
+
+# Suppress known scheduler-noise denial seen during mount helper execution.
+dontaudit unconfined_mount_t kernel_t:process setsched;

@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/etc/conf/media-encryption.conf   --      gen_context(system_u:object_r:fbe_conf_file_t,s0)

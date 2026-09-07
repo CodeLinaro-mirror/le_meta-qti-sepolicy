@@ -1,0 +1,11 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+userdebug_or_eng(`
+    gen_require(`
+        type rfsa_adsp_lib_t;
+    ')
+
+    allow unconfined_t rfsa_adsp_lib_t:dir { add_name remove_name write };
+    allow unconfined_t rfsa_adsp_lib_t:file { append create unlink write };
+')

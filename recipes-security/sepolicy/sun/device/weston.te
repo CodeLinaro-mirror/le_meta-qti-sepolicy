@@ -39,3 +39,4 @@ allow weston_t weston_data_t:file manage_file_perms;
 allow weston_t vendor_clstc_config_t:file read_file_perms;
 allow weston_t default_t:file read_file_perms;
 allow weston_t adreno_lib_t:file mmap_exec_file_perms;
+allow weston_t self:process execmem;

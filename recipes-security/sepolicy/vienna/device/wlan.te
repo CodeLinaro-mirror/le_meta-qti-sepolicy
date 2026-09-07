@@ -5,9 +5,54 @@ gen_require(`
     type wlan_initrc_t;
     type kernel_t;
     type wifi_data_t;
+    type mount_t;
+    type initrc_t;
+    type data_t;
 ')
+
+type cnss_socket_t;
+files_type(cnss_socket_t)
+
+type cnss_sock_dir_t;
+files_type(cnss_sock_dir_t)
+
+type cnss_diag_conf_t;
+files_type(cnss_diag_conf_t)
+
+init_daemon_domain(wlan_initrc_t, wlan_initrc_exec_t)
 
 allow wlan_initrc_t kernel_t:unix_dgram_socket sendto;
 
 allow wlan_initrc_t wifi_data_t:dir rw_dir_perms;
 allow wlan_initrc_t wifi_data_t:file rw_file_perms;
+
+# Dir permissions needed to create/remove a socket file
+allow wlan_initrc_t cnss_sock_dir_t:dir { write add_name remove_name search };
+
+# Allow socket creation and removal (unlink needed on reboot when stale socket persists)
+allow wlan_initrc_t cnss_socket_t:sock_file { create getattr unlink };
+
+# Restrict transition only to this socket name (after restorecon labels dir as cnss_sock_dir_t)
+type_transition wlan_initrc_t cnss_sock_dir_t:sock_file cnss_socket_t "cnss_user_server";
+
+# cnss_daemon runs as mount_t; allow it to create and access cnss_socket_t sock_files
+allow mount_t cnss_sock_dir_t:dir { write add_name search };
+allow mount_t cnss_socket_t:sock_file { create getattr };
+
+# explicit process transition
+allow initrc_t wlan_initrc_exec_t:file { read open getattr execute map };
+allow initrc_t wlan_initrc_t:process transition;
+type_transition initrc_t wlan_initrc_exec_t:process wlan_initrc_t;
+allow wlan_initrc_t wlan_initrc_exec_t:file entrypoint;
+
+# initrc_t path for cnss_diag.conf
+allow initrc_t data_t:dir { add_name search };
+type_transition initrc_t data_t:file cnss_diag_conf_t "cnss_diag.conf";
+
+# keep the mount_t boot-time path
+allow mount_t data_t:dir { add_name search };
+type_transition mount_t data_t:file cnss_diag_conf_t "cnss_diag.conf";
+allow mount_t cnss_diag_conf_t:file { create open read write append getattr setattr };
+
+# wlan_initrc_t (cnss_diag) needs to read/append to cnss_diag.conf
+allow wlan_initrc_t cnss_diag_conf_t:file { read append open getattr };

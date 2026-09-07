@@ -104,7 +104,7 @@ allow weston_t sysfs_cpu_present:file { read_file_perms };
 #For weston-terminal
 allow weston_t shell_exec_t:file map; #/bin/sh
 allow weston_t home_root_t:dir search;
-allow weston_t user_home_dir_t:dir search;
+allow weston_t user_home_dir_t:dir { search getattr };
 allow weston_t weston_exec_t:file execute_no_trans;
 type weston_pty_t;
 term_create_pty(weston_t, weston_pty_t)

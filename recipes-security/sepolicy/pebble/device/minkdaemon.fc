@@ -1,0 +1,8 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/bin/minkdaemon                             gen_context(system_u:object_r:minkdaemon_exec_t,s0)
+/usr/libexec/minkdaemon/minkdaemon_post_script  gen_context(system_u:object_r:minkdaemon_post_script_exec_t,s0)
+/etc/taconfig(/.*)?                             gen_context(system_u:object_r:minkdaemon_etc_ta_config_t,s0)
+/dev/socket/hlos_mink_opener       -s           gen_context(system_u:object_r:minkdaemon_sock_t,s0)
+/dev/socket/ssgtzd                 -s           gen_context(system_u:object_r:minkdaemon_tzd_sock_t,s0)
