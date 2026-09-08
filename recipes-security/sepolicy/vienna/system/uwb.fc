@@ -7,3 +7,7 @@
 /data/vendor/uwb/.*    --    gen_context(system_u:object_r:uwb_data_file_t,s0)
 /etc/uwb(/.*)?    --    gen_context(system_u:object_r:uwb_etc_t,s0)
 /tmp/uwb_adapter_active    --    gen_context(system_u:object_r:uwb_tmp_t,s0)
+
+# SSR dump directory and files
+/data/vendor/ssrdump    -d    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
+/data/vendor/ssrdump/.*    --    gen_context(system_u:object_r:ssrdump_data_file_t,s0)
