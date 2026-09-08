@@ -65,6 +65,7 @@ gen_require(`
     type thermal_etc_t;
     type syslog_conf_t;
     type perf_hal_etc_t;
+    type uwb_etc_t;
     type audio_hal_etc_t;
     type audio_hal_etc_acdb_t;
     type qwes_config_etc_t;
@@ -110,13 +111,15 @@ allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               systemd_unit_t dbusd_etc_t dnsmasq_etc_t cert_t
                               audio_hal_etc_t audio_hal_etc_acdb_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
-                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t }:dir list_dir_perms;
+                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t
+                              uwb_etc_t }:dir list_dir_perms;
 allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
                               thermal_etc_t perf_hal_etc_t cert_t syslog_conf_t
                               audio_hal_etc_t audio_hal_etc_acdb_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
-                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t }:file read_file_perms;
+                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t
+                              uwb_etc_t }:file read_file_perms;
 allow overlay_etc_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
 
 # /etc/alsa/ config reads; alsa_etc_t declared in upstream refpolicy.
@@ -126,6 +129,7 @@ optional_policy(`
     ')
     allow overlay_etc_mounter_t alsa_etc_t:dir list_dir_perms;
     allow overlay_etc_mounter_t alsa_etc_t:file read_file_perms;
+    allow overlay_etc_mounter_t alsa_etc_t:lnk_file read_lnk_file_perms;
 ')
 
 allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:dir search_dir_perms;
