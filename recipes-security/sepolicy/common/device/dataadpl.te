@@ -98,3 +98,6 @@ userdebug_or_eng(`
 
 # for dlt logging
 dlt_allow_user_logging(dataadpl_t)
+
+#for Common logging
+allow_common_log(dataadpl_t)
