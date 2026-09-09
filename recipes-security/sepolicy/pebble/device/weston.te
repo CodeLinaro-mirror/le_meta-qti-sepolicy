@@ -45,3 +45,4 @@ allow weston_t qmmf_data_file_t:dir manage_dir_perms;
 allow weston_t qmmf_data_file_t:file manage_file_perms;
 allow weston_t user_home_t:dir search;
 allow weston_t self:process execmem;
+allow weston_t self:fifo_file { getattr ioctl };
