@@ -3,4 +3,6 @@
 
 /usr/bin/lefbe_service            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
 /overlay/unencrypted(/.*)? -d gen_context(system_u:object_r:fbe_secure_data_t,s0)
+/usr/bin/lefbe_setpolicy            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
+/usr/bin/lefbe_mkdir            --      gen_context(system_u:object_r:fbe_service_exec_t,s0)
 

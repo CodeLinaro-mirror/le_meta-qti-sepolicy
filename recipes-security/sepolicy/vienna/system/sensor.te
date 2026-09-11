@@ -22,6 +22,7 @@ gen_require(`
     type etc_sensors_t;
     type rfsa_adsp_lib_t;
     type system_dmabuf_device_t;
+    type socket_device_t;
 ')
 
 init_daemon_domain(sscrpcd_t, sscrpcd_exec_t)
@@ -56,6 +57,8 @@ allow sscrpcd_t event_device_t:chr_file { getattr read };
 
 allow sscrpcd_t etc_sensors_t:dir manage_dir_perms;
 allow sscrpcd_t etc_sensors_t:file manage_file_perms;
+
+allow sscrpcd_t socket_device_t:dir search;
 
 logging_send_syslog_msg(sscrpcd_t)
 mls_file_read_all_levels(sscrpcd_t)

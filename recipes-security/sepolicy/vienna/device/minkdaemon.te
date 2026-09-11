@@ -1,0 +1,7 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(minkdaemon, 1.0)
+
+type minkdaemon_etc_ta_config_t;
+files_type(minkdaemon_etc_ta_config_t)

@@ -7,12 +7,15 @@ policy_module(test, 1.0)
 gen_require(`
     type kernel_tests_t;
     type mount_t;
+    type overlay_data_mounter_t;
     type kmod_t;
 ')
 
 userdebug_or_eng(`
     allow mount_t kernel_tests_t:dir manage_dir_perms;
     allow mount_t kernel_tests_t:file { manage_file_perms execute };
+    allow overlay_data_mounter_t kernel_tests_t:dir manage_dir_perms;
+    allow overlay_data_mounter_t kernel_tests_t:file manage_file_perms;
     allow kmod_t kernel_tests_t:file read_file_perms;
     allow kmod_t kernel_tests_t:system module_load;
 ')

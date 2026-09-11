@@ -65,6 +65,7 @@ gen_require(`
     type thermal_etc_t;
     type syslog_conf_t;
     type perf_hal_etc_t;
+    type uwb_etc_t;
     type audio_hal_etc_t;
     type audio_hal_etc_acdb_t;
     type qwes_config_etc_t;
@@ -78,6 +79,7 @@ gen_require(`
     type default_context_t;
     type file_context_t;
     type systemd_update_run_t;
+    type etc_sensors_t;
 ')
 
 ########################################
@@ -96,11 +98,12 @@ allow overlay_etc_mounter_t overlay_t:chr_file manage_chr_file_perms;
 # Phase 2: copy-up (stashed credential second-check)
 ########################################
 
-allow overlay_etc_mounter_t { etc_t
+allow overlay_etc_mounter_t { etc_t adbd_system_data_t
                               wifi_system_data_t }:dir { manage_dir_perms relabel_dir_perms };
 
 allow overlay_etc_mounter_t { etc_t etc_runtime_t systemd_update_run_t
-                              leprop_system_data_t adbd_system_data_t }:file { manage_file_perms relabel_file_perms };
+                              leprop_system_data_t adbd_system_data_t
+                              uwb_etc_t }:file { manage_file_perms relabel_file_perms };
 
 allow overlay_etc_mounter_t etc_t:lnk_file manage_lnk_file_perms;
 
@@ -110,14 +113,19 @@ allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               systemd_unit_t dbusd_etc_t dnsmasq_etc_t cert_t
                               audio_hal_etc_t audio_hal_etc_acdb_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
-                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t }:dir list_dir_perms;
+                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t
+                              uwb_etc_t }:dir list_dir_perms;
 allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
-                              systemd_unit_t dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
+                              dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
                               thermal_etc_t perf_hal_etc_t cert_t syslog_conf_t
                               audio_hal_etc_t audio_hal_etc_acdb_t
                               qwes_config_etc_t qmi_sec_config_t fbe_conf_file_t
-                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t }:file read_file_perms;
+                              iotd_etc_t loc_etc_t minkdaemon_etc_ta_config_t
+                              uwb_etc_t }:file read_file_perms;
 allow overlay_etc_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
+
+allow overlay_etc_mounter_t etc_sensors_t:dir { list_dir_perms setattr };
+allow overlay_etc_mounter_t etc_sensors_t:file { read_file_perms setattr };
 
 # /etc/alsa/ config reads; alsa_etc_t declared in upstream refpolicy.
 optional_policy(`
@@ -126,36 +134,30 @@ optional_policy(`
     ')
     allow overlay_etc_mounter_t alsa_etc_t:dir list_dir_perms;
     allow overlay_etc_mounter_t alsa_etc_t:file read_file_perms;
+    allow overlay_etc_mounter_t alsa_etc_t:lnk_file read_lnk_file_perms;
 ')
 
-# /etc/bluetooth/ is writable at runtime; reparent covers copy-up dir rename
-# from workdir to upper, link covers atomic file install via vfs_link().
-allow overlay_etc_mounter_t { default_context_t file_context_t }:dir list_dir_perms;
-allow overlay_etc_mounter_t bluetooth_conf_t:dir { manage_dir_perms reparent };
+allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:dir search_dir_perms;
 allow overlay_etc_mounter_t selinux_config_t:dir list_dir_perms;
 allow overlay_etc_mounter_t selinux_config_t:file read_file_perms;
-allow overlay_etc_mounter_t { default_context_t file_context_t }:file read_file_perms;
-allow overlay_etc_mounter_t bluetooth_conf_t:file { manage_file_perms link };
+allow overlay_etc_mounter_t { bluetooth_conf_t default_context_t file_context_t }:file read_file_perms;
 
 # The overlayfs stashed-credential second-check uses overlay_etc_mounter_t when any
-# process opens /etc/shadow through the /etc overlay.  auth_read_shadow() adds this
+# process opens /etc/shadow through the /etc overlay. auth_read_shadow() adds this
 # domain to can_read_shadow_passwords and grants read_file_perms, satisfying the
 # kernel second-check without violating the authlogin neverallow.
 auth_read_shadow(overlay_etc_mounter_t)
 
 # Second-check for udev helper scripts in /etc/udev/scripts/.
-# read_file_perms covers copy-up; execute and map are also needed because
-# ovl_permission() mirrors the caller's MAY_EXEC check using the mounter's
-# stashed credentials when udev_t executes a helper via execve(2).
+# copy-up only reads the lower file; read_file_perms is sufficient.
 optional_policy(`
     gen_require(`
         type udev_helper_exec_t;
     ')
-    allow overlay_etc_mounter_t udev_helper_exec_t:file { read_file_perms execute map };
+    allow overlay_etc_mounter_t udev_helper_exec_t:file read_file_perms;
 ')
 
 mls_file_read_all_levels(overlay_etc_mounter_t)
 mls_file_write_all_levels(overlay_etc_mounter_t)
 mls_file_downgrade(overlay_etc_mounter_t)
 mls_file_upgrade(overlay_etc_mounter_t)
-
