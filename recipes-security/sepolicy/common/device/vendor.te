@@ -227,6 +227,10 @@ seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
 allow post_boot_script_t sysfs_vblank_t:dir read_file_perms;
 
+# dmsetup
+lvm_exec(post_boot_script_t)
+dev_rw_lvm_control(post_boot_script_t)
+
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
 dontaudit post_boot_script_t kernel_t:process setsched;
