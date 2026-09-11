@@ -62,3 +62,4 @@ allow time_daemon_t self:qipcrtr_socket { write read create getattr setopt };
 allow time_daemon_t self:unix_stream_socket { accept listen };
 allow time_daemon_t syslogd_var_run_t:dir search;
 dlt_allow_user_logging(time_daemon_t);
+allow_common_log(time_daemon_t)
