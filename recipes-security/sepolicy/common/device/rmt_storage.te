@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(rmt_storage, 1.0)
 
@@ -35,9 +39,40 @@ policy_module(rmt_storage, 1.0)
 type rmt_storage_t;
 type rmt_storage_exec_t;
 
+gen_require(`
+    type kmsg_device_t;
+    type userio_device_t;
+    type mmcblock_device_t;
+    type tmp_t;
+')
+
 init_vendor_domain(rmt_storage_t, rmt_storage_exec_t)
+logging_send_syslog_msg(rmt_storage_t)
 
 ########################################
 #
 # Remote Storage local policy
 #
+
+# /sys/power/wake_lock, /sys/power/wake_unlock
+# No dedicated sysfs type exists for these nodes on this tree; avoid dev_rw_sysfs
+# (grants rw on all of sysfs) and scope this domain to read + a narrow write instead.
+dev_read_sysfs(rmt_storage_t)
+allow rmt_storage_t sysfs_t:file { open write append};
+
+# /sys/class/uio/ directory traversal (opendir in uio_device_setup_shared_mem)
+allow rmt_storage_t sysfs_t:dir search;
+
+allow rmt_storage_t self:qipcrtr_socket { create getattr read write };
+
+# /dev/kmsg
+allow rmt_storage_t kmsg_device_t:chr_file write;
+
+# /dev/uio0 (modem shared-memory channel for rmtfs requests)
+allow rmt_storage_t userio_device_t:chr_file { open read write map getattr };
+
+# eMMC partitions rmt_storage serves on the modem's behalf
+allow rmt_storage_t mmcblock_device_t:blk_file { open read write getattr };
+
+# tmpfs root search (seen during startup)
+allow rmt_storage_t tmp_t:dir search;
