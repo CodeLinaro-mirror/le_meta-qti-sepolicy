@@ -53,7 +53,7 @@ userdebug_or_eng(`
 allow sscrpcd_t default_t:dir search_dir_perms;
 allow sscrpcd_t default_t:file read_file_perms;
 allow sscrpcd_t device_t:dir { getattr watch };
-allow sscrpcd_t event_device_t:chr_file { getattr read };
+allow sscrpcd_t event_device_t:chr_file { getattr read open};
 
 allow sscrpcd_t etc_sensors_t:dir manage_dir_perms;
 allow sscrpcd_t etc_sensors_t:file manage_file_perms;
