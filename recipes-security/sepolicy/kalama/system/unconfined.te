@@ -120,7 +120,7 @@ userdebug_or_eng(`
     allow unconfined_t dev_dri_t:dir getattr;
     allow unconfined_t perf_hal_socket_t:sock_file getattr;
     allow unconfined_t touch_input_device_t:file getattr;
-    allow unconfined_t tuicoreservice_dev_t:chr_file getattr;
+    allow unconfined_t tuicoreservice_dev_t:chr_file read_chr_file_perms;
     allow unconfined_t zs_handle_sysfs_t:dir getattr;
     allow unconfined_t zspage_sysfs_t:dir getattr;
     allow unconfined_t rfsa_adsp_lib_t:dir { watch list_dir_perms };
