@@ -55,6 +55,7 @@ allow tlpd_t cert_t:dir { search };
 allow tlpd_t urandom_device_t:chr_file { read open };
 allow tlpd_t cert_t:file { read open getattr };
 dlt_allow_user_logging(tlpd_t);
+allow_common_log(tlpd_t);
 
 # Qcmap files
 files_rw_qcmap_etc_data_files(tlpd_t)
