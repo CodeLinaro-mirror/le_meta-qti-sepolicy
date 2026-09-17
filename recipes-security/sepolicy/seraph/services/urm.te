@@ -1,0 +1,142 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(urm)
+
+########################################
+#
+# Declarations
+#
+
+type urm_config_t;
+files_config_file(urm_config_t)
+
+type urm_exec_t;
+type urm_t;
+init_daemon_domain(urm_t, urm_exec_t)
+
+type urm_runtime_t;
+files_runtime_file(urm_runtime_t)
+
+########################################
+#
+# urm local policy
+#
+
+# Suppress spurious capability denials
+dontaudit urm_t self:capability { dac_override dac_read_search net_admin };
+
+# Netlink connector socket access
+allow urm_t self:netlink_connector_socket create_socket_perms;
+
+# Unix stream socket for client-server communication
+allow urm_t self:unix_stream_socket { create connectto };
+
+# Read and write its own config files
+# e.g. scaling_max_freq.txt for per-username
+# CPU frequency scaling settings
+allow urm_t urm_config_t:file rw_file_perms;
+
+# Allow urm to manage its runtime socket
+# under /run for client communication
+allow urm_t urm_runtime_t:sock_file manage_sock_file_perms;
+
+# Create runtime socket transition under /run
+files_runtime_filetrans(urm_t, urm_runtime_t, sock_file)
+
+# Access /dev/cpu_dma_latency for PM QoS
+# to manage power and latency per username
+dev_rw_pmqos(urm_t)
+
+# Read and write sysfs entries for CPU frequency
+# scaling and IRQ affinity management
+dev_rw_sysfs(urm_t)
+
+# Read all domain process state /proc/<pid>
+# for per-username process resource monitoring
+domain_read_all_domains_state(urm_t)
+
+# Create camera and other cgroup directories
+# for per-username resource group isolation
+fs_create_cgroup_dirs(urm_t)
+
+# Create and manage cgroup files
+# for per-username resource group isolation
+fs_create_cgroup_files(urm_t)
+
+# Read and write cgroup files/dirs for
+# per-username resource group management
+fs_rw_cgroup_files(urm_t)
+
+# Read system state from /proc for monitoring
+# per-username resource usage
+kernel_read_system_state(urm_t)
+
+# Request kernel module loading e.g. netlink connector
+kernel_request_load_module(urm_t)
+
+# Read and write IRQ sysctls /proc/irq/*/smp_affinity
+# for per-username IRQ affinity management
+kernel_rw_irq_sysctls(urm_t)
+
+# Read and write kernel sysctls e.g. sched_util_clamp_min
+# for per-username CPU scheduling resource management
+kernel_rw_kernel_sysctl(urm_t)
+
+# Send log messages to syslog
+logging_send_syslog_msg(urm_t)
+
+# Read per-username resource configuration files under /etc/urm
+urm_read_config(urm_t)
+
+# Search /var/lib directory for runtime state access
+files_search_var_lib(urm_t)
+
+# Search tmpfs root /tmp and /run for socket and runtime file access
+files_search_tmp(urm_t)
+
+# Read sysdevice sysfs files e.g. /sys/devices/.../machine
+# for hardware platform identification
+gen_require(`
+    type sysdevice_sysfs_t;
+')
+allow urm_t sysdevice_sysfs_t:file { read open };
+
+# Read and search cpu sysfs dirs e.g. /sys/devices/system/cpu/LLCC
+# for Qualcomm LLCC cache resource management
+gen_require(`
+    type cpu_sysfs_t;
+')
+allow urm_t cpu_sysfs_t:dir { read search };
+
+# Read and write generic sysctl files e.g. /proc/sys/kernel/input_boost_ms
+# for CPU input boost tuning (distinct from kernel_sysctl_t)
+gen_require(`
+    type sysctl_t;
+')
+allow urm_t sysctl_t:file { read write open };
+
+# Write to /tmp for runtime socket and temporary file creation
+gen_require(`
+    type tmp_t;
+')
+allow urm_t tmp_t:dir { write add_name };
+
+# Type transition: when initrc_t creates restune_sock in /run (var_run_t),
+# label it urm_runtime_t so clients can connect using urm_stream_connect
+gen_require(`
+    type initrc_t;
+    type var_run_t;
+')
+filetrans_pattern(initrc_t, var_run_t, urm_runtime_t, sock_file, "restune_sock")
+
+# Allow pulseaudio to connect to URM socket for audio resource management
+gen_require(`
+    type pulseaudio_t;
+')
+urm_stream_connect(pulseaudio_t)
+
+# MLS: allow urm to read/write across all sensitivity levels
+# Required for seraph MLS policy build
+mls_file_read_all_levels(urm_t)
+mls_file_write_all_levels(urm_t)

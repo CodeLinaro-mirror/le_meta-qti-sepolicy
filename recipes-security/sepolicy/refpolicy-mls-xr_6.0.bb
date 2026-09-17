@@ -1,5 +1,8 @@
 require refpolicy-qti-common.inc
 
+# Enable URM (Userspace Resource Manager) module for seraph
+CONTRIB_MODULES:append = " urm"
+
 SRC_URI += " \
     file://xr/ \
     file://${BASEMACHINE}/ \
