@@ -73,7 +73,7 @@ allow overlay_data_mounter_t { wifi_data_t time_data_t bt_data_t qwes_data_t
 # /data overlay: full manage + relabel on copy-up target files.
 allow overlay_data_mounter_t { wifi_data_t audio_data_file_t perf_hal_data_t
                                etc_sensors_t qseecomd_data_t qwes_data_t bt_data_t
-                               reboot_cookie_data_t }:file { manage_file_perms relabel_file_perms };
+                               reboot_cookie_data_t tombstone_data_t }:file { manage_file_perms relabel_file_perms };
 # /data/wifi overlay: cnss_daemon socket operations
 allow overlay_data_mounter_t wifi_data_t:sock_file { create getattr unlink };
 
