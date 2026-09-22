@@ -25,6 +25,7 @@ gen_require(`
     type time_data_t;
     type udev_rules_t;
     type var_t;
+    type mount_copybind_t;
     type unconfined_mount_t;
 ')
 
@@ -60,4 +61,6 @@ allow mount_t time_data_t:dir search;
 allow mount_t udev_rules_t:dir read;
 allow mount_t udev_rules_t:file { getattr open read };
 allow mount_t var_t:dir { add_name remove_name };
+allow mount_copybind_t { default_context_t file_context_t }:dir { getattr search read open };
+allow mount_copybind_t file_context_t:file { getattr open read map };
 allow unconfined_mount_t kernel_t:process setsched;
