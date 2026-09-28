@@ -110,6 +110,7 @@ gen_require(`
   type sysctl_vm_t;
   type tmp_t;
   type sysctl_vm_overcommit_t;
+  type firmware_t;
   class dbus send_msg;
   class dbus acquire_svc;
   class service stop;
@@ -248,6 +249,10 @@ corecmd_exec_shell(qnetcfgmgr_t)
 allow qnetcfgmgr_t sysctl_t:dir search;
 allow qnetcfgmgr_t sysctl_net_t:dir search;
 allow qnetcfgmgr_t sysctl_net_t:file { write open };
+allow qnetcfgmgr_t firmware_t:dir search;
+allow qnetcfgmgr_t sysctl_vm_t:dir search;
+allow qnetcfgmgr_t qcmap_etc_data_t:file {read open};
+allow qnetcfgmgr_t sysctl_vm_overcommit_t:file {read open};
 
 #QNCM rt_tables
 allow initrc_t qcmap_etc_data_t:dir search;
