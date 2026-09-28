@@ -109,6 +109,10 @@ allow ab_updater_shell_t ab_updater_shell_t:fifo_file { getattr read write };
 allow ab_updater_shell_t shell_exec_t:file { read execute map };
 allow ab_updater_shell_t ab_updater_conf_t:file { getattr open read };
 
+# ab-log-rotate tries to read /proc/filesystem when running "mv" commands
+kernel_dontaudit_read_system_state(ab_updater_shell_t)
+kernel_dontaudit_search_kernel_sysctl(ab_updater_shell_t)
+
 #============= initrc_t ==============
 
 allow initrc_t abupdater_log_t:dir { add_name search write };
