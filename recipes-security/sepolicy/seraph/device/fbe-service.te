@@ -13,6 +13,8 @@ type fbe_service_exec_t;
 type install_evict_t;
 type fbe_secure_data_t;
 files_type(fbe_secure_data_t)
+type fbe_conf_file_t;
+files_type(fbe_conf_file_t)
 
 init_daemon_domain(fbe_service_t, fbe_service_exec_t)
 
@@ -20,6 +22,7 @@ gen_require(`
         type urandom_device_t;
         type init_var_run_t;
         type overlay_t;
+        type initrc_t;
         type syslogd_var_run_t;
         type fs_t;
         type syslogd_t;
@@ -57,6 +60,14 @@ allow fbe_secure_data_t fs_t:filesystem  { associate };
 
 #Allow fbe_service_t to check if unencrypted folder already exists in /overlay
 allow fbe_service_t overlay_t:dir manage_dir_perms;
+
+# Allow initrc_t (shell script context and ExecStartPre shell wrapper) to access
+# /overlay during pre-transition steps — lefbe_mkdir.sh runs as initrc_t since it
+# is a shell script (no domain transition), and ExecStartPre wraps in /bin/sh.
+allow initrc_t overlay_t:dir { getattr search add_name write };
+
+# Allow fbe_service_t to read media-encryption.conf (labeled fbe_conf_file_t).
+allow fbe_service_t fbe_conf_file_t:file read_file_perms;
 
 allow fbe_service_t urandom_device_t:chr_file read_chr_file_perms;
 allow fbe_service_t init_var_run_t:dir search_dir_perms;

@@ -1,0 +1,77 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+policy_module(overlay_cache_mounter, 1.0)
+
+########################################
+#
+# Declarations
+#
+########################################
+
+type overlay_cache_mounter_t;
+type overlay_cache_mounter_exec_t;
+
+init_daemon_domain(overlay_cache_mounter_t, overlay_cache_mounter_exec_t)
+
+# Allow entry through the shared /usr/libexec/overlay-mounter binary.
+# systemd uses SELinuxContext= to transition into this domain; the entrypoint
+# check requires the domain to accept the shared exec label.
+# read/execute/map are also required: init_daemon_domain() only wires up these
+# permissions for the primary domain (overlay_data_mounter_t).  Domains that
+# enter via SELinuxContext= skip the normal domain-transition path, so the
+# kernel still checks read+execute+map on the file against this domain at
+# exec(2) time.  Without them the service fails to start in enforcing mode
+# (observed AVC denied { read execute map } in permissive boot logs).
+gen_require(`
+    type overlay_mounter_exec_t;
+')
+allow overlay_cache_mounter_t overlay_mounter_exec_t:file { entrypoint mmap_exec_file_perms };
+
+
+# overlay_t is user_data_files_type; the neverallow in data.te requires
+# membership in these attributes.
+gen_require(`
+    attribute domain_can_read_userdata;
+    attribute domain_can_write_userdata;
+')
+typeattribute overlay_cache_mounter_t domain_can_read_userdata;
+typeattribute overlay_cache_mounter_t domain_can_write_userdata;
+
+########################################
+#
+# overlay_cache_mounter_t policy
+#
+########################################
+
+gen_require(`
+    type overlay_t;
+    type fs_t;
+    type cache_t;
+    type cache_recovery_t;
+')
+
+########################################
+# Phase 1: mount(2) syscall
+########################################
+
+allow overlay_cache_mounter_t self:capability { sys_admin chown fowner dac_override dac_read_search fsetid };
+allow overlay_cache_mounter_t fs_t:filesystem { mount getattr relabelfrom };
+allow overlay_cache_mounter_t cache_t:dir { mounton list_dir_perms relabelfrom relabelto };
+allow overlay_cache_mounter_t cache_t:filesystem { mount relabelfrom relabelto };
+allow overlay_cache_mounter_t overlay_t:dir manage_dir_perms;
+allow overlay_cache_mounter_t overlay_t:file manage_file_perms;
+allow overlay_cache_mounter_t overlay_t:chr_file manage_chr_file_perms;
+
+########################################
+# Phase 2: copy-up (stashed credential second-check)
+########################################
+
+allow overlay_cache_mounter_t { cache_t cache_recovery_t }:dir { manage_dir_perms relabel_dir_perms };
+allow overlay_cache_mounter_t { cache_t cache_recovery_t }:file { manage_file_perms relabel_file_perms };
+allow overlay_cache_mounter_t cache_t:lnk_file manage_lnk_file_perms;
+
+mls_file_read_all_levels(overlay_cache_mounter_t)
+mls_file_write_all_levels(overlay_cache_mounter_t)
+mls_file_downgrade(overlay_cache_mounter_t)
+mls_file_upgrade(overlay_cache_mounter_t)

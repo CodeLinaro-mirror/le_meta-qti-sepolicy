@@ -38,15 +38,18 @@ userdebug_or_eng(`
         type rfsa_adsp_lib_t;
         type uwb_t;
         type sysfs_devcoredump_t;
+        type power_sysfs_t;
     ')
 
+    allow unconfined_t power_sysfs_t:file rw_file_perms;
     allow unconfined_t rfsa_adsp_lib_t:dir rw_dir_perms;
     allow unconfined_t rfsa_adsp_lib_t:dir watch;
     allow unconfined_t rfsa_adsp_lib_t:file rw_file_perms;
     allow unconfined_t rfsa_adsp_lib_t:file { create watch unlink };
+    allow unconfined_t sysfs_devcoredump_t:dir search_dir_perms;
+    allow unconfined_t sysfs_devcoredump_t:file rw_file_perms;
+
     # uwb test app permission
     unconfined_dbus_send(uwb_t)
 ')
 
-allow unconfined_t sysfs_devcoredump_t:dir search_dir_perms;
-allow unconfined_t sysfs_devcoredump_t:file rw_file_perms;

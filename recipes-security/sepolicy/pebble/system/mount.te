@@ -4,6 +4,7 @@
 
 gen_require(`
     type adbd_system_data_t;
+    type adreno_lib_t;
     type audio_data_file_t;
     type audio_hal_etc_t;
     type bt_data_t;
@@ -66,6 +67,10 @@ allow mount_t var_lib_t:dir { manage_dir_perms relabel_dir_perms };
 # and directly reads and updates the fontconfig cache directory.
 allow mount_t fonts_cache_t:dir { manage_dir_perms relabel_dir_perms };
 allow mount_t fonts_cache_t:file manage_file_perms;
+
+# init_qti_graphics bind-mounts Mesa's software-rendering libraries over the
+# fixed Adreno library paths on the fused-off-GPU SKU.
+allow mount_t adreno_lib_t:file mounton;
 
 # mount_t boot-time setup on non-overlay system paths.
 allow mount_t var_t:chr_file unlink;

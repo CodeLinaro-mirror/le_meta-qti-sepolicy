@@ -1,0 +1,10 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type power_control_t;
+')
+
+# Allow qseecomd (OPS listener) to service TZ's display clock vote request
+# by writing to /sys/class/drm/card0/device/power/control.
+allow qseecomd_t power_control_t:file { open read write getattr };

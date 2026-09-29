@@ -1,0 +1,11 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+# Seraph BT hardware device nodes
+/dev/btpower                         -c      gen_context(system_u:object_r:bt_device_t,s0)
+/dev/ttyHS0                          -c      gen_context(system_u:object_r:ttyHS0_device_t,s0)
+/dev/socket/ble_gap_socket           -s      gen_context(system_u:object_r:bt_app_sock_t,s0)
+/dev/socket/ble_wbds_socket          -s      gen_context(system_u:object_r:bt_app_sock_t,s0)
+
+# BT data files
+/data/misc/bluetooth(/.*)?               gen_context(system_u:object_r:bt_data_t,s0)

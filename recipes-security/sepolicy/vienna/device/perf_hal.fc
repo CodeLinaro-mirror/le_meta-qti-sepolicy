@@ -1,0 +1,4 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/data/vendor/perfd/default_scaling_min_freq  --  gen_context(system_u:object_r:perf_hal_data_scaling_t,s0)
