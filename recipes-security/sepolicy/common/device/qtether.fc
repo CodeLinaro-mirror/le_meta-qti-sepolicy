@@ -24,12 +24,15 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 /usr/bin/qti    --      gen_context(system_u:object_r:qtether_exec_t,s0)
+/usr/bin/qti_adpl --    gen_context(system_u:object_r:qtether_exec_t,s0)
 
 /dev/smdcntl8           -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/rmnet_ctrl         -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/rmnet_v2x_ctrl     -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/mhi_pipe_14        -c      gen_context(system_u:object_r:dataqti_device_t,s0)
 /dev/mhi_ctrl           -c      gen_context(system_u:object_r:dataqti_device_t,s0)
-
