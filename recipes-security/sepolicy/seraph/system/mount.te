@@ -27,6 +27,12 @@ gen_require(`
     type var_t;
     type mount_copybind_t;
     type unconfined_mount_t;
+    type systemd_logind_var_lib_t;
+    type system_dbusd_var_lib_t;
+    type init_var_lib_t;
+    type var_lib_t;
+    type chronyd_var_lib_t;
+    type dhcpc_state_t;
 ')
 
 
@@ -53,14 +59,27 @@ allow mount_t overlay_t:file manage_file_perms;
 allow mount_t perf_hal_data_t:dir { add_name getattr search write };
 allow mount_t perf_hal_data_t:file { create getattr open write };
 allow mount_t perf_hal_etc_t:file { getattr open read };
-allow mount_t pulseaudio_var_lib_t:dir { add_name remove_name };
-allow mount_t pulseaudio_var_lib_t:file { create open rename write };
 allow mount_t self:capability { fowner fsetid };
 allow mount_t syslog_conf_t:file { getattr open read };
 allow mount_t time_data_t:dir search;
 allow mount_t udev_rules_t:dir read;
 allow mount_t udev_rules_t:file { getattr open read };
-allow mount_t var_t:dir { add_name remove_name };
 allow mount_copybind_t { default_context_t file_context_t }:dir { getattr search read open };
 allow mount_copybind_t file_context_t:file { getattr open read map };
 allow unconfined_mount_t kernel_t:process setsched;
+
+# overlayfs workdir on /var/volatile (tmpfs, var_t): work/ dir, tmpfile/whiteout
+# tests, whiteouts; systemd-tmpfiles relabels upper /var/volatile/lib
+allow mount_t var_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t var_t:file { manage_file_perms };
+allow mount_t var_t:chr_file { create getattr setattr unlink rename };
+
+# plain /var/lib entries
+allow mount_t var_lib_t:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t var_lib_t:file manage_file_perms;
+
+# service state dirs under /var/lib: create/copy-up in the upper layer
+# with the mounter's creds (mount_t), checked against the final label
+allow mount_t { pulseaudio_var_lib_t init_var_lib_t system_dbusd_var_lib_t systemd_logind_var_lib_t chronyd_var_lib_t dhcpc_state_t }:dir { manage_dir_perms relabel_dir_perms };
+allow mount_t { pulseaudio_var_lib_t init_var_lib_t system_dbusd_var_lib_t systemd_logind_var_lib_t chronyd_var_lib_t dhcpc_state_t }:file manage_file_perms;
+allow mount_t { init_var_lib_t system_dbusd_var_lib_t }:lnk_file { manage_lnk_file_perms relabel_lnk_file_perms };
