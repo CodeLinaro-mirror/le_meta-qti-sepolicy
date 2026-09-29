@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 userdebug_or_eng(`
     rw_diag_dev(ifconfig_t)
 ')
@@ -51,3 +55,4 @@ read_files_pattern(ifconfig_t, tmp_t, qcmap_tmp_t)
 
 #dont audit setuid and setgid
 dontaudit ifconfig_t self: capability {setuid setgid kill};
+allow_common_log(ifconfig_t)
