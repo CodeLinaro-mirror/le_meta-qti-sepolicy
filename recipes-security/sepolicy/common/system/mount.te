@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 fs_relabelfrom_firmware(mount_t)
 fs_relabelfrom_dsp(mount_t)
 data_mount_user_dir(mount_t)
@@ -104,9 +108,11 @@ allow mount_copybind_t self:capability kill;
 gen_require(`
 type binderfs_t;
 type mount_t;
+type mmcblock_device_t;
 ')
 
 allow mount_t binderfs_t:dir { getattr mounton };
 allow mount_t binderfs_t:filesystem mount;
 manage_files_pattern(mount_copybind_t, NetworkManager_exec_t, NetworkManager_exec_t);
 allow mount_t NetworkManager_exec_t:file { getattr mounton open };
+allow mount_t mmcblock_device_t:blk_file { read_file_perms mounton };
