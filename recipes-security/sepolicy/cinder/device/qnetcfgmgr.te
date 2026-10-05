@@ -51,6 +51,7 @@ type qnetcfgmgr_ipv6_net_t;
 type qnetcfgmgr_chip_t;
 type qnetcfgmgr_run_qncm_t;
 type qnetcfgmgr_persist_qncm_t;
+type qnetcfgmgr_tmp_t;
 
 init_vendor_domain(qnetcfgmgr_t, qnetcfgmgr_exec_t)
 init_script_domain(qnetcfgmgr_macsec_t, qnetcfgmgr_macsec_exec_t)
@@ -106,6 +107,9 @@ gen_require(`
   type pmsg0_t;
   type system_dbusd_var_run_t;
   type faultmgr_t;
+  type sysctl_vm_t;
+  type tmp_t;
+  type sysctl_vm_overcommit_t;
   class dbus send_msg;
   class dbus acquire_svc;
   class service stop;
@@ -174,6 +178,12 @@ allow qnetcfgmgr_t udev_t:dir { getattr search };
 allow qnetcfgmgr_t udev_t:file { read open };
 allow qnetcfgmgr_t initrc_var_run_t:dir { search write add_name create remove_name unlink};
 allow qnetcfgmgr_t initrc_var_run_t:file { create read write open getattr unlink };
+allow qnetcfgmgr_t sysctl_vm_t:dir search;
+allow qnetcfgmgr_t sysctl_vm_overcommit_t:file { read open };
+files_tmp_file(qnetcfgmgr_tmp_t)
+files_tmp_filetrans(qnetcfgmgr_t, qnetcfgmgr_tmp_t, file)
+allow qnetcfgmgr_t tmp_t:dir { search write add_name remove_name };
+allow qnetcfgmgr_t qnetcfgmgr_tmp_t:file { create open write getattr read unlink };
 
 userdebug_or_eng('
 # To support systemctl stop qnet_config_managerd
