@@ -75,8 +75,8 @@ device_manage_socket_file(dlsc_t, dlsc_socket_device_t);
 device_rw_socket_files(dlsc_t, dlsc_socket_device_t);
 
 # spearhead connection
-sprhd_use_unix_stream_sockets(dlsc_t)
-sprhd_rw_netlink_sockets(dlsc_t)
+tlpd_use_unix_stream_sockets(dlsc_t)
+tlpd_rw_netlink_sockets(dlsc_t)
 
 # devlog
 allow dlsc_t devlog_t:sock_file write;
