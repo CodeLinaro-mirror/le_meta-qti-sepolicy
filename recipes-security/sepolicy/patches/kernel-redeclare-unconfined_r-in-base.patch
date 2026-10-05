@@ -1,0 +1,30 @@
+From 6c6d7b2c4744eaa05d541b8b9cdb3b58d65bf67a Mon Sep 17 00:00:00 2001
+From: Abhinav Gupta <abhingu@qti.qualcomm.com>
+Date: Wed, 19 Aug 2026 20:15:22 +0530
+Subject: [PATCH] kernel: re-declare unconfined_r in the base module
+
+Upstream-Status: Inappropriate
+
+Upstream refpolicy used to declare "role unconfined_r;" in policy/modules/kernel/kernel.te (a base module), this let policy/users, which is compiled as part of base, reference unconfined_r directly
+That declaration was dropped from kernel.te upstream, leaving unconfined_r declared only inside the loadable unconfined module.
+Since policy/users is part of the base module, checkmodule now fails with "unknown role 'unconfined_r'" while compiling base, because the loadable unconfined module hasn't been (and can't be) compiled yet at that point.
+Restore the base-module role declaration.
+
+Signed-off-by: Abhinav Gupta <abhingu@qti.qualcomm.com>
+---
+ policy/modules/kernel/kernel.te | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/policy/modules/kernel/kernel.te
++++ b/policy/modules/kernel/kernel.te
+@@ -37,6 +37,8 @@
+ role staff_r;
+ role user_r;
+
++role unconfined_r;
++
+ ifdef(`enable_mls',`
+ 	role secadm_r;
+ 	role auditadm_r;
+--
+2.34.1
