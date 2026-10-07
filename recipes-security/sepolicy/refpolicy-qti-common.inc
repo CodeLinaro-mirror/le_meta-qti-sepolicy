@@ -15,6 +15,7 @@ FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 SRC_URI += "file://add-userdebug_or_eng-macro.patch \
             file://0004-selinux-update-the-getty.te-for-addressing.patch \
             file://mls-enabling-sysadmin-role-for-the-ssh-login.patch \
+            file://kernel-redeclare-unconfined_r-in-base.patch \
             file://Move-root-user-to-unconfined-context.patch \
             file://Allow-adbd-to-transition-to-root-user.patch \
             file://common/ \
@@ -133,7 +134,10 @@ rebuild_policy:append() {
 
 	if ${@bb.utils.contains('MACHINE_FEATURES', 'qti-recovery', 'true', 'false', d)}; then
 		policy_dir=${D}${sysconfdir}/selinux/${POLICY_NAME}/policy
-		mv ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
+                if [ ! -f ${policy_dir}/policy.${policy_version} ]; then
+                    bbwarn "policy.${policy_version} not found in ${policy_dir}, cannot create recovery policy"
+                fi
+                cp -f ${policy_dir}/policy.${policy_version} ${policy_dir}/recovery.policy.${policy_version}
 	fi
 
 	if ${@bb.utils.contains('COMBINED_FEATURES', 'qti-ab-boot', 'false', 'true', d)}; then

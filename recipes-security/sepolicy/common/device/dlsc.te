@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(dlsc, 1.0)
 
 type dlsc_t;
@@ -62,6 +66,7 @@ allow dlsc_t self:process { signal };
 allow dlsc_t self:{ socket netlink_socket netlink_route_socket udp_socket } create_socket_perms;
 allow dlsc_t self:qipcrtr_socket create_socket_perms;
 allow dlsc_t self:unix_stream_socket create_stream_socket_perms;
+allow dlsc_t self:netlink_route_socket { nlmsg_read };
 
 type dlsc_socket_device_t;
 files_type(dlsc_socket_device_t);
@@ -70,8 +75,8 @@ device_manage_socket_file(dlsc_t, dlsc_socket_device_t);
 device_rw_socket_files(dlsc_t, dlsc_socket_device_t);
 
 # spearhead connection
-sprhd_use_unix_stream_sockets(dlsc_t)
-sprhd_rw_netlink_sockets(dlsc_t)
+tlpd_use_unix_stream_sockets(dlsc_t)
+tlpd_rw_netlink_sockets(dlsc_t)
 
 # devlog
 allow dlsc_t devlog_t:sock_file write;

@@ -61,6 +61,7 @@ ifndef(`init_systemd', `
 ## location conf files
 /etc/gps.conf       -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/izat.conf      -- gen_context(system_u:object_r:loc_etc_t,s0)
+/etc/izat_process.conf -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/xtwifi.conf    -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/flp.conf       -- gen_context(system_u:object_r:loc_etc_t,s0)
 /etc/lowi.conf      -- gen_context(system_u:object_r:loc_etc_t,s0)

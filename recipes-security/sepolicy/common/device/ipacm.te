@@ -25,6 +25,10 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 policy_module(ipacm, 1.0)
 
 ### ipa data directory
@@ -181,8 +185,6 @@ dontaudit ipa_lnx_agent_t self:process { getcap setcap };
 dev_read_sysfs(ipa_lnx_agent_t);
 fs_manage_tmpfs_dirs(ipa_lnx_agent_t);
 files_rw_qcmap_etc_data_files(ipa_lnx_agent_t)
-sprhd_use_unix_stream_sockets(ipa_lnx_agent_t)
-sprhd_rw_netlink_sockets(ipa_lnx_agent_t)
 allow ipa_lnx_agent_t self:qipcrtr_socket create;
 allow ipa_lnx_agent_t self:netlink_socket create;
 allow ipa_lnx_agent_t self:netlink_socket bind;
