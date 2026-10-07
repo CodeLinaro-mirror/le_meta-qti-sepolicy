@@ -64,7 +64,7 @@ allow fbe_service_t overlay_t:dir manage_dir_perms;
 # Allow initrc_t (shell script context and ExecStartPre shell wrapper) to access
 # /overlay during pre-transition steps — lefbe_mkdir.sh runs as initrc_t since it
 # is a shell script (no domain transition), and ExecStartPre wraps in /bin/sh.
-allow initrc_t overlay_t:dir { getattr search add_name write };
+allow initrc_t overlay_t:dir { getattr search add_name write create };
 
 # Allow fbe_service_t to read media-encryption.conf (labeled fbe_conf_file_t).
 allow fbe_service_t fbe_conf_file_t:file read_file_perms;
