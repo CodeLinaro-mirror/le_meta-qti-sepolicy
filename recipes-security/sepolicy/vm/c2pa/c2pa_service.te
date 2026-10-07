@@ -25,6 +25,15 @@ user_data_files_type(c2pa_persist_t)
 filetrans_pattern(c2paservice_t, persist_t, c2pa_persist_t, { file dir })
 manage_user_data_files(c2paservice_t, c2pa_persist_t);
 
+# cryptinit.sh needs to update permissions on OTA, and is confirmed to not
+# launch binaries that would otherwise be unlabeled
+gen_require(`
+    type initrc_t;
+    attribute initrc_data_rw_exception;
+')
+typeattribute c2pa_persist_t initrc_data_rw_exception;
+manage_user_data_files(initrc_t, c2pa_persist_t);
+
 kernel_read_system_state(c2paservice_t)
 files_tmpfs_file(c2paservice_tmpfs_t)
 

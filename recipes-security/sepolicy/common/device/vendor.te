@@ -25,8 +25,8 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2023,2025 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 policy_module(vendor, 1.0)
@@ -226,6 +226,10 @@ allow post_boot_script_t sysctl_t:file { rw_file_perms };
 seutil_read_config(post_boot_script_t)
 allow post_boot_script_t security_t:filesystem { getattr };
 allow post_boot_script_t sysfs_vblank_t:dir read_file_perms;
+
+# dmsetup
+lvm_exec(post_boot_script_t)
+dev_rw_lvm_control(post_boot_script_t)
 
 dontaudit post_boot_script_t domain:filesystem { getattr };
 dontaudit post_boot_script_t tmpfs_t:filesystem getattr;
