@@ -67,7 +67,7 @@ allow csr_bt_t ptmx_t:chr_file rw_chr_file_perms;
 allow csr_bt_t self:fifo_file rw_inherited_fifo_file_perms;
 allow csr_bt_t self:capability2 block_suspend;
 allow csr_bt_t self:qipcrtr_socket create;
-allow csr_bt_t self:capability { chown fowner };
+allow csr_bt_t self:capability { chown fowner fsetid sys_nice };
 allow csr_bt_t self:process { signal sigkill };
 allow csr_bt_t self:unix_stream_socket { connectto create_stream_socket_perms };
 allow csr_bt_t self:{ socket netlink_kobject_uevent_socket } create_socket_perms;

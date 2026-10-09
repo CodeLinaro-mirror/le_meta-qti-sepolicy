@@ -1,0 +1,6 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+/usr/lib/libEGL_adreno\.so        gen_context(system_u:object_r:adreno_lib_t,s0)
+/usr/lib/libGLESv1_CM_adreno\.so  gen_context(system_u:object_r:adreno_lib_t,s0)
+/usr/lib/libGLESv2_adreno\.so     gen_context(system_u:object_r:adreno_lib_t,s0)
