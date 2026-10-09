@@ -86,6 +86,7 @@ allow ethagent_t  var_run_t:dir search;
 allow ethagent_t  var_run_t:lnk_file read;
 allow ethagent_t  self:process signal;
 allow ethagent_t  self:udp_socket { create ioctl };
+allow_common_log(ethagent_t);
 # Allow ethagent to connect to tlpd's Unix stream socket
 tlpd_use_unix_stream_sockets(ethagent_t)
 kernel_read_system_state(ethagent_t)
