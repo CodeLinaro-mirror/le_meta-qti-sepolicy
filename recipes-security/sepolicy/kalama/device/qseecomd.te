@@ -27,6 +27,7 @@
 
 gen_require(`
        type sysfs_t;
+       type power_control_t;
 ')
 
 allow qseecomd_t self:capability chown;
@@ -46,3 +47,7 @@ allow qseecomd_t self:capability2 block_suspend;
 
 # allow qseecomd read/write access to /dev/mmcblk0rpmb
 allow qseecomd_t qseecomd_rpmb_t:chr_file { rw_chr_file_perms };
+
+# Allow qseecomd (OPS listener) to service TZ's display clock vote request
+# by writing to /sys/class/drm/card0/device/power/control.
+allow qseecomd_t power_control_t:file { open read write getattr };
