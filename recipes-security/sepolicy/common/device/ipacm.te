@@ -190,8 +190,11 @@ allow ipa_lnx_agent_t self:netlink_socket create;
 allow ipa_lnx_agent_t self:netlink_socket bind;
 allow ipa_lnx_agent_t self:netlink_socket read;
 allow ipa_lnx_agent_t self:capability {net_admin kill};
+allow ipa_lnx_agent_t self:process signal;
 allow ipa_lnx_agent_t qcmap_var_run_t:dir search;
 allow ipa_lnx_agent_t qcmap_var_run_t:sock_file write;
+# The IPA Linux agent is a TLPD client over the listener in /run/data.
+tlpd_use_unix_stream_sockets(ipa_lnx_agent_t)
 data_filetrans(ipa_lnx_agent_t, ipacm_data_t, dir)
 manage_user_data_files(ipa_lnx_agent_t, ipacm_data_t)
 

@@ -10,6 +10,7 @@ type nicmd_socket_t;
 
 gen_require(`
     type proc_net_t;
+    type proc_t;
     type socket_device_t;
     type kernel_t;
     type qcmap_cm_t;
@@ -55,6 +56,7 @@ allow nicmd_t self:{ socket udp_socket } ioctl;
 kernel_request_load_module(nicmd_t)
 
 allow nicmd_t proc_net_t:file { getattr open read write ioctl lock append };
+allow nicmd_t proc_t:file { getattr read open };
 
 allow nicmd_t self:capability2 block_suspend;
 

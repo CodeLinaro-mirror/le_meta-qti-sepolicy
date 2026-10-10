@@ -10,6 +10,8 @@ init_vendor_domain(tlpd_t, tlpd_exec_t)
 
 gen_require(`
     type default_t;
+    type initrc_t;
+    type systemd_tmpfiles_t;
     type sysfs_t;
     type cert_t;
 ')
@@ -23,9 +25,16 @@ userdebug_or_eng(`
         class service { start status stop };
     ')
     allow unconfined_t tlpd_exec_t:service { status start stop};
-    allow unconfined_t tlpd_data_t:fifo_file { open write getattr };
+    allow unconfined_t tlpd_data_t:fifo_file { create getattr open write };
     dev_write_kmsg(tlpd_t)
 ')
+
+allow initrc_t tlpd_data_t:dir search;
+allow initrc_t tlpd_data_t:fifo_file { getattr open write };
+
+# systemd-tmpfiles provisions /data/data_tlpd/tlpd_ctrl as a radio-owned FIFO.
+allow systemd_tmpfiles_t tlpd_data_t:dir { write add_name };
+allow systemd_tmpfiles_t tlpd_data_t:fifo_file { create getattr setattr };
 
 logging_send_syslog_msg(tlpd_t)
 

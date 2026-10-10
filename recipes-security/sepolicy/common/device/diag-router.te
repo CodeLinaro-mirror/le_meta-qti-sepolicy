@@ -38,9 +38,14 @@ policy_module(diag-router, 1.0)
 
 type diag-router_t;
 type diag-router_exec_t;
+type diag-router_coresight_exec_t;
 type mhi_pipe_4_t;
+files_type(diag-router_coresight_exec_t)
 dev_node(mhi_pipe_4_t);
 init_vendor_domain(diag-router_t, diag-router_exec_t)
+
+can_exec(diag-router_t, diag-router_coresight_exec_t)
+corecmd_exec_shell(diag-router_t)
 
 #===============diag-router_t =====================
 userdebug_or_eng(`
@@ -51,6 +56,7 @@ userdebug_or_eng(`
     type usb_dev_t;
     type usbfs_t;
     type sysfs_t;
+    type proc_t;
   ')
 
   allow diag-router_t self:qipcrtr_socket create_socket_perms;
@@ -83,5 +89,6 @@ userdebug_or_eng(`
   allow diag-router_t sysfs_t:file { open read write getattr };
   allow diag-router_t sysfs_t:lnk_file { read getattr };
   allow diag-router_t sysfs_t:dir { search read open getattr };
+  allow diag-router_t proc_t:file { getattr read open };
+  allow diag-router_t self:fifo_file { read write getattr ioctl };
 ')
-

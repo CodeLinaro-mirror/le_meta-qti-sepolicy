@@ -94,6 +94,7 @@
 
     mls_fd_use_all_levels(syslogd_t)
     mls_socket_write_all_levels(syslogd_t)
+    mls_file_write_all_levels(syslogd_t)
 
     allow syslogd_t init_var_run_t:file read_file_perms;
     allow syslogd_t self:netlink_audit_socket nlmsg_write;
