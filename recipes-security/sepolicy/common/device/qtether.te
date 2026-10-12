@@ -133,3 +133,6 @@ emac_rw_dev(qtether_t)
 
 # for dlt logging
 dlt_allow_user_logging(qtether_t)
+
+#for common logging
+allow_common_log(qtether_t)
