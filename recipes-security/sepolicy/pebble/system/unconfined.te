@@ -9,6 +9,7 @@ userdebug_or_eng(`
         type touch_input_device_t;
         type zs_handle_sysfs_t;
         type zspage_sysfs_t;
+        type adreno_lib_t;
     ')
 
     allow unconfined_t binderfs_t:file getattr;
@@ -17,6 +18,7 @@ userdebug_or_eng(`
     allow unconfined_t touch_input_device_t:file getattr;
     allow unconfined_t zs_handle_sysfs_t:dir list_dir_perms;
     allow unconfined_t zspage_sysfs_t:dir list_dir_perms;
+    allow unconfined_t adreno_lib_t:file mmap_exec_file_perms;
 
     # Allow getenforce and libselinux to read /etc/selinux/config so that
     # is_selinux_enabled() returns the correct result instead of "Disabled".

@@ -73,6 +73,7 @@ gen_require(`
     type post_boot_script_exec_t;
     type policy_config_t;
     type reset_reboot_initrc_exec_t;
+    type fbe_conf_file_t;
 
 ')
 ########################################
@@ -107,13 +108,15 @@ allow overlay_etc_mounter_t reset_reboot_initrc_exec_t:file { getattr execute re
 # /etc overlay: lower-inode directory traversal (second-check)
 allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               systemd_unit_t dbusd_etc_t dnsmasq_etc_t
-                              cert_t alsa_etc_t }:dir list_dir_perms;
+                              cert_t alsa_etc_t
+                              fbe_conf_file_t }:dir list_dir_perms;
 # /etc overlay: lower-inode file reads (second-check)
 allow overlay_etc_mounter_t { udev_rules_t modules_conf_t net_conf_t
                               dbusd_etc_t dnsmasq_etc_t chronyd_conf_t
                               thermal_etc_t perf_hal_etc_t cert_t dhcp_etc_t
                               syslog_conf_t alsa_etc_t
-                              default_context_t file_context_t }:file read_file_perms;
+                              default_context_t file_context_t
+                              fbe_conf_file_t }:file read_file_perms;
 # /etc overlay: net_conf_t symlink reads
 allow overlay_etc_mounter_t net_conf_t:lnk_file read_lnk_file_perms;
 # /etc/selinux overlay: directory listing

@@ -32,6 +32,7 @@ type ssrdump_data_file_t;
 files_type(ssrdump_data_file_t)
 
 allow ss-ramdump_t ramdump_data_t:dir rw_dir_perms;
+allow ss-ramdump_t ramdump_data_t:file manage_file_perms;
 
 allow post_boot_script_t perf_hal_data_t:dir add_entry_dir_perms;
 allow post_boot_script_t perf_hal_data_scaling_t:file manage_file_perms;

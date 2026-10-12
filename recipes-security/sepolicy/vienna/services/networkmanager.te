@@ -1,0 +1,9 @@
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+gen_require(`
+    type socket_device_t;
+    type NetworkManager_t;
+')
+
+allow NetworkManager_t socket_device_t:dir search;

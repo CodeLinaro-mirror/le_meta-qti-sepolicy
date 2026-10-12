@@ -98,6 +98,7 @@ allow overlay_data_mounter_t { chg-policy-persist_data_t sensors_persist_data_t
                                audio_data_file_t perf_hal_data_t
                                bt_data_t ssrdump_data_file_t
                                perf_hal_data_scaling_t cnss_diag_conf_t
+                               ramdump_data_t uwb_data_file_t
                                qsahara_dump_data_t }:file { manage_file_perms relabel_file_perms };
 
 mls_file_read_all_levels(overlay_data_mounter_t)
