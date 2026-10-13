@@ -38,6 +38,7 @@ gen_require(`
     type adbd_system_data_t;
     type qwes_data_t;
     type bt_data_t;
+    type ss-ramdump_data_t;
     attribute domain_can_read_userdata;
     attribute domain_can_write_userdata;
     attribute qwes_data_writer;
@@ -69,11 +70,11 @@ allow overlay_data_mounter_t data_t:lnk_file manage_lnk_file_perms;
 allow overlay_data_mounter_t { wifi_data_t time_data_t bt_data_t qwes_data_t
                                tombstone_data_t tombstone_rfs_data_t
                                audio_data_file_t perf_hal_data_t
-                               etc_sensors_t qseecomd_data_t }:dir { manage_dir_perms relabel_dir_perms };
+                               etc_sensors_t qseecomd_data_t ss-ramdump_data_t }:dir { manage_dir_perms relabel_dir_perms };
 # /data overlay: full manage + relabel on copy-up target files.
 allow overlay_data_mounter_t { wifi_data_t audio_data_file_t perf_hal_data_t
                                etc_sensors_t qseecomd_data_t qwes_data_t bt_data_t
-                               reboot_cookie_data_t tombstone_data_t }:file { manage_file_perms relabel_file_perms };
+                               reboot_cookie_data_t tombstone_data_t ss-ramdump_data_t }:file { manage_file_perms relabel_file_perms };
 # /data/wifi overlay: cnss_daemon socket operations
 allow overlay_data_mounter_t wifi_data_t:sock_file { create getattr unlink };
 
