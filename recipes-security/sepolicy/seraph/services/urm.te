@@ -122,13 +122,39 @@ gen_require(`
 ')
 allow urm_t tmp_t:dir { write add_name };
 
-# Type transition: when initrc_t creates restune_sock in /run (var_run_t),
-# label it urm_runtime_t so clients can connect using urm_stream_connect
 gen_require(`
-    type initrc_t;
-    type var_run_t;
+    type cpu_sysfs_t;
+    type sysfs_cpu_capacity;
+    type tracefs_t;
+    type syslog_conf_t;
+    type urm_config_t;
+    type cpu_scaling_freq_t;
 ')
-filetrans_pattern(initrc_t, var_run_t, urm_runtime_t, sock_file, "restune_sock")
+
+# Read and search CPU sysfs dirs and files
+# e.g. /sys/devices/system/cpu/core_ctl/enable, related_cpus
+allow urm_t cpu_sysfs_t:dir { search read open getattr };
+allow urm_t cpu_sysfs_t:file rw_file_perms;
+
+# Read CPU capacity (/sys/devices/system/cpu/cpu*/cpu_capacity)
+allow urm_t sysfs_cpu_capacity:file read_file_perms;
+
+# Read and write kernel tracing files
+# e.g. /sys/kernel/tracing/tracing_on
+allow urm_t tracefs_t:dir { search_dir_perms read open getattr };
+allow urm_t tracefs_t:file rw_file_perms;
+
+# Read journald configuration file
+# e.g. /etc/systemd/journald.conf
+allow urm_t syslog_conf_t:file read_file_perms;
+
+# Manage URM config directory and files
+# e.g. /etc/urm/journald_modified_conf
+allow urm_t urm_config_t:dir manage_dir_perms;
+allow urm_t urm_config_t:file manage_file_perms;
+
+# Allow URM to read and write CPU scaling frequencies (scaling_min_freq, scaling_max_freq)
+allow urm_t cpu_scaling_freq_t:file rw_file_perms;
 
 # Allow pulseaudio to connect to URM socket for audio resource management
 gen_require(`
