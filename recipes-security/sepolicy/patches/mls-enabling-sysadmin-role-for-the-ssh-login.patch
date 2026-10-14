@@ -3,6 +3,8 @@ From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Mon, 18 Dec 2017 15:38:33 -0800
 Subject: [PATCH] selinux: Create meta-qti-sepolicy layer
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 ---
  config/appconfig-mls/default_contexts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

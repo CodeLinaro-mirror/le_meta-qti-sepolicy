@@ -3,6 +3,8 @@ From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Mon, 5 Nov 2018 16:59:40 -0800
 Subject: [PATCH] Allow adbd to transition to root user
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 Change-Id: Idf7817502044de08ac29cc6eb5f29ac89a05a093
 ---
  config/appconfig-mls/root_default_contexts | 1 +

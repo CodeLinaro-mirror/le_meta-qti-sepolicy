@@ -3,6 +3,8 @@ From: chenghen <quic_chenghen@quicinc.com>
 Date: Fri, 26 May 2023 17:15:13 +0800
 Subject: [PATCH] selinux: enable_ssh_sysadm_login
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 Signed-off-by: chenghen <quic_chenghen@quicinc.com>
 ---
  policy/modules/services/ssh.te | 2 +-
@@ -23,4 +25,3 @@ index 49ccc7f15..e312b14e8 100644
  ## <p>
 -- 
 2.17.1
-

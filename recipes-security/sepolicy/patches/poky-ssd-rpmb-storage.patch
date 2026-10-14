@@ -3,6 +3,8 @@ From: Jiten Patel <quic_jitepate@quicinc.com>
 Date: Mon, 29 Nov 2021 16:43:10 +0530
 Subject: [PATCH] modify rpmb and ssd tag
 
+Upstream-Status: Inappropriate [Qualcomm-specific device policy]
+
 Signed-off-by: Jiten Patel <quic_jitepate@quicinc.com>
 ---
  policy/modules/kernel/storage.fc | 3 ++-

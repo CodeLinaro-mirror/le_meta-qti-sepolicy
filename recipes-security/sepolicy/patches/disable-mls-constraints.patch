@@ -6,6 +6,8 @@ Subject: [PATCH] Disable MLS constraints
 Remove most MLS constraints while keeping sensitivity labels on
 the filesystem
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 Change-Id: I64463fbec89286f1f018073e8cb1a97d147dc7ec
 ---
  policy/mls | 854 +------------------------------------------------------------
@@ -882,4 +884,3 @@ index 69ca726..74c3a82 100644
 +')
 -- 
 1.9.1
-
