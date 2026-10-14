@@ -24,6 +24,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
 
 userdebug_or_eng(`
     rw_diag_dev(iptables_t)
@@ -37,3 +41,4 @@ systemd_tmpfilesd_managed(iptables_runtime_t)
 allow systemd_tmpfiles_t iptables_runtime_t:file { getattr open write };
 dontaudit iptables_t self:capability { kill };
 read_user_data_files(iptables_t, qcmap_data_t)
+qcmap_read_qcmap_etc_data_files(iptables_t)
