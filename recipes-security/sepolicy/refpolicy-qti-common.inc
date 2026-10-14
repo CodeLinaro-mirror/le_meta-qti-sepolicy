@@ -1,12 +1,12 @@
 POLICY_TYPE = "mls"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy:"
+FILESEXTRAPATHS:prepend := "${QTI_METADATA_ROOT}/meta-selinux/recipes-security/refpolicy:"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/files:"
+FILESEXTRAPATHS:prepend := "${QTI_METADATA_ROOT}/meta-selinux/recipes-security/refpolicy/files:"
 
-FILESEXTRAPATHS:prepend := "${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy:"
+FILESEXTRAPATHS:prepend := "${QTI_METADATA_ROOT}/meta-selinux/recipes-security/refpolicy/refpolicy:"
 
-require ${COREBASE}/meta-selinux/recipes-security/refpolicy/refpolicy_git.inc
+require ${QTI_METADATA_ROOT}/meta-selinux/recipes-security/refpolicy/refpolicy_git.inc
 
 FILESEXTRAPATHS:append := "${THISDIR}:${THISDIR}/patches:"
 
@@ -50,7 +50,7 @@ def copy_policy_file(src_path, dst_path):
     os.renames(src_path, dst_path)
 
 def install_device_policy(d, src_root):
-    src_dir = os.path.join(d.getVar("WORKDIR"), src_root)
+    src_dir = os.path.join(d.getVar("UNPACKDIR"), src_root)
     dst_dir = os.path.join(d.getVar("S"), "policy", "modules")
     for root, dirs, files in os.walk(src_dir):
         for file in files:

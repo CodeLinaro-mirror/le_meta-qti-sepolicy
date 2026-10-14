@@ -8,6 +8,6 @@ PURGE_POLICY_MODULES:append = " adbd adkcfg adk_message_monitor adk_message_send
 
 do_patch:append() {
     install_device_policy(d, "vm")
-    if os.path.exists(os.path.join(d.getVar("WORKDIR"), d.getVar("BASEMACHINE"))):
+    if os.path.exists(os.path.join(d.getVar("UNPACKDIR"), d.getVar("BASEMACHINE"))):
          install_device_policy(d, d.getVar("BASEMACHINE"))
 }
