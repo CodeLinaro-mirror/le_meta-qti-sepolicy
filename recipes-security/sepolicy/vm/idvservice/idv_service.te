@@ -10,6 +10,12 @@ platform_container_domain_type(idv_service_t, idv_service_exec_t)
 gen_require(`
     bool allow_minijail_mount;
 ')
+type idv_tmpfs_t;
+files_tmpfs_file(idv_tmpfs_t)
+if (allow_minijail_mount) {
+    fs_tmpfs_filetrans(idv_service_t, idv_tmpfs_t, file)
+    allow idv_service_t idv_tmpfs_t:file { manage_file_perms mounton };
+}
 
 gen_require(`
     type socket_device_t;
