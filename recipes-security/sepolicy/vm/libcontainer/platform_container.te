@@ -30,7 +30,7 @@ allow platform_launcher_domain platform_container_domain:process { rlimitinh sig
 
 allow platform_container_domain platform_hub_domain:fd { use };
 allow platform_container_domain platform_hub_domain:unix_stream_socket connectto;
-allow platform_container_domain tvmmink_sock_t:sock_file write;
+allow platform_container_domain tvmmink_sock_t:sock_file { getattr write };
 
 # Redirect all TVMRoot logs to adb logcat
 #  no user variant support for bind mounts, so always allow the mount. But
@@ -46,6 +46,8 @@ userdebug_or_eng(`
 # Wakelock support
 allow platform_container_domain sysfs_t:file { open write };
 allow platform_container_domain self:capability2 block_suspend;
+
+logging_send_syslog_msg(platform_container_domain)
 
 ## <desc>
 ## <p>
