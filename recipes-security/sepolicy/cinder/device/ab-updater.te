@@ -8,8 +8,11 @@ type ab_updater_t;
 type ab_updater_exec_t;
 type ab_updater_conf_t;
 type abupdater_log_t;
+type ab_updater_shell_t;
+type ab_updater_shell_exec_t;
 
 init_vendor_domain(ab_updater_t, ab_updater_exec_t)
+init_vendor_domain(ab_updater_shell_t, ab_updater_shell_exec_t)
 
 gen_require(`
     type unreserved_port_t;
@@ -100,9 +103,20 @@ allow ab_updater_t sysctl_kernel_t:dir search;
 allow ab_updater_t sysctl_kernel_t:file { getattr ioctl open read };
 allow ab_updater_t sysctl_t:dir search;
 
+allow ab_updater_shell_t abupdater_log_t:dir { getattr search read open write remove_name add_name };
+allow ab_updater_shell_t abupdater_log_t:file { getattr unlink open write create rename };
+allow ab_updater_shell_t ab_updater_shell_t:fifo_file { getattr read write };
+allow ab_updater_shell_t shell_exec_t:file { read execute map };
+allow ab_updater_shell_t ab_updater_conf_t:file { getattr open read };
+
+# ab-log-rotate tries to read /proc/filesystem when running "mv" commands
+kernel_dontaudit_read_system_state(ab_updater_shell_t)
+kernel_dontaudit_search_kernel_sysctl(ab_updater_shell_t)
+
 #============= initrc_t ==============
-allow initrc_t abupdater_log_t:dir { add_name getattr search write };
-allow initrc_t abupdater_log_t:file { append create getattr open read write };
+
+allow initrc_t abupdater_log_t:dir { add_name search write };
+allow initrc_t abupdater_log_t:file { create open write };
 
 #============= setfiles_t ==============
 allow setfiles_t abupdater_log_t:dir { getattr open read relabelto };
