@@ -5,6 +5,8 @@ Subject: [PATCH] Update busybox substitution paths
 
 Update busybox paths to match with other aliases
 
+Upstream-Status: Inappropriate [Qualcomm-specific filesystem layout]
+
 Signed-off-by: Dennis Cagle <dcagle@codeaurora.org>
 ---
  config/file_contexts.subs_dist | 4 ++--
@@ -26,4 +28,3 @@ index 04fca3c..c720871 100644
  
 -- 
 2.7.4
-

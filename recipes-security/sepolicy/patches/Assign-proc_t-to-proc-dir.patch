@@ -3,6 +3,8 @@ From: Dennis Cagle <d-cagle@codeaurora.org>
 Date: Wed, 30 Nov 2016 15:55:19 -0800
 Subject: [PATCH] Assign proc_t to proc dir
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 ---
  policy/modules/kernel/files.fc | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)

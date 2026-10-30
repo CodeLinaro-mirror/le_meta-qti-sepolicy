@@ -5,6 +5,8 @@ Subject: [PATCH] Move root user to unconfined context
 
 Start the root user in unconfined context instead of sysadm
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 Change-Id: I27216a10609a02fc11f4e437fefd66a3ea774298
 ---
  policy/users | 4 ++--

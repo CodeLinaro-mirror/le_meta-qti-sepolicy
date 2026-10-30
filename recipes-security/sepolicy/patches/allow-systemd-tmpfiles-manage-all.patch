@@ -3,6 +3,8 @@ From: Dennis Cagle <dcagle@codeaurora.org>
 Date: Wed, 31 Jan 2018 18:02:00 -0800
 Subject: [PATCH] Allow systemd to manage all tmp files
 
+Upstream-Status: Inappropriate [Qualcomm-specific SELinux policy]
+
 Change-Id: I18b89c378871c821a19419a818eafdcf9c93b29d
 ---
  policy/booleans.conf | 2 +-
@@ -23,4 +25,3 @@ index 32fa070..3b0014b 100644
  # Allow users to connect to mysql
 -- 
 1.9.1
-

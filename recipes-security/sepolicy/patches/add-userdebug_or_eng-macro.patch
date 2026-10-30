@@ -5,6 +5,8 @@ Subject: [PATCH] selinux: Add userdebug_or_eng macro
 
 Add support for userdebug_or_eng macro
 
+Upstream-Status: Inappropriate [Qualcomm-specific build policy]
+
 Change-Id: Ic278a5d2b1a2ddc926dd06401e60f70d9c511d00
 ---
  Makefile                       | 5 +++++

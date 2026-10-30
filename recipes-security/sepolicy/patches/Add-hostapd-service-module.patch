@@ -6,6 +6,8 @@ Subject: [PATCH] Add hostapd service module
 Add a SELinux Reference Policy module for the hostapd
 IEEE 802.11 wireless LAN Host AP daemon.
 
+Upstream-Status: Backport [upstream commit 275c304dc164acb9c15741169a6674a93598400a]
+
 (cherry picked from commit 275c304dc164acb9c15741169a6674a93598400a)
 ---
  policy/modules/services/hostapd.fc |  7 +++++
@@ -100,4 +102,3 @@ index 0000000..2db1e7d
 +miscfiles_read_localization(hostapd_t)
 -- 
 1.9.1
-
