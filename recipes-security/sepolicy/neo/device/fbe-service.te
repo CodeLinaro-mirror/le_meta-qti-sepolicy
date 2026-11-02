@@ -64,6 +64,8 @@ allow fbe_service_t fbe_service_t:key { search };
 allow fbe_service_t smcinvoke_device_t:chr_file rw_chr_file_perms;
 allow fbe_service_t socket_device_t:dir search_dir_perms;
 allow fbe_service_t hwfde_conf_file_t:file read_file_perms;
+# Allow SmcInvoke CIO to send SIGUSR1 to its own threads for IPC synchronization
+allow fbe_service_t self:process signal;
 allow fbe_service_t fbe_secure_data_t:file { create };
 allow fbe_service_t pmsg_device_t:chr_file rw_chr_file_perms;
 #Allow fbe_service_t to request for openssl encryption
