@@ -16,3 +16,10 @@ dev_associate_sysfs(dev_pmsg0_t)
 type image_size_sysfs_t;
 genfscon sysfs /power/image_size gen_context(system_u:object_r:image_size_sysfs_t,s0)
 dev_associate_sysfs(image_size_sysfs_t)
+
+# kalama's mdss_mdp block sits at a different bus address than the one
+# hardcoded in common/kernel/filesystem.te (ae00000.qcom,mdss_mdp), so
+# power/control falls back to the default sysfs_t label there. Re-label
+# it here for kalama's actual address so qseecomd's allow rule in
+# device/qseecomd.te applies.
+genfscon sysfs /devices/platform/soc/9800000.qcom,mdss_mdp/power/control gen_context(system_u:object_r:power_control_t,s0)

@@ -98,6 +98,7 @@ if (allow_minijail_mount) {
     platform_container_bind_mount(platform_container_domain, vendor_dmabuf_tui_demura_heap_device_t, chr_file)
     platform_container_bind_mount(platform_container_domain, vendor_vm_oem_device_t, chr_file)
     platform_container_bind_mount(platform_container_domain, vendor_vm_self_device_t, chr_file)
+    allow platform_container_domain socket_device_t:dir search;
     platform_container_bind_mount(platform_container_domain, socket_device_t, dir)
 
     # Use dontaudit for restorecon access inside of bind-mounted directories.
