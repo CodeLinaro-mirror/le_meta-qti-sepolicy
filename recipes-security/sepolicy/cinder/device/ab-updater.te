@@ -8,11 +8,13 @@ type ab_updater_t;
 type ab_updater_exec_t;
 type ab_updater_conf_t;
 type abupdater_log_t;
+type ab_updater_shell_t;
+type ab_updater_shell_exec_t;
 
 init_vendor_domain(ab_updater_t, ab_updater_exec_t)
+init_vendor_domain(ab_updater_shell_t, ab_updater_shell_exec_t)
 
 gen_require(`
-    type proc_t;
     type unreserved_port_t;
     type node_t;
     type tmpfs_t;
@@ -31,10 +33,12 @@ gen_require(`
     type mount_t;
     type unconfined_t;
     type proc_t;
+    type pmsg0_t;
     type removable_device_t;
     type fs_t;
     type setfiles_t;
     type power_unit_t;
+    type socket_device_t;
     type sysctl_kernel_t;
     type sysctl_t;
     class service { start status stop reload };
@@ -65,6 +69,10 @@ allow ab_updater_t removable_device_t:blk_file { read open write };
 allow ab_updater_t shell_exec_t:file { open read execute getattr map execute_no_trans };
 allow ab_updater_t faultmgr_t:dbus { send_msg acquire_svc };
 allow ab_updater_t system_dbusd_t:dbus acquire_svc;
+allow ab_updater_t self:qipcrtr_socket setopt;
+allow ab_updater_t self:fifo_file { read write };
+allow ab_updater_t pmsg0_t:chr_file { open read write getattr setattr };
+allow ab_updater_t socket_device_t:dir search;
 
 allow mount_copybind_t ab_updater_conf_t:file { getattr read open create write setattr };
 allow mount_t ab_updater_conf_t:file { getattr mounton };
@@ -95,9 +103,20 @@ allow ab_updater_t sysctl_kernel_t:dir search;
 allow ab_updater_t sysctl_kernel_t:file { getattr ioctl open read };
 allow ab_updater_t sysctl_t:dir search;
 
+allow ab_updater_shell_t abupdater_log_t:dir { getattr search read open write remove_name add_name };
+allow ab_updater_shell_t abupdater_log_t:file { getattr unlink open write create rename };
+allow ab_updater_shell_t ab_updater_shell_t:fifo_file { getattr read write };
+allow ab_updater_shell_t shell_exec_t:file { read execute map };
+allow ab_updater_shell_t ab_updater_conf_t:file { getattr open read };
+
+# ab-log-rotate tries to read /proc/filesystem when running "mv" commands
+kernel_dontaudit_read_system_state(ab_updater_shell_t)
+kernel_dontaudit_search_kernel_sysctl(ab_updater_shell_t)
+
 #============= initrc_t ==============
-allow initrc_t abupdater_log_t:dir { add_name getattr search write };
-allow initrc_t abupdater_log_t:file { append create getattr open read write };
+
+allow initrc_t abupdater_log_t:dir { add_name search write };
+allow initrc_t abupdater_log_t:file { create open write };
 
 #============= setfiles_t ==============
 allow setfiles_t abupdater_log_t:dir { getattr open read relabelto };
